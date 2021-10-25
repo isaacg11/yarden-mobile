@@ -1,4 +1,5 @@
 
+import 'react-native-gesture-handler';
 import React from 'react';
 import { Text } from 'react-native';
 import { Provider } from "react-redux";
@@ -69,7 +70,8 @@ function App() {
             name="Dashboard"
             component={Dashboard}
             options={{
-              headerLeft: displayNone
+              headerLeft: displayNone,
+              headerShown: false
             }}
           />
           <Stack.Screen
@@ -102,7 +104,7 @@ function App() {
               title: 'Password Confirm'
             }}
           />
-        </Stack.Navigator>
+        </Stack.Navigator>        
       </NavigationContainer>
     </Provider>
   );

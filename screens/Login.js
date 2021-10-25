@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { View, Text, SafeAreaView } from 'react-native';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
+import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { login } from '../actions/auth/index';
 
 class Login extends Component {
@@ -15,6 +16,9 @@ class Login extends Component {
     }
 
     async login() {
+        // render loading indicator
+        await this.setState({ isLoading: true });
+
         const credentials = {
             email: this.state.email,
             password: this.state.password
@@ -29,13 +33,17 @@ class Login extends Component {
             // redirect to dashboard
             this.props.navigation.navigate('Dashboard');
         }
+
+        // hide loading indicator
+        await this.setState({ isLoading: false });
     }
 
     render() {
 
         const {
             email,
-            password
+            password,
+            isLoading
         } = this.state;
 
         return (
@@ -43,6 +51,12 @@ class Login extends Component {
                 flex: 1,
                 width: "100%",
             }}>
+                {/* loading indicator start */}
+                <LoadingIndicator
+                    loading={isLoading}
+                />
+                {/* loading indicator end */}
+
                 {/* login form start */}
                 <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Sign In</Text>
                 <View style={{ padding: 12 }}>

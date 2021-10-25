@@ -1,46 +1,34 @@
 
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { logout } from '../actions/auth/index';
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import BottomTabNavigator from '../components/app/BottomTabNavigator';
+import Referrals from '../screens/Referrals';
+import Settings from '../screens/Settings';
+
+const Drawer = createDrawerNavigator();
 
 class Dashboard extends Component {
 
-    async logout() {
-        // logout
-        await this.props.logout();
-
-        // redirect to login
-        this.props.navigation.navigate('Login');
-    }
-
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Dashboard Screen</Text>
-                <Button
-                    title="Logout"
-                    onPress={() => this.logout()}
-                />
-            </View>
+            <Drawer.Navigator>
+                <Drawer.Screen name="Home" component={BottomTabNavigator} />
+                <Drawer.Screen name="Referrals" component={Referrals} />
+                <Drawer.Screen name="Settings" component={Settings} />
+                <Drawer.Screen name="Log Out" component={BottomTabNavigator} initialParams={{ action: 'log out' }} />
+            </Drawer.Navigator>
         )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        user: state.user,
+        user: state.user
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        logout
-    }, dispatch)
-}
-
-Dashboard = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+Dashboard = connect(mapStateToProps, null)(Dashboard);
 
 export default Dashboard;
 
