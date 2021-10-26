@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Text, SafeAreaView } from 'react-native';
 
-class Messenger extends Component {
+class Garden extends Component {
 
     render() {
 
@@ -11,10 +11,10 @@ class Messenger extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Messages</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Garden</Text>
             </SafeAreaView>
         )
     }
 }
 
-module.exports = Messenger;
+module.exports = Garden;
