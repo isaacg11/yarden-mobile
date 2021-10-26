@@ -18,6 +18,9 @@ import Confirm from './screens/Confirm';
 import Welcome from './screens/Welcome';
 import PasswordReset from './screens/PasswordReset';
 import PasswordConfirm from './screens/PasswordConfirm';
+import OrderDetails from './screens/OrderDetails';
+import ChangeDate from './screens/ChangeDate';
+import Logout from './screens/Logout';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -102,6 +105,21 @@ function App() {
             component={PasswordConfirm}
             options={{
               title: 'Password Confirm'
+            }}
+          />
+          <Stack.Screen
+            name="Order Details"
+            component={OrderDetails}
+          />
+          <Stack.Screen
+            name="Change Date"
+            component={ChangeDate}
+          />
+          <Stack.Screen
+            name="Log Out"
+            component={Logout}
+            options={{
+              headerLeft: displayNone
             }}
           />
         </Stack.Navigator>        

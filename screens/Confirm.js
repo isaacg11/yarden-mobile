@@ -70,7 +70,7 @@ class Confirm extends Component {
                 type: 'yard assessment',
                 date: new Date(info.date),
                 time: info.time,
-                description: vars.orderDescriptions.yardAssessment
+                description: vars.orderDescriptions.vendor.yardAssessment
             }
 
             // create new order

@@ -26,8 +26,6 @@ class DateSelect extends Component {
             validationError
         } = this.state;
 
-        console.log(minDate)
-
         return (
             <View>
                 <Input

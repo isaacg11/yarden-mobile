@@ -83,7 +83,7 @@ class Schedule extends Component {
             state,
             zipCode,
             date,
-            time,
+            time = '09',
             isLoading
         } = this.state;
 
