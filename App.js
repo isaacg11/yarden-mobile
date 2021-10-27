@@ -21,6 +21,7 @@ import PasswordConfirm from './screens/PasswordConfirm';
 import OrderDetails from './screens/OrderDetails';
 import ChangeDate from './screens/ChangeDate';
 import Logout from './screens/Logout';
+import ChangeSettings from './screens/ChangeSettings';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -121,6 +122,10 @@ function App() {
             options={{
               headerLeft: displayNone
             }}
+          />
+          <Stack.Screen
+            name="Change Settings"
+            component={ChangeSettings}
           />
         </Stack.Navigator>        
       </NavigationContainer>
