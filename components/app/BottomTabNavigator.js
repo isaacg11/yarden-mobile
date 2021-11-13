@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Orders from '../../screens/Orders';
 import Quotes from '../../screens/Quotes';
-import Garden from '../../screens/Garden';
+import Shop from '../../screens/Shop';
 import Messenger from '../../screens/Messenger';
 
 const Tab = createBottomTabNavigator();
@@ -18,8 +18,8 @@ class BottomTabNavigator extends Component {
                 return <Ionicons name={'reader-outline'} size={30} />
             case 'Quotes':
                 return <Ionicons name={'layers-outline'} size={30} />
-            case 'Garden':
-                return <Ionicons name={'leaf-outline'} size={30} />
+            case 'Shop':
+                return <Ionicons name={'cart-outline'} size={30} />
             case 'Messages':
                 return <Ionicons name={'file-tray-outline'} size={30} />
             default:
@@ -40,7 +40,7 @@ class BottomTabNavigator extends Component {
             >
                 <Tab.Screen name="Orders" component={Orders} />
                 <Tab.Screen name="Quotes" component={Quotes} />
-                <Tab.Screen name="Garden" component={Garden} />
+                <Tab.Screen name="Shop" component={Shop} />
                 <Tab.Screen name="Messages" component={Messenger} />
             </Tab.Navigator>
         )

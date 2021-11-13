@@ -23,8 +23,13 @@ class Orders extends Component {
         // show loading indicator
         await this.setState({ isLoading: true, status: status });
 
-        // get pending orders
-        await this.props.getOrders(`status=${status}&start=none&end=${new Date(moment().add(1, 'year'))}`);
+        if (status === 'pending') {
+            // get pending orders
+            await this.props.getOrders(`status=${status}&start=none&end=${new Date(moment().add(1, 'year'))}`);
+        } else {
+            // get completed orders
+            await this.props.getOrders(`status=${status}`);
+        }
 
         // hide loading indicator
         await this.setState({ isLoading: false });
@@ -52,7 +57,7 @@ class Orders extends Component {
                 />
                 {/* loading indicator end */}
 
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Orders</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Orders {(orders.list && orders.list.length > 0) ? `(${orders.list.length})` : ''}</Text>
                 <View style={{ padding: 12 }}>
 
                     {/* status start */}

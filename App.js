@@ -22,6 +22,11 @@ import OrderDetails from './screens/OrderDetails';
 import ChangeDate from './screens/ChangeDate';
 import Logout from './screens/Logout';
 import ChangeSettings from './screens/ChangeSettings';
+import QuoteDetails from './screens/QuoteDetails';
+import Checkout from './screens/Checkout';
+import Garden from './screens/Garden';
+import Approved from './screens/Approved';
+import Enrollment from './screens/Enrollment';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -127,7 +132,30 @@ function App() {
             name="Change Settings"
             component={ChangeSettings}
           />
-        </Stack.Navigator>        
+          <Stack.Screen
+            name="Quote Details"
+            component={QuoteDetails}
+          />
+          <Stack.Screen
+            name="Checkout"
+            component={Checkout}
+          />
+          <Stack.Screen
+            name="Approved"
+            component={Approved}
+            options={{
+              headerLeft: displayNone
+            }}
+          />
+          <Stack.Screen
+            name="Garden"
+            component={Garden}
+          />
+          <Stack.Screen
+            name="Enrollment"
+            component={Enrollment}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
     </Provider>
   );

@@ -1,0 +1,1 @@
+export const GET_PLANTS = 'Get_Plants';
