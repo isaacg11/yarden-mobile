@@ -11,9 +11,9 @@ class DateSelect extends Component {
 
     render() {
 
-        const { 
+        const {
             placeholder,
-            onConfirm, 
+            onConfirm,
             value,
             minDate = null,
             maxDate = null,
@@ -29,9 +29,10 @@ class DateSelect extends Component {
         return (
             <View>
                 <Input
-                    onPressIn={() => this.setState({datePickerIsOpen: true})}
                     value={value}
                     placeholder={placeholder}
+                    onPressIn={() => this.setState({ datePickerIsOpen: true })}
+                    onChange={() => this.setState({ datePickerIsOpen: true })}
                 />
                 <DatePicker
                     modal
@@ -43,7 +44,7 @@ class DateSelect extends Component {
                     onConfirm={async (info) => {
 
                         // close date picker
-                        await this.setState({datePickerIsOpen: false});
+                        await this.setState({ datePickerIsOpen: false });
 
                         await this.setState({
                             validationError: false
@@ -51,9 +52,9 @@ class DateSelect extends Component {
 
                         // save info to local state
                         onConfirm(moment(info).tz('America/Los_Angeles'));
-                        
+
                     }}
-                    onCancel={() => {}}
+                    onCancel={() => { }}
                 />
                 {(validationError) && (
                     <Text>{validationError}</Text>

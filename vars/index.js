@@ -11,13 +11,21 @@ const vars = {
         },
         customer: {
             yardAssessment: 'Meet with one of our gardeners for an on-site appointment! Get a quote for a garden and answers to all your questions.',
-            installation: 'tbd',
-            revive: 'tbd',
+            installation: 'Installation of new garden. Service includes building beds, adding soil / amendments, setting up drip irrigation, and initial planting.',
+            revive: 'Revival of current garden. Service includes adding soil / amendments, setting up drip irrigation, and initial planting.',
             cropRotation: 'tbd',
             fullPlan: 'tbd',
             assistedPlan: 'tbd',
             initialPlanting: 'tbd'
         }
+    },
+    tax: {
+        ca: 0.1
+    },
+    fees: {
+        maintenance: 0.4,
+        misc: 0.1,
+        payment_processing: 0.03
     }
 }
 
