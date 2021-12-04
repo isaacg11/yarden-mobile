@@ -62,24 +62,23 @@ class Quotes extends Component {
                         options={[
                             {
                                 label: 'Quote Requested',
-                                value: 'bid requested'
+                                value: 'bid requested',
                             },
                             {
                                 label: 'Pending Approval',
-                                value: 'pending approval'
+                                value: 'pending approval',
                             },
                             {
                                 label: 'Approved',
-                                value: 'approved'
+                                value: 'approved',
                             }
                         ]}
-                        placeholder="Status"
                     />
                     {/* status end */}
 
                     {/* quotes start */}
                     {quotes.list && quotes.list.map((quote, index) => (
-                        <View key={index} style={{ backgroundColor: '#fff', padding: 12, bquoteRadius: 5 }}>
+                        <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
                             <View style={{ marginBottom: 12 }}>
                                 <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Title</Text>
                                 <Text>{quote.title}</Text>

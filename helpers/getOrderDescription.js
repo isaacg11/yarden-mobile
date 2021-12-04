@@ -1,7 +1,7 @@
 import vars from '../vars/index';
 
-export default function getOrderDescription(type) {
-    switch (type) {
+export default function getOrderDescription(order) {
+    switch (order.type) {
         case 'yard assessment':
             return vars.orderDescriptions.customer.yardAssessment;
         case 'installation':
@@ -16,6 +16,8 @@ export default function getOrderDescription(type) {
             return vars.orderDescriptions.customer.fullPlan;
         case 'assisted plan':
             return vars.orderDescriptions.customer.assistedPlan;
+        case 'misc':
+            return order.description;
         default:
             return 'n/a';
     }

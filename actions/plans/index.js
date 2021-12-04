@@ -24,3 +24,22 @@ export function getPlans(query) {
         }
     }
 }
+
+export function getPlan(id) {
+    return async function() {        
+        try {
+            const authToken = await getAuthToken();
+            const response = await axios.get(`${API_URL}/plans/${id}`, {headers: {authorization: authToken}});    
+            return response.data;
+        }
+
+        catch(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+            }
+            
+            alert('Something went wrong. We are working on a fix now!');
+        }
+    }
+}

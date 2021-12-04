@@ -26,10 +26,50 @@ import { updateQuote, getQuotes } from '../../actions/quotes/index';
 import { sendAlert } from '../../actions/alerts/index';
 import { sendEmail } from '../../actions/emails/index';
 import { updateUser } from '../../actions/user/index';
+import { updateChangeOrder, getChangeOrders, resetChangeOrders } from '../../actions/changeOrders/index';
 
 class Approval extends Component {
 
     state = {}
+
+    async scheduleNewOrder(approval) {
+        // format new order
+        let newOrder = {
+            customer: this.props.user._id,
+            approval: approval._id,
+            type: (this.props.quote.type) ? this.props.quote.type : 'misc',
+            date: moment().add(2, 'weeks'),
+            time: '10',
+            description: this.props.quote.description,
+            bid: this.props.quote._id
+        }
+
+        // if order is for a new garden {...}
+        if (this.props.quote.type === 'installation' || this.props.quote.type === 'revive') {
+
+            // set project phase to 1
+            newOrder.phase = 1;
+
+            // set garden info
+            let gardenInfo = {};
+            if (this.props.vegetables) gardenInfo.vegetables = this.props.vegetables;
+            if (this.props.herbs) gardenInfo.herbs = this.props.herbs;
+            if (this.props.fruit) gardenInfo.fruit = this.props.fruit;
+            if (this.props.plan) gardenInfo.maintenance_plan = this.props.plan;
+
+            // update user with garden info
+            await this.props.updateUser(null, { gardenInfo: gardenInfo })
+        }
+
+        // if a vendor created this quote, then set the order assignment to this vendor
+        if (this.props.quote.vendor) newOrder.vendor = this.props.quote.vendor._id;
+
+        // create work order
+        const order = await this.props.createOrder(newOrder);
+
+        // return value
+        return order;
+    }
 
     async approve() {
 
@@ -84,60 +124,52 @@ class Approval extends Component {
             // create approval
             const approval = await this.props.createApproval(newApproval);
 
-            // update quote as "approved"
-            await this.props.updateQuote(this.props.quote._id, { status: 'approved' });
+            // set empty order
+            let order = {};
 
-            // format new order
-            let newOrder = {
-                customer: this.props.user._id,
-                approval: approval._id,
-                type: (this.props.quote.type) ? this.props.quote.type : 'misc',
-                date: moment().add(2, 'weeks'),
-                time: '10',
-                description: this.props.quote.description,
-                bid: this.props.quote._id
+            // if approval is for a change order {...}
+            if (this.props.isChangeOrder) {
+
+                // update change order as "approved"
+                await this.props.updateChangeOrder(this.props.quote._id, { status: 'approved', approval: approval._id });
+
+                // assign order value
+                order = this.props.quote.order;
+            } else {
+                // update quote as "approved"
+                await this.props.updateQuote(this.props.quote._id, { status: 'approved' });
+
+                // schedule a new order
+                order = await this.scheduleNewOrder(approval);
             }
-
-            // if order is for a new garden {...}
-            if (this.props.quote.type === 'installation' || this.props.quote.type === 'revive') {
-
-                // set project phase to 1
-                newOrder.phase = 1;
-
-                // set garden info
-                let gardenInfo = {};
-                if (this.props.vegetables) gardenInfo.vegetables = this.props.vegetables;
-                if (this.props.herbs) gardenInfo.herbs = this.props.herbs;
-                if (this.props.fruit) gardenInfo.fruit = this.props.fruit;
-                if (this.props.plan) gardenInfo.maintenance_plan = this.props.plan;
-                
-                // update user with garden info
-                await this.props.updateUser(null, {gardenInfo: gardenInfo})
-            }
-
-            // if a vendor created this quote, then set the order assignment to this vendor
-            if (this.props.quote.vendor) newOrder.vendor = this.props.quote.vendor._id;
-
-            // create work order
-            const order = await this.props.createOrder(newOrder);
 
             // format address
-            const address = formatAddress(this.props.quote.customer);
-
-            // send notification to customer
-            await this.notifyCustomer(order, this.props.quote, address);
+            const address = formatAddress(this.props.user);
 
             // send notification to HQ
-            await this.notifyHQ(this.props.quote, address);
+            await this.notifyHQ(this.props.quote, address, this.props.isChangeOrder);
+
+            // send notification to customer
+            await this.notifyCustomer(order, address, this.props.isChangeOrder);
 
             // if a vendor created this quote, then notify the vendor
-            if (this.props.quote.vendor) await this.notifyVendor(this.props.quote.vendor, order);
+            if (this.props.quote.vendor) await this.notifyVendor(this.props.quote.vendor, order, this.props.isChangeOrder);
 
             // get updated quotes
             await this.props.getQuotes(`status=pending approval&page=1&limit=50`);
 
             // get pending orders
             await this.props.getOrders(`status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`);
+
+            // reset change orders
+            await this.props.resetChangeOrders();
+
+            // iterate through order list
+            await this.props.orders.list.forEach(async (o) => {
+
+                // get pending change orders
+                await this.props.getChangeOrders(`order=${o._id}&status=pending approval`);
+            })
 
             // navigate user to approved screen
             await this.props.onApproved();
@@ -147,19 +179,18 @@ class Approval extends Component {
         this.setState({ isLoading: false });
     }
 
-    async notifyHQ(quote, address) {
-
+    async notifyHQ(quote, address, changeOrder) {
         // send slack notification to HQ
         await this.props.sendAlert({
             channel: 'conversions',
-            text: `*New Conversion!* \n${quote.customer.first_name} ${quote.customer.last_name}\n${address}\nTitle: "${quote.title}"\nDescription: "${quote.description}"`
+            text: `*New Conversion!* \n${this.props.user.first_name} ${this.props.user.last_name}\n${address}\nTitle: "${(changeOrder) ? 'Change Order' : quote.title}"\nDescription: "${quote.description}"`
         })
     }
 
     async notifyVendor(vendor, order, changeOrder) {
         const vendorMessage = (changeOrder) ?
-            `Greetings from Yarden! Your change order has been approved for ${order.customer.address}, ${order.customer.city}, ${order.customer.state}. Log in to your Yarden app to view the details.` :
-            `Greetings from Yarden! You have been assigned a new work order scheduled for ${moment(order.date).format("MM-DD-YYYY")} in ${order.customer.city}, ${order.customer.state}. Log in to your Yarden app to view the details.`;
+            `Greetings from Yarden! Your change order has been approved for ${order.customer.address}, ${order.customer.city}, ${order.customer.state}. Log in to your Yarden dashboard to view the details.` :
+            `Greetings from Yarden! You have been assigned a new work order scheduled for ${moment(order.date).format("MM-DD-YYYY")} in ${order.customer.city}, ${order.customer.state}. Log in to your Yarden dashboard to view the details.`;
 
         const messageSubject = (changeOrder) ?
             `Yarden - Change order approved` :
@@ -191,7 +222,7 @@ class Approval extends Component {
         await this.props.sendSms(sms);
     }
 
-    async notifyCustomer(order, quote, address, changeOrder) {
+    async notifyCustomer(order, address, changeOrder) {
         let customerMessage;
 
         // if not a change order {...}
@@ -223,7 +254,7 @@ class Approval extends Component {
                 '<p style="margin-bottom: 0px"><b>Service</b></p>' +
                 '</td>' +
                 '<td>' +
-                '<p style="margin-bottom: 0px"><em>' + quote.description + '</em></p>' +
+                '<p style="margin-bottom: 0px"><em>' + order.description + '</em></p>' +
                 '</td>' +
                 '</tr>' +
                 '<tr>' +
@@ -265,8 +296,7 @@ class Approval extends Component {
             // format customer message for change order
             customerMessage = (
                 '<p>Hello <b>' + this.props.user.first_name + '</b>,</p>' +
-                `<p>Your change order has been confirmed, you can view the details by clicking the link below.</p>` +
-                `<p>Log in to your Yarden app to view the details.</p>`
+                `<p>Your change order has been confirmed, Log in to your Yarden app to view the details.</p>`
             );
         }
 
@@ -327,7 +357,7 @@ class Approval extends Component {
                     </Text>
                     <Divider />
                     <Text style={{ marginTop: 12, textDecorationLine: 'underline' }}>Scope of Work (1a)</Text>
-                    <Text style={{ marginBottom: 12 }}>{quote.title}</Text>
+                    <Text style={{ marginBottom: 12 }}>{quote.title} - {quote.description}</Text>
                     <Divider />
                     <View>
                         <Text style={{ marginTop: 12 }}>Add your e-signature to approve the quote</Text>
@@ -365,7 +395,8 @@ class Approval extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        user: state.user,
+        orders: state.orders
     }
 }
 
@@ -380,7 +411,10 @@ function mapDispatchToProps(dispatch) {
         getQuotes,
         sendAlert,
         sendEmail,
-        updateUser
+        updateUser,
+        updateChangeOrder,
+        getChangeOrders,
+        resetChangeOrders
     }, dispatch)
 }
 

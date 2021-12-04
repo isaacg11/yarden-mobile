@@ -38,15 +38,6 @@ class ChangeDate extends Component {
         alert('Your order date has been changed', 'Success!', () => this.props.navigation.navigate('Orders'));
     }
 
-    throwWarning(message) {
-
-        // render warning message
-        alert(message);
-
-        // hide loading indicator
-        this.setState({ isLoading: false });
-    }
-
     render() {
 
         const {

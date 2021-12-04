@@ -11,12 +11,12 @@ const vars = {
         },
         customer: {
             yardAssessment: 'Meet with one of our gardeners for an on-site appointment! Get a quote for a garden and answers to all your questions.',
-            installation: 'Installation of new garden. Service includes building beds, adding soil / amendments, setting up drip irrigation, and initial planting.',
-            revive: 'Revival of current garden. Service includes adding soil / amendments, setting up drip irrigation, and initial planting.',
+            installation: 'Installation of new garden. Service includes building beds, adding soil / amendments, and setting up drip irrigation.',
+            revive: 'Revival of current garden. Service includes adding soil / amendments, and setting up drip irrigation',
             cropRotation: 'tbd',
-            fullPlan: 'tbd',
-            assistedPlan: 'tbd',
-            initialPlanting: 'tbd'
+            fullPlan: 'Weekly garden maintenance. Service includes weed abatement, irrigation management, harvesting, seasonal crop rotation, and plant replacement.',
+            assistedPlan: 'Bi-weekly garden maintenance. Service includes weed abatement, irrigation management, harvesting, and seasonal crop rotation.',
+            initialPlanting: 'Initial planting of seeds and plants in garden beds. Sowing seeds and adding plant starts.'
         }
     },
     tax: {

@@ -1,45 +1,36 @@
 
 import React, { Component } from 'react';
 import { Text, SafeAreaView, View, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
+import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
+import ChangeOrderInfo from '../components/app/ChangeOrderInfo';
+import QuoteSummary from '../components/app/QuoteSummary';
 import Materials from '../components/app/Materials';
 import Labor from '../components/app/Labor';
 import Delivery from '../components/app/Delivery';
 import ToolRentals from '../components/app/ToolRentals';
 import Disposal from '../components/app/Disposal';
-import QuoteSummary from '../components/app/QuoteSummary';
-import QuoteInfo from '../components/app/QuoteInfo';
-import Button from '../components/UI/Button';
 
-class QuoteDetails extends Component {
+class ChangeOrderDetails extends Component {
 
     state = {}
 
     proceedToCheckout() {
-        // format quote
-        const quote = this.props.route.params;
 
-        // if installation or revive {...}
-        if (quote.type === 'installation' || quote.type === 'revive') {
-
-            // if no garden info {...}
-            if (!this.props.user.garden_info) {
-
-                // navigate to garden screen
-                return this.props.navigation.navigate('Garden', quote);
-            }
+        // add isChangeOrder flag so that checkout can process correctly
+        const dataWithChangeOrder = {
+            ...this.props.route.params,
+            ...{ isChangeOrder: true }
         }
 
-        // navigate to checkout screen
-        this.props.navigation.navigate('Checkout', quote);
-
+        // navigate to checkout
+        this.props.navigation.navigate('Checkout', dataWithChangeOrder)
     }
 
     render() {
 
-        const quote = this.props.route.params;
+        const changeOrder = this.props.route.params;
         const { isLoading } = this.state;
 
         return (
@@ -49,99 +40,98 @@ class QuoteDetails extends Component {
             }}>
                 <ScrollView>
 
-                    {/* loading indicator */}
+                    {/* loading indicator start */}
                     <LoadingIndicator
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Quote Details</Text>
+                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Change Order</Text>
                     <View style={{ padding: 12 }}>
 
-                        {(quote.line_items) && (
-                            // quote summary
+                        {(changeOrder.line_items) && (
+                            // change order summary
                             <View style={{ marginTop: 12 }}>
                                 <Collapse
-                                    title="Quote Summary"
+                                    title="Change Order Summary"
                                     open={true}
                                     content={
                                         <QuoteSummary
-                                            quote={quote}
+                                            quote={changeOrder}
                                         />
                                     }
                                 />
                             </View>
                         )}
 
-                        {/* quote info */}
+                        {/* change order info */}
                         <View style={{ marginTop: 12 }}>
                             <Collapse
-                                title="Quote Info"
-                                open={!quote.line_items}
+                                title="Change Order Info"
                                 content={
-                                    <QuoteInfo
-                                        quote={quote}
+                                    <ChangeOrderInfo
+                                        changeOrder={changeOrder}
                                     />
                                 }
                             />
                         </View>
 
-                        {(quote.line_items) && (
+                        {(changeOrder.line_items) && (
                             <View>
                                 {/* materials */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.materials) ? 'none' : null }}>
+                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.materials) ? 'none' : null }}>
                                     <Collapse
                                         title="Materials"
                                         content={
                                             <Materials
-                                                materials={quote.line_items.materials}
+                                                materials={changeOrder.line_items.materials}
                                             />
                                         }
                                     />
                                 </View>
 
                                 {/* labor */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.labor) ? 'none' : null }}>
+                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.labor) ? 'none' : null }}>
                                     <Collapse
                                         title="Labor"
                                         content={
                                             <Labor
-                                                labor={quote.line_items.labor}
+                                                labor={changeOrder.line_items.labor}
                                             />
                                         }
                                     />
                                 </View>
 
                                 {/* delivery */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.delivery) ? 'none' : null }}>
+                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.delivery) ? 'none' : null }}>
                                     <Collapse
                                         title="Delivery"
                                         content={
                                             <Delivery
-                                                delivery={quote.line_items.delivery}
+                                                delivery={changeOrder.line_items.delivery}
                                             />
                                         }
                                     />
                                 </View>
 
                                 {/* tool rentals */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.rentals) ? 'none' : null }}>
+                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.rentals) ? 'none' : null }}>
                                     <Collapse
                                         title="Tool Rentals"
                                         content={
                                             <ToolRentals
-                                                rentals={quote.line_items.rentals}
+                                                rentals={changeOrder.line_items.rentals}
                                             />
                                         }
                                     />
                                 </View>
 
                                 {/* disposal */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.disposal) ? 'none' : null }}>
+                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.disposal) ? 'none' : null }}>
                                     <Collapse
                                         title="Disposal"
                                         content={
                                             <Disposal
-                                                disposal={quote.line_items.disposal}
+                                                disposal={changeOrder.line_items.disposal}
                                             />
                                         }
                                     />
@@ -150,7 +140,7 @@ class QuoteDetails extends Component {
                         )}
 
                         {/* navigation buttons */}
-                        {(quote.status === 'pending approval') && (
+                        {(changeOrder.status === 'pending approval') && (
                             <View>
                                 <View>
                                     <Button
@@ -162,7 +152,7 @@ class QuoteDetails extends Component {
                                 <View>
                                     <Button
                                         text="Request Changes"
-                                        onPress={() => this.props.navigation.navigate('Messages')} 
+                                        // onPress={() => this.cancel()}
                                         variant="secondary"
                                     />
                                 </View>
@@ -176,14 +166,4 @@ class QuoteDetails extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        user: state.user
-    }
-}
-
-QuoteDetails = connect(mapStateToProps, null)(QuoteDetails);
-
-export default QuoteDetails;
-
-module.exports = QuoteDetails;
+module.exports = ChangeOrderDetails;

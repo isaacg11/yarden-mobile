@@ -19,8 +19,12 @@ class QuoteInfo extends Component {
                     <Text>{quote.description}</Text>
                     <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Status</Text>
                     <Text>{quote.status}</Text>
-                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Estimated Start Date</Text>
-                    <Text>{moment(quote.estimated_start_dt).format('MM/DD/YYYY')}</Text>
+                    {(quote.status !== 'bid requested') && (
+                        <View>
+                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Estimated Start Date</Text>
+                            <Text>{moment(quote.estimated_start_dt).format('MM/DD/YYYY')}</Text>
+                        </View>
+                    )}
                     <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Customer</Text>
                     <Text>
                         {quote.customer.first_name} {quote.customer.last_name}{"\n"}

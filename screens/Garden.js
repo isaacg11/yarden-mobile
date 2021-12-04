@@ -169,7 +169,8 @@ class Garden extends Component {
         // combine quote and plants
         const quoteAndPlants = {
             ...quote,
-            ...plants
+            ...plants,
+            ...{isCheckout: true}
         }
 
         // navigate to plan enrollment

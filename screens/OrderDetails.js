@@ -4,18 +4,34 @@ import { Text, SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
-import Divider from '../components/UI/Divider';
-import Button from '../components/UI/Button';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Collapse from '../components/UI/Collapse';
 import ImageGrid from '../components/app/ImageGrid';
-import formatPhoneNumber from '../helpers/formatPhoneNumber';
-import getOrderDescription from '../helpers/getOrderDescription';
+import OrderInfo from '../components/app/OrderInfo';
+import ChangeOrders from '../components/app/ChangeOrders';
 import { getOrders, updateOrder } from '../actions/orders/index';
+import { getChangeOrders } from '../actions/changeOrders/index';
 
 class OrderDetails extends Component {
 
-    state = {}
+    state = {
+        changeOrders: []
+    }
+
+    async componentDidMount() {
+        // show loading indicator
+        this.setState({ isLoading: true });
+
+        // get change orders
+        const changeOrders = await this.props.getChangeOrders(`order=${this.props.route.params._id}`, true);
+
+        // hide loading indicator
+        this.setState({
+            isLoading: false,
+            changeOrders: changeOrders
+        });
+    }
 
     cancel() {
         // render confirm alert
@@ -45,7 +61,7 @@ class OrderDetails extends Component {
     render() {
 
         const order = this.props.route.params;
-        const { isLoading } = this.state;
+        const { isLoading, changeOrders } = this.state;
 
         return (
             <SafeAreaView style={{
@@ -54,56 +70,44 @@ class OrderDetails extends Component {
             }}>
                 <ScrollView>
 
-                    {/* loading indicator start */}
+                    {/* loading indicator */}
                     <LoadingIndicator
                         loading={isLoading}
                     />
-                    {/* loading indicator end */}
 
                     <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Order Details</Text>
                     <View style={{ padding: 12 }}>
 
-                        {/* order details start */}
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                            <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Service</Text>
-                                <Text>{order.type}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Status</Text>
-                                <Text>{order.status}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Date</Text>
-                                <Text>{moment(order.date).format('MM/DD/YYYY')} {(order.time) ? `@ ${moment(order.time, `HH:mm:ss`).format(`h:mm A`)}` : ''}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Customer</Text>
-                                <Text>
-                                    {order.customer.first_name} {order.customer.last_name}{"\n"}
-                                    {order.customer.address}{(order.customer.unit) ? ` #${order.customer.unit}` : ''}, {order.customer.city} {order.customer.state} {order.customer.zip_code}{"\n"}
-                                    {order.customer.email}{"\n"}
-                                    {formatPhoneNumber(order.customer.phone_number)}
-                                </Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
-                                <Text>{getOrderDescription(order.type)}</Text>
-                            </View>
-                            {(order.status === 'pending' && order.type === 'yard assessment') && (
-                                <View>
-                                    <Divider />
-                                    <View style={{ marginBottom: 12 }}>
-                                        <Button
-                                            text="Change Date"
-                                            onPress={() => this.props.navigation.navigate('Change Date', { orderId: order._id })}
-                                            variant="secondary"
-                                        />
-                                    </View>
-                                    <Divider />
-                                    <View>
-                                        <Button
-                                            text="Cancel Order"
-                                            onPress={() => this.cancel()}
-                                            variant="secondary"
-                                        />
-                                    </View>
-                                </View>
-                            )}
+                        {/* order info */}
+                        <View style={{ marginTop: 12 }}>
+                            <Collapse
+                                title="Order Info"
+                                open={true}
+                                content={
+                                    <OrderInfo
+                                        order={order}
+                                        onChangeDate={() => this.props.navigation.navigate('Change Date', { orderId: order._id })}
+                                        onCancel={() => this.cancel()}
+                                    />
+                                }
+                            />
                         </View>
-                        {/* order details end */}
+
+                        {/* change orders */}
+                        {(changeOrders.length > 0) && (
+                            <View style={{ marginTop: 12 }}>
+                                <Collapse
+                                    title={`Change Orders (${changeOrders.length})`}
+                                    open={changeOrders.find((changeOrder) => changeOrder.status === 'pending approval')}
+                                    content={
+                                        <ChangeOrders
+                                            changeOrders={changeOrders}
+                                            onPress={(changeOrder) => this.props.navigation.navigate('Change Order Details', changeOrder)}
+                                        />
+                                    }
+                                />
+                            </View>
+                        )}
 
                         {/* order images */}
                         {(order.images.length > 0) && (
@@ -113,8 +117,6 @@ class OrderDetails extends Component {
                         )}
 
                     </View>
-                    {/* order details end */}
-
                 </ScrollView>
             </SafeAreaView>
         )
@@ -124,7 +126,8 @@ class OrderDetails extends Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getOrders,
-        updateOrder
+        updateOrder,
+        getChangeOrders
     }, dispatch)
 }
 

@@ -47,7 +47,7 @@ class Plans extends Component {
 
     render() {
 
-        const { plans } = this.props;
+        const { plans, isCheckout } = this.props;
         const { selectedPlan } = this.state;
 
         return (
@@ -80,7 +80,7 @@ class Plans extends Component {
                             </View>
                         </View>
                     )))}
-                    <View>
+                    <View style={{display: (isCheckout) ? null : 'none'}}>
                         <View style={{ padding: 12, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
                             <View style={{ paddingRight: 12, marginRight: 12 }}>
                                 <CheckBox

@@ -39,7 +39,7 @@ export function updateUser(query, user) {
             const authToken = await getAuthToken();
             const response = await axios.put(`${API_URL}/users${q}`, user, {headers: {authorization: authToken}});
             dispatch({ type: GET_USER, payload: response.data });
-            return response;
+            return response.data;
         }
 
         catch(error) {

@@ -3,12 +3,10 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { Text } from 'react-native';
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import ReduxPromise from "redux-promise";
-import ReduxThunk from "redux-thunk";
-import reducers from "./reducers";
+import store from "./config/store";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
@@ -27,17 +25,11 @@ import Checkout from './screens/Checkout';
 import Garden from './screens/Garden';
 import Approved from './screens/Approved';
 import Enrollment from './screens/Enrollment';
+import ChangeOrderDetails from './screens/ChangeOrderDetails';
+import ChangePlan from './screens/ChangePlan';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
-
-// redux middleware
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise, ReduxThunk)(
-  createStore
-);
-
-// global state config
-const store = createStoreWithMiddleware(reducers);
 
 // display config
 const displayNone = () => { return <Text></Text> };
@@ -54,6 +46,9 @@ const linking = {
   prefixes: ['https://yarden.com', 'yarden://'],
   config,
 };
+
+// set header logo
+const logo = <Mark />;
 
 // main app render
 function App() {
@@ -72,7 +67,8 @@ function App() {
             name="Login"
             component={Login}
             options={{
-              headerLeft: displayNone
+              headerLeft: displayNone,
+              headerTitle: () => logo
             }}
           />
           <Stack.Screen
@@ -86,40 +82,60 @@ function App() {
           <Stack.Screen
             name="Register"
             component={Register}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Schedule"
             component={Schedule}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Confirm"
             component={Confirm}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Welcome"
             component={Welcome}
             options={{
-              headerLeft: displayNone
+              headerLeft: displayNone,
+              headerTitle: () => logo
             }}
           />
           <Stack.Screen
             name="Password Reset"
             component={PasswordReset}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="PasswordConfirm"
             component={PasswordConfirm}
             options={{
-              title: 'Password Confirm'
+              title: 'Password Confirm',
+              headerTitle: () => logo
             }}
           />
           <Stack.Screen
             name="Order Details"
             component={OrderDetails}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Change Date"
             component={ChangeDate}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Log Out"
@@ -131,29 +147,59 @@ function App() {
           <Stack.Screen
             name="Change Settings"
             component={ChangeSettings}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Quote Details"
             component={QuoteDetails}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Checkout"
             component={Checkout}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Approved"
             component={Approved}
             options={{
-              headerLeft: displayNone
+              headerLeft: displayNone,
+              headerTitle: () => logo
             }}
           />
           <Stack.Screen
             name="Garden"
             component={Garden}
+            options={{
+              headerTitle: () => logo
+            }}
           />
           <Stack.Screen
             name="Enrollment"
             component={Enrollment}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Change Order Details"
+            component={ChangeOrderDetails}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Change Plan"
+            component={ChangePlan}
+            options={{
+              headerTitle: () => logo
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

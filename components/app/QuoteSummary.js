@@ -11,7 +11,7 @@ class QuoteSummary extends Component {
 
         const { quote } = this.props;
         const q = calculateQuoteCost(quote.line_items);
-
+        
         return (
             <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                 <View style={{ display: (quote.line_items.materials) ? 'flex' : 'none', flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

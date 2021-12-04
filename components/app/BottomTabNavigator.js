@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Orders from '../../screens/Orders';
 import Quotes from '../../screens/Quotes';
 import Shop from '../../screens/Shop';
 import Messenger from '../../screens/Messenger';
+import { getOrders } from '../../actions/orders/index';
+import { getChangeOrders } from '../../actions/changeOrders/index';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +32,13 @@ class BottomTabNavigator extends Component {
     }
 
     render() {
+
+        const {
+            quotes
+        } = this.props;
+
+        const isPendingApproval = quotes.list && quotes.list.find((quote) => quote.status === 'pending approval');
+
         return (
             <Tab.Navigator
                 screenOptions={({ route }) => ({
@@ -38,13 +49,49 @@ class BottomTabNavigator extends Component {
                     headerShown: false
                 })}
             >
-                <Tab.Screen name="Orders" component={Orders} />
-                <Tab.Screen name="Quotes" component={Quotes} />
-                <Tab.Screen name="Shop" component={Shop} />
-                <Tab.Screen name="Messages" component={Messenger} />
+                <Tab.Screen
+                    name="Orders"
+                    component={Orders}
+                />
+
+                <Tab.Screen
+                    name="Quotes"
+                    component={Quotes}
+                    options={{ tabBarBadge: ((quotes.list && quotes.list.length > 0) && isPendingApproval) ? quotes.list.length : null }}
+                />
+
+                <Tab.Screen
+                    name="Messages"
+                    component={Messenger}
+                />
+
+                <Tab.Screen
+                    name="Shop"
+                    component={Shop}
+                />
+
             </Tab.Navigator>
         )
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        orders: state.orders,
+        user: state.user,
+        quotes: state.quotes
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        getOrders,
+        getChangeOrders
+    }, dispatch)
+}
+
+BottomTabNavigator = connect(mapStateToProps, mapDispatchToProps)(BottomTabNavigator);
+
+export default BottomTabNavigator;
 
 module.exports = BottomTabNavigator;

@@ -67,6 +67,7 @@ class Checkout extends Component {
                                         herbs={this.props.route.params.herbs}
                                         fruit={this.props.route.params.fruit}
                                         plan={this.props.route.params.plan}
+                                        isChangeOrder={this.props.route.params.isChangeOrder}
                                         onApproved={() => this.props.navigation.navigate('Approved')}
                                     />
                                 }
