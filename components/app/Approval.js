@@ -113,7 +113,7 @@ class Approval extends Component {
             const screenshot = await getScreenShot();
 
             // save screenshot of approval image
-            const approvalImage = await uploadImage(screenshot, 'approval');
+            const approvalImage = await uploadImage(screenshot, 'approval.jpg');
 
             // format new approval
             const newApproval = {

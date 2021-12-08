@@ -19,7 +19,6 @@ export default async function uploadImage(image, name, type = 'jpg') {
 
     // setup s3 config
     const options = {
-        keyPrefix: "/",
         bucket: config.s3Bucket,
         region: config.s3Region,
         accessKey: config.s3AccessKeyId,

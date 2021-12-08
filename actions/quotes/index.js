@@ -8,7 +8,7 @@ export function getQuotes(query) {
     return async function(dispatch) {        
         try {
             const authToken = await getAuthToken();
-            const response = await axios.get(`${API_URL}/bids?${query}`, {headers: {authorization: authToken}});            
+            const response = await axios.get(`${API_URL}/bids?${query}`, {headers: {authorization: authToken}});  
             dispatch({type: GET_QUOTES, payload: response.data});
             return response.data;
         }

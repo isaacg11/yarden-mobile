@@ -11,11 +11,8 @@ import { getQuotes } from '../actions/quotes/index';
 
 class Quotes extends Component {
 
-    state = {}
-
-    componentDidMount() {
-        // set quote status to pending approval
-        this.setStatus('pending approval');
+    state = {
+        status: 'pending approval'
     }
 
     async setStatus(status) {
@@ -45,36 +42,36 @@ class Quotes extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator start */}
+                {/* loading indicator */}
                 <LoadingIndicator
                     loading={isLoading}
                 />
-                {/* loading indicator end */}
-
 
                 <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.list.length})` : ''}</Text>
                 <View style={{ padding: 12 }}>
 
-                    {/* status start */}
-                    <Dropdown
-                        value={status}
-                        onChange={(value) => this.setStatus(value)}
-                        options={[
-                            {
-                                label: 'Quote Requested',
-                                value: 'bid requested',
-                            },
-                            {
-                                label: 'Pending Approval',
-                                value: 'pending approval',
-                            },
-                            {
-                                label: 'Approved',
-                                value: 'approved',
-                            }
-                        ]}
-                    />
-                    {/* status end */}
+                    {/* status filter */}
+                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                        <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
+                        <Dropdown
+                            value={status}
+                            onChange={(value) => this.setStatus(value)}
+                            options={[
+                                {
+                                    label: 'Quote Requested',
+                                    value: 'bid requested',
+                                },
+                                {
+                                    label: 'Pending Approval',
+                                    value: 'pending approval',
+                                },
+                                {
+                                    label: 'Approved',
+                                    value: 'approved',
+                                }
+                            ]}
+                        />
+                    </View>
 
                     {/* quotes start */}
                     {quotes.list && quotes.list.map((quote, index) => (

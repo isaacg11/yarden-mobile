@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const primaryButtonStyles = StyleSheet.create({
     button: {
@@ -74,7 +74,8 @@ class Button extends Component {
             onPress, 
             text = "Submit",
             variant,
-            disabled
+            disabled,
+            icon
         } = this.props;
 
         const buttonStyles = this.getButtonStyles(variant);
@@ -85,7 +86,9 @@ class Button extends Component {
                 onPress={(value) => onPress(value)}
                 underlayColor='#fff'
                 disabled={disabled}>
-                <Text style={buttonStyles.text}>{text}</Text>
+                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={buttonStyles.text}>{text}</Text>{icon}
+                </View>
             </TouchableOpacity>
         )
     }

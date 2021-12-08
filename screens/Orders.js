@@ -18,7 +18,7 @@ class Orders extends Component {
         status: 'pending'
     }
 
-    componentDidMount() {        
+    componentDidMount() {
         // set order status to pending
         this.setStatus('pending');
     }
@@ -26,7 +26,7 @@ class Orders extends Component {
     async setStatus(status) {
 
         // set new status
-        this.setState({status: status});
+        this.setState({ status: status });
 
         // if status is pending {...}
         if (status === 'pending') {
@@ -74,21 +74,24 @@ class Orders extends Component {
                     <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Orders {(orders.list && orders.list.length > 0) ? `(${orders.list.length})` : ''}</Text>
                     <View style={{ padding: 12 }}>
 
-                        {/* status start */}
-                        <Dropdown
-                            value={status}
-                            onChange={(value) => this.setStatus(value)}
-                            options={[
-                                {
-                                    label: 'Pending',
-                                    value: 'pending',
-                                },
-                                {
-                                    label: 'Complete',
-                                    value: 'complete',
-                                }
-                            ]}
-                        />
+                        {/* status filter */}
+                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
+                            <Dropdown
+                                value={status}
+                                onChange={(value) => this.setStatus(value)}
+                                options={[
+                                    {
+                                        label: 'Pending',
+                                        value: 'pending',
+                                    },
+                                    {
+                                        label: 'Complete',
+                                        value: 'complete',
+                                    }
+                                ]}
+                            />
+                        </View>
 
                         {/* order list */}
                         {orders.list && orders.list.map((order, index) => (

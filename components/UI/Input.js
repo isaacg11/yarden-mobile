@@ -9,6 +9,13 @@ const componentStyles = StyleSheet.create({
         marginBottom: 12,
         borderWidth: 1,
         padding: 10
+    },
+    textarea: {
+        height: 60,
+        marginTop: 12,
+        marginBottom: 12,
+        borderWidth: 1,
+        padding: 10
     }
 });
 
@@ -22,14 +29,18 @@ class Input extends Component {
             placeholder,
             type = "default",
             onPressIn,
-            password = false
+            password = false,
+            multiline = false,
+            numberOfLines = 1
         } = this.props;
 
         return (
             <TextInput
+                multiline={multiline}
+                numberOfLines={numberOfLines}
                 autoCapitalize='none'
                 keyboardType={type}
-                style={componentStyles.input}
+                style={(multiline) ? componentStyles.textarea : componentStyles.input}
                 onChangeText={(value) => onChange(value)}
                 onPressIn={(value) => onPressIn ? onPressIn(value) : null}
                 value={(type === 'numeric') ? value.replace(/[^0-9]/g, '') : value}

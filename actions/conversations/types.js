@@ -1,0 +1,1 @@
+export const GET_CONVERSATIONS = 'Get_Conversations';
