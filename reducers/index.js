@@ -7,6 +7,7 @@ import quotes from './quotes';
 import plants from './plants';
 import plans from './plans';
 import changeOrders from './changeOrders';
+import conversations from './conversations';
 
 const rootReducer = combineReducers({
     user,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     quotes,
     plants,
     plans,
-    changeOrders
+    changeOrders,
+    conversations
 })
 
 export default rootReducer;

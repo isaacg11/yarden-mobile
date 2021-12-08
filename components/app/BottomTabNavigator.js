@@ -3,18 +3,62 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import LoadingIndicator from '../UI/LoadingIndicator';
 import Orders from '../../screens/Orders';
 import Quotes from '../../screens/Quotes';
 import Shop from '../../screens/Shop';
-import Messenger from '../../screens/Messenger';
-import { getOrders } from '../../actions/orders/index';
-import { getChangeOrders } from '../../actions/changeOrders/index';
+import Messages from '../../screens/Messages';
+import { getQuotes } from '../../actions/quotes/index';
+import { getConversations } from '../../actions/conversations/index';
+import { getMessages } from '../../actions/messages/index';
 
 const Tab = createBottomTabNavigator();
 
 Ionicons.loadFont().then();
 
 class BottomTabNavigator extends Component {
+
+    state = {
+        inbox: []
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.conversations !== this.props.conversations) {
+            this.setInbox();
+        }
+    }
+
+    async componentDidMount() {
+
+        // get pending quotes
+        const status = 'pending approval';
+        await this.props.getQuotes(`status=${status}&page=1&limit=50`);
+
+        // get conversations
+        await this.props.getConversations(`users=${this.props.user._id}`);
+    }
+
+    async setInbox() {
+        if (this.props.conversations.length > 0) {
+            // iterate through conversations
+            this.props.conversations.forEach(async (conversation, index) => {
+
+                // get unread messages for conversation
+                const messages = await this.props.getMessages(`conversation_id=${conversation._id}&receiver=${this.props.user._id}&opened=false`);
+
+                // if messages, add messages to conversations
+                let conversations = [];
+                if (messages.length > 0) conversations.push(messages);
+
+                // if last iteration of loop, set inbox and render UI
+                if (index === this.props.conversations.length - 1) this.setState({ inbox: conversations, renderTabNavigator: true });
+            })
+        } else {
+
+            // render UI
+            this.setState({ renderTabNavigator: true });
+        }
+    }
 
     renderIcon(route) {
         switch (route) {
@@ -34,44 +78,58 @@ class BottomTabNavigator extends Component {
     render() {
 
         const {
+            inbox,
+            renderTabNavigator
+        } = this.state;
+
+        const {
             quotes
         } = this.props;
 
         const isPendingApproval = quotes.list && quotes.list.find((quote) => quote.status === 'pending approval');
 
-        return (
-            <Tab.Navigator
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        const icon = this.renderIcon(route.name);
-                        return icon;
-                    },
-                    headerShown: false
-                })}
-            >
-                <Tab.Screen
-                    name="Orders"
-                    component={Orders}
-                />
+        if (renderTabNavigator) {
+            return (
+                <Tab.Navigator
+                    screenOptions={({ route }) => ({
+                        tabBarIcon: ({ focused, color, size }) => {
+                            const icon = this.renderIcon(route.name);
+                            return icon;
+                        },
+                        headerShown: false
+                    })}
+                >
+                    <Tab.Screen
+                        name="Orders"
+                        component={Orders}
+                    />
 
-                <Tab.Screen
-                    name="Quotes"
-                    component={Quotes}
-                    options={{ tabBarBadge: ((quotes.list && quotes.list.length > 0) && isPendingApproval) ? quotes.list.length : null }}
-                />
+                    <Tab.Screen
+                        name="Quotes"
+                        component={Quotes}
+                        options={{ tabBarBadge: ((quotes.list && quotes.list.length > 0) && isPendingApproval) ? quotes.list.length : null }}
+                    />
 
-                <Tab.Screen
-                    name="Messages"
-                    component={Messenger}
-                />
+                    <Tab.Screen
+                        name="Messages"
+                        component={Messages}
+                        options={{ tabBarBadge: (inbox.length > 0) ? inbox.length : null }}
+                    />
 
-                <Tab.Screen
-                    name="Shop"
-                    component={Shop}
-                />
+                    <Tab.Screen
+                        name="Shop"
+                        component={Shop}
+                    />
 
-            </Tab.Navigator>
-        )
+                </Tab.Navigator>
+            )
+        } else {
+            return (
+                <LoadingIndicator
+                    loading={true}
+                />
+            )
+        }
     }
 }
 
@@ -79,14 +137,16 @@ function mapStateToProps(state) {
     return {
         orders: state.orders,
         user: state.user,
-        quotes: state.quotes
+        quotes: state.quotes,
+        conversations: state.conversations
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getOrders,
-        getChangeOrders
+        getQuotes,
+        getConversations,
+        getMessages
     }, dispatch)
 }
 

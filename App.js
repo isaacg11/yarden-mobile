@@ -27,6 +27,7 @@ import Approved from './screens/Approved';
 import Enrollment from './screens/Enrollment';
 import ChangeOrderDetails from './screens/ChangeOrderDetails';
 import ChangePlan from './screens/ChangePlan';
+import Message from './screens/Message';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -197,6 +198,13 @@ function App() {
           <Stack.Screen
             name="Change Plan"
             component={ChangePlan}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Message"
+            component={Message}
             options={{
               headerTitle: () => logo
             }}

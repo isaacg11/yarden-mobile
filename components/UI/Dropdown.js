@@ -21,12 +21,14 @@ class Dropdown extends Component {
             placeholder,
             options,
             onChange,
-            value
+            value,
+            disabled
         } = this.props;
 
         return (
             <View style={componentStyles.dropdown}>
                 <RNPickerSelect
+                    disabled={disabled}
                     value={value}
                     placeholder={(placeholder) ? {label: placeholder} : {label: ''}}
                     onValueChange={(value) => onChange(value)}
