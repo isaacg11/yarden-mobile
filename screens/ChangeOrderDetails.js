@@ -149,13 +149,6 @@ class ChangeOrderDetails extends Component {
                                         variant="primary"
                                     />
                                 </View>
-                                <View>
-                                    <Button
-                                        text="Request Changes"
-                                        // onPress={() => this.cancel()}
-                                        variant="secondary"
-                                    />
-                                </View>
                             </View>
                         )}
 

@@ -26,6 +26,7 @@ import { updateQuote, getQuotes } from '../../actions/quotes/index';
 import { sendAlert } from '../../actions/alerts/index';
 import { sendEmail } from '../../actions/emails/index';
 import { updateUser } from '../../actions/user/index';
+import { sendSms } from '../../actions/sms/index';
 import { updateChangeOrder, getChangeOrders, resetChangeOrders } from '../../actions/changeOrders/index';
 
 class Approval extends Component {
@@ -153,7 +154,7 @@ class Approval extends Component {
             await this.notifyCustomer(order, address, this.props.isChangeOrder);
 
             // if a vendor created this quote, then notify the vendor
-            if (this.props.quote.vendor) await this.notifyVendor(this.props.quote.vendor, order, this.props.isChangeOrder);
+            if (this.props.quote.vendor) await this.notifyVendor(this.props.quote.vendor, order.date, address, this.props.isChangeOrder);
 
             // get updated quotes
             await this.props.getQuotes(`status=pending approval&page=1&limit=50`);
@@ -187,10 +188,10 @@ class Approval extends Component {
         })
     }
 
-    async notifyVendor(vendor, order, changeOrder) {
+    async notifyVendor(vendor, date, address, changeOrder) {
         const vendorMessage = (changeOrder) ?
-            `Greetings from Yarden! Your change order has been approved for ${order.customer.address}, ${order.customer.city}, ${order.customer.state}. Log in to your Yarden dashboard to view the details.` :
-            `Greetings from Yarden! You have been assigned a new work order scheduled for ${moment(order.date).format("MM-DD-YYYY")} in ${order.customer.city}, ${order.customer.state}. Log in to your Yarden dashboard to view the details.`;
+            `Greetings from Yarden! Your change order has been approved for ${address}. Log in to your Yarden dashboard to view the details.` :
+            `Greetings from Yarden! You have been assigned a new work order scheduled for ${moment(date).format("MM-DD-YYYY")} at ${address}. Log in to your Yarden dashboard to view the details.`;
 
         const messageSubject = (changeOrder) ?
             `Yarden - Change order approved` :
@@ -414,7 +415,8 @@ function mapDispatchToProps(dispatch) {
         updateUser,
         updateChangeOrder,
         getChangeOrders,
-        resetChangeOrders
+        resetChangeOrders,
+        sendSms
     }, dispatch)
 }
 

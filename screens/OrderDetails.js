@@ -7,6 +7,7 @@ import moment from 'moment';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
+import Button from '../components/UI/Button';
 import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
@@ -56,6 +57,11 @@ class OrderDetails extends Component {
             },
             true
         );
+    }
+
+    requestChanges() {
+        // navigate to request change page
+        this.props.navigation.navigate('Request Order Change', this.props.route.params);
     }
 
     render() {
@@ -116,6 +122,16 @@ class OrderDetails extends Component {
                             </View>
                         )}
 
+                        {/* navigation button */}
+                        {(order.type === 'installation' || order.type === 'revive' || order.type === 'misc') && (
+                            <View>
+                                <Button
+                                    text="Request Changes"
+                                    onPress={() => this.requestChanges()}
+                                    variant="secondary"
+                                />
+                            </View>
+                        )}
                     </View>
                 </ScrollView>
             </SafeAreaView>

@@ -37,6 +37,11 @@ class QuoteDetails extends Component {
 
     }
 
+    requestChanges() {
+        // navigate to request change page
+        this.props.navigation.navigate('Request Quote Change', {quote: this.props.route.params});
+    }
+
     render() {
 
         const quote = this.props.route.params;
@@ -162,7 +167,7 @@ class QuoteDetails extends Component {
                                 <View>
                                     <Button
                                         text="Request Changes"
-                                        onPress={() => this.props.navigation.navigate('Messages')} 
+                                        onPress={() => this.requestChanges()}
                                         variant="secondary"
                                     />
                                 </View>
@@ -181,6 +186,7 @@ function mapStateToProps(state) {
         user: state.user
     }
 }
+
 
 QuoteDetails = connect(mapStateToProps, null)(QuoteDetails);
 

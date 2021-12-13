@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_URL } from '../../helpers/getUrl';
+import config from '../../config/index';
 
 export function sendEmail(info) {
     return async function() {
@@ -7,7 +8,7 @@ export function sendEmail(info) {
             const email = {
                 to: info.email,
                 subject: info.subject,
-                bcc: (__DEV__) ? null : 'info@yardengarden.com',
+                bcc: (__DEV__) ? null : config.email,
                 html:
                 '<table style="margin: 0 auto; border-bottom: 2px solid #DDDDDD"; width="600px" cellspacing="0" cellpadding="0" border="0">' +
                     '<tr>' +
