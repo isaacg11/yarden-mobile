@@ -9,13 +9,16 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
+import Paginate from '../components/UI/Paginate';
 import { getOrders } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 
 class Orders extends Component {
 
     state = {
-        status: 'pending'
+        status: 'pending',
+        page: 1,
+        limit: 5
     }
 
     componentDidMount() {
@@ -28,11 +31,14 @@ class Orders extends Component {
         // set new status
         this.setState({ status: status });
 
+        // set order query
+        const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
+
         // if status is pending {...}
         if (status === 'pending') {
 
             // get pending orders
-            await this.props.getOrders(`status=${status}&start=none&end=${new Date(moment().add(1, 'year'))}`);
+            await this.props.getOrders(query);
 
             // iterate through order list
             await this.props.orders.list.forEach(async (order) => {
@@ -43,15 +49,42 @@ class Orders extends Component {
 
         } else {
             // get completed orders
-            await this.props.getOrders(`status=${status}`);
+            await this.props.getOrders(query);
         }
+    }
+
+    paginate(direction) {
+
+        // show loading indicator
+        this.setState({isLoading: true});
+
+        // set intitial page
+        let page = 1;
+
+        // if direction is forward, increase page by 1
+        if (direction === 'forward') page = (this.state.page + 1);
+
+        // if direction is back, decrease page by 1
+        if (direction === 'back') page = (this.state.page - 1);
+
+        // set new page
+        this.setState({ page: page }, async () => {
+
+            // set status
+            await this.setStatus(this.state.status);
+
+            // hide loading indicator
+            this.setState({isLoading: false});
+        });
     }
 
     render() {
 
         const {
             status,
-            isLoading
+            isLoading,
+            page,
+            limit
         } = this.state;
 
         const {
@@ -71,7 +104,7 @@ class Orders extends Component {
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Orders {(orders.list && orders.list.length > 0) ? `(${orders.list.length})` : ''}</Text>
+                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Orders {(orders.total && orders.total > 0) ? `(${orders.total})` : ''}</Text>
                     <View style={{ padding: 12 }}>
 
                         {/* status filter */}
@@ -128,6 +161,18 @@ class Orders extends Component {
                                 </View>
                             </View>
                         ))}
+
+                        {/* pagination */}
+                        {(orders.list && (orders.total > limit)) && (
+                            <View style={{ marginBottom: 12 }}>
+                                <Paginate
+                                    page={page}
+                                    limit={limit}
+                                    total={orders.total}
+                                    onPaginate={(direction) => this.paginate(direction)}
+                                />
+                            </View>
+                        )}
 
                         {/* no orders */}
                         {(orders.list && orders.list.length < 1) && (

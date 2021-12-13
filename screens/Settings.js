@@ -19,7 +19,7 @@ class Settings extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Settings</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Settings</Text>
                 <View style={{ padding: 12 }}>
                     <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                         <View style={{ marginBottom: 12 }}>
