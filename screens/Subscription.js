@@ -127,7 +127,7 @@ class Subscription extends Component {
                     loading={isLoading}
                 />
 
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Subscription</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Subscription</Text>
 
                 {/* subscription start */}
                 {(plan && subscription) && (

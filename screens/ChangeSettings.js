@@ -67,42 +67,44 @@ class ChangeSettings extends Component {
                 {/* loading indicator end */}
 
                 {/* change date form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Change Settings</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Settings</Text>
                 <View style={{ padding: 12 }}>
-                    <View>
-                        <Input
-                            onChange={(value) => this.setState({ firstName: value })}
-                            value={firstName}
-                            placeholder="First Name"
-                        />
-                    </View>
-                    <View>
-                        <Input
-                            onChange={(value) => this.setState({ lastName: value })}
-                            value={lastName}
-                            placeholder="Last Name"
-                        />
-                    </View>
-                    <View>
-                        <Input
-                            onChange={(value) => this.setState({ email: value })}
-                            value={email}
-                            placeholder="Email"
-                        />
-                    </View>
-                    <View>
-                        <Input
-                            onChange={(value) => this.setState({ phoneNumber: value })}
-                            value={formatPhoneNumber(phoneNumber)}
-                            placeholder="Phone Number"
-                        />
-                    </View>
-                    <View>
-                        <Button
-                            text="Save Changes"
-                            onPress={() => this.save()}
-                            variant="primary"
-                        />
+                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                        <View>
+                            <Input
+                                onChange={(value) => this.setState({ firstName: value })}
+                                value={firstName}
+                                placeholder="First Name"
+                            />
+                        </View>
+                        <View>
+                            <Input
+                                onChange={(value) => this.setState({ lastName: value })}
+                                value={lastName}
+                                placeholder="Last Name"
+                            />
+                        </View>
+                        <View>
+                            <Input
+                                onChange={(value) => this.setState({ email: value })}
+                                value={email}
+                                placeholder="Email"
+                            />
+                        </View>
+                        <View>
+                            <Input
+                                onChange={(value) => this.setState({ phoneNumber: value })}
+                                value={formatPhoneNumber(phoneNumber)}
+                                placeholder="Phone Number"
+                            />
+                        </View>
+                        <View>
+                            <Button
+                                text="Save Changes"
+                                onPress={() => this.save()}
+                                variant="primary"
+                            />
+                        </View>
                     </View>
                 </View>
                 {/* change date form end */}

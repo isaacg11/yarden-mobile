@@ -12,7 +12,7 @@ class Message extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Messenger</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messenger</Text>
                 <View style={{ padding: 12 }}>
 
                     {/* messenger */}

@@ -7,30 +7,63 @@ import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
+import Paginate from '../components/UI/Paginate';
 import { getQuotes } from '../actions/quotes/index';
 
 class Quotes extends Component {
 
     state = {
-        status: 'pending approval'
+        status: 'pending approval',
+        page: 1,
+        limit: 5
     }
 
     async setStatus(status) {
         // show loading indicator
         await this.setState({ isLoading: true, status: status });
 
+        // set quote query
+        const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
+
         // get pending quotes
-        await this.props.getQuotes(`status=${status}&page=1&limit=50`);
+        await this.props.getQuotes(query);
 
         // hide loading indicator
         await this.setState({ isLoading: false });
+    }
+
+    paginate(direction) {
+
+        // show loading indicator
+        this.setState({isLoading: true});
+
+        // set intitial page
+        let page = 1;
+
+        // if direction is forward, increase page by 1
+        if (direction === 'forward') page = (this.state.page + 1);
+
+        // if direction is back, decrease page by 1
+        if (direction === 'back') page = (this.state.page - 1);
+
+        // set new page
+        this.setState({ page: page }, async () => {
+
+            // set status
+            await this.setStatus(this.state.status);
+
+            // hide loading indicator
+            this.setState({isLoading: false});
+        });
     }
 
     render() {
 
         const {
             status = 'pending approval',
-            isLoading
+            isLoading,
+            page,
+            limit
         } = this.state;
 
         const {
@@ -47,7 +80,7 @@ class Quotes extends Component {
                     loading={isLoading}
                 />
 
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.list.length})` : ''}</Text>
+                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.list.length})` : ''}</Text>
                 <View style={{ padding: 12 }}>
 
                     {/* status filter */}
@@ -92,6 +125,19 @@ class Quotes extends Component {
                             </View>
                         </View>
                     ))}
+
+                    {/* pagination */}
+                    {(quotes.list && (quotes.total > limit)) && (
+                        <View style={{ marginBottom: 12 }}>
+                            <Paginate
+                                page={page}
+                                limit={limit}
+                                total={quotes.total}
+                                onPaginate={(direction) => this.paginate(direction)}
+                            />
+                        </View>
+                    )}
+
                     {(quotes.list && quotes.list.length < 1) && (
                         <View style={{ marginBottom: 12 }}>
                             <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No quotes found</Text>

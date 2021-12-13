@@ -1,10 +1,8 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { Text, SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Inbox from '../components/app/Inbox';
-import { getConversations } from '../actions/conversations/index';
 
 class Messages extends Component {
 
@@ -15,15 +13,17 @@ class Messages extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Messages</Text>
-                <View style={{ padding: 12 }}>
+                <ScrollView>
+                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messages</Text>
+                    <View style={{ padding: 12 }}>
 
-                    {/* inbox */}
-                    <Inbox 
-                        onSelectConversation={(conversationId) => this.props.navigation.navigate('Message', {conversationId: conversationId})}
-                    />
-                    
-                </View>
+                        {/* inbox */}
+                        <Inbox
+                            onSelectConversation={(conversationId) => this.props.navigation.navigate('Message', { conversationId: conversationId })}
+                        />
+
+                    </View>
+                </ScrollView>
             </SafeAreaView>
         )
     }
@@ -36,13 +36,7 @@ function mapStateToProps(state) {
     }
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        getConversations
-    }, dispatch)
-}
-
-Messages = connect(mapStateToProps, mapDispatchToProps)(Messages);
+Messages = connect(mapStateToProps, null)(Messages);
 
 export default Messages;
 
