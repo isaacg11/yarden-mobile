@@ -53,8 +53,26 @@ class Messenger extends Component {
                 }
             })
 
+            // set other participant for conversation
+            let participant = null;
+
+            // iterate through messages {...}
+            messages.forEach((message) => {
+
+                // if message sender is not current logged in user {...}
+                if(message.sender._id !== this.props.user._id) {
+
+                    // set participant using sender
+                    participant = message.sender;
+                } else {
+
+                    // set participant using receiver
+                    participant = message.receiver;
+                }
+            })
+
             // set receiver
-            const receiver = `${messages[0].sender.first_name} ${messages[0].sender.last_name}`;
+            const receiver = `${participant.first_name} ${participant.last_name}`;
 
             // set contacts
             const contacts = [{ label: receiver, value: receiver }];
@@ -264,7 +282,7 @@ class Messenger extends Component {
                                 {conversation && conversation.map((message, index) => (
                                     <View style={{ flexDirection: 'row' }} key={index}>
                                         <View style={{ flex: (message.sender._id !== user._id) ? 1 : 0 }}></View>
-                                        <View style={{ flex: 1 }}>
+                                        <View style={{ flex: 2 }}>
                                             <View>
                                                 <View style={{
                                                     padding: 15,

@@ -1,5 +1,6 @@
 module.exports = {
     phoneNumber: '8888289287',
+    email: 'info@yardengarden.com',
     s3Bucket: 'yarden-images',
     s3AccessKeyId: 'AKIAIXC3GI3BAP533KNA',
     s3SecretAccessKey: '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',

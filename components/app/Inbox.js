@@ -41,8 +41,11 @@ class Inbox extends Component {
             // set opened status
             const openedStatus = (status === 'unread') ? '&opened=false' : '';
 
+            // set conversation users
+            const users = (status === 'unread') ? `&receiver=${this.props.user._id}` : '';
+
             // get messages for conversation
-            const messages = await this.props.getMessages(`conversation_id=${conversation._id}&receiver=${this.props.user._id}${openedStatus}`);
+            const messages = await this.props.getMessages(`conversation_id=${conversation._id}${users}${openedStatus}`);
 
             // if messages, add messages to conversations
             if (messages.length > 0) conversations.push(messages);

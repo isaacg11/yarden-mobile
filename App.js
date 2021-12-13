@@ -28,6 +28,9 @@ import Enrollment from './screens/Enrollment';
 import ChangeOrderDetails from './screens/ChangeOrderDetails';
 import ChangePlan from './screens/ChangePlan';
 import Message from './screens/Message';
+import RequestQuoteChange from './screens/RequestQuoteChange';
+import RequestOrderChange from './screens/RequestOrderChange';
+import ChangesRequested from './screens/ChangesRequested';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -207,6 +210,28 @@ function App() {
             component={Message}
             options={{
               headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Request Quote Change"
+            component={RequestQuoteChange}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Request Order Change"
+            component={RequestOrderChange}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Changes Requested"
+            component={ChangesRequested}
+            options={{
+              headerTitle: () => logo,
+              headerLeft: displayNone
             }}
           />
         </Stack.Navigator>
