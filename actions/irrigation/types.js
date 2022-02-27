@@ -1,0 +1,1 @@
+export const GET_IRRIGATION = 'Get_Irrigation';

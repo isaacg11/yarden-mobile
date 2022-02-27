@@ -12,6 +12,7 @@ import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import { getOrders } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
+import { setFilters } from '../actions/filters/index';
 
 class Orders extends Component {
 
@@ -22,14 +23,16 @@ class Orders extends Component {
     }
 
     componentDidMount() {
-        // set order status to pending
         this.setStatus('pending');
     }
 
     async setStatus(status) {
 
+        // show loading indicator
+        this.setState({ isLoading: true });
+
         // set new status
-        this.setState({ status: status });
+        this.props.setFilters({orders: status});
 
         // set order query
         const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
@@ -51,6 +54,9 @@ class Orders extends Component {
             // get completed orders
             await this.props.getOrders(query);
         }
+
+        // show loading indicator
+        this.setState({ isLoading: false });
     }
 
     paginate(direction) {
@@ -81,7 +87,6 @@ class Orders extends Component {
     render() {
 
         const {
-            status,
             isLoading,
             page,
             limit
@@ -89,7 +94,8 @@ class Orders extends Component {
 
         const {
             orders,
-            changeOrders
+            changeOrders,
+            filters
         } = this.props;
 
         return (
@@ -111,7 +117,7 @@ class Orders extends Component {
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
                             <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
                             <Dropdown
-                                value={status}
+                                value={filters.orders}
                                 onChange={(value) => this.setStatus(value)}
                                 options={[
                                     {
@@ -190,14 +196,16 @@ class Orders extends Component {
 function mapStateToProps(state) {
     return {
         orders: state.orders,
-        changeOrders: state.changeOrders
+        changeOrders: state.changeOrders,
+        filters: state.filters
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getOrders,
-        getChangeOrders
+        getChangeOrders,
+        setFilters
     }, dispatch)
 }
 

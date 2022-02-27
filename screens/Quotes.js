@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { Text, SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropdown from '../components/UI/Dropdown';
@@ -9,6 +9,7 @@ import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Paginate from '../components/UI/Paginate';
 import { getQuotes } from '../actions/quotes/index';
+import { setFilters } from '../actions/filters/index';
 
 class Quotes extends Component {
 
@@ -19,8 +20,12 @@ class Quotes extends Component {
     }
 
     async setStatus(status) {
+
         // show loading indicator
-        await this.setState({ isLoading: true, status: status });
+        this.setState({ isLoading: true });
+
+        // set new status
+        this.props.setFilters({quotes: status});
 
         // set quote query
         const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
@@ -29,13 +34,13 @@ class Quotes extends Component {
         await this.props.getQuotes(query);
 
         // hide loading indicator
-        await this.setState({ isLoading: false });
+        this.setState({ isLoading: false });
     }
 
     paginate(direction) {
 
         // show loading indicator
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
         // set intitial page
         let page = 1;
@@ -53,7 +58,7 @@ class Quotes extends Component {
             await this.setStatus(this.state.status);
 
             // hide loading indicator
-            this.setState({isLoading: false});
+            this.setState({ isLoading: false });
         });
     }
 
@@ -67,7 +72,8 @@ class Quotes extends Component {
         } = this.state;
 
         const {
-            quotes
+            quotes,
+            filters
         } = this.props
 
         return (
@@ -80,71 +86,73 @@ class Quotes extends Component {
                     loading={isLoading}
                 />
 
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.list.length})` : ''}</Text>
-                <View style={{ padding: 12 }}>
+                <ScrollView>
+                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.list.length})` : ''}</Text>
+                    <View style={{ padding: 12 }}>
 
-                    {/* status filter */}
-                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                        <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
-                        <Dropdown
-                            value={status}
-                            onChange={(value) => this.setStatus(value)}
-                            options={[
-                                {
-                                    label: 'Quote Requested',
-                                    value: 'bid requested',
-                                },
-                                {
-                                    label: 'Pending Approval',
-                                    value: 'pending approval',
-                                },
-                                {
-                                    label: 'Approved',
-                                    value: 'approved',
-                                }
-                            ]}
-                        />
-                    </View>
-
-                    {/* quotes start */}
-                    {quotes.list && quotes.list.map((quote, index) => (
-                        <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                            <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Title</Text>
-                                <Text>{quote.title}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
-                                <Text>{quote.description}</Text>
-                            </View>
-                            <Divider />
-                            <View>
-                                <Button
-                                    text="View Details"
-                                    onPress={() => this.props.navigation.navigate('Quote Details', quote)}
-                                    variant="secondary"
-                                />
-                            </View>
-                        </View>
-                    ))}
-
-                    {/* pagination */}
-                    {(quotes.list && (quotes.total > limit)) && (
-                        <View style={{ marginBottom: 12 }}>
-                            <Paginate
-                                page={page}
-                                limit={limit}
-                                total={quotes.total}
-                                onPaginate={(direction) => this.paginate(direction)}
+                        {/* status filter */}
+                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
+                            <Dropdown
+                                value={filters.quotes}
+                                onChange={(value) => this.setStatus(value)}
+                                options={[
+                                    {
+                                        label: 'Quote Requested',
+                                        value: 'bid requested',
+                                    },
+                                    {
+                                        label: 'Pending Approval',
+                                        value: 'pending approval',
+                                    },
+                                    {
+                                        label: 'Approved',
+                                        value: 'approved',
+                                    }
+                                ]}
                             />
                         </View>
-                    )}
 
-                    {(quotes.list && quotes.list.length < 1) && (
-                        <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No quotes found</Text>
-                        </View>
-                    )}
-                    {/* quotes end */}
-                </View>
+                        {/* quotes start */}
+                        {quotes.list && quotes.list.map((quote, index) => (
+                            <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                                <View style={{ marginBottom: 12 }}>
+                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Title</Text>
+                                    <Text>{quote.title}</Text>
+                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
+                                    <Text>{quote.description}</Text>
+                                </View>
+                                <Divider />
+                                <View>
+                                    <Button
+                                        text="View Details"
+                                        onPress={() => this.props.navigation.navigate('Quote Details', quote)}
+                                        variant="secondary"
+                                    />
+                                </View>
+                            </View>
+                        ))}
+
+                        {/* pagination */}
+                        {(quotes.list && (quotes.total > limit)) && (
+                            <View style={{ marginBottom: 12 }}>
+                                <Paginate
+                                    page={page}
+                                    limit={limit}
+                                    total={quotes.total}
+                                    onPaginate={(direction) => this.paginate(direction)}
+                                />
+                            </View>
+                        )}
+
+                        {(quotes.list && quotes.list.length < 1) && (
+                            <View style={{ marginBottom: 12 }}>
+                                <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No quotes found</Text>
+                            </View>
+                        )}
+                        {/* quotes end */}
+                    </View>
+                </ScrollView>
             </SafeAreaView>
         )
     }
@@ -152,14 +160,16 @@ class Quotes extends Component {
 
 function mapStateToProps(state) {
     return {
-        quotes: state.quotes
+        quotes: state.quotes,
+        filters: state.filters
     }
 }
 
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        getQuotes
+        getQuotes,
+        setFilters
     }, dispatch)
 }
 

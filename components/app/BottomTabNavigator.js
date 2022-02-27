@@ -11,6 +11,9 @@ import Messages from '../../screens/Messages';
 import { getQuotes } from '../../actions/quotes/index';
 import { getConversations } from '../../actions/conversations/index';
 import { getMessages } from '../../actions/messages/index';
+import { getOrders } from '../../actions/orders/index';
+import { getChangeOrders } from '../../actions/changeOrders/index';
+import { getUser } from '../../actions/user/index';
 
 const Tab = createBottomTabNavigator();
 
@@ -79,11 +82,14 @@ class BottomTabNavigator extends Component {
 
         const {
             inbox,
-            renderTabNavigator
+            renderTabNavigator,
         } = this.state;
 
         const {
-            quotes
+            quotes,
+            filters,
+            orders,
+            user
         } = this.props;
 
         const isPendingApproval = quotes.list && quotes.list.find((quote) => quote.status === 'pending approval');
@@ -102,23 +108,96 @@ class BottomTabNavigator extends Component {
                     <Tab.Screen
                         name="Orders"
                         component={Orders}
+                        listeners={({ navigation }) => ({
+                            tabPress: async (e) => {
+                                // Prevent default action
+                                e.preventDefault();
+
+                                // set order query
+                                const query = `status=${filters.orders}&page=${1}&limit=${5}`;
+
+                                // if status is pending {...}
+                                if (filters.orders === 'pending') {
+
+                                    // get pending orders
+                                    await this.props.getOrders(query);
+
+                                    if (orders.list) {
+                                        // iterate through order list
+                                        await orders.list.forEach(async (order) => {
+
+                                            // get pending change orders
+                                            await this.props.getChangeOrders(`order=${order._id}&status=pending approval`);
+                                        })
+                                    }
+                                } else {
+                                    // get completed orders
+                                    await this.props.getOrders(query);
+                                }
+
+                                // navigate to orders
+                                navigation.jumpTo('Orders');
+                            }
+                        })}
                     />
 
                     <Tab.Screen
                         name="Quotes"
                         component={Quotes}
                         options={{ tabBarBadge: ((quotes.list && quotes.list.length > 0) && isPendingApproval) ? quotes.list.length : null }}
+                        listeners={({ navigation }) => ({
+                            tabPress: async (e) => {
+                                // Prevent default action
+                                e.preventDefault();
+
+                                // set order query
+                                const query = `status=${filters.quotes}&page=${1}&limit=${5}`;
+
+                                // get completed orders
+                                await this.props.getQuotes(query);
+
+                                // navigate to quotes
+                                navigation.jumpTo('Quotes');
+
+                            }
+                        })}
                     />
 
                     <Tab.Screen
                         name="Messages"
                         component={Messages}
                         options={{ tabBarBadge: (inbox.length > 0) ? inbox.length : null }}
+                        listeners={({ navigation }) => ({
+                            tabPress: async (e) => {
+                                // Prevent default action
+                                e.preventDefault();
+
+                                // get conversations
+                                await this.props.getConversations(`users=${user._id}`);
+
+                                // navigate to messages
+                                navigation.jumpTo('Messages');
+
+                            }
+                        })}
                     />
 
                     <Tab.Screen
                         name="Shop"
                         component={Shop}
+                        listeners={({ navigation }) => ({
+                            tabPress: async (e) => {
+                                // Prevent default action
+                                e.preventDefault();
+
+                                // get user
+                                await this.props.getUser(`${user._id}`);
+
+                                // navigate to shop
+                                navigation.jumpTo('Shop');
+
+                            }
+                        })}
                     />
 
                 </Tab.Navigator>
@@ -138,7 +217,8 @@ function mapStateToProps(state) {
         orders: state.orders,
         user: state.user,
         quotes: state.quotes,
-        conversations: state.conversations
+        conversations: state.conversations,
+        filters: state.filters,
     }
 }
 
@@ -146,7 +226,10 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getQuotes,
         getConversations,
-        getMessages
+        getMessages,
+        getOrders,
+        getChangeOrders,
+        getUser
     }, dispatch)
 }
 

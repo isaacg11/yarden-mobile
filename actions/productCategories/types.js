@@ -1,0 +1,1 @@
+export const GET_PRODUCT_CATEGORIES = 'Get_Product_Categories';

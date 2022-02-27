@@ -38,7 +38,7 @@ export function updateUser(query, user) {
         try {
             const authToken = await getAuthToken();
             const response = await axios.put(`${API_URL}/users${q}`, user, {headers: {authorization: authToken}});
-            dispatch({ type: GET_USER, payload: response.data });
+            dispatch(getUser(response.data._id));
             return response.data;
         }
 
@@ -48,6 +48,27 @@ export function updateUser(query, user) {
                 console.log(error.response.data);
                 console.log(error.response.status);
             }
+            alert('Something went wrong. We are working on a fix now!');
+        }
+    }
+}
+
+
+export function getUser(id) {
+    return async function(dispatch) {        
+        try {
+            const authToken = await getAuthToken();
+            const response = await axios.get(`${API_URL}/users/${id}`, {headers: {authorization: authToken}});            
+            dispatch({type: GET_USER, payload: response.data});
+            return response.data;
+        }
+
+        catch(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+            }
+            
             alert('Something went wrong. We are working on a fix now!');
         }
     }

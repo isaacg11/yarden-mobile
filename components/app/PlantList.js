@@ -94,8 +94,11 @@ class PlantList extends Component {
 
     render() {
 
-        const { plants } = this.props;
         const { selectedPlants } = this.state;
+        const { 
+            plants,
+            title = 'Plant Selection'
+        } = this.props;
 
         if (plants && plants.vegetables && plants.herbs && plants.fruit) {
             const vegetables = this.renderPlants(plants.vegetables);
@@ -104,7 +107,7 @@ class PlantList extends Component {
 
             return (
                 <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Plant Selection</Text>
+                    <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{title}</Text>
                     <Text style={{ marginBottom: 25 }}>Select a minimum of 5 plants, and a maximum of 20</Text>
                     <View style={{ paddingBottom: 25 }}>
                         <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#737373'}}>Selected: {selectedPlants.length}</Text>
