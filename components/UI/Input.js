@@ -31,7 +31,8 @@ class Input extends Component {
             onPressIn,
             password = false,
             multiline = false,
-            numberOfLines = 1
+            numberOfLines = 1,
+            disabled = false
         } = this.props;
 
         return (
@@ -46,6 +47,7 @@ class Input extends Component {
                 value={(type === 'numeric') ? value.replace(/[^0-9]/g, '') : value}
                 placeholder={placeholder}
                 secureTextEntry={password}
+                editable={disabled ? false : true}
             />
         )
     }

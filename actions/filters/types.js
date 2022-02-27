@@ -1,0 +1,1 @@
+export const GET_FILTERS = 'Get_Filters';

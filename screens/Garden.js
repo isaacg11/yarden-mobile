@@ -9,7 +9,7 @@ import { alert } from '../components/UI/SystemAlert';
 import PlantList from '../components/app/PlantList';
 import PlantAvailability from '../components/app/PlantAvailability';
 import getSeason from '../helpers/getSeason';
-import minifyDataToID from '../helpers/minifyDataToID';
+import setPlants from '../helpers/setPlants';
 import { getPlants } from '../actions/plants/index';
 
 class Garden extends Component {
@@ -29,152 +29,48 @@ class Garden extends Component {
         // get all plants associated with the current season
         await this.props.getPlants(`season=${season}`);
 
-        // separate plants by category
-        const categorizedPlants = this.separateByCategory(this.props.plants);
+        // set plants
+        const plants = setPlants(this.props.plants);
 
-        // separate categorized plants by class
-        const vegetables = this.separateByClass(categorizedPlants.vegetables);
-        const fruit = this.separateByClass(categorizedPlants.fruit);
-        const herbs = categorizedPlants.herbs;
-
+        // update UI
         this.setState({
-            vegetables: vegetables,
-            herbs: herbs,
-            fruit: fruit,
+            vegetables: plants.vegetables,
+            herbs: plants.herbs,
+            fruit: plants.fruit,
             isLoading: false
         })
-    }
-
-    separateByCategory(plants) {
-        // set initial values
-        let vegetables = [];
-        let herbs = [];
-        let fruit = [];
-
-        // separate plants by category
-        plants.forEach((plant) => {
-            if (plant.category.name === 'vegetable') vegetables.push(plant);
-            if (plant.category.name === 'herb') herbs.push(plant);
-            if (plant.category.name === 'fruit') fruit.push(plant);
-        })
-
-        // set category data
-        const categoryData = {
-            vegetables,
-            herbs,
-            fruit
-        }
-
-        // return value
-        return categoryData;
-    }
-
-    separateByClass(plants) {
-        // set initial values
-        let fruiting = [];
-        let gourd = [];
-        let shooting = [];
-        let leafy = [];
-        let pod = [];
-        let bulb = [];
-        let root = [];
-        let bud = [];
-        let berry = [];
-        let pit = [];
-        let core = [];
-        let citrus = [];
-        let melon = [];
-        let tropical = [];
-        let classData = {};
-
-        // separate plants by class
-        plants.forEach((plant, index) => {
-            if (plant.category.name === 'vegetable') {
-                if (plant.class) {
-                    if (plant.class.name === 'fruiting') fruiting.push(plant);
-                    if (plant.class.name === 'gourd') gourd.push(plant);
-                    if (plant.class.name === 'shooting') shooting.push(plant);
-                    if (plant.class.name === 'leafy') leafy.push(plant);
-                    if (plant.class.name === 'pod') pod.push(plant);
-                    if (plant.class.name === 'bulb') bulb.push(plant);
-                    if (plant.class.name === 'root') root.push(plant);
-                    if (plant.class.name === 'bud') bud.push(plant);
-                    if (index === (plants.length - 1)) {
-                        classData = {
-                            fruiting,
-                            gourd,
-                            shooting,
-                            leafy,
-                            pod,
-                            bulb,
-                            root,
-                            bud
-                        }
-                    }
-                }
-            }
-
-            if (plant.category.name === 'fruit') {
-                if (plant.class) {
-                    if (plant.class.name === 'berry') berry.push(plant);
-                    if (plant.class.name === 'pit') pit.push(plant);
-                    if (plant.class.name === 'core') core.push(plant);
-                    if (plant.class.name === 'citrus') citrus.push(plant);
-                    if (plant.class.name === 'melon') melon.push(plant);
-                    if (plant.class.name === 'tropical') tropical.push(plant);
-                    if (index === (plants.length - 1)) {
-                        classData = {
-                            berry,
-                            pit,
-                            core,
-                            citrus,
-                            melon,
-                            tropical
-                        }
-                    }
-                }
-            }
-        })
-
-        return classData;
     }
 
     next() {
         // if user selected too many plants, show error message
         if(this.state.selectedPlants.length > 20) return alert('You selected too many plants. Please adjust your selection to a maximum of 20 plants');
 
-        // set quote
-        const quote = this.props.route.params;
-
-        // separate plants by category
-        const categorizedPlants = this.separateByCategory(this.state.selectedPlants);
-
-        // separate categorized plants by class
-        let vegetables = this.separateByClass(categorizedPlants.vegetables);
-        let fruit = this.separateByClass(categorizedPlants.fruit);
-        let herbs = categorizedPlants.herbs;
-
-        // minify plant data to id's
-        vegetables = minifyDataToID(vegetables);
-        fruit = minifyDataToID(fruit);
-        herbs = minifyDataToID(herbs, true);
-
         // set garden plants
-        const plants = {
-            vegetables,
-            herbs,
-            fruit
-        }
+        const plants = setPlants(this.state.selectedPlants);
+
+        // set plants
+        const vegetables = plants.vegetables;
+        const fruit = plants.fruit;
+        const herbs = plants.herbs;
 
         // combine quote and plants
         const quoteAndPlants = {
-            ...quote,
-            ...plants,
+            quoteTitle: this.props.route.params.title,
+            ...{ vegetables, herbs, fruit }
+        }
+
+        // set plant selections
+        const plantSelections = [quoteAndPlants];
+
+        // combine quote and plants
+        const params = {
+            ...this.props.route.params,
+            ...{ plantSelections },
             ...{isCheckout: true}
         }
 
         // navigate to plan enrollment
-        this.props.navigation.navigate('Enrollment', quoteAndPlants);
+        this.props.navigation.navigate('Enrollment', params);
 
     }
 

@@ -5,7 +5,6 @@ import { Text, SafeAreaView, Button, View } from 'react-native';
 class Approved extends Component {
 
     render() {
-
         return (
             <SafeAreaView style={{
                 flex: 1,

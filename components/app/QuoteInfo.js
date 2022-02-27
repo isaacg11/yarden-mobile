@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 
@@ -7,7 +8,10 @@ class QuoteInfo extends Component {
 
     render() {
 
-        const { quote } = this.props;
+        const { 
+            quote,
+            user
+        } = this.props;
 
         return (
             // quote info start
@@ -27,10 +31,10 @@ class QuoteInfo extends Component {
                     )}
                     <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Customer</Text>
                     <Text>
-                        {quote.customer.first_name} {quote.customer.last_name}{"\n"}
-                        {quote.customer.address}{(quote.customer.unit) ? ` #${quote.customer.unit}` : ''}, {quote.customer.city} {quote.customer.state} {quote.customer.zip_code}{"\n"}
-                        {quote.customer.email}{"\n"}
-                        {formatPhoneNumber(quote.customer.phone_number)}
+                        {user.first_name} {user.last_name}{"\n"}
+                        {user.address}{(user.unit) ? ` #${user.unit}` : ''}, {user.city} {user.state} {user.zip_code}{"\n"}
+                        {user.email}{"\n"}
+                        {formatPhoneNumber(user.phone_number)}
                     </Text>
                 </View>
             </View>
@@ -38,5 +42,16 @@ class QuoteInfo extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        user: state.user
+    }
+}
+
+
+QuoteInfo = connect(mapStateToProps, null)(QuoteInfo);
+
+export default QuoteInfo;
 
 module.exports = QuoteInfo;

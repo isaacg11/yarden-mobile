@@ -26,6 +26,10 @@ const vars = {
         maintenance: 0.4,
         misc: 0.1,
         payment_processing: 0.03
+    },
+    labor: {
+        rate: 35,
+        description: 'hourly rate'
     }
 }
 

@@ -31,6 +31,12 @@ import Message from './screens/Message';
 import RequestQuoteChange from './screens/RequestQuoteChange';
 import RequestOrderChange from './screens/RequestOrderChange';
 import ChangesRequested from './screens/ChangesRequested';
+import Products from './screens/Products';
+import Product from './screens/Product';
+import Cart from './screens/Cart';
+import PurchaseDetails from './screens/PurchaseDetails';
+import Purchases from './screens/Purchases';
+import Plants from './screens/Plants';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -232,6 +238,48 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerLeft: displayNone
+            }}
+          />
+          <Stack.Screen
+            name="Products"
+            component={Products}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Product"
+            component={Product}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Cart"
+            component={Cart}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Purchase Details"
+            component={PurchaseDetails}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Purchases"
+            component={Purchases}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Plants"
+            component={Plants}
+            options={{
+              headerTitle: () => logo
             }}
           />
         </Stack.Navigator>

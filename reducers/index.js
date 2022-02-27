@@ -8,6 +8,13 @@ import plants from './plants';
 import plans from './plans';
 import changeOrders from './changeOrders';
 import conversations from './conversations';
+import productCategories from './productCategories';
+import products from './products';
+import items from './items';
+import rules from './rules';
+import purchases from './purchases';
+import irrigation from './irrigation';
+import filters from './filters';
 
 const rootReducer = combineReducers({
     user,
@@ -18,7 +25,14 @@ const rootReducer = combineReducers({
     plants,
     plans,
     changeOrders,
-    conversations
+    conversations,
+    productCategories,
+    products,
+    items,
+    rules,
+    purchases,
+    irrigation,
+    filters
 })
 
 export default rootReducer;
