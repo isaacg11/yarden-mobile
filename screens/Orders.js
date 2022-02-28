@@ -28,15 +28,18 @@ class Orders extends Component {
 
     async setStatus(status) {
 
-        // show loading indicator
-        this.setState({ isLoading: true });
+        // show loading indicator and set status
+        this.setState({ 
+            isLoading: true,
+            status: status
+        });
 
         // set new status
-        this.props.setFilters({orders: status});
+        await this.props.setFilters({orders: status});
 
         // set order query
         const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
-
+        
         // if status is pending {...}
         if (status === 'pending') {
 

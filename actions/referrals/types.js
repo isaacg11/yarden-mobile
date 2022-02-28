@@ -1,0 +1,1 @@
+export const GET_REFERRALS = 'Get_Referrals';

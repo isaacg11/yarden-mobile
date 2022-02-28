@@ -22,7 +22,10 @@ class Quotes extends Component {
     async setStatus(status) {
 
         // show loading indicator
-        this.setState({ isLoading: true });
+        this.setState({ 
+            isLoading: true,
+            status: status
+        });
 
         // set new status
         this.props.setFilters({quotes: status});
@@ -87,7 +90,7 @@ class Quotes extends Component {
                 />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.list.length})` : ''}</Text>
+                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.total})` : ''}</Text>
                     <View style={{ padding: 12 }}>
 
                         {/* status filter */}
