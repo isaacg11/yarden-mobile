@@ -37,6 +37,7 @@ import Cart from './screens/Cart';
 import PurchaseDetails from './screens/PurchaseDetails';
 import Purchases from './screens/Purchases';
 import Plants from './screens/Plants';
+import ReferralHistory from './screens/ReferralHistory';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -278,6 +279,13 @@ function App() {
           <Stack.Screen
             name="Plants"
             component={Plants}
+            options={{
+              headerTitle: () => logo
+            }}
+          />
+          <Stack.Screen
+            name="Referral History"
+            component={ReferralHistory}
             options={{
               headerTitle: () => logo
             }}
