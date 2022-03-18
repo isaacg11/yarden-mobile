@@ -9,9 +9,9 @@ const componentStyles = StyleSheet.create({
         marginBottom: 8,
         borderBottomWidth: 1,
         padding: 16,
-        borderColor: '#330099',
+        borderColor: '#330099', // green0
         padding: 16,
-        backgroundColor: 'hsla(120,100%,20%, 0.1)',
+        backgroundColor: 'hsla(120,100%,20%, 0.1)', // greenC-10
     },
     textarea: {
         height: 60,
@@ -51,8 +51,8 @@ class Input extends Component {
                 placeholder={placeholder}
                 secureTextEntry={password}
                 editable={disabled ? false : true}
-                placeholderTextColor='hsla(120,100%,20%, 0.25)'
-                selectionColor={'#00ff00'}
+                placeholderTextColor='hsla(120,100%,20%, 0.25)' //purpleB
+                selectionColor={'hsl(260,100%,50%)'} //purple0
             />
         )
     }
