@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import moment, { min } from 'moment';
+import { View } from 'react-native';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CheckBox from '@react-native-community/checkbox';
@@ -10,6 +10,7 @@ import Input from '../../components/UI/Input';
 import Button from '../../components/UI/Button';
 import Link from '../../components/UI/Link';
 import LoadingIndicator from '../../components/UI/LoadingIndicator';
+import Paragraph from '../../components/UI/Paragraph';
 import { alert } from '../../components/UI/SystemAlert';
 import ElectronicSignatureAgreement from '../../components/app/ElectronicSignatureAgreement';
 import calculateQuoteCost from '../../helpers/calculateQuote';
@@ -692,16 +693,16 @@ class Approval extends Component {
 
                 {/* approval start */}
                 <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <Text style={{ marginBottom: 12 }}>
+                    <Paragraph style={{ marginBottom: 12 }}>
                         By signing, I agree to pay the full amount of ${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))} to {getCompanyName()} for all work listed in section (1a) "Scope of Work" of this contract.
                         I agree to pay the first payment of ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))} today {moment().format('MM/DD/YYYY')}, and a second payment of ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))} once all work has been completed.
-                    </Text>
+                    </Paragraph>
                     <Divider />
-                    <Text style={{ marginTop: 12, textDecorationLine: 'underline' }}>Scope of Work (1a)</Text>
-                    <Text style={{ marginBottom: 12 }}>{quote.title} - {quote.description}</Text>
+                    <Paragraph style={{ marginTop: 12, textDecorationLine: 'underline' }}>Scope of Work (1a)</Paragraph>
+                    <Paragraph style={{ marginBottom: 12 }}>{quote.title} - {quote.description}</Paragraph>
                     <Divider />
                     <View>
-                        <Text style={{ marginTop: 12 }}>Add your e-signature to approve the quote</Text>
+                        <Paragraph style={{ marginTop: 12 }}>Add your e-signature to approve the quote</Paragraph>
                         <Input
                             onChange={(value) => this.setState({ userSignature: value })}
                             value={userSignature}
@@ -715,7 +716,7 @@ class Approval extends Component {
                             boxType="square"
                         />
                         <View style={{ paddingLeft: 12, paddingRight: 12 }}>
-                            <Text>By checking this box, you agree to the <Link onPress={() => this.setState({ isOpen: true })} text="Electronic Record and Signature Disclosure"></Link></Text>
+                            <Paragraph>By checking this box, you agree to the <Link onPress={() => this.setState({ isOpen: true })} text="Electronic Record and Signature Disclosure"></Link></Paragraph>
                         </View>
                     </View>
                     <View>

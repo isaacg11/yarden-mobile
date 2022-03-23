@@ -466,7 +466,7 @@ DEPENDENCIES:
   - React-RCTLinking (from `../node_modules/react-native/Libraries/LinkingIOS`)
   - React-RCTNetwork (from `../node_modules/react-native/Libraries/Network`)
   - React-RCTSettings (from `../node_modules/react-native/Libraries/Settings`)
-  - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
+  - React-RCTText (from `../node_modules/react-native/Libraries/Paragraph`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
@@ -563,7 +563,7 @@ EXTERNAL SOURCES:
   React-RCTSettings:
     :path: "../node_modules/react-native/Libraries/Settings"
   React-RCTText:
-    :path: "../node_modules/react-native/Libraries/Text"
+    :path: "../node_modules/react-native/Libraries/Paragraph"
   React-RCTVibration:
     :path: "../node_modules/react-native/Libraries/Vibration"
   React-runtimeexecutor:

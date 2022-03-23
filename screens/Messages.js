@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Inbox from '../components/app/Inbox';
+import Paragraph from '../components/UI/Paragraph';
 
 class Messages extends Component {
 
@@ -14,7 +15,7 @@ class Messages extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messages</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messages</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* inbox */}

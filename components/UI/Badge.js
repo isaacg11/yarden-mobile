@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import IconBadge from 'react-native-icon-badge';
+import Paragraph from './Paragraph';
 
 class Badge extends Component {
 
@@ -16,7 +17,7 @@ class Badge extends Component {
                 <IconBadge
                     MainElement={icon}
                     BadgeElement={
-                        <Text style={{ color: '#FFFFFF',  }}>{count}</Text>
+                        <Paragraph style={{ color: '#FFFFFF',  }}>{count}</Paragraph>
                     }
                     IconBadgeStyle={
                         {

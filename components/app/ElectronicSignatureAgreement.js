@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Modal, Text, ScrollView } from 'react-native';
+import { View, Modal, ScrollView } from 'react-native';
 import Link from '../UI/Link';
+import Paragraph from '../UI/Paragraph';
 
 class ElectronicSignatureAgreement extends Component {
 
@@ -23,8 +24,8 @@ class ElectronicSignatureAgreement extends Component {
                         <View style={{ padding: 12 }}>
                             <ScrollView>
                                 <Link text="Back" onPress={() => close()} />
-                                <Text style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Electronic Record and Signature Disclosure</Text>
-                                <Text>
+                                <Paragraph style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Electronic Record and Signature Disclosure</Paragraph>
+                                <Paragraph>
                                     Please  read  this Electronic  Record  and  Signature  Disclosure (“Disclosure”) carefully. It contains important information.
                                     {'\n'}
                                     {'\n'}
@@ -108,7 +109,7 @@ class ElectronicSignatureAgreement extends Component {
                                     Consenting  to  use  electronic  signatures  and  records  in  connection  with communications we provide to you through the Yarden Sign Service;
                                     Representing and warranting that you are authorized to give consent on behalf of both yourself and any other person entering into the Transaction along with you or on your behalf; and
                                     Confirming  that  you  are  able  to  receive,  access,  and  view  the  information presented electronically via the methods described above.
-                                </Text>
+                                </Paragraph>
                             </ScrollView>
                         </View>
                     </View>

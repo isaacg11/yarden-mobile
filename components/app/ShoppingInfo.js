@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Badge from '../UI/Badge';
+import Paragraph from '../UI/Paragraph';
 import { getItems } from '../../actions/items/index';
 
 class ShoppingInfo extends Component {
@@ -59,13 +60,13 @@ class ShoppingInfo extends Component {
             <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                 <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{marginBottom: 12}}>CART</Text>
+                        <Paragraph style={{marginBottom: 12}}>CART</Paragraph>
                         <TouchableOpacity onPress={() => onSelectCart()}>
                             {cartItems > 0 ? (<Badge icon={<Ionicons name="cart-outline" size={40} />} count={cartItems} />) : <Ionicons name="cart-outline" size={40} />}
                         </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, alignItems: 'center', borderLeftWidth: 1, borderLeftColor: '#ddd' }}>
-                        <Text style={{marginBottom: 12}}>PURCHASES</Text>
+                        <Paragraph style={{marginBottom: 12}}>PURCHASES</Paragraph>
                         <TouchableOpacity onPress={() => onSelectPurchases()}>
                             <Ionicons name="receipt-outline" size={40} />
                         </TouchableOpacity>

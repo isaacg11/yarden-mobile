@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import formatPhoneNumber from '../../helpers/formatPhoneNumber';
+import Paragraph from '../../components/UI/Paragraph';
 
 class QuoteInfo extends Component {
 
@@ -17,25 +18,25 @@ class QuoteInfo extends Component {
             // quote info start
             <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                 <View style={{ marginBottom: 12 }}>
-                    <Text style={{ fontWeight: 'bold' }}>Title</Text>
-                    <Text>{quote.title}</Text>
-                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
-                    <Text>{quote.description}</Text>
-                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Status</Text>
-                    <Text>{quote.status}</Text>
+                    <Paragraph style={{ fontWeight: 'bold' }}>Title</Paragraph>
+                    <Paragraph>{quote.title}</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                    <Paragraph>{quote.description}</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Status</Paragraph>
+                    <Paragraph>{quote.status}</Paragraph>
                     {(quote.status !== 'bid requested') && (
                         <View>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Estimated Start Date</Text>
-                            <Text>{moment(quote.estimated_start_dt).format('MM/DD/YYYY')}</Text>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Estimated Start Date</Paragraph>
+                            <Paragraph>{moment(quote.estimated_start_dt).format('MM/DD/YYYY')}</Paragraph>
                         </View>
                     )}
-                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Customer</Text>
-                    <Text>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Customer</Paragraph>
+                    <Paragraph>
                         {user.first_name} {user.last_name}{"\n"}
                         {user.address}{(user.unit) ? ` #${user.unit}` : ''}, {user.city} {user.state} {user.zip_code}{"\n"}
                         {user.email}{"\n"}
                         {formatPhoneNumber(user.phone_number)}
-                    </Text>
+                    </Paragraph>
                 </View>
             </View>
             // quote info end

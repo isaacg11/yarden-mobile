@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Header from '../components/UI/Header';
 import { logout } from '../actions/auth/index';
 
 class Logout extends Component {
@@ -28,7 +29,7 @@ class Logout extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Logging Out...</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Logging Out...</Header>
             </SafeAreaView>
         )
     }

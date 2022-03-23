@@ -1,6 +1,8 @@
 
 import React, { Component } from 'react';
-import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import fonts from '../styles/fonts';
+import Paragraph from './Paragraph';
 
 const primaryButtonStyles = StyleSheet.create({
     button: {
@@ -16,7 +18,8 @@ const primaryButtonStyles = StyleSheet.create({
         color: '#fff',
         textAlign: 'center',
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        fontFamily: fonts.default
     }
 });
 
@@ -31,7 +34,8 @@ const secondaryButtonStyles = StyleSheet.create({
     text: {
         textAlign: 'center',
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        fontFamily: fonts.default
     }
 });
 
@@ -47,7 +51,8 @@ const disabledButtonStyles = StyleSheet.create({
     text: {
         textAlign: 'center',
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        fontFamily: fonts.default
     }
 });
 
@@ -87,7 +92,7 @@ class Button extends Component {
                 underlayColor='#fff'
                 disabled={disabled}>
                 <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={buttonStyles.text}>{text}</Text>{icon}
+                    <Paragraph style={buttonStyles.text}>{text}</Paragraph>{icon}
                 </View>
             </TouchableOpacity>
         )

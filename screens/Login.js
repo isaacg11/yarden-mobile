@@ -2,10 +2,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Header from '../components/UI/Header';
 import { login } from '../actions/auth/index';
 
 class Login extends Component {
@@ -58,7 +59,7 @@ class Login extends Component {
                 {/* loading indicator end */}
 
                 {/* login form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Sign In</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Sign In</Header>
                 <View style={{ padding: 12 }}>
                     <View>
                         <Input

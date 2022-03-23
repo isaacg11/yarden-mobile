@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import RNQRGenerator from 'rn-qr-generator';
-import { Text } from 'react-native';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Mark from '../components/app/branding/Mark';
 import BottomTabNavigator from '../components/app/BottomTabNavigator';
@@ -11,6 +10,7 @@ import Settings from '../screens/Settings';
 import Logout from '../screens/Logout';
 import Subscription from '../screens/Subscription';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { APP_URL } from '../helpers/getUrl';
 
 const Drawer = createDrawerNavigator();
@@ -45,7 +45,7 @@ class Dashboard extends Component {
         } = this.state;
 
         // display config
-        const displayNone = () => { return <Text></Text> };
+        const displayNone = () => { return <Paragraph></Paragraph> };
 
         // set header logo
         const logo = <Mark />;

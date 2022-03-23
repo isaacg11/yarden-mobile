@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PaymentSchedule from '../components/app/PaymentSchedule';
@@ -8,6 +8,7 @@ import PaymentMethod from '../components/app/PaymentMethod';
 import Approval from '../components/app/Approval';
 import Collapse from '../components/UI/Collapse';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { getItems } from '../actions/items/index';
 import clearCart from '../helpers/clearCart';
 
@@ -42,7 +43,7 @@ class Checkout extends Component {
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Checkout</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Checkout</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* payment method */}

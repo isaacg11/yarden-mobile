@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import Button from '../../components/UI/Button';
 import Divider from '../../components/UI/Divider';
+import Paragraph from '../../components/UI/Paragraph';
 import Card from '../../components/app/Card';
 
 class PaymentMethod extends Component {
@@ -33,7 +34,7 @@ class PaymentMethod extends Component {
                     <View style={{ marginBottom: 12 }}>
                         {(!user.payment_info) && (
                             <View>
-                                <Text style={{ textAlign: 'center', marginBottom: 12, marginTop: 12 }}>No payment method found</Text>
+                                <Paragraph style={{ textAlign: 'center', marginBottom: 12, marginTop: 12 }}>No payment method found</Paragraph>
                                 <Divider />
                                 <Button
                                     text="Add Card +"
@@ -44,7 +45,7 @@ class PaymentMethod extends Component {
                         )}
                         {(user.payment_info) && (
                             <View>
-                                <Text style={{marginBottom: 12}}>{user.payment_info.card_brand} ending in {user.payment_info.card_last4} (Exp: {user.payment_info.card_exp_month}/{user.payment_info.card_exp_year})</Text>
+                                <Paragraph style={{marginBottom: 12}}>{user.payment_info.card_brand} ending in {user.payment_info.card_last4} (Exp: {user.payment_info.card_exp_month}/{user.payment_info.card_exp_year})</Paragraph>
                                 <Divider />
                                 <Button
                                     text="Edit"

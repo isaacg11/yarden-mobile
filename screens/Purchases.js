@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
 import Paginate from '../components/UI/Paginate';
 import Divider from '../components/UI/Divider';
@@ -86,7 +87,7 @@ class Purchase extends Component {
                 />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Purchases</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Purchases</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* purchases */}
@@ -100,12 +101,12 @@ class Purchase extends Component {
                             return (
                                 <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
                                 <View style={{ marginBottom: 12 }}>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Order Placed</Text>
-                                    <Text>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Text>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
-                                    <Text>{purchase.order.description}</Text>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Total</Text>
-                                    <Text>${(purchaseTotal).toFixed(2)}</Text>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Order Placed</Paragraph>
+                                    <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                                    <Paragraph>{purchase.order.description}</Paragraph>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Total</Paragraph>
+                                    <Paragraph>${(purchaseTotal).toFixed(2)}</Paragraph>
                                 </View>
                                 <Divider />
                                 <View>
@@ -136,7 +137,7 @@ class Purchase extends Component {
                         {/* no purchases UI */}
                         {(purchases.list && purchases.list.length < 1) && (
                             <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No purchases found</Text>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No purchases found</Paragraph>
                             </View>
                         )}
                     </View>

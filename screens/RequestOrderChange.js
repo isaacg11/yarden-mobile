@@ -1,11 +1,12 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { updateOrder, getOrders } from '../actions/orders/index';
 import { createChangeOrder } from '../actions/changeOrders/index';
 import { getConversations, createConversation } from '../actions/conversations/index';
@@ -186,11 +187,11 @@ class RequestOrderChange extends Component {
                 {/* loading indicator end */}
 
                 {/* change request form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Request Changes</Text>
+                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Request Changes</Paragraph>
                 <View style={{ padding: 12 }}>
                     <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                         <View>
-                            <Text>Please describe the changes you'd like made to your order</Text>
+                            <Paragraph>Please describe the changes you'd like made to your order</Paragraph>
                         </View>
                         <View>
                             <Input

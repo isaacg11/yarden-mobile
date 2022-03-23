@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
+import Paragraph from '../components/UI/Paragraph';
 import ChangeOrderInfo from '../components/app/ChangeOrderInfo';
 import QuoteSummary from '../components/app/QuoteSummary';
 import Materials from '../components/app/Materials';
@@ -45,7 +46,7 @@ class ChangeOrderDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Change Order</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Change Order</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {(changeOrder.line_items) && (

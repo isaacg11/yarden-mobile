@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -9,6 +9,7 @@ import DateSelect from '../components/UI/DateSelect';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
+import Header from '../components/UI/Header';
 import { updateOrder, getOrders } from '../actions/orders/index';
 
 class ChangeDate extends Component {
@@ -60,7 +61,7 @@ class ChangeDate extends Component {
                 {/* loading indicator end */}
 
                 {/* change date form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Change Date</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Change Date</Header>
                 <View style={{ padding: 12 }}>
                     <View>
                         <DateSelect

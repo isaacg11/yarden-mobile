@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Text, SafeAreaView, Image, View, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView, Image, View, TouchableOpacity, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { getItems } from '../actions/items/index';
 import { getRules } from '../actions/rules/index';
 import { getIrrigation } from '../actions/irrigation/index';
@@ -318,7 +319,7 @@ class Cart extends Component {
                     </TouchableOpacity>
                     <View style={{ flex: 3 }}>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <Text style={{ marginLeft: 12, marginRight: 12, flex: 3 }}>{capitalize(li.item.product.name)} - {capitalize(truncate(li.variant.name, 35))}</Text>
+                            <Paragraph style={{ marginLeft: 12, marginRight: 12, flex: 3 }}>{capitalize(li.item.product.name)} - {capitalize(truncate(li.variant.name, 35))}</Paragraph>
                             <TouchableOpacity onPress={async () => {
 
                                 const variantQty = await AsyncStorage.getItem(li.variant._id);
@@ -375,7 +376,7 @@ class Cart extends Component {
                 {/* items list */}
                 <ScrollView>
                     <View style={{ padding: 12 }}>
-                        <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Cart</Text>
+                        <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Cart</Paragraph>
                         <View style={{ display: (items.length > 0) ? null : 'none' }}>
                             {
                                 (!isLoading) ? (
@@ -397,7 +398,7 @@ class Cart extends Component {
                                 ) : <LoadingIndicator loading={isLoading} />}
                         </View>
                         <View style={{ display: (items.length > 0) ? 'none' : null, padding: 25 }}>
-                            <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>No items in cart</Text>
+                            <Paragraph style={{ fontWeight: 'bold', textAlign: 'center' }}>No items in cart</Paragraph>
                         </View>
                     </View>
                 </ScrollView>

@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Paragraph from './Paragraph';
 
 class Paginate extends Component {
 
@@ -22,7 +23,7 @@ class Paginate extends Component {
                     <TouchableOpacity onPress={() => onPaginate('back')}>
                         <Ionicons name="arrow-back" size={30} color={(page > 1) ? null : "#fff"} />
                     </TouchableOpacity>
-                    <Text style={{ fontWeight: 'bold' }}>{page} / {Math.ceil(total / limit)}</Text>
+                    <Paragraph style={{ fontWeight: 'bold' }}>{page} / {Math.ceil(total / limit)}</Paragraph>
                     <TouchableOpacity onPress={() => onPaginate('forward')}>
                         <Ionicons name="arrow-forward" size={30} color={(page === Math.ceil(total / limit)) ? "#fff" : null}/>
                     </TouchableOpacity>

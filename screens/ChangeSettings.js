@@ -1,12 +1,13 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
+import Paragraph from '../components/UI/Paragraph';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import { updateUser } from '../actions/user/index';
 
@@ -67,7 +68,7 @@ class ChangeSettings extends Component {
                 {/* loading indicator end */}
 
                 {/* change date form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Settings</Text>
+                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Settings</Paragraph>
                 <View style={{ padding: 12 }}>
                     <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
                         <View>

@@ -8,14 +8,16 @@ const componentStyles = StyleSheet.create({
         marginTop: 12,
         marginBottom: 12,
         borderWidth: 1,
-        padding: 10
+        padding: 10,
+        fontFamily: 'Futura-Bold'
     },
     textarea: {
         height: 60,
         marginTop: 12,
         marginBottom: 12,
         borderWidth: 1,
-        padding: 10
+        padding: 10,
+        fontFamily: 'Futura-Bold'
     }
 });
 

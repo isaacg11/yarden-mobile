@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Modal, Image, Text } from 'react-native';
+import { View, Modal, Image } from 'react-native';
 import Link from '../UI/Link';
+import Paragraph from '../UI/Paragraph';
 
 class ImageDetails extends Component {
 
@@ -23,7 +24,7 @@ class ImageDetails extends Component {
                     <View style={{ marginTop: 50 }}>
                         <View style={{ padding: 12 }}>
                             <Link text="Back" onPress={() => close()} />
-                            <Text style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Image Details</Text>
+                            <Paragraph style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Image Details</Paragraph>
                             <Image
                                 source={{ uri: url }}
                                 style={{ width: '100%', height: 200 }}

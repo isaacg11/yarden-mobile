@@ -1,12 +1,13 @@
 
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Header from '../components/UI/Header';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import { getUsers } from '../actions/users/index';
 
@@ -82,7 +83,7 @@ class Register extends Component {
                 {/* loading indicator end */}
 
                 {/* registration form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>New Account</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>New Account</Header>
                 <View style={{ padding: 12 }}>
                     <View>
                         <Input

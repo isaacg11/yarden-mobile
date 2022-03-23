@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import Messenger from '../components/app/Messenger';
+import Paragraph from '../components/UI/Paragraph';
 
 class Message extends Component {
 
@@ -12,7 +13,7 @@ class Message extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messenger</Text>
+                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messenger</Paragraph>
                 <View style={{ padding: 12 }}>
 
                     {/* messenger */}

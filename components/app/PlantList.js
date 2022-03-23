@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Divider from '../../components/UI/Divider';
+import Paragraph from '../../components/UI/Paragraph';
 import Collapse from '../../components/UI/Collapse';
 
 class PlantList extends Component {
@@ -20,7 +21,7 @@ class PlantList extends Component {
         const list = plantList.map((plant) => {
             return plant.map((p, index) => (
                 <View key={index}>
-                    <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12, display: (index < 1) ? null : 'none', color: '#737373' }}>{p.class.name} vegetables</Text>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12, display: (index < 1) ? null : 'none', color: '#737373' }}>{p.class.name} vegetables</Paragraph>
                     <View style={{ padding: 12, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ paddingRight: 12, marginRight: 12, borderRightColor: '#ddd', borderRightWidth: 1 }}>
                             <CheckBox
@@ -35,7 +36,7 @@ class PlantList extends Component {
                                 uri: p.image,
                             }}
                         />
-                        <Text>{p.name}</Text>
+                        <Paragraph>{p.name}</Paragraph>
                     </View>
                     <Divider />
                 </View>
@@ -62,7 +63,7 @@ class PlantList extends Component {
                             uri: h.image,
                         }}
                     />
-                    <Text>{h.name}</Text>
+                    <Paragraph>{h.name}</Paragraph>
                 </View>
                 <Divider />
             </View>
@@ -107,10 +108,10 @@ class PlantList extends Component {
 
             return (
                 <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{title}</Text>
-                    <Text style={{ marginBottom: 25 }}>Select a minimum of 5 plants, and a maximum of 20</Text>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{title}</Paragraph>
+                    <Paragraph style={{ marginBottom: 25 }}>Select a minimum of 5 plants, and a maximum of 20</Paragraph>
                     <View style={{ paddingBottom: 25 }}>
-                        <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#737373'}}>Selected: {selectedPlants.length}</Text>
+                        <Paragraph style={{ textAlign: 'center', fontWeight: 'bold', color: '#737373'}}>Selected: {selectedPlants.length}</Paragraph>
                     </View>
                     <Divider />
                     {(Object.keys(vegetables).length > 0) && (
@@ -141,7 +142,7 @@ class PlantList extends Component {
             )
         }
 
-        return <Text>Loading...</Text>
+        return <Paragraph>Loading...</Paragraph>
     }
 }
 

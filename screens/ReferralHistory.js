@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
-import { View, SafeAreaView, ScrollView, Text } from 'react-native';
+import { View, SafeAreaView, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Table from '../components/UI/Table';
+import Paragraph from '../components/UI/Paragraph';
 
 class ReferralHistory extends Component {
 
@@ -16,7 +17,7 @@ class ReferralHistory extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Referral History</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Referral History</Paragraph>
                     <View style={{ padding: 12 }}>
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                             <Table data={referrals} />

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
 import Button from '../components/UI/Button';
+import Paragraph from '../components/UI/Paragraph';
 import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
@@ -81,7 +82,7 @@ class OrderDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Order Details</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Order Details</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* order info */}

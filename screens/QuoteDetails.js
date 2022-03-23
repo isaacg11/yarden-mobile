@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import Collapse from '../components/UI/Collapse';
 import Materials from '../components/app/Materials';
 import Labor from '../components/app/Labor';
@@ -59,7 +60,7 @@ class QuoteDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Quote Details</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Quote Details</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {(quote.line_items) && (

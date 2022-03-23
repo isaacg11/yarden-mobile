@@ -2,10 +2,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import { sendEmail } from '../actions/emails/index';
 import { getUsers } from '../actions/users/index';
@@ -71,7 +72,7 @@ class PasswordReset extends Component {
                 {/* loading indicator end */}
 
                 {/* password reset start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Password Reset</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Password Reset</Header>
                 <View style={{ padding: 12 }}>
                     <View>
                         <Input
