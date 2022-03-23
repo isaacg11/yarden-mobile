@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
+import fonts from '../styles/fonts';
 
 const componentStyles = StyleSheet.create({
     input: {
@@ -9,7 +10,7 @@ const componentStyles = StyleSheet.create({
         marginBottom: 12,
         borderWidth: 1,
         padding: 10,
-        fontFamily: 'Futura-Bold'
+        fontFamily: fonts.default
     },
     textarea: {
         height: 60,
@@ -17,7 +18,7 @@ const componentStyles = StyleSheet.create({
         marginBottom: 12,
         borderWidth: 1,
         padding: 10,
-        fontFamily: 'Futura-Bold'
+        fontFamily: fonts.default
     }
 });
 
@@ -50,6 +51,8 @@ class Input extends Component {
                 placeholder={placeholder}
                 secureTextEntry={password}
                 editable={disabled ? false : true}
+                placeholderTextColor='hsla(120,100%,20%, 0.25)' //purpleB
+                selectionColor={'hsl(260,100%,50%)'} //purple0
             />
         )
     }
