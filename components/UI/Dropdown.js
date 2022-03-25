@@ -2,14 +2,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import fonts from '../styles/fonts'
+
 
 const componentStyles = StyleSheet.create({
     dropdown: {
-        height: 40,
-        marginTop: 12,
-        marginBottom: 12,
+        // marginTop: 12,
+        // marginBottom: 12,
         borderWidth: 1,
-        padding: 10
+        padding: 16,
+        backgroundColor: 'red'
     }
 });
 
@@ -33,6 +35,12 @@ class Dropdown extends Component {
                     placeholder={(placeholder) ? {label: placeholder} : {label: ''}}
                     onValueChange={(value) => onChange(value)}
                     items={options}
+                    textInputProps={{
+                        style: {
+                            fontFamily: fonts.default,
+                            fontSize: fonts.h6,
+                        }
+                    }}
                 />
             </View>
         )
