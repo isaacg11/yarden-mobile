@@ -36,10 +36,29 @@ class Header extends Component {
             case 'h6':
                 return h6;
             default:
-                return h1;
+                return h5;
         }
     }
 
+    getLineHeight(headerSize) {
+        switch (headerSize) {
+            case 'h1':
+                return h1 * ratio.fontScaleRatio;
+            case 'h2':
+                return h1;
+            case 'h3':
+                return h2;
+            case 'h4':
+                return h3;
+            case 'h5':
+                return h4;
+            case 'h6':
+                return h5;
+            default:
+                return h4;
+        }
+    }
+ 
     render() {
         const {
             children,
@@ -47,8 +66,10 @@ class Header extends Component {
         } = this.props;
 
         const size = this.getHeaderSize();
+        const lineHeight = this.getLineHeight(size);
+
         const styles = {
-            ...{ fontSize: size },
+            ...{ fontSize: size, lineHeight: lineHeight },
             ...componentStyles.header,
             ...style
         }

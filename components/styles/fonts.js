@@ -1,7 +1,8 @@
 
 // fonts
 const fonts = {
-    default: 'Futura-Bold'
+    default: 'Futura-Medium',
+    bold: 'Futura-Bold'
 }
 
 export default fonts;

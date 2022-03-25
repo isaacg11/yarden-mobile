@@ -63,6 +63,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Futura-Bold.ttf</string>
+		<string>Futura-Medium.ttf</string>
 	</array>
 </dict>
 </plist>
