@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, Button } from 'react-native';
+import { SafeAreaView, Button } from 'react-native';
+import Header from '../components/UI/Header';
 
 class Welcome extends Component {
 
@@ -11,7 +12,7 @@ class Welcome extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Welcome to Yarden!</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Welcome to Yarden!</Header>
                 <Button
                     title="Continue to dashboard"
                     onPress={() => this.props.navigation.navigate('Dashboard')}

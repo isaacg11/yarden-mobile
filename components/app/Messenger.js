@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -13,6 +13,7 @@ import Button from '../UI/Button';
 import LoadingIndicator from '../UI/LoadingIndicator';
 import Divider from '../UI/Divider';
 import Link from '../UI/Link';
+import Paragraph from '../UI/Paragraph';
 import { createMessage, getMessages, updateMessage } from '../../actions/messages/index';
 import { getConversations } from '../../actions/conversations/index';
 import uploadImage from '../../helpers/uploadImage';
@@ -263,7 +264,7 @@ class Messenger extends Component {
                     <View style={{ marginBottom: 12 }}>
 
                         {/* message receiver dropdown */}
-                        <Text style={{ fontWeight: 'bold', marginTop: 12 }}>To</Text>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>To</Paragraph>
                         <Dropdown
                             disabled={true}
                             value={receiver}
@@ -274,7 +275,7 @@ class Messenger extends Component {
                         />
 
                         {/* conversation thread */}
-                        <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Conversation</Text>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Conversation</Paragraph>
                         <View style={{ backgroundColor: '#F7F7F7', height: 200, borderWidth: 1, padding: 12, display: 'flex' }}>
                             <ScrollView
                                 ref={ref => { this.scrollView = ref }}
@@ -289,9 +290,9 @@ class Messenger extends Component {
                                                     borderRadius: 5,
                                                     backgroundColor: (message.sender._id !== user._id) ? '#4d991a' : '#ffffff'
                                                 }}>
-                                                    <Text style={{ color: (message.sender._id !== user._id) ? '#ffffff' : '#000000' }}>
+                                                    <Paragraph style={{ color: (message.sender._id !== user._id) ? '#ffffff' : '#000000' }}>
                                                         {message.text}
-                                                    </Text>
+                                                    </Paragraph>
                                                     {(message.attachments.length > 0) && message.attachments.map((attachment, i) => (
                                                         <View key={i} style={{ marginTop: 12 }}>
                                                             <TouchableOpacity onPress={() => this.setState({
@@ -309,7 +310,7 @@ class Messenger extends Component {
                                                     ))}
                                                 </View>
                                                 <View style={{ marginBottom: 15, marginTop: 5 }}>
-                                                    <Text style={{ fontSize: 10 }}>{moment(message.dt_created).format('MM/DD/YYYY')} {(message.receiver._id !== user._id) ? (message.opened) ? '• Read' : '• Sent' : ''}</Text>
+                                                    <Paragraph style={{ fontSize: 10 }}>{moment(message.dt_created).format('MM/DD/YYYY')} {(message.receiver._id !== user._id) ? (message.opened) ? '• Read' : '• Sent' : ''}</Paragraph>
                                                 </View>
                                             </View>
                                         </View>
@@ -320,7 +321,7 @@ class Messenger extends Component {
                         </View>
 
                         {/* message input */}
-                        <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Message</Text>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Message</Paragraph>
                         <Input
                             onChange={(value) => this.setState({ message: value })}
                             value={message}
@@ -332,7 +333,7 @@ class Messenger extends Component {
                         {/* attachments */}
                         <View>
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-                                <Text>Attachments ({attachments.length})</Text>
+                                <Paragraph>Attachments ({attachments.length})</Paragraph>
                                 <Link text="Delete" onPress={() => this.setState({ attachments: [] })}></Link>
                             </View>
                             <Divider />

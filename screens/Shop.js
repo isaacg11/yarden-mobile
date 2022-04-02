@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import ProductCategories from '../components/app/ProductCategories';
 import ShoppingInfo from '../components/app/ShoppingInfo';
+import Paragraph from '../components/UI/Paragraph';
 
 class Shop extends Component {
 
@@ -13,7 +14,7 @@ class Shop extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Shop</Text>
+                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Shop</Paragraph>
                 <View style={{ padding: 12 }}>
     
                     {/* shopping info */}

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../UI/LoadingIndicator';
+import Paragraph from '../UI/Paragraph';
 import { getProductCategories } from '../../actions/productCategories/index';
 import capitalize from '../../helpers/capitalize';
 
@@ -61,7 +62,7 @@ class ProductCategories extends Component {
                         <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
                             <TouchableOpacity onPress={() => onPress(category)}>
                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{capitalize(category.name)}</Text>
+                                    <Paragraph style={{ fontWeight: 'bold' }}>{capitalize(category.name)}</Paragraph>
                                     <Ionicons name="arrow-forward" size={30} color="#CCCCCC" />
                                 </View>
                             </TouchableOpacity>

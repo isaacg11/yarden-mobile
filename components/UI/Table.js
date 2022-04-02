@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import Link from '../UI/Link';
+import Paragraph from '../UI/Paragraph';
 
 class Table extends Component {
 
@@ -23,18 +24,18 @@ class Table extends Component {
                 // render link
                 return (
                     <View style={{ flex: 1, alignSelf: 'stretch', padding: 5 }} key={index}>
-                        <Text numberOfLines={3}>
+                        <Paragraph numberOfLines={3}>
                             <Link url={column.url} text={column.url} />
-                        </Text>
+                        </Paragraph>
                     </View>
                 )
             } else {
                 // render text
                 return (
                     <View style={{ flex: 1, alignSelf: 'stretch', padding: 5 }} key={index}>
-                        <Text numberOfLines={3}>
+                        <Paragraph numberOfLines={3}>
                             {column.text}
-                        </Text>
+                        </Paragraph>
                     </View>
                 )
             }
@@ -58,9 +59,9 @@ class Table extends Component {
         return columns.map((column, index) => {
             return (
                 <View style={{ flex: 1, alignSelf: 'stretch', padding: 5 }} key={index}>
-                    <Text numberOfLines={3} style={{ fontWeight: 'bold' }}>
+                    <Paragraph numberOfLines={3} style={{ fontWeight: 'bold' }}>
                         {column.header}
-                    </Text>
+                    </Paragraph>
                 </View>
             )
         })

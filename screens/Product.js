@@ -2,10 +2,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Text, SafeAreaView, ImageBackground, View } from 'react-native';
+import { SafeAreaView, ImageBackground, View } from 'react-native';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import AddToCart from '../components/app/AddToCart';
 import { getItems } from '../actions/items/index';
 import { getRules } from '../actions/rules/index';
@@ -157,7 +158,7 @@ class Product extends Component {
                 >
                     <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', padding: 12 }}>
                         <View style={{ backgroundColor: '#fff', padding: 12 }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{capitalize(name)}</Text>
+                            <Paragraph style={{ fontWeight: 'bold', fontSize: 25 }}>{capitalize(name)}</Paragraph>
                         </View>
                     </View>
                 </ImageBackground>
@@ -166,15 +167,15 @@ class Product extends Component {
                 <View style={{ padding: 12 }}>
                     <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                         <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontWeight: 'bold' }}>Price</Text>
-                            <Text>${delimit(price.toFixed(2))} / each</Text>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
+                            <Paragraph>${delimit(price.toFixed(2))} / each</Paragraph>
                         </View>
                         <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontWeight: 'bold' }}>Description</Text>
-                            <Text>{description}</Text>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Description</Paragraph>
+                            <Paragraph>{description}</Paragraph>
                         </View>
                         <View>
-                            <Text style={{ fontWeight: 'bold' }}>Qty</Text>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Qty</Paragraph>
                             <Input
                                 type="numeric"
                                 onChange={(value) => this.setState({ qty: value })}

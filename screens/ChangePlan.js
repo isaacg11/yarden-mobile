@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -8,6 +8,7 @@ import moment from 'moment';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Divider from '../components/UI/Divider';
+import Paragraph from '../components/UI/Paragraph';
 import { alert } from '../components/UI/SystemAlert';
 import { updateUser } from '../actions/user/index';
 import { getPlans } from '../actions/plans/index';
@@ -168,15 +169,15 @@ class ChangePlan extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Plan</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Plan</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* plan list start */}
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Current Plan</Text>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Current Plan</Paragraph>
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={{ marginBottom: 12, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Text>
-                                <Text style={{ marginBottom: 12 }}>${currentPlan.rate.toFixed(2)} / month</Text>
+                                <Paragraph style={{ marginBottom: 12, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Paragraph>
+                                <Paragraph style={{ marginBottom: 12 }}>${currentPlan.rate.toFixed(2)} / month</Paragraph>
                             </View>
 
                             <Divider />
@@ -193,12 +194,12 @@ class ChangePlan extends Component {
                                                 />
                                             </View>
                                             <View>
-                                                <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{plan.type}</Text>
-                                                <Text style={{ marginBottom: 12 }}>${plan.rate.toFixed(2)} / month</Text>
+                                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{plan.type}</Paragraph>
+                                                <Paragraph style={{ marginBottom: 12 }}>${plan.rate.toFixed(2)} / month</Paragraph>
                                             </View>
                                         </View>
                                         <View>
-                                            <Text style={{ marginBottom: 12, fontStyle: 'italic' }}>{plan.description}</Text>
+                                            <Paragraph style={{ marginBottom: 12, fontStyle: 'italic' }}>{plan.description}</Paragraph>
                                             <Divider />
                                         </View>
                                     </View>

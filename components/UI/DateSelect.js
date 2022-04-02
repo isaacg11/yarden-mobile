@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment-timezone';
 import Input from './Input';
+import Paragraph from './Paragraph';
 
 class DateSelect extends Component {
 
@@ -57,7 +58,7 @@ class DateSelect extends Component {
                     onCancel={() => { }}
                 />
                 {(validationError) && (
-                    <Text>{validationError}</Text>
+                    <Paragraph>{validationError}</Paragraph>
                 )}
             </View>
         )

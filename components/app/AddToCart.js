@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Modal, Text, ScrollView, Image } from 'react-native';
+import { View, Modal, ScrollView, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../UI/Button';
 import Divider from '../UI/Divider';
+import Paragraph from '../UI/Paragraph';
 import capitalize from '../../helpers/capitalize';
 
 class AddToCart extends Component {
@@ -31,13 +32,13 @@ class AddToCart extends Component {
                         <View style={{ padding: 12 }}>
                             <ScrollView>
                                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Item{(qty > 1) ? 's' : ''} added to cart!</Text>
+                                    <Paragraph style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Item{(qty > 1) ? 's' : ''} added to cart!</Paragraph>
                                     <Ionicons name="checkmark" size={50} color="#4d991a" />
                                 </View>
                                 <Divider />
                                 <View style={{ display: 'flex', flexDirection: 'row', height: 100, marginTop: 12, marginBottom: 12 }}>
                                     <Image source={{ uri: product.image }} style={{ width: '100%' }} style={{ flex: 1 }} />
-                                    <Text style={{ flex: 3, marginLeft: 12 }}>({qty}) {capitalize(product.name)} - {capitalize(product.description)}</Text>
+                                    <Paragraph style={{ flex: 3, marginLeft: 12 }}>({qty}) {capitalize(product.name)} - {capitalize(product.description)}</Paragraph>
                                 </View>
                                 <View>
                                     <Button

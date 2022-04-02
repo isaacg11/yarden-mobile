@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Divider from '../UI/Divider';
+import Paragraph from '../UI/Paragraph';
 
 class Plans extends Component {
 
@@ -52,10 +53,10 @@ class Plans extends Component {
 
         return (
             <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Plan Selection</Text>
-                <Text style={{ marginBottom: 12 }}>
+                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Plan Selection</Paragraph>
+                <Paragraph style={{ marginBottom: 12 }}>
                     Please select a plan from the list below. 1st Month FREE! Cancel anytime.
-                </Text>
+                </Paragraph>
                 <Divider />
                 <View style={{ padding: 12 }}>
                     {(plans.map((plan, index) => (
@@ -70,12 +71,12 @@ class Plans extends Component {
                                     />
                                 </View>
                                 <View>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{plan.type}</Text>
-                                    <Text style={{ marginBottom: 12 }}>${plan.rate.toFixed(2)} / month</Text>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{plan.type}</Paragraph>
+                                    <Paragraph style={{ marginBottom: 12 }}>${plan.rate.toFixed(2)} / month</Paragraph>
                                 </View>
                             </View>
                             <View>
-                                <Text style={{ marginBottom: 12, fontStyle: 'italic' }}>{plan.description}</Text>
+                                <Paragraph style={{ marginBottom: 12, fontStyle: 'italic' }}>{plan.description}</Paragraph>
                                 <Divider />
                             </View>
                         </View>
@@ -90,11 +91,11 @@ class Plans extends Component {
                                 />
                             </View>
                             <View>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>no plan</Text>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>no plan</Paragraph>
                             </View>
                         </View>
                         <View>
-                            <Text style={{ marginBottom: 12, fontStyle: 'italic' }}>None - I want to maintain my garden without any help</Text>
+                            <Paragraph style={{ marginBottom: 12, fontStyle: 'italic' }}>None - I want to maintain my garden without any help</Paragraph>
                             <Divider />
                         </View>
                     </View>

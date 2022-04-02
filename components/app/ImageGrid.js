@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import { View, Image } from 'react-native';
+import Paragraph from '../UI/Paragraph';
 
 class ImageGrid extends Component {
 
@@ -23,9 +24,9 @@ class ImageGrid extends Component {
 
         return (
             <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                <Text style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Images</Text>
+                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Images</Paragraph>
                 <View>
-                    {(images.length > 0) ? imageList : <View><Text style={{textAlign: 'center', marginTop: 25, marginBottom: 25}}>No images found</Text></View>}
+                    {(images.length > 0) ? imageList : <View><Paragraph style={{textAlign: 'center', marginTop: 25, marginBottom: 25}}>No images found</Paragraph></View>}
                 </View>
             </View>
         )

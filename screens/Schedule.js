@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import moment from 'moment-timezone';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import Dropdown from '../components/UI/Dropdown';
 import DateSelect from '../components/UI/DateSelect';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Header from '../components/UI/Header';
 import { getGeolocation, getCounty, getServiceArea } from '../actions/location/index';
 
 class Schedule extends Component {
@@ -101,7 +102,7 @@ class Schedule extends Component {
                 {/* loading indicator end */}
 
                 {/* schedule form start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Schedule Appointment</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Schedule Appointment</Header>
                 <View style={{ padding: 12 }}>
                     <View>
                         <Input

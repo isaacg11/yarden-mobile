@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import moment from 'moment';
+import Paragraph from '../components/UI/Paragraph';
 import getAuthToken from '../helpers/getAuthToken';
 import getAuthTokenExp from '../helpers/getAuthTokenExp';
 import removeAuthToken from '../helpers/removeAuthToken';
@@ -43,7 +44,7 @@ class Splash extends Component {
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Splash Screen</Text>
+                <Paragraph>Splash Screen</Paragraph>
             </View>
         )
     }

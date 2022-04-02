@@ -144,7 +144,7 @@ class BottomTabNavigator extends Component {
                     <Tab.Screen
                         name="Quotes"
                         component={Quotes}
-                        options={{ tabBarBadge: ((quotes.list && quotes.list.length > 0) && isPendingApproval) ? quotes.list.length : null }}
+                        options={{ tabBarBadge: ((quotes.list && quotes.list.length > 0) && isPendingApproval) ? quotes.list.length : null, tabBarBadgeStyle: { backgroundColor: '#ff6060', color: 'white', fontWeight: 'bold' } }}
                         listeners={({ navigation }) => ({
                             tabPress: async (e) => {
                                 // Prevent default action

@@ -1,11 +1,12 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
+import Paragraph from '../components/UI/Paragraph';
 import PlantList from '../components/app/PlantList';
 import PlantAvailability from '../components/app/PlantAvailability';
 import getSeason from '../helpers/getSeason';
@@ -90,7 +91,7 @@ class Garden extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Garden Setup</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Garden Setup</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* plant list */}

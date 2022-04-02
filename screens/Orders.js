@@ -1,11 +1,12 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
@@ -13,6 +14,7 @@ import Paginate from '../components/UI/Paginate';
 import { getOrders } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 import { setFilters } from '../actions/filters/index';
+import fonts from '../components/styles/fonts'
 
 class Orders extends Component {
 
@@ -113,12 +115,12 @@ class Orders extends Component {
                         loading={isLoading}
                     />
 
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Orders {(orders.total && orders.total > 0) ? `(${orders.total})` : ''}</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Orders {(orders.total && orders.total > 0) ? `(${orders.total})` : ''}</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* status filter */}
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
+                            <Paragraph style={{ marginBottom: 4, letterSpacing: 2, fontSize: fonts.h7 }}>FILTER</Paragraph>
                             <Dropdown
                                 value={filters.orders}
                                 onChange={(value) => this.setStatus(value)}
@@ -155,10 +157,10 @@ class Orders extends Component {
 
                                 {/* order info */}
                                 <View style={{ marginBottom: 12 }}>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Service</Text>
-                                    <Text>{order.type}</Text>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Date</Text>
-                                    <Text>{moment(order.date).format('MM/DD/YYYY')} {(order.time) ? `@ ${moment(order.time, `HH:mm:ss`).format(`h:mm A`)}` : ''}</Text>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Service</Paragraph>
+                                    <Paragraph>{order.type}</Paragraph>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Date</Paragraph>
+                                    <Paragraph>{moment(order.date).format('MM/DD/YYYY')} {(order.time) ? `@ ${moment(order.time, `HH:mm:ss`).format(`h:mm A`)}` : ''}</Paragraph>
                                 </View>
                                 <Divider />
                                 <View>
@@ -186,7 +188,7 @@ class Orders extends Component {
                         {/* no orders */}
                         {(orders.list && orders.list.length < 1) && (
                             <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No orders found</Text>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No orders found</Paragraph>
                             </View>
                         )}
                     </View>

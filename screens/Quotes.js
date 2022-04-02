@@ -1,10 +1,11 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Paginate from '../components/UI/Paginate';
@@ -90,12 +91,12 @@ class Quotes extends Component {
                 />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.total})` : ''}</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.total})` : ''}</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* status filter */}
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Text>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Paragraph>
                             <Dropdown
                                 value={filters.quotes}
                                 onChange={(value) => this.setStatus(value)}
@@ -120,10 +121,10 @@ class Quotes extends Component {
                         {quotes.list && quotes.list.map((quote, index) => (
                             <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
                                 <View style={{ marginBottom: 12 }}>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Title</Text>
-                                    <Text>{quote.title}</Text>
-                                    <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
-                                    <Text>{quote.description}</Text>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Title</Paragraph>
+                                    <Paragraph>{quote.title}</Paragraph>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                                    <Paragraph>{quote.description}</Paragraph>
                                 </View>
                                 <Divider />
                                 <View>
@@ -150,7 +151,7 @@ class Quotes extends Component {
 
                         {(quotes.list && quotes.list.length < 1) && (
                             <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No quotes found</Text>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No quotes found</Paragraph>
                             </View>
                         )}
                         {/* quotes end */}

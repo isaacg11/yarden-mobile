@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Paragraph from './Paragraph';
 
 class Collapse extends Component {
 
@@ -28,7 +29,7 @@ class Collapse extends Component {
             <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                 <TouchableOpacity onPress={() => this.setState({ isOpen: !isOpen })}>
                     <View style={{ display: 'flex', flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Text style={{ fontWeight: 'bold'}}>{title}</Text>
+                        <Paragraph style={{ fontWeight: 'bold'}}>{title}</Paragraph>
                         <Ionicons name={`caret-${(isOpen) ? 'up' : 'down' }-circle-outline`} size={30} style={{ alignSelf: 'flex-end' }} />
                     </View>
                 </TouchableOpacity>

@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
+import fonts from '../styles/fonts';
 
 const componentStyles = StyleSheet.create({
     input: {

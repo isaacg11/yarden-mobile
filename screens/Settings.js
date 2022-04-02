@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { connect } from 'react-redux';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
+import Paragraph from '../components/UI/Paragraph';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 
 class Settings extends Component {
@@ -19,16 +20,16 @@ class Settings extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Settings</Text>
+                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Settings</Paragraph>
                 <View style={{ padding: 12 }}>
                     <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                         <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Name</Text>
-                            <Text>{user.first_name} {user.last_name}</Text>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Email</Text>
-                            <Text>{user.email}</Text>
-                            <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Phone Number</Text>
-                            <Text>{formatPhoneNumber(user.phone_number)}</Text>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Name</Paragraph>
+                            <Paragraph>{user.first_name} {user.last_name}</Paragraph>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Email</Paragraph>
+                            <Paragraph>{user.email}</Paragraph>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Phone Number</Paragraph>
+                            <Paragraph>{formatPhoneNumber(user.phone_number)}</Paragraph>
                         </View>
                         <Divider />
                         <View>

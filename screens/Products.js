@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Text, SafeAreaView, View, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { getProducts } from '../actions/products/index';
 import capitalize from '../helpers/capitalize';
 
@@ -54,7 +55,7 @@ class Products extends Component {
                 />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>{capitalize(name)}</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>{capitalize(name)}</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* products list */}
@@ -68,7 +69,7 @@ class Products extends Component {
                                         >
                                             <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', padding: 12 }}>
                                                 <View style={{ backgroundColor: '#fff', padding: 12 }}>
-                                                    <Text style={{ fontWeight: 'bold', fontSize: 25 }}>{capitalize(product.name)} - {variant.name}</Text>
+                                                    <Paragraph style={{ fontWeight: 'bold', fontSize: 25 }}>{capitalize(product.name)} - {variant.name}</Paragraph>
                                                 </View>
                                             </View>
                                         </ImageBackground>

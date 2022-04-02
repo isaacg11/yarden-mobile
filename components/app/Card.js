@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Modal, Text, ActivityIndicator } from 'react-native';
+import { View, Modal, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import Dropdown from '../../components/UI/Dropdown';
+import Paragraph from '../../components/UI/Paragraph';
 import formatCardNumber from '../../helpers/formatCardNumber';
 import formatExpDate from '../../helpers/formatExpDate';
 import { createToken, createCustomer, deleteCard, createCard } from '../../actions/cards/index';
@@ -108,7 +109,7 @@ class Card extends Component {
                 >
                     <View style={{ marginTop: 50 }}>
                         <View style={{ padding: 12 }}>
-                            <Text style={{ fontSize: 25 }}>{(newCard) ? 'Add' : 'Update'} Card</Text>
+                            <Paragraph style={{ fontSize: 25 }}>{(newCard) ? 'Add' : 'Update'} Card</Paragraph>
                             <View>
                                 <Dropdown
                                     onChange={(value) => this.setState({ type: value })}

@@ -1,12 +1,14 @@
 
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import RNQRGenerator from 'rn-qr-generator';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { createUser, updateUser } from '../actions/user/index';
 import { createOrder } from '../actions/orders/index';
 import { sendEmail } from '../actions/emails/index';
@@ -197,32 +199,32 @@ class Confirm extends Component {
                 {/* loading indicator end */}
 
                 {/* confirmation start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Confirm Appointment</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Confirm Appointment</Header>
                 <View style={{ padding: 12 }}>
                     <View>
-                        <Text style={{ fontWeight: 'bold' }}>Date</Text>
-                        <Text>{date}</Text>
+                        <Paragraph style={{ fontWeight: 'bold' }}>Date</Paragraph>
+                        <Paragraph>{date}</Paragraph>
                     </View>
                     <View style={{ marginTop: 12 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Time</Text>
-                        <Text>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Text>
+                        <Paragraph style={{ fontWeight: 'bold' }}>Time</Paragraph>
+                        <Paragraph>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Paragraph>
                     </View>
                     <View style={{ marginTop: 12 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Name</Text>
-                        <Text>{`${firstName} ${lastName}`}</Text>
+                        <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
+                        <Paragraph>{`${firstName} ${lastName}`}</Paragraph>
                     </View>
                     <View style={{ marginTop: 12 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Location</Text>
-                        <Text>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Text>
+                        <Paragraph style={{ fontWeight: 'bold' }}>Location</Paragraph>
+                        <Paragraph>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Paragraph>
                     </View>
                     <View style={{ marginTop: 12 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Contact Information</Text>
-                        <Text>{`${phoneNumber}`}</Text>
-                        <Text>{`${email}`}</Text>
+                        <Paragraph style={{ fontWeight: 'bold' }}>Contact Information</Paragraph>
+                        <Paragraph>{`${phoneNumber}`}</Paragraph>
+                        <Paragraph>{`${email}`}</Paragraph>
                     </View>
                     <View style={{ marginTop: 12 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Price</Text>
-                        <Text>FREE</Text>
+                        <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
+                        <Paragraph>FREE</Paragraph>
                     </View>
                     <View>
                         <Button

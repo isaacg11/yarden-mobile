@@ -1,11 +1,12 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import { resetPassword } from '../actions/auth/index';
 
@@ -66,7 +67,7 @@ class PasswordConfirm extends Component {
                 {/* loading indicator end */}
 
                 {/* password confirm start */}
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25 }}>Password Confirm</Text>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Password Confirm</Header>
                 <View style={{ padding: 12 }}>
                     <View>
                         <Input

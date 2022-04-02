@@ -1,12 +1,13 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Button from '../components/UI/Button';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import Plans from '../components/app/Plans';
 import Card from '../components/app/Card';
 import { getPlans } from '../actions/plans/index';
@@ -162,7 +163,7 @@ class Enrollment extends Component {
                 />
 
                 <ScrollView>
-                    <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Maintenance Plans</Text>
+                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Maintenance Plans</Paragraph>
                     <View style={{ padding: 12 }}>
 
                         {/* plan list */}

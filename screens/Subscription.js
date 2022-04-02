@@ -1,12 +1,13 @@
 
 import React, { Component } from 'react';
-import { Text, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { alert } from '../components/UI/SystemAlert';
 import { getSubscription, deleteSubscription } from '../actions/subscriptions/index';
 import { getPlan } from '../actions/plans/index';
@@ -127,21 +128,21 @@ class Subscription extends Component {
                     loading={isLoading}
                 />
 
-                <Text style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Subscription</Text>
+                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Subscription</Paragraph>
 
                 {/* subscription start */}
                 {(plan && subscription) && (
                     <View style={{ padding: 12 }}>
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                             <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Plan Name</Text>
-                                <Text>{plan.type}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Text>
-                                <Text>{plan.description}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Rate</Text>
-                                <Text>{`$${subscription.plan.amount / 100}.00 / ${subscription.plan.interval}`}</Text>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12 }}>Current Billing Period</Text>
-                                <Text>{`${moment(subscription.current_period_start * 1000).format('MM/DD/YYYY')} - ${moment(subscription.current_period_end * 1000).format('MM/DD/YYYY')}`}</Text>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Plan Name</Paragraph>
+                                <Paragraph>{plan.type}</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                                <Paragraph>{plan.description}</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Rate</Paragraph>
+                                <Paragraph>{`$${subscription.plan.amount / 100}.00 / ${subscription.plan.interval}`}</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Current Billing Period</Paragraph>
+                                <Paragraph>{`${moment(subscription.current_period_start * 1000).format('MM/DD/YYYY')} - ${moment(subscription.current_period_end * 1000).format('MM/DD/YYYY')}`}</Paragraph>
                             </View>
                             <Divider />
                             <View style={{ marginBottom: 12 }}>
@@ -169,8 +170,8 @@ class Subscription extends Component {
                     <View style={{ padding: 12 }}>
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
                             <View style={{ marginBottom: 12 }}>
-                                <Text style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No subscription found</Text>
-                                <Text style={{ marginTop: 12 }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Text>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No subscription found</Paragraph>
+                                <Paragraph style={{ marginTop: 12 }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
                             </View>
                             <Divider />
                             <View>
