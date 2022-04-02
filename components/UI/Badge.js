@@ -23,6 +23,10 @@ class Badge extends Component {
                         {
                             width: 20,
                             height: 20,
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            transform: [{ translateX: 5 }],
                             backgroundColor: '#ff6060'
                         }
                     }
