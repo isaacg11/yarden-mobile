@@ -17,13 +17,13 @@ class Badge extends Component {
                 <IconBadge
                     MainElement={icon}
                     BadgeElement={
-                        <Paragraph style={{ color: '#FFFFFF',  }}>{count}</Paragraph>
+                        <Paragraph style={{ color: '#FFFFFF', fontWeight: 'bold' }}>{count}</Paragraph>
                     }
                     IconBadgeStyle={
                         {
                             width: 20,
                             height: 20,
-                            backgroundColor: '#ff9900'
+                            backgroundColor: '#ff6060'
                         }
                     }
                 />

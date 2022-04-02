@@ -14,6 +14,7 @@ import Paginate from '../components/UI/Paginate';
 import { getOrders } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 import { setFilters } from '../actions/filters/index';
+import fonts from '../components/styles/fonts'
 
 class Orders extends Component {
 
@@ -119,7 +120,7 @@ class Orders extends Component {
 
                         {/* status filter */}
                         <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Paragraph>
+                            <Paragraph style={{ marginBottom: 4, letterSpacing: 2, fontSize: fonts.h7 }}>FILTER</Paragraph>
                             <Dropdown
                                 value={filters.orders}
                                 onChange={(value) => this.setStatus(value)}
