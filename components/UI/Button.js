@@ -6,16 +6,18 @@ import Paragraph from './Paragraph';
 
 const primaryButtonStyles = StyleSheet.create({
     button: {
-        marginTop: 10,
-        paddingTop: 10,
-        paddingBottom: 10,
-        backgroundColor: '#1E6738',
-        borderRadius: 10,
+        marginTop: 8,
+        paddingTop: 8,
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        display: 'flex',
+        backgroundColor: '#00ff00',
+        borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#fff'
+        borderColor: 'red'
     },
     text: {
-        color: '#fff',
+        color: '#330099',
         textAlign: 'center',
         paddingLeft: 10,
         paddingRight: 10,

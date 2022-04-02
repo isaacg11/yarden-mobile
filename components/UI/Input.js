@@ -5,20 +5,24 @@ import fonts from '../styles/fonts';
 
 const componentStyles = StyleSheet.create({
     input: {
-        height: 40,
-        marginTop: 12,
-        marginBottom: 12,
-        borderWidth: 1,
-        padding: 10,
-        fontFamily: fonts.default
+        // height: 64,
+        marginTop: 8,
+        marginBottom: 8,
+        borderBottomWidth: 1,
+        padding: 16,
+        borderColor: '#330099', // purpleB
+        padding: 16,
+        backgroundColor: 'hsla(120,100%,20%, 0.1)', // greenC-10
     },
     textarea: {
-        height: 60,
-        marginTop: 12,
-        marginBottom: 12,
-        borderWidth: 1,
-        padding: 10,
-        fontFamily: fonts.default
+        height: 64,
+        marginTop: 8,
+        marginBottom: 8,
+        borderBottomWidth: 1,
+        padding: 16,
+        borderColor: '#330099', // green0
+        padding: 16,
+        backgroundColor: 'hsla(120,100%,20%, 0.1)', // greenC-10
     }
 });
 
@@ -51,7 +55,7 @@ class Input extends Component {
                 placeholder={placeholder}
                 secureTextEntry={password}
                 editable={disabled ? false : true}
-                placeholderTextColor='hsla(120,100%,20%, 0.25)' //purpleB
+                placeholderTextColor='hsla(120,100%,20%, 0.25)' //greenC-25
                 selectionColor={'hsl(260,100%,50%)'} //purple0
             />
         )
