@@ -49,7 +49,7 @@ class Input extends Component {
 
     return (
       <View>
-        <Text style={componentStyles.label}>hello</Text>
+        <Text style={componentStyles.label}>{this.props.label}</Text>
         <TextInput
           multiline={multiline}
           numberOfLines={numberOfLines}
