@@ -16,8 +16,9 @@ const componentStyles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    fontSize: fonts.h6,
+    fontSize: fonts.h4,
     marginBottom: units.unit2,
+    color: colors.purpleB,
   },
 });
 
