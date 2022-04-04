@@ -1,56 +1,53 @@
-
-import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, View, Text} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import fonts from '../styles/fonts';
+import units from '../styles/units';
+import colors from '../styles/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
 const componentStyles = StyleSheet.create({
-    dropdown: {
-        // marginTop: 12,
-        // marginBottom: 12,
-        borderWidth: 1,
-        padding: 16,
-        borderColor: '#330099', // green0
-        padding: 16,
-        backgroundColor: 'hsla(120,100%,20%, 0.1)', // greenC-10
-        display: 'flex',
-        alignItems: 'center',
-    }
+  dropdown: {
+    borderWidth: 1,
+    padding: units.unit4,
+    borderColor: colors.purpleB,
+    backgroundColor: colors.greenC10,
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 class Dropdown extends Component {
+  render() {
+    const {placeholder, options, onChange, value, disabled} = this.props;
 
-    render() {
+    return (
+      <View>
+        {this.props.label && (
+          <Text style={{fontSize: fonts.h6, marginBottom: units.unit2}}>
+            {this.props.label}
+          </Text>
+        )}
 
-        const { 
-            placeholder,
-            options,
-            onChange,
-            value,
-            disabled
-        } = this.props;
-
-        return (
-            <View style={componentStyles.dropdown}>
-                <RNPickerSelect
-                    disabled={disabled}
-                    value={value}
-                    placeholder={(placeholder) ? {label: placeholder} : {label: ''}}
-                    onValueChange={(value) => onChange(value)}
-                    items={options}
-                    Icon={() => <Ionicons name={'chevron-down'} size={20} />}
-                    textInputProps={{
-                        style: {
-                            fontFamily: fonts.default,
-                            fontSize: fonts.h6,
-                        }
-                    }}
-                />
-            </View>
-        )
-    }
+        <View style={componentStyles.dropdown}>
+          <RNPickerSelect
+            disabled={disabled}
+            value={value}
+            placeholder={placeholder ? {label: placeholder} : {label: ''}}
+            onValueChange={value => onChange(value)}
+            items={options}
+            Icon={() => <Ionicons name={'chevron-down'} size={fonts.h4} />}
+            textInputProps={{
+              style: {
+                fontFamily: fonts.default,
+                fontSize: fonts.h5,
+              },
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
 }
 
 module.exports = Dropdown;
