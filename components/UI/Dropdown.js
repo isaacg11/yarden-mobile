@@ -24,7 +24,13 @@ class Dropdown extends Component {
     return (
       <View>
         {this.props.label && (
-          <Text style={{fontSize: fonts.h6, marginBottom: units.unit2}}>
+          <Text
+            style={{
+              fontSize: fonts.h4,
+              color: colors.purpleB,
+              marginBottom: units.unit2,
+              fontFamily: fonts.default,
+            }}>
             {this.props.label}
           </Text>
         )}
@@ -36,11 +42,11 @@ class Dropdown extends Component {
             placeholder={placeholder ? {label: placeholder} : {label: ''}}
             onValueChange={value => onChange(value)}
             items={options}
-            Icon={() => <Ionicons name={'chevron-down'} size={fonts.h4} />}
+            Icon={() => <Ionicons name={'chevron-down'} size={fonts.h2} />}
             textInputProps={{
               style: {
                 fontFamily: fonts.default,
-                fontSize: fonts.h5,
+                fontSize: fonts.h3,
               },
             }}
           />
