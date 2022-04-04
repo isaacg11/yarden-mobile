@@ -19,6 +19,7 @@ const componentStyles = StyleSheet.create({
     fontSize: fonts.h4,
     marginBottom: units.unit2,
     color: colors.purpleB,
+    fontWeight: 'bold',
   },
 });
 
