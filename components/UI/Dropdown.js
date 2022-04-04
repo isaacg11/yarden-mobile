@@ -38,11 +38,11 @@ class Dropdown extends Component {
             placeholder={placeholder ? {label: placeholder} : {label: ''}}
             onValueChange={value => onChange(value)}
             items={options}
-            Icon={() => <Ionicons name={'chevron-down'} size={fonts.h4} />}
+            Icon={() => <Ionicons name={'chevron-down'} size={fonts.h2} />}
             textInputProps={{
               style: {
                 fontFamily: fonts.default,
-                fontSize: fonts.h5,
+                fontSize: fonts.h3,
               },
             }}
           />
