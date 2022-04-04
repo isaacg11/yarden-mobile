@@ -107,6 +107,13 @@ class Button extends Component {
       ...this.btn2Style.button,
       backgroundColor: colors.purpleB,
       opacity: this.props.disabled ? 0.5 : 1,
+      shadowColor: colors.purpleC25,
+      shadowOffset: {
+        width: 0,
+        height: 8,
+      },
+      shadowOpacity: 1,
+      shadowRadius: 8,
     },
     text: {
       ...this.btnStyle.text,

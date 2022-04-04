@@ -44,6 +44,13 @@ let greenB25 = `hsla(${hue}, ${saturation}, ${lightness - 20}%, 0.25)`;
 let greenB50 = `hsla(${hue}, ${saturation}, ${lightness - 20}%, 0.5)`;
 let greenA = `hsla(${hue}, ${saturation}, ${lightness - 10}%, ${alpha})`;
 let green0 = `hsla(${hue}, ${saturation}, ${lightness}%, ${alpha})`;
+let green095 = `hsla(${hue}, ${saturation}, ${lightness}%, 0.95)`;
+let green090 = `hsla(${hue}, ${saturation}, ${lightness}%, 0.90)`;
+let green075 = `hsla(${hue}, ${saturation}, ${lightness}%, 0.75)`;
+let green050 = `hsla(${hue}, ${saturation}, ${lightness}%, 0.5)`;
+let green025 = `hsla(${hue}, ${saturation}, ${lightness}%, 0.25)`;
+let green010 = `hsla(${hue}, ${saturation}, ${lightness}%, 0.1)`;
+let green05 = `hsla(${hue}, ${saturation}, ${lightness - 40}%, 0.05)`;
 let green1 = `hsla(${hue}, ${saturation}, ${lightness + 10}%, ${alpha})`;
 let green2 = `hsla(${hue}, ${saturation}, ${lightness + 20}%, ${alpha})`;
 let green3 = `hsla(${hue}, ${saturation}, ${lightness + 30}%, ${alpha})`;
@@ -59,6 +66,13 @@ let purpleD = `hsla(${hue + purple}, ${saturation}, ${
 let purpleC = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 30
 }%, ${alpha})`;
+let purpleC95 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.95)`;
+let purpleC90 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.90)`;
+let purpleC75 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.75)`;
+let purpleC50 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.5)`;
+let purpleC25 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.25)`;
+let purpleC10 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.1)`;
+let purpleC5 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.05)`;
 let purpleB = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 20
 }%, ${alpha})`;
@@ -120,7 +134,17 @@ const colors = {
   greenB25,
   greenB50,
   greenA,
+
+  // green0
   green0,
+  green095,
+  green090,
+  green075,
+  green050,
+  green025,
+  green010,
+  green05,
+
   green1,
   green2,
   green3,
@@ -129,6 +153,13 @@ const colors = {
   purpleE,
   purpleD,
   purpleC,
+  purpleC95,
+  purpleC90,
+  purpleC75,
+  purpleC50,
+  purpleC25,
+  purpleC10,
+  purpleC5,
   purpleB,
   purpleA,
   purple0,
