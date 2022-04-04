@@ -1,104 +1,149 @@
-
-import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import fonts from '../styles/fonts';
+import units from '../styles/units';
+import colors from '../styles/colors';
 import Paragraph from './Paragraph';
 
-const primaryButtonStyles = StyleSheet.create({
-    button: {
-        marginTop: 8,
-        paddingTop: 8,
-        paddingVertical: 16,
-        paddingHorizontal: 32,
-        display: 'flex',
-        backgroundColor: '#00ff00',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: 'red'
-    },
-    text: {
-        color: '#330099',
-        textAlign: 'center',
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontFamily: fonts.default
-    }
-});
-
-const secondaryButtonStyles = StyleSheet.create({
-    button: {
-        marginRight: 20,
-        marginLeft: 20,
-        marginTop: 10,
-        paddingTop: 10,
-        paddingBottom: 10
-    },
-    text: {
-        textAlign: 'center',
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontFamily: fonts.default
-    }
-});
-
-const disabledButtonStyles = StyleSheet.create({
-    button: {
-        marginTop: 10,
-        paddingTop: 10,
-        paddingBottom: 10,
-        backgroundColor: '#DDDDDD',
-        borderRadius: 10,
-        borderWidth: 1,
-    },
-    text: {
-        textAlign: 'center',
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontFamily: fonts.default
-    }
-});
-
 class Button extends Component {
-
-    getButtonStyles(variant) {
-
-        // if disabled, render disabled style
-        if(this.props.disabled) return disabledButtonStyles;
-
-        // render buttons styled based on variant
-        switch(variant) {
-            case 'primary':
-                return primaryButtonStyles;
-            case 'secondary': 
-                return secondaryButtonStyles;
-            default:
-                return primaryButtonStyles; 
-        }
+  getButtonStyles(variant) {
+    // render buttons styled based on variant
+    switch (variant) {
+      case 'button':
+        return this.btnStyle;
+      case 'btn2':
+        return this.btn2Style;
+      case 'btn3':
+        return this.btn3Style;
+      case 'btn4':
+        return this.btn4Style;
+      default:
+        return this.btnStyle;
     }
+  }
 
-    render() {
-        const { 
-            onPress, 
-            text = "Submit",
-            variant,
-            disabled,
-            icon
-        } = this.props;
-
-        const buttonStyles = this.getButtonStyles(variant);
-
-        return (
-            <TouchableOpacity
-                style={buttonStyles.button}
-                onPress={(value) => onPress(value)}
-                underlayColor='#fff'
-                disabled={disabled}>
-                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                    <Paragraph style={buttonStyles.text}>{text}</Paragraph>{icon}
-                </View>
-            </TouchableOpacity>
-        )
+  getVariantStyles() {
+    let variant = {};
+    if (this.props.small) {
+      variant.paddingVertical = units.unit3;
+      variant.paddingHorizontal = units.unit4;
     }
+    if (this.props.large) {
+      variant.paddingVertical = units.unit5;
+      variant.paddingHorizontal = units.unit6;
+    }
+    return variant;
+  }
+
+  getVariantTextStyles() {
+    let variant = {};
+    if (this.props.small) {
+      variant.fontSize = fonts.h5;
+    }
+    if (this.props.large) {
+      variant.fontSize = fonts.h3;
+    }
+    return variant;
+  }
+
+  btnStyle = {
+    button: {
+      paddingVertical: 16,
+      paddingHorizontal: 32,
+      display: 'flex',
+      backgroundColor: colors.green0,
+      borderRadius: 32,
+      borderWidth: 1,
+      borderColor: colors.greenB25,
+      borderTopColor: colors.green4,
+      borderBottomColor: colors.greenB50,
+      fontSize: fonts.h5,
+
+      shadowColor: colors.greenC10,
+      shadowOffset: {
+        width: 0,
+        height: 8,
+      },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+      opacity: this.props.disabled ? 0.5 : 1,
+    },
+    text: {
+      color: colors.purpleB,
+      fontWeight: 'bold',
+      fontFamily: fonts.default,
+    },
+  };
+
+  btn2Style = {
+    button: {
+      ...this.btnStyle.button,
+      backgroundColor: colors.white75,
+      borderColor: colors.green0,
+      borderTopColor: colors.green3,
+      borderBottomColor: colors.greenA,
+      opacity: this.props.disabled ? 0.5 : 1,
+    },
+    text: {
+      ...this.btnStyle.text,
+    },
+  };
+
+  btn3Style = {
+    button: {
+      ...this.btn2Style.button,
+      borderColor: colors.greenB10,
+      borderTopColor: 'white',
+      borderBottomColor: colors.greenB25,
+      opacity: this.props.disabled ? 0.5 : 1,
+    },
+    text: {
+      ...this.btnStyle.text,
+    },
+  };
+
+  btn4Style = {
+    button: {
+      ...this.btn2Style.button,
+      backgroundColor: colors.purpleB,
+      opacity: this.props.disabled ? 0.5 : 1,
+    },
+    text: {
+      ...this.btnStyle.text,
+      color: 'white',
+    },
+  };
+
+  render() {
+    const {onPress, text = 'Submit', variant, disabled, icon} = this.props;
+
+    const buttonStyles = this.getButtonStyles(variant);
+    const buttonVariant = this.getVariantStyles();
+    const buttonVariantText = this.getVariantTextStyles();
+
+    return (
+      <TouchableOpacity
+        style={{...buttonStyles.button, ...buttonVariant}}
+        onPress={value => onPress(value)}
+        underlayColor="#fff"
+        disabled={disabled}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Paragraph style={{...buttonStyles.text, ...buttonVariantText}}>
+            {text}
+          </Paragraph>
+          {icon}
+        </View>
+      </TouchableOpacity>
+    );
+  }
 }
 
 module.exports = Button;
+
+// usage ****
