@@ -22,23 +22,24 @@ class Link extends Component {
   }
 
   linkStyles = {
-    purple: {
-      color: colors.purpleB,
+    sizing: {
       fontSize: fonts.h4,
-      opacity: this.props.disabled ? 0.5 : 1,
       lineHeight: fonts.h3,
+    },
+    purple: {
+      ...this.sizing,
+      color: colors.purpleB,
+      opacity: this.props.disabled ? 0.5 : 1,
     },
     white: {
+      ...this.sizing,
       color: 'white',
-      fontSize: fonts.h4,
       opacity: this.props.disabled ? 0.5 : 1,
-      lineHeight: fonts.h3,
     },
     green: {
+      ...this.sizing,
       color: colors.green0,
-      fontSize: fonts.h4,
       opacity: this.props.disabled ? 0.5 : 1,
-      lineHeight: fonts.h3,
     },
   };
 
