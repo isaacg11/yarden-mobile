@@ -18,6 +18,7 @@ const componentStyles = StyleSheet.create({
   label: {
     fontSize: fonts.h4,
     marginBottom: units.unit2,
+    color: colors.purpleB,
   },
 });
 
