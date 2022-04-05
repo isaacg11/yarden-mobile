@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Modal, ScrollView, Image} from 'react-native';
+import {View, Modal, ScrollView, Image, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../UI/Button';
 import Paragraph from '../UI/Paragraph';
@@ -34,83 +34,118 @@ class AddToCart extends Component {
                   flexGrow: 1,
                   height: '100%',
                 }}>
-                <View
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    height: '100%',
-                  }}>
-                  <View>
-                    {/* header view */}
+                <View>
+                  {/* header view */}
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      overflow: 'visible',
+                      marginTop: units.unit6,
+                    }}>
                     <View
                       style={{
+                        backgroundColor: colors.purpleB,
+                        height: units.unit6,
+                        width: units.unit6,
+                        borderRadius: units.unit5,
                         display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        overflow: 'visible',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        overflow: 'hidden',
                       }}>
-                      <Paragraph
-                        style={{
-                          fontSize: fonts.h3,
-                          marginBottom: units.unit4,
-                          marginTop: units.unit3,
-                          display: 'flex',
-                          justifyContent: 'center',
-                        }}>
-                        Item{qty > 1 ? 's' : ''} added to cart!
-                      </Paragraph>
                       <Ionicons
                         name="checkmark"
                         size={units.unit5}
-                        color={colors.purpleB}
+                        color={colors.green0}
                       />
                     </View>
-
-                    {/* image and description view */}
-                    <View
+                    <Paragraph
                       style={{
-                        flexDirection: 'column',
-                        height: units.unit9,
+                        fontSize: fonts.h3,
+                        marginBottom: units.unit4,
                         marginTop: units.unit3,
-                        marginBottom: units.unit3,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        color: colors.purpleB,
+                        fontWeight: 'bold',
                       }}>
-                      <Image
-                        source={{uri: product.image}}
-                        style={{width: '100%', flex: 1}}
-                      />
-                      <Paragraph
-                        style={{
-                          flex: 1,
-                          marginTop: units.unit3,
-                          lineHeight: fonts.h2,
-                          fontSize: fonts.h3,
-                        }}>
-                        ({qty}) {capitalize(product.name)} -{' '}
-                        {capitalize(product.description)}
-                      </Paragraph>
-                    </View>
+                      Item{qty > 1 ? 's' : ''} added to cart!
+                    </Paragraph>
                   </View>
 
-                  {/* buttons view */}
-                  <View style={{overflow: 'visible', marginTop: units.unit6}}>
-                    <Button
-                      text="View Cart"
-                      onPress={() => {
-                        // close modal
-                        close();
-
-                        // navigate user to cart
-                        onViewCart();
+                  {/* image and description view */}
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      height: units.unit9,
+                      marginTop: units.unit3,
+                      marginBottom: units.unit3,
+                    }}>
+                    <Image
+                      source={{uri: product.image}}
+                      style={{
+                        width: '100%',
+                        flex: 1,
+                        width: null,
+                        height: null,
+                        resizeMode: 'contain',
+                        marginVertical: units.unit6,
                       }}
-                      variant="button"
                     />
-                    <View style={{marginTop: units.unit3}}>
-                      <Button
-                        text="Close"
-                        onPress={() => close()}
-                        variant="btn2"
-                      />
-                    </View>
+                    <Paragraph
+                      style={{
+                        flex: 1,
+                        lineHeight: fonts.h2,
+                        fontSize: fonts.h3,
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: fonts.h2,
+                          textAlign: 'center',
+                          paddingTop: units.unit4,
+                        }}>
+                        ({qty}) {capitalize(product.name)}
+                      </Text>
+
+                      {'\n'}
+                      <Text
+                        style={{textAlign: 'center', color: colors.greenD50}}>
+                        {capitalize(product.description)}
+                      </Text>
+                    </Paragraph>
+                  </View>
+                </View>
+
+                {/* buttons view */}
+                <View
+                  style={{
+                    overflow: 'visible',
+                    position: 'absolute',
+                    width: '100%',
+                    bottom: 0,
+                    transform: [{translateY: units.unit6}],
+                  }}>
+                  <Button
+                    text="View Cart"
+                    onPress={() => {
+                      // close modal
+                      close();
+
+                      // navigate user to cart
+                      onViewCart();
+                    }}
+                    variant="button"
+                  />
+                  <View style={{marginTop: units.unit3}}>
+                    <Button
+                      text="Close"
+                      onPress={() => close()}
+                      variant="btn2"
+                    />
                   </View>
                 </View>
               </ScrollView>
