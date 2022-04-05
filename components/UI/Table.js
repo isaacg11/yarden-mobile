@@ -5,6 +5,7 @@ import Paragraph from '../UI/Paragraph';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import fonts from '../styles/fonts';
 import units from '../styles/units';
+import colors from '../styles/colors';
 
 class Table extends Component {
   renderColumns(row) {
@@ -66,8 +67,9 @@ class Table extends Component {
         style={{
           flex: 1,
           alignSelf: 'stretch',
+          justifyContent: index === 0 ? 'flex-start' : 'center',
           flexDirection: 'row',
-          borderBottomColor: '#ddd',
+          borderBottomColor: colors.greenD25,
           borderBottomWidth: 1,
           paddingVertical: units.unit2,
         }}
@@ -85,10 +87,23 @@ class Table extends Component {
 
     return columns.map((column, index) => {
       return (
-        <View style={{flex: 1, alignSelf: 'stretch', padding: 5}} key={index}>
+        <View
+          style={{
+            flex: 1,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: index === 0 ? 'flex-start' : 'center',
+            padding: units.unit3,
+          }}
+          key={index}>
           <Paragraph
             numberOfLines={3}
-            style={{fontWeight: 'bold', alignItems: 'center'}}>
+            style={{
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
             {column.header}
           </Paragraph>
         </View>
