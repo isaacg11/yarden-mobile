@@ -1,11 +1,10 @@
-
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Text } from 'react-native';
-import { Provider } from "react-redux";
-import store from "./config/store";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {Text} from 'react-native';
+import {Provider} from 'react-redux';
+import store from './config/store';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
@@ -38,18 +37,21 @@ import PurchaseDetails from './screens/PurchaseDetails';
 import Purchases from './screens/Purchases';
 import Plants from './screens/Plants';
 import ReferralHistory from './screens/ReferralHistory';
+import units from './components/styles/units';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
 
 // display config
-const displayNone = () => { return <Text></Text> };
+const displayNone = () => {
+  return <Text></Text>;
+};
 
 // format deep linking config
 const config = {
   screens: {
     PasswordConfirm: 'password-confirm/:userId',
-  }
+  },
 };
 
 // set linking prefixes
@@ -59,7 +61,7 @@ const linking = {
 };
 
 // set header logo
-const logo = <Mark />;
+const logo = <Mark size={units.unit5} />;
 
 // main app render
 function App() {
@@ -71,7 +73,7 @@ function App() {
             name="Splash"
             component={Splash}
             options={{
-              headerLeft: displayNone
+              headerLeft: displayNone,
             }}
           />
           <Stack.Screen
@@ -79,7 +81,7 @@ function App() {
             component={Login}
             options={{
               headerLeft: displayNone,
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
@@ -87,28 +89,28 @@ function App() {
             component={Dashboard}
             options={{
               headerLeft: displayNone,
-              headerShown: false
+              headerShown: false,
             }}
           />
           <Stack.Screen
             name="Register"
             component={Register}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Schedule"
             component={Schedule}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Confirm"
             component={Confirm}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
@@ -116,14 +118,14 @@ function App() {
             component={Welcome}
             options={{
               headerLeft: displayNone,
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Password Reset"
             component={PasswordReset}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
@@ -131,49 +133,49 @@ function App() {
             component={PasswordConfirm}
             options={{
               title: 'Password Confirm',
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Order Details"
             component={OrderDetails}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Change Date"
             component={ChangeDate}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Log Out"
             component={Logout}
             options={{
-              headerLeft: displayNone
+              headerLeft: displayNone,
             }}
           />
           <Stack.Screen
             name="Change Settings"
             component={ChangeSettings}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Quote Details"
             component={QuoteDetails}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Checkout"
             component={Checkout}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
@@ -181,56 +183,56 @@ function App() {
             component={Approved}
             options={{
               headerLeft: displayNone,
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Garden"
             component={Garden}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Enrollment"
             component={Enrollment}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Change Order Details"
             component={ChangeOrderDetails}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Change Plan"
             component={ChangePlan}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Message"
             component={Message}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Request Quote Change"
             component={RequestQuoteChange}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Request Order Change"
             component={RequestOrderChange}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
@@ -238,56 +240,56 @@ function App() {
             component={ChangesRequested}
             options={{
               headerTitle: () => logo,
-              headerLeft: displayNone
+              headerLeft: displayNone,
             }}
           />
           <Stack.Screen
             name="Products"
             component={Products}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Product"
             component={Product}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Cart"
             component={Cart}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Purchase Details"
             component={PurchaseDetails}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Purchases"
             component={Purchases}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Plants"
             component={Plants}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
           <Stack.Screen
             name="Referral History"
             component={ReferralHistory}
             options={{
-              headerTitle: () => logo
+              headerTitle: () => logo,
             }}
           />
         </Stack.Navigator>
