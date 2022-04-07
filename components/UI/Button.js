@@ -66,7 +66,6 @@ class Button extends Component {
       },
       shadowOpacity: 1,
       shadowRadius: 8,
-      opacity: this.props.disabled ? 0.5 : 1,
     },
     text: {
       color: colors.purpleB,
@@ -82,7 +81,6 @@ class Button extends Component {
       borderColor: colors.green0,
       borderTopColor: colors.green3,
       borderBottomColor: colors.greenA,
-      opacity: this.props.disabled ? 0.5 : 1,
     },
     text: {
       ...this.btnStyle.text,
@@ -95,7 +93,6 @@ class Button extends Component {
       borderColor: colors.greenB10,
       borderTopColor: 'white',
       borderBottomColor: colors.greenB25,
-      opacity: this.props.disabled ? 0.5 : 1,
     },
     text: {
       ...this.btnStyle.text,
@@ -106,7 +103,6 @@ class Button extends Component {
     button: {
       ...this.btn2Style.button,
       backgroundColor: colors.purpleB,
-      opacity: this.props.disabled ? 0.5 : 1,
       shadowColor: colors.purpleC25,
       shadowOffset: {
         width: 0,
@@ -127,10 +123,11 @@ class Button extends Component {
     const buttonStyles = this.getButtonStyles(variant);
     const buttonVariant = this.getVariantStyles();
     const buttonVariantText = this.getVariantTextStyles();
+    const disabledStyles = (disabled) ? {opacity: 0.5} : {};
 
     return (
       <TouchableOpacity
-        style={{...buttonStyles.button, ...buttonVariant}}
+        style={{...buttonStyles.button, ...buttonVariant, ...disabledStyles}}
         onPress={value => onPress(value)}
         underlayColor="#fff"
         disabled={disabled}>
