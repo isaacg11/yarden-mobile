@@ -3,6 +3,7 @@ import {View, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Paragraph from './Paragraph';
 import colors from '../styles/colors';
+import units from '../../components/styles/units';
 
 class Collapse extends Component {
   state = {};
@@ -19,7 +20,7 @@ class Collapse extends Component {
     const {isOpen} = this.state;
 
     return (
-      <View style={{backgroundColor: '#fff', padding: 12, borderRadius: 5}}>
+      <View style={{backgroundColor: '#fff', padding: units.unit5, borderRadius: 5}}>
         <TouchableOpacity onPress={() => this.setState({isOpen: !isOpen})}>
           <View
             style={{

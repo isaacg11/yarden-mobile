@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Modal, ScrollView } from 'react-native';
 import Link from '../UI/Link';
 import Paragraph from '../UI/Paragraph';
+import units from '../../components/styles/units';
 
 class ElectronicSignatureAgreement extends Component {
 
@@ -20,11 +21,11 @@ class ElectronicSignatureAgreement extends Component {
                     visible={isOpen}
                     presentationStyle="fullScreen"
                 >
-                    <View style={{ marginTop: 50 }}>
-                        <View style={{ padding: 12 }}>
+                    <View style={{ marginTop: units.unit7 }}>
+                        <View style={{ padding: units.unit5 }}>
                             <ScrollView>
                                 <Link text="Back" onPress={() => close()} />
-                                <Paragraph style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Electronic Record and Signature Disclosure</Paragraph>
+                                <Paragraph style={{ fontSize: units.unit6, marginBottom: units.unit6, marginTop: units.unit5 }}>Electronic Record and Signature Disclosure</Paragraph>
                                 <Paragraph>
                                     Please  read  this Electronic  Record  and  Signature  Disclosure (“Disclosure”) carefully. It contains important information.
                                     {'\n'}

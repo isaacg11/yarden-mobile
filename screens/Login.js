@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 import { View, SafeAreaView } from 'react-native';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
-import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
+import { alert } from '../components/UI/SystemAlert';
 import { login } from '../actions/auth/index';
+import units from '../components/styles/units';
 
 class Login extends Component {
 
@@ -17,8 +18,9 @@ class Login extends Component {
     }
 
     async login() {
-        // render loading indicator
-        await this.setState({ isLoading: true });
+
+        // if user selected too many plants, show error message
+        if(!this.state.email || !this.state.password) return alert('Please complete all required fields');
 
         const credentials = {
             email: this.state.email,
@@ -34,9 +36,6 @@ class Login extends Component {
             // redirect to dashboard
             this.props.navigation.navigate('Dashboard');
         }
-
-        // hide loading indicator
-        await this.setState({ isLoading: false });
     }
 
     render() {
@@ -44,7 +43,6 @@ class Login extends Component {
         const {
             email,
             password,
-            isLoading
         } = this.state;
 
         return (
@@ -52,15 +50,10 @@ class Login extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator start */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-                {/* loading indicator end */}
 
                 {/* login form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Sign In</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Sign In</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
                             onChange={(value) => this.setState({ email: value })}
@@ -81,7 +74,6 @@ class Login extends Component {
                             text="Continue"
                             onPress={() => this.login()}
                             variant="primary"
-                            disabled={!email || !password}
                         />
                     </View>
                     <View style={{ marginTop: 15 }}>

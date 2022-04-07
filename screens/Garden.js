@@ -6,12 +6,13 @@ import { bindActionCreators } from 'redux';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import PlantList from '../components/app/PlantList';
 import PlantAvailability from '../components/app/PlantAvailability';
 import getSeason from '../helpers/getSeason';
 import setPlants from '../helpers/setPlants';
 import { getPlants } from '../actions/plants/index';
+import units from '../components/styles/units';
 
 class Garden extends Component {
 
@@ -91,11 +92,11 @@ class Garden extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Garden Setup</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Garden Setup</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* plant list */}
-                        <View style={{ marginBottom: 12 }}>
+                        <View style={{ marginBottom: units.unit5 }}>
                             <PlantList
                                 plants={this.state}
                                 selectedPlants={selectedPlants}

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Inbox from '../components/app/Inbox';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
+import units from '../components/styles/units';
 
 class Messages extends Component {
 
@@ -15,8 +16,10 @@ class Messages extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messages</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                        Messages
+                    </Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* inbox */}
                         <Inbox

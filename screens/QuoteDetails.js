@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import Collapse from '../components/UI/Collapse';
 import Materials from '../components/app/Materials';
 import Labor from '../components/app/Labor';
@@ -13,6 +13,7 @@ import Disposal from '../components/app/Disposal';
 import QuoteSummary from '../components/app/QuoteSummary';
 import QuoteInfo from '../components/app/QuoteInfo';
 import Button from '../components/UI/Button';
+import units from '../components/styles/units';
 
 class QuoteDetails extends Component {
 
@@ -40,7 +41,7 @@ class QuoteDetails extends Component {
 
     requestChanges() {
         // navigate to request change page
-        this.props.navigation.navigate('Request Quote Change', {quote: this.props.route.params});
+        this.props.navigation.navigate('Request Quote Change', { quote: this.props.route.params });
     }
 
     render() {
@@ -60,12 +61,12 @@ class QuoteDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Quote Details</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Quote Details</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {(quote.line_items) && (
                             // quote summary
-                            <View style={{ marginTop: 12 }}>
+                            <View style={{ marginTop: units.unit5 }}>
                                 <Collapse
                                     title="Quote Summary"
                                     open={true}
@@ -79,7 +80,7 @@ class QuoteDetails extends Component {
                         )}
 
                         {/* quote info */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Quote Info"
                                 open={!quote.line_items}
@@ -94,7 +95,7 @@ class QuoteDetails extends Component {
                         {(quote.line_items) && (
                             <View>
                                 {/* materials */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.materials) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!quote.line_items.materials) ? 'none' : null }}>
                                     <Collapse
                                         title="Materials"
                                         content={
@@ -106,7 +107,7 @@ class QuoteDetails extends Component {
                                 </View>
 
                                 {/* labor */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.labor) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!quote.line_items.labor) ? 'none' : null }}>
                                     <Collapse
                                         title="Labor"
                                         content={
@@ -118,7 +119,7 @@ class QuoteDetails extends Component {
                                 </View>
 
                                 {/* delivery */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.delivery) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!quote.line_items.delivery) ? 'none' : null }}>
                                     <Collapse
                                         title="Delivery"
                                         content={
@@ -130,7 +131,7 @@ class QuoteDetails extends Component {
                                 </View>
 
                                 {/* tool rentals */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.rentals) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!quote.line_items.rentals) ? 'none' : null }}>
                                     <Collapse
                                         title="Tool Rentals"
                                         content={
@@ -142,7 +143,7 @@ class QuoteDetails extends Component {
                                 </View>
 
                                 {/* disposal */}
-                                <View style={{ marginTop: 12, display: (!quote.line_items.disposal) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!quote.line_items.disposal) ? 'none' : null }}>
                                     <Collapse
                                         title="Disposal"
                                         content={

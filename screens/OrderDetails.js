@@ -9,11 +9,13 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
 import { getOrders, updateOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
+import units from '../components/styles/units';
 
 class OrderDetails extends Component {
 
@@ -82,11 +84,13 @@ class OrderDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Order Details</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                        Order Details
+                    </Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* order info */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Order Info"
                                 open={true}
@@ -102,7 +106,7 @@ class OrderDetails extends Component {
 
                         {/* change orders */}
                         {(changeOrders.length > 0) && (
-                            <View style={{ marginTop: 12 }}>
+                            <View style={{ marginTop: units.unit5 }}>
                                 <Collapse
                                     title={`Change Orders (${changeOrders.length})`}
                                     open={changeOrders.find((changeOrder) => changeOrder.status === 'pending approval')}
@@ -118,7 +122,7 @@ class OrderDetails extends Component {
 
                         {/* order images */}
                         {(order.images.length > 0) && (
-                            <View style={{ marginTop: 12 }}>
+                            <View style={{ marginTop: units.unit5 }}>
                                 <ImageGrid images={order.images} />
                             </View>
                         )}

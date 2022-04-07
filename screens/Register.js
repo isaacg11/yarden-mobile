@@ -10,6 +10,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import { getUsers } from '../actions/users/index';
+import units from '../components/styles/units';
 
 class Register extends Component {
 
@@ -83,8 +84,8 @@ class Register extends Component {
                 {/* loading indicator end */}
 
                 {/* registration form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>New Account</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>New Account</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
                             onChange={(value) => this.setState({ firstName: value })}

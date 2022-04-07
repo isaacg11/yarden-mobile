@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Header from '../components/UI/Header';
 import { logout } from '../actions/auth/index';
+import units from '../components/styles/units';
 
 class Logout extends Component {
 
@@ -29,7 +30,7 @@ class Logout extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Logging Out...</Header>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Logging Out...</Header>
             </SafeAreaView>
         )
     }

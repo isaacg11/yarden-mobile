@@ -7,6 +7,7 @@ import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
 import { getProductCategories } from '../../actions/productCategories/index';
 import capitalize from '../../helpers/capitalize';
+import units from '../../components/styles/units';
 
 class ProductCategories extends Component {
 
@@ -59,7 +60,7 @@ class ProductCategories extends Component {
 
                     // render category
                     return (
-                        <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                        <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
                             <TouchableOpacity onPress={() => onPress(category)}>
                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Paragraph style={{ fontWeight: 'bold' }}>{capitalize(category.name)}</Paragraph>

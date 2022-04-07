@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View, Image } from 'react-native';
 import Paragraph from '../UI/Paragraph';
+import units from '../../components/styles/units';
 
 class ImageGrid extends Component {
 
@@ -13,7 +14,7 @@ class ImageGrid extends Component {
                     style={{
                         width: '100%',
                         height: 200,
-                        marginBottom: 12
+                        marginBottom: units.unit5
                     }}
                     source={{
                         uri: image.url
@@ -23,10 +24,10 @@ class ImageGrid extends Component {
         ));
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Images</Paragraph>
+            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Images</Paragraph>
                 <View>
-                    {(images.length > 0) ? imageList : <View><Paragraph style={{textAlign: 'center', marginTop: 25, marginBottom: 25}}>No images found</Paragraph></View>}
+                    {(images.length > 0) ? imageList : <View><Paragraph style={{textAlign: 'center', marginTop: units.unit6, marginBottom: units.unit6}}>No images found</Paragraph></View>}
                 </View>
             </View>
         )

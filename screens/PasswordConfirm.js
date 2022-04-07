@@ -9,6 +9,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import { resetPassword } from '../actions/auth/index';
+import units from '../components/styles/units';
 
 class PasswordConfirm extends Component {
 
@@ -67,8 +68,8 @@ class PasswordConfirm extends Component {
                 {/* loading indicator end */}
 
                 {/* password confirm start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Password Confirm</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Password Confirm</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
                             password

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { View, SafeAreaView, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Table from '../components/UI/Table';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
+import units from '../components/styles/units';
 
 class ReferralHistory extends Component {
 
@@ -17,9 +18,11 @@ class ReferralHistory extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Referral History</Paragraph>
-                    <View style={{ padding: 12 }}>
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                        Referral History
+                    </Header>
+                    <View style={{ padding: units.unit5 }}>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
                             <Table data={referrals} />
                         </View>
                     </View>

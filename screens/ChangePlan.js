@@ -9,12 +9,14 @@ import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Divider from '../components/UI/Divider';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import { updateUser } from '../actions/user/index';
 import { getPlans } from '../actions/plans/index';
 import { deleteSubscription, createSubscription } from '../actions/subscriptions/index';
 import { getOrders, createOrder, updateOrder, updateOrders } from '../actions/orders/index';
 import getOrderDescription from '../helpers/getOrderDescription';
+import units from '../components/styles/units';
 
 class ChangePlan extends Component {
 
@@ -169,23 +171,23 @@ class ChangePlan extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Plan</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Plan</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* plan list start */}
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Current Plan</Paragraph>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Current Plan</Paragraph>
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Paragraph style={{ marginBottom: 12, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Paragraph>
-                                <Paragraph style={{ marginBottom: 12 }}>${currentPlan.rate.toFixed(2)} / month</Paragraph>
+                                <Paragraph style={{ marginBottom: units.unit5, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Paragraph>
+                                <Paragraph style={{ marginBottom: units.unit5 }}>${currentPlan.rate.toFixed(2)} / month</Paragraph>
                             </View>
 
                             <Divider />
-                            <View style={{ padding: 12 }}>
+                            <View style={{ padding: units.unit5 }}>
                                 {(plans.map((plan, index) => (
                                     <View key={index} style={{ display: (plan.type === currentPlan.type) ? 'none' : null }}>
-                                        <View style={{ padding: 12, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
-                                            <View style={{ paddingRight: 12, marginRight: 12 }}>
+                                        <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
+                                            <View style={{ paddingRight: units.unit5, marginRight: units.unit5 }}>
                                                 <CheckBox
                                                     disabled={(selectedPlan === 'none') || ((selectedPlan.type && selectedPlan.type !== plan.type))}
                                                     value={(selectedPlan.type === plan.type)}
@@ -194,12 +196,12 @@ class ChangePlan extends Component {
                                                 />
                                             </View>
                                             <View>
-                                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{plan.type}</Paragraph>
-                                                <Paragraph style={{ marginBottom: 12 }}>${plan.rate.toFixed(2)} / month</Paragraph>
+                                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>{plan.type}</Paragraph>
+                                                <Paragraph style={{ marginBottom: units.unit5 }}>${plan.rate.toFixed(2)} / month</Paragraph>
                                             </View>
                                         </View>
                                         <View>
-                                            <Paragraph style={{ marginBottom: 12, fontStyle: 'italic' }}>{plan.description}</Paragraph>
+                                            <Paragraph style={{ marginBottom: units.unit5, fontStyle: 'italic' }}>{plan.description}</Paragraph>
                                             <Divider />
                                         </View>
                                     </View>

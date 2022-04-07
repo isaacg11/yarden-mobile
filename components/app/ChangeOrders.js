@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import Button from '../UI/Button';
 import Divider from '../UI/Divider';
 import Paragraph from '../UI/Paragraph';
+import units from '../../components/styles/units';
 
 class ChangeOrders extends Component {
 
@@ -14,13 +15,13 @@ class ChangeOrders extends Component {
         } = this.props;
 
         return (
-            <View style={{ padding: 12 }}>
+            <View style={{ padding: units.unit5 }}>
                 {changeOrders.map((changeOrder, index) => (
                     <View key={index}>
-                        <View style={{ marginBottom: 12 }}>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                        <View style={{ marginBottom: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
                             <Paragraph>{changeOrder.description}</Paragraph>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Status</Paragraph>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Status</Paragraph>
                             <Paragraph>{changeOrder.status}</Paragraph>
                         </View>
                         <Divider />

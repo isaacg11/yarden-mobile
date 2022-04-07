@@ -15,6 +15,7 @@ import { sendEmail } from '../actions/emails/index';
 import { sendAlert } from '../actions/alerts/index';
 import { APP_URL } from '../helpers/getUrl';
 import vars from '../vars/index';
+import units from '../components/styles/units';
 
 class Confirm extends Component {
 
@@ -199,30 +200,30 @@ class Confirm extends Component {
                 {/* loading indicator end */}
 
                 {/* confirmation start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Confirm Appointment</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Confirm Appointment</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <Paragraph style={{ fontWeight: 'bold' }}>Date</Paragraph>
                         <Paragraph>{date}</Paragraph>
                     </View>
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: units.unit5 }}>
                         <Paragraph style={{ fontWeight: 'bold' }}>Time</Paragraph>
                         <Paragraph>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Paragraph>
                     </View>
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: units.unit5 }}>
                         <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
                         <Paragraph>{`${firstName} ${lastName}`}</Paragraph>
                     </View>
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: units.unit5 }}>
                         <Paragraph style={{ fontWeight: 'bold' }}>Location</Paragraph>
                         <Paragraph>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Paragraph>
                     </View>
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: units.unit5 }}>
                         <Paragraph style={{ fontWeight: 'bold' }}>Contact Information</Paragraph>
                         <Paragraph>{`${phoneNumber}`}</Paragraph>
                         <Paragraph>{`${email}`}</Paragraph>
                     </View>
-                    <View style={{ marginTop: 12 }}>
+                    <View style={{ marginTop: units.unit5 }}>
                         <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
                         <Paragraph>FREE</Paragraph>
                     </View>

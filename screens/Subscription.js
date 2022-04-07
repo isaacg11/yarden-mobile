@@ -8,11 +8,13 @@ import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import { getSubscription, deleteSubscription } from '../actions/subscriptions/index';
 import { getPlan } from '../actions/plans/index';
 import { getOrders, updateOrder, updateOrders } from '../actions/orders/index';
 import { updateUser } from '../actions/user/index';
+import units from '../components/styles/units';
 
 class Subscription extends Component {
 
@@ -128,24 +130,25 @@ class Subscription extends Component {
                     loading={isLoading}
                 />
 
-                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Subscription</Paragraph>
-
                 {/* subscription start */}
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                    Subscription
+                </Header>
                 {(plan && subscription) && (
-                    <View style={{ padding: 12 }}>
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                            <View style={{ marginBottom: 12 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Plan Name</Paragraph>
+                    <View style={{ padding: units.unit5 }}>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                            <View style={{ marginBottom: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Plan Name</Paragraph>
                                 <Paragraph>{plan.type}</Paragraph>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
                                 <Paragraph>{plan.description}</Paragraph>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Rate</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Rate</Paragraph>
                                 <Paragraph>{`$${subscription.plan.amount / 100}.00 / ${subscription.plan.interval}`}</Paragraph>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Current Billing Period</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Current Billing Period</Paragraph>
                                 <Paragraph>{`${moment(subscription.current_period_start * 1000).format('MM/DD/YYYY')} - ${moment(subscription.current_period_end * 1000).format('MM/DD/YYYY')}`}</Paragraph>
                             </View>
                             <Divider />
-                            <View style={{ marginBottom: 12 }}>
+                            <View style={{ marginBottom: units.unit5 }}>
                                 <Button
                                     text="Change Plan"
                                     onPress={() => this.props.navigation.navigate('Change Plan', { currentPlan: plan })}
@@ -167,11 +170,11 @@ class Subscription extends Component {
 
                 {/* no subscription start */}
                 {(!plan && !subscription) && (
-                    <View style={{ padding: 12 }}>
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                            <View style={{ marginBottom: 12 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No subscription found</Paragraph>
-                                <Paragraph style={{ marginTop: 12 }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
+                    <View style={{ padding: units.unit5 }}>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                            <View style={{ marginBottom: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No subscription found</Paragraph>
+                                <Paragraph style={{ marginTop: units.unit5 }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
                             </View>
                             <Divider />
                             <View>

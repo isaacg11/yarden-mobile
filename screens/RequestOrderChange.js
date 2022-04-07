@@ -7,6 +7,7 @@ import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { updateOrder, getOrders } from '../actions/orders/index';
 import { createChangeOrder } from '../actions/changeOrders/index';
 import { getConversations, createConversation } from '../actions/conversations/index';
@@ -15,6 +16,7 @@ import { sendEmail } from '../actions/emails/index';
 import { sendSms } from '../actions/sms/index';
 import formatAddress from '../helpers/formatAddress';
 import config from '../config/index';
+import units from '../components/styles/units';
 
 class RequestOrderChange extends Component {
 
@@ -187,9 +189,9 @@ class RequestOrderChange extends Component {
                 {/* loading indicator end */}
 
                 {/* change request form start */}
-                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Request Changes</Paragraph>
-                <View style={{ padding: 12 }}>
-                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Request Changes</Header>
+                <View style={{ padding: units.unit5 }}>
+                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
                         <View>
                             <Paragraph>Please describe the changes you'd like made to your order</Paragraph>
                         </View>

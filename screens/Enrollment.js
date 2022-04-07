@@ -7,7 +7,7 @@ import moment from 'moment';
 import Button from '../components/UI/Button';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import Plans from '../components/app/Plans';
 import Card from '../components/app/Card';
 import { getPlans } from '../actions/plans/index';
@@ -15,6 +15,7 @@ import { updateUser } from '../actions/user/index';
 import { createSubscription } from '../actions/subscriptions/index';
 import { createOrder, getOrders } from '../actions/orders/index';
 import getOrderDescription from '../helpers/getOrderDescription';
+import units from '../components/styles/units';
 
 class Enrollment extends Component {
 
@@ -163,8 +164,8 @@ class Enrollment extends Component {
                 />
 
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Maintenance Plans</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Maintenance Plans</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* plan list */}
                         <Plans

@@ -8,8 +8,10 @@ import Input from '../components/UI/Input';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import { updateUser } from '../actions/user/index';
+import units from '../components/styles/units';
 
 class ChangeSettings extends Component {
 
@@ -68,9 +70,9 @@ class ChangeSettings extends Component {
                 {/* loading indicator end */}
 
                 {/* change date form start */}
-                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Change Settings</Paragraph>
-                <View style={{ padding: 12 }}>
-                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Settings</Header>
+                <View style={{ padding: units.unit5 }}>
+                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
                         <View>
                             <Input
                                 onChange={(value) => this.setState({ firstName: value })}

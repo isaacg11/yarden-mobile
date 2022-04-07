@@ -8,9 +8,10 @@ import PaymentMethod from '../components/app/PaymentMethod';
 import Approval from '../components/app/Approval';
 import Collapse from '../components/UI/Collapse';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { getItems } from '../actions/items/index';
 import clearCart from '../helpers/clearCart';
+import units from '../components/styles/units';
 
 class Checkout extends Component {
 
@@ -43,11 +44,11 @@ class Checkout extends Component {
                         loading={isLoading}
                     />
 
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Checkout</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Checkout</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* payment method */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Payment Method"
                                 open={true}
@@ -58,7 +59,7 @@ class Checkout extends Component {
                         </View>
 
                         {/* payment schedule */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Payment Schedule"
                                 content={
@@ -71,12 +72,12 @@ class Checkout extends Component {
                         </View>
 
                         {/* approval */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Payment Approval"
                                 open={true}
                                 content={
-                                    <Approval 
+                                    <Approval
                                         quote={this.props.route.params}
                                         quotes={this.props.route.params.quotes}
                                         plantSelections={this.props.route.params.plantSelections}

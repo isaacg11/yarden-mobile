@@ -6,12 +6,14 @@ import moment from 'moment';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import Button from '../components/UI/Button';
 import Paginate from '../components/UI/Paginate';
 import Divider from '../components/UI/Divider';
 import { getPurchases } from '../actions/purchases/index';
 import calculateQuote from '../helpers/calculateQuote';
 import vars from '../vars/index';
+import units from '../components/styles/units';
 
 class Purchase extends Component {
 
@@ -71,7 +73,7 @@ class Purchase extends Component {
         } = this.props;
 
         const {
-            page, 
+            page,
             limit,
             isLoading
         } = this.state;
@@ -87,8 +89,8 @@ class Purchase extends Component {
                 />
 
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Purchases</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Purchases</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* purchases */}
                         {purchases.list && purchases.list.map((purchase, index) => {
@@ -99,32 +101,32 @@ class Purchase extends Component {
                             const purchaseTotal = total + tax + processingFee;
 
                             return (
-                                <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                                <View style={{ marginBottom: 12 }}>
-                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Order Placed</Paragraph>
-                                    <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
-                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
-                                    <Paragraph>{purchase.order.description}</Paragraph>
-                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Total</Paragraph>
-                                    <Paragraph>${(purchaseTotal).toFixed(2)}</Paragraph>
+                                <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                                    <View style={{ marginBottom: units.unit5 }}>
+                                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Order Placed</Paragraph>
+                                        <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
+                                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
+                                        <Paragraph>{purchase.order.description}</Paragraph>
+                                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Total</Paragraph>
+                                        <Paragraph>${(purchaseTotal).toFixed(2)}</Paragraph>
+                                    </View>
+                                    <Divider />
+                                    <View>
+                                        <Button
+                                            text="View Details"
+                                            onPress={() => {
+                                                this.props.navigation.navigate('Quote Details', purchase.order.bid)
+                                            }}
+                                            variant="secondary"
+                                        />
+                                    </View>
                                 </View>
-                                <Divider />
-                                <View>
-                                    <Button
-                                        text="View Details"
-                                        onPress={() => {
-                                            this.props.navigation.navigate('Quote Details', purchase.order.bid)
-                                        }}
-                                        variant="secondary"
-                                    />
-                                </View>
-                            </View>
                             )
                         })}
 
                         {/* pagination */}
                         {(purchases.list && (purchases.total > limit)) && (
-                            <View style={{ marginBottom: 12 }}>
+                            <View style={{ marginBottom: units.unit5 }}>
                                 <Paginate
                                     page={page}
                                     limit={limit}
@@ -136,8 +138,8 @@ class Purchase extends Component {
 
                         {/* no purchases UI */}
                         {(purchases.list && purchases.list.length < 1) && (
-                            <View style={{ marginBottom: 12 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No purchases found</Paragraph>
+                            <View style={{ marginBottom: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No purchases found</Paragraph>
                             </View>
                         )}
                     </View>

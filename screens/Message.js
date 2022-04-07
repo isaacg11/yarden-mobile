@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import Messenger from '../components/app/Messenger';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
+import units from '../components/styles/units';
 
 class Message extends Component {
 
@@ -13,8 +14,8 @@ class Message extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Messenger</Paragraph>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Messenger</Header>
+                <View style={{ padding: units.unit5 }}>
 
                     {/* messenger */}
                     <Messenger 

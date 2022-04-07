@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 import Paragraph from '../../components/UI/Paragraph';
+import units from '../../components/styles/units';
 
 class QuoteInfo extends Component {
 
@@ -16,21 +17,21 @@ class QuoteInfo extends Component {
 
         return (
             // quote info start
-            <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                <View style={{ marginBottom: 12 }}>
+            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                <View style={{ marginBottom: units.unit5 }}>
                     <Paragraph style={{ fontWeight: 'bold' }}>Title</Paragraph>
                     <Paragraph>{quote.title}</Paragraph>
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
                     <Paragraph>{quote.description}</Paragraph>
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Status</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Status</Paragraph>
                     <Paragraph>{quote.status}</Paragraph>
                     {(quote.status !== 'bid requested') && (
                         <View>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Estimated Start Date</Paragraph>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Estimated Start Date</Paragraph>
                             <Paragraph>{moment(quote.estimated_start_dt).format('MM/DD/YYYY')}</Paragraph>
                         </View>
                     )}
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Customer</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Customer</Paragraph>
                     <Paragraph>
                         {user.first_name} {user.last_name}{"\n"}
                         {user.address}{(user.unit) ? ` #${user.unit}` : ''}, {user.city} {user.state} {user.zip_code}{"\n"}
