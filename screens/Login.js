@@ -6,7 +6,6 @@ import { View, SafeAreaView } from 'react-native';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import Header from '../components/UI/Header';
-import { alert } from '../components/UI/SystemAlert';
 import { login } from '../actions/auth/index';
 import units from '../components/styles/units';
 
@@ -18,10 +17,6 @@ class Login extends Component {
     }
 
     async login() {
-
-        // if user selected too many plants, show error message
-        if(!this.state.email || !this.state.password) return alert('Please complete all required fields');
-
         const credentials = {
             email: this.state.email,
             password: this.state.password
@@ -71,6 +66,7 @@ class Login extends Component {
                     </View>
                     <View>
                         <Button
+                            disabled={!email || !password}
                             text="Continue"
                             onPress={() => this.login()}
                             variant="primary"
