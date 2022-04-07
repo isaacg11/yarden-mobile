@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import PlantList from '../components/app/PlantList';
 import getSeason from '../helpers/getSeason';
 import setPlants from '../helpers/setPlants';
 import { getPlants } from '../actions/plants/index';
+import units from '../components/styles/units';
 
 class Plants extends Component {
 
@@ -122,15 +123,15 @@ class Plants extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Plants Setup</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Plants Setup</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* plant list */}
                         {quotes.map((quote, index) => {
 
                             if(quote.product.type.name === 'garden') {
                                 return (
-                                    <View key={index} style={{ marginBottom: 12 }}>
+                                    <View key={index} style={{ marginBottom: units.unit5 }}>
                                         <PlantList
                                             title={quote.description}
                                             plants={this.state}

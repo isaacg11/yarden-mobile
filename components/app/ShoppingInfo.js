@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Badge from '../UI/Badge';
 import Paragraph from '../UI/Paragraph';
 import { getItems } from '../../actions/items/index';
+import units from '../../components/styles/units';
 
 class ShoppingInfo extends Component {
 
@@ -57,16 +58,16 @@ class ShoppingInfo extends Component {
         } = this.state;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
+            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
                 <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Paragraph style={{marginBottom: 12}}>CART</Paragraph>
+                        <Paragraph style={{marginBottom: units.unit5}}>CART</Paragraph>
                         <TouchableOpacity onPress={() => onSelectCart()}>
                             {cartItems > 0 ? (<Badge icon={<Ionicons name="cart-outline" size={40} />} count={cartItems} />) : <Ionicons name="cart-outline" size={40} />}
                         </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, alignItems: 'center', borderLeftWidth: 1, borderLeftColor: '#ddd' }}>
-                        <Paragraph style={{marginBottom: 12}}>PURCHASES</Paragraph>
+                        <Paragraph style={{marginBottom: units.unit5}}>PURCHASES</Paragraph>
                         <TouchableOpacity onPress={() => onSelectPurchases()}>
                             <Ionicons name="receipt-outline" size={40} />
                         </TouchableOpacity>

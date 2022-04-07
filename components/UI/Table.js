@@ -123,8 +123,8 @@ class Table extends Component {
             flexDirection: 'row',
             borderBottomColor: '#ddd',
             borderBottomWidth: 1,
-            paddingTop: 12,
-            paddingBottom: 12,
+            paddingTop: units.unit5,
+            paddingBottom: units.unit5,
           }}>
           {this.renderHeaders(data[0])}
         </View>

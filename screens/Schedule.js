@@ -12,6 +12,7 @@ import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import { getGeolocation, getCounty, getServiceArea } from '../actions/location/index';
+import units from '../components/styles/units';
 
 class Schedule extends Component {
 
@@ -102,8 +103,8 @@ class Schedule extends Component {
                 {/* loading indicator end */}
 
                 {/* schedule form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Schedule Appointment</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Schedule Appointment</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
                             onChange={(value) => this.setState({ address: value })}

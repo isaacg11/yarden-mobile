@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import Collapse from '../components/UI/Collapse';
 import Materials from '../components/app/Materials';
 import Labor from '../components/app/Labor';
@@ -13,6 +13,7 @@ import Button from '../components/UI/Button';
 import combineMaterials from '../helpers/combineMaterials';
 import formatMaterials from '../helpers/formatMaterials';
 import vars from '../vars';
+import units from '../components/styles/units';
 
 class PurchaseDetails extends Component {
 
@@ -52,7 +53,7 @@ class PurchaseDetails extends Component {
             laborQty += purchase.line_items.labor.qty;
 
             // if delivery fee is found, only add one to entire purchase
-            if(purchase.line_items.delivery) {
+            if (purchase.line_items.delivery) {
                 delivery = purchase.line_items.delivery;
             }
 
@@ -135,11 +136,11 @@ class PurchaseDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Purchase Details</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Purchase Details</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* purchase summary */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Purchase Summary"
                                 open={true}
@@ -152,7 +153,7 @@ class PurchaseDetails extends Component {
                         </View>
 
                         {/* materials */}
-                        <View style={{ marginTop: 12, display: (purchase.line_items.materials.length < 1) ? 'none' : null }}>
+                        <View style={{ marginTop: units.unit5, display: (purchase.line_items.materials.length < 1) ? 'none' : null }}>
                             <Collapse
                                 title="Materials"
                                 content={
@@ -164,7 +165,7 @@ class PurchaseDetails extends Component {
                         </View>
 
                         {/* labor */}
-                        <View style={{ marginTop: 12, display: (!purchase.line_items.labor) ? 'none' : null }}>
+                        <View style={{ marginTop: units.unit5, display: (!purchase.line_items.labor) ? 'none' : null }}>
                             <Collapse
                                 title="Labor"
                                 content={
@@ -176,7 +177,7 @@ class PurchaseDetails extends Component {
                         </View>
 
                         {/* delivery */}
-                        <View style={{ marginTop: 12, display: (!purchase.line_items.delivery) ? 'none' : null }}>
+                        <View style={{ marginTop: units.unit5, display: (!purchase.line_items.delivery) ? 'none' : null }}>
                             <Collapse
                                 title="Delivery"
                                 content={

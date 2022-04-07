@@ -9,8 +9,10 @@ import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Paginate from '../components/UI/Paginate';
+import Header from '../components/UI/Header';
 import { getQuotes } from '../actions/quotes/index';
 import { setFilters } from '../actions/filters/index';
+import units from '../components/styles/units';
 
 class Quotes extends Component {
 
@@ -23,13 +25,13 @@ class Quotes extends Component {
     async setStatus(status) {
 
         // show loading indicator
-        this.setState({ 
+        this.setState({
             isLoading: true,
             status: status
         });
 
         // set new status
-        this.props.setFilters({quotes: status});
+        this.props.setFilters({ quotes: status });
 
         // set quote query
         const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
@@ -91,12 +93,14 @@ class Quotes extends Component {
                 />
 
                 <ScrollView>
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.total})` : ''}</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                        Quotes {(quotes.list && quotes.list.length > 0) ? `(${quotes.total})` : ''}
+                    </Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {/* status filter */}
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Paragraph>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Filter</Paragraph>
                             <Dropdown
                                 value={filters.quotes}
                                 onChange={(value) => this.setStatus(value)}
@@ -119,11 +123,11 @@ class Quotes extends Component {
 
                         {/* quotes start */}
                         {quotes.list && quotes.list.map((quote, index) => (
-                            <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                                <View style={{ marginBottom: 12 }}>
-                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Title</Paragraph>
+                            <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                                <View style={{ marginBottom: units.unit5 }}>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Title</Paragraph>
                                     <Paragraph>{quote.title}</Paragraph>
-                                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Description</Paragraph>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
                                     <Paragraph>{quote.description}</Paragraph>
                                 </View>
                                 <Divider />
@@ -139,7 +143,7 @@ class Quotes extends Component {
 
                         {/* pagination */}
                         {(quotes.list && (quotes.total > limit)) && (
-                            <View style={{ marginBottom: 12 }}>
+                            <View style={{ marginBottom: units.unit5 }}>
                                 <Paginate
                                     page={page}
                                     limit={limit}
@@ -150,8 +154,8 @@ class Quotes extends Component {
                         )}
 
                         {(quotes.list && quotes.list.length < 1) && (
-                            <View style={{ marginBottom: 12 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No quotes found</Paragraph>
+                            <View style={{ marginBottom: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No quotes found</Paragraph>
                             </View>
                         )}
                         {/* quotes end */}

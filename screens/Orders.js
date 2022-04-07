@@ -10,10 +10,12 @@ import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
+import Header from '../components/UI/Header';
 import {getOrders} from '../actions/orders/index';
 import {getChangeOrders} from '../actions/changeOrders/index';
 import {setFilters} from '../actions/filters/index';
 import fonts from '../components/styles/fonts';
+import units from '../components/styles/units';
 
 class Orders extends Component {
   state = {
@@ -98,23 +100,17 @@ class Orders extends Component {
           {/* loading indicator start */}
           <LoadingIndicator loading={isLoading} />
 
-          <Paragraph
-            style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginTop: 25,
-              marginBottom: 25,
-            }}>
+          <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
             Orders {orders.total && orders.total > 0 ? `(${orders.total})` : ''}
-          </Paragraph>
-          <View style={{padding: 12}}>
+          </Header>
+          <View style={{padding: units.unit5}}>
             {/* status filter */}
             <View
               style={{
                 backgroundColor: '#fff',
-                padding: 12,
+                padding: units.unit5,
                 borderRadius: 5,
-                marginBottom: 12,
+                marginBottom: units.unit5,
               }}>
               <Paragraph
                 style={{marginBottom: 4, letterSpacing: 2, fontSize: fonts.h7}}>
@@ -144,9 +140,9 @@ class Orders extends Component {
                   key={index}
                   style={{
                     backgroundColor: '#fff',
-                    padding: 12,
+                    padding: units.unit5,
                     borderRadius: 5,
-                    marginBottom: 12,
+                    marginBottom: units.unit5,
                   }}>
                   {/* change order notification */}
                   {changeOrders.length > 0 &&
@@ -167,12 +163,12 @@ class Orders extends Component {
                     )}
 
                   {/* order info */}
-                  <View style={{marginBottom: 12}}>
-                    <Paragraph style={{fontWeight: 'bold', marginTop: 12}}>
+                  <View style={{marginBottom: units.unit5}}>
+                    <Paragraph style={{fontWeight: 'bold', marginTop: units.unit5}}>
                       Service
                     </Paragraph>
                     <Paragraph>{order.type}</Paragraph>
-                    <Paragraph style={{fontWeight: 'bold', marginTop: 12}}>
+                    <Paragraph style={{fontWeight: 'bold', marginTop: units.unit5}}>
                       Date
                     </Paragraph>
                     <Paragraph>
@@ -197,7 +193,7 @@ class Orders extends Component {
 
             {/* pagination */}
             {orders.list && orders.total > limit && (
-              <View style={{marginBottom: 12}}>
+              <View style={{marginBottom: units.unit5}}>
                 <Paginate
                   page={page}
                   limit={limit}
@@ -209,11 +205,11 @@ class Orders extends Component {
 
             {/* no orders */}
             {orders.list && orders.list.length < 1 && (
-              <View style={{marginBottom: 12}}>
+              <View style={{marginBottom: units.unit5}}>
                 <Paragraph
                   style={{
                     fontWeight: 'bold',
-                    marginTop: 12,
+                    marginTop: units.unit5,
                     textAlign: 'center',
                   }}>
                   No orders found

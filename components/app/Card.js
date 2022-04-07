@@ -10,6 +10,7 @@ import formatCardNumber from '../../helpers/formatCardNumber';
 import formatExpDate from '../../helpers/formatExpDate';
 import { createToken, createCustomer, deleteCard, createCard } from '../../actions/cards/index';
 import { updateUser } from '../../actions/user/index';
+import units from '../../components/styles/units';
 
 class Card extends Component {
 
@@ -107,9 +108,9 @@ class Card extends Component {
                     visible={isOpen}
                     presentationStyle="fullScreen"
                 >
-                    <View style={{ marginTop: 50 }}>
-                        <View style={{ padding: 12 }}>
-                            <Paragraph style={{ fontSize: 25 }}>{(newCard) ? 'Add' : 'Update'} Card</Paragraph>
+                    <View style={{ marginTop: units.unit7 }}>
+                        <View style={{ padding: units.unit5 }}>
+                            <Paragraph style={{ fontSize: units.unit6 }}>{(newCard) ? 'Add' : 'Update'} Card</Paragraph>
                             <View>
                                 <Dropdown
                                     onChange={(value) => this.setState({ type: value })}
@@ -176,7 +177,7 @@ class Card extends Component {
                                 </View>
                             )}
                             {(isLoading) && (
-                                <View style={{ flex: 1, justifyContent: "center", paddingTop: 25 }}>
+                                <View style={{ flex: 1, justifyContent: "center", paddingTop: units.unit6 }}>
                                     <ActivityIndicator />
                                 </View>
                             )}

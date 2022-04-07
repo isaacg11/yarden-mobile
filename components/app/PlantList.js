@@ -4,6 +4,7 @@ import CheckBox from '@react-native-community/checkbox';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
 import Collapse from '../../components/UI/Collapse';
+import units from '../../components/styles/units';
 
 class PlantList extends Component {
 
@@ -21,9 +22,9 @@ class PlantList extends Component {
         const list = plantList.map((plant) => {
             return plant.map((p, index) => (
                 <View key={index}>
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12, display: (index < 1) ? null : 'none', color: '#737373' }}>{p.class.name} vegetables</Paragraph>
-                    <View style={{ padding: 12, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{ paddingRight: 12, marginRight: 12, borderRightColor: '#ddd', borderRightWidth: 1 }}>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5, display: (index < 1) ? null : 'none', color: '#737373' }}>{p.class.name} vegetables</Paragraph>
+                    <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ paddingRight: units.unit5, marginRight: units.unit5, borderRightColor: '#ddd', borderRightWidth: 1 }}>
                             <CheckBox
                                 value={this.state[p.name]}
                                 onValueChange={() => this.onSelect(p)}
@@ -31,7 +32,7 @@ class PlantList extends Component {
                             />
                         </View>
                         <Image
-                            style={{ height: 75, width: 75, marginRight: 12 }}
+                            style={{ height: 75, width: 75, marginRight: units.unit5 }}
                             source={{
                                 uri: p.image,
                             }}
@@ -49,8 +50,8 @@ class PlantList extends Component {
     renderHerbs(herbs) {
         return herbs.map((h, index) => (
             <View key={index}>
-                <View style={{ padding: 12, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ paddingRight: 12, marginRight: 12, borderRightColor: '#ddd', borderRightWidth: 1 }}>
+                <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ paddingRight: units.unit5, marginRight: units.unit5, borderRightColor: '#ddd', borderRightWidth: 1 }}>
                         <CheckBox
                             value={this.state[h.name]}
                             onValueChange={() => this.onSelect(h)}
@@ -58,7 +59,7 @@ class PlantList extends Component {
                         />
                     </View>
                     <Image
-                        style={{ height: 75, width: 75, marginRight: 12 }}
+                        style={{ height: 75, width: 75, marginRight: units.unit5 }}
                         source={{
                             uri: h.image,
                         }}
@@ -107,10 +108,10 @@ class PlantList extends Component {
             const fruit = this.renderPlants(plants.fruit);
 
             return (
-                <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>{title}</Paragraph>
-                    <Paragraph style={{ marginBottom: 25 }}>Select a minimum of 5 plants, and a maximum of 20</Paragraph>
-                    <View style={{ paddingBottom: 25 }}>
+                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>{title}</Paragraph>
+                    <Paragraph style={{ marginBottom: units.unit6 }}>Select a minimum of 5 plants, and a maximum of 20</Paragraph>
+                    <View style={{ paddingBottom: units.unit6 }}>
                         <Paragraph style={{ textAlign: 'center', fontWeight: 'bold', color: '#737373'}}>Selected: {selectedPlants.length}</Paragraph>
                     </View>
                     <Divider />

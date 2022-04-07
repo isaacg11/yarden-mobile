@@ -6,6 +6,7 @@ import Paragraph from '../../components/UI/Paragraph';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
 import vars from '../../vars/index';
+import units from '../../components/styles/units';
 
 class PurchaseSummary extends Component {
 
@@ -48,16 +49,16 @@ class PurchaseSummary extends Component {
         } = this.state;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
+            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
                 {quotes.map((quote, index) => {
                     const q = calculateQuoteCost(quote.line_items);
                     
                     return (
                         <View key={index}>
-                            <View style={{ marginBottom: 12, marginTop: 12 }}>
+                            <View style={{ marginBottom: units.unit5, marginTop: units.unit5 }}>
                                 <Paragraph style={{ fontWeight: 'bold', color: '#737373' }}>{quote.description}</Paragraph>
                             </View>
-                            <View style={{ paddingLeft: 12 }}>
+                            <View style={{ paddingLeft: units.unit5 }}>
                                 <View style={{ display: (quote.line_items.materials) ? 'flex' : 'none', flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Paragraph>Materials</Paragraph>
                                     <Paragraph>${delimit(q.materialsTotal.toFixed(2))}</Paragraph>
@@ -82,15 +83,15 @@ class PurchaseSummary extends Component {
                         </View>
                     )
                 })}
-                <View style={{ marginBottom: 12, marginTop: 12 }}>
+                <View style={{ marginBottom: units.unit5, marginTop: units.unit5 }}>
                     <Paragraph style={{ fontWeight: 'bold', color: '#737373' }}>Taxes and Fees</Paragraph>
                 </View>
-                <View style={{ paddingLeft: 12 }}>
+                <View style={{ paddingLeft: units.unit5 }}>
                     <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Paragraph>Processing Fee</Paragraph>
                         <Paragraph>${delimit((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing).toFixed(2))}</Paragraph>
                     </View>
-                    <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: units.unit5 }}>
                         <Paragraph>Taxes</Paragraph>
                         <Paragraph>${delimit(((materialsTotal) * vars.tax.ca).toFixed(2))}</Paragraph>
                     </View>
@@ -98,7 +99,7 @@ class PurchaseSummary extends Component {
                 <View>
                     <Divider />
                 </View>
-                <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
+                <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: units.unit5 }}>
                     <Paragraph>TOTAL</Paragraph>
                     <Paragraph>${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))}</Paragraph>
                 </View>

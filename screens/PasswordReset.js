@@ -11,6 +11,7 @@ import { alert } from '../components/UI/SystemAlert';
 import { sendEmail } from '../actions/emails/index';
 import { getUsers } from '../actions/users/index';
 import { APP_URL } from '../helpers/getUrl';
+import units from '../components/styles/units';
 
 class PasswordReset extends Component {
 
@@ -72,8 +73,8 @@ class PasswordReset extends Component {
                 {/* loading indicator end */}
 
                 {/* password reset start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Password Reset</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Password Reset</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
                             onChange={(value) => this.setState({ email: value })}

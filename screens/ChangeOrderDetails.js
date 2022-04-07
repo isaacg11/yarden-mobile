@@ -4,7 +4,7 @@ import { SafeAreaView, View, ScrollView } from 'react-native';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
-import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import ChangeOrderInfo from '../components/app/ChangeOrderInfo';
 import QuoteSummary from '../components/app/QuoteSummary';
 import Materials from '../components/app/Materials';
@@ -12,6 +12,7 @@ import Labor from '../components/app/Labor';
 import Delivery from '../components/app/Delivery';
 import ToolRentals from '../components/app/ToolRentals';
 import Disposal from '../components/app/Disposal';
+import units from '../components/styles/units';
 
 class ChangeOrderDetails extends Component {
 
@@ -46,12 +47,12 @@ class ChangeOrderDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 12 }}>Change Order</Paragraph>
-                    <View style={{ padding: 12 }}>
+                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Order</Header>
+                    <View style={{ padding: units.unit5 }}>
 
                         {(changeOrder.line_items) && (
                             // change order summary
-                            <View style={{ marginTop: 12 }}>
+                            <View style={{ marginTop: units.unit5 }}>
                                 <Collapse
                                     title="Change Order Summary"
                                     open={true}
@@ -65,7 +66,7 @@ class ChangeOrderDetails extends Component {
                         )}
 
                         {/* change order info */}
-                        <View style={{ marginTop: 12 }}>
+                        <View style={{ marginTop: units.unit5 }}>
                             <Collapse
                                 title="Change Order Info"
                                 content={
@@ -79,7 +80,7 @@ class ChangeOrderDetails extends Component {
                         {(changeOrder.line_items) && (
                             <View>
                                 {/* materials */}
-                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.materials) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.materials) ? 'none' : null }}>
                                     <Collapse
                                         title="Materials"
                                         content={
@@ -91,7 +92,7 @@ class ChangeOrderDetails extends Component {
                                 </View>
 
                                 {/* labor */}
-                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.labor) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.labor) ? 'none' : null }}>
                                     <Collapse
                                         title="Labor"
                                         content={
@@ -103,7 +104,7 @@ class ChangeOrderDetails extends Component {
                                 </View>
 
                                 {/* delivery */}
-                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.delivery) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.delivery) ? 'none' : null }}>
                                     <Collapse
                                         title="Delivery"
                                         content={
@@ -115,7 +116,7 @@ class ChangeOrderDetails extends Component {
                                 </View>
 
                                 {/* tool rentals */}
-                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.rentals) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.rentals) ? 'none' : null }}>
                                     <Collapse
                                         title="Tool Rentals"
                                         content={
@@ -127,7 +128,7 @@ class ChangeOrderDetails extends Component {
                                 </View>
 
                                 {/* disposal */}
-                                <View style={{ marginTop: 12, display: (!changeOrder.line_items.disposal) ? 'none' : null }}>
+                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.disposal) ? 'none' : null }}>
                                     <Collapse
                                         title="Disposal"
                                         content={

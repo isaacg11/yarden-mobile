@@ -33,6 +33,7 @@ import { createPurchase } from '../../actions/purchases/index';
 import formatMaterials from '../../helpers/formatMaterials';
 import minifyDataToID from '../../helpers/minifyDataToID';
 import combinePlants from '../../helpers/combinePlants';
+import units from '../../components/styles/units';
 
 class Approval extends Component {
 
@@ -692,17 +693,17 @@ class Approval extends Component {
                 />
 
                 {/* approval start */}
-                <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <Paragraph style={{ marginBottom: 12 }}>
+                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                    <Paragraph style={{ marginBottom: units.unit5 }}>
                         By signing, I agree to pay the full amount of ${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))} to {getCompanyName()} for all work listed in section (1a) "Scope of Work" of this contract.
                         I agree to pay the first payment of ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))} today {moment().format('MM/DD/YYYY')}, and a second payment of ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))} once all work has been completed.
                     </Paragraph>
                     <Divider />
-                    <Paragraph style={{ marginTop: 12, textDecorationLine: 'underline' }}>Scope of Work (1a)</Paragraph>
-                    <Paragraph style={{ marginBottom: 12 }}>{quote.title} - {quote.description}</Paragraph>
+                    <Paragraph style={{ marginTop: units.unit5, textDecorationLine: 'underline' }}>Scope of Work (1a)</Paragraph>
+                    <Paragraph style={{ marginBottom: units.unit5 }}>{quote.title} - {quote.description}</Paragraph>
                     <Divider />
                     <View>
-                        <Paragraph style={{ marginTop: 12 }}>Add your e-signature to approve the quote</Paragraph>
+                        <Paragraph style={{ marginTop: units.unit5 }}>Add your e-signature to approve the quote</Paragraph>
                         <Input
                             onChange={(value) => this.setState({ userSignature: value })}
                             value={userSignature}
@@ -715,7 +716,7 @@ class Approval extends Component {
                             onValueChange={() => this.setState({ eSignatureAgreement: !eSignatureAgreement })}
                             boxType="square"
                         />
-                        <View style={{ paddingLeft: 12, paddingRight: 12 }}>
+                        <View style={{ paddingLeft: units.unit5, paddingRight: units.unit5 }}>
                             <Paragraph>By checking this box, you agree to the <Link onPress={() => this.setState({ isOpen: true })} text="Electronic Record and Signature Disclosure"></Link></Paragraph>
                         </View>
                     </View>

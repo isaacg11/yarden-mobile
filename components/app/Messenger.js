@@ -17,6 +17,7 @@ import Paragraph from '../UI/Paragraph';
 import { createMessage, getMessages, updateMessage } from '../../actions/messages/index';
 import { getConversations } from '../../actions/conversations/index';
 import uploadImage from '../../helpers/uploadImage';
+import units from '../../components/styles/units';
 
 class Messenger extends Component {
 
@@ -260,11 +261,11 @@ class Messenger extends Component {
                     close={() => this.setState({ isOpen: false, imageUrl: null })}
                 />
 
-                <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <View style={{ marginBottom: 12 }}>
+                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                    <View style={{ marginBottom: units.unit5 }}>
 
                         {/* message receiver dropdown */}
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>To</Paragraph>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>To</Paragraph>
                         <Dropdown
                             disabled={true}
                             value={receiver}
@@ -275,8 +276,8 @@ class Messenger extends Component {
                         />
 
                         {/* conversation thread */}
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12, marginBottom: 12 }}>Conversation</Paragraph>
-                        <View style={{ backgroundColor: '#F7F7F7', height: 200, borderWidth: 1, padding: 12, display: 'flex' }}>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Conversation</Paragraph>
+                        <View style={{ backgroundColor: '#F7F7F7', height: 200, borderWidth: 1, padding: units.unit5, display: 'flex' }}>
                             <ScrollView
                                 ref={ref => { this.scrollView = ref }}
                                 onContentSizeChange={() => this.scrollView.scrollToEnd({ animated: false })}>
@@ -294,7 +295,7 @@ class Messenger extends Component {
                                                         {message.text}
                                                     </Paragraph>
                                                     {(message.attachments.length > 0) && message.attachments.map((attachment, i) => (
-                                                        <View key={i} style={{ marginTop: 12 }}>
+                                                        <View key={i} style={{ marginTop: units.unit5 }}>
                                                             <TouchableOpacity onPress={() => this.setState({
                                                                 imageUrl: attachment.url,
                                                                 isOpen: true
@@ -321,7 +322,7 @@ class Messenger extends Component {
                         </View>
 
                         {/* message input */}
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Message</Paragraph>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Message</Paragraph>
                         <Input
                             onChange={(value) => this.setState({ message: value })}
                             value={message}
@@ -332,7 +333,7 @@ class Messenger extends Component {
 
                         {/* attachments */}
                         <View>
-                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: units.unit5 }}>
                                 <Paragraph>Attachments ({attachments.length})</Paragraph>
                                 <Link text="Delete" onPress={() => this.setState({ attachments: [] })}></Link>
                             </View>

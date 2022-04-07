@@ -10,6 +10,7 @@ import Button from '../components/UI/Button';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { getItems } from '../actions/items/index';
 import { getRules } from '../actions/rules/index';
 import { getIrrigation } from '../actions/irrigation/index';
@@ -19,6 +20,7 @@ import updateCart from '../helpers/updateCart';
 import applyProductRules from '../helpers/applyProductRules';
 import getProductMeasurements from '../helpers/getProductMeasurements';
 import vars from '../vars/index';
+import units from '../components/styles/units';
 
 class Cart extends Component {
 
@@ -312,14 +314,14 @@ class Cart extends Component {
 
         // render items
         return list.map((li, index) => (
-            <View key={index} style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: (index === (list.length - 1)) ? 0 : 12 }}>
-                <View style={{ display: 'flex', flexDirection: 'row', height: 100, marginTop: 12, marginBottom: 12 }}>
+            <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: (index === (list.length - 1)) ? 0 : units.unit5 }}>
+                <View style={{ display: 'flex', flexDirection: 'row', height: 100, marginTop: units.unit5, marginBottom: units.unit5 }}>
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate('Product', { product: li.item.product, variant: li.variant })}>
                         <Image source={{ uri: li.variant.image }} style={{ width: '100%', height: '100%' }} />
                     </TouchableOpacity>
                     <View style={{ flex: 3 }}>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <Paragraph style={{ marginLeft: 12, marginRight: 12, flex: 3 }}>{capitalize(li.item.product.name)} - {capitalize(truncate(li.variant.name, 35))}</Paragraph>
+                            <Paragraph style={{ marginLeft: units.unit5, marginRight: units.unit5, flex: 3 }}>{capitalize(li.item.product.name)} - {capitalize(truncate(li.variant.name, 35))}</Paragraph>
                             <TouchableOpacity onPress={async () => {
 
                                 const variantQty = await AsyncStorage.getItem(li.variant._id);
@@ -331,8 +333,8 @@ class Cart extends Component {
                                 <Ionicons name="trash-outline" size={20} color="#ff4d4d" />
                             </TouchableOpacity>
                         </View>
-                        <View style={{ marginLeft: 12, display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                            <View style={{ marginRight: 12 }}>
+                        <View style={{ marginLeft: units.unit5, display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ marginRight: units.unit5 }}>
                                 <Input
                                     disabled={true}
                                     type="numeric"
@@ -375,8 +377,9 @@ class Cart extends Component {
 
                 {/* items list */}
                 <ScrollView>
-                    <View style={{ padding: 12 }}>
-                        <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Cart</Paragraph>
+                    <View style={{ padding: units.unit5 }}>
+                        
+                        <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Cart</Header>
                         <View style={{ display: (items.length > 0) ? null : 'none' }}>
                             {
                                 (!isLoading) ? (
@@ -397,7 +400,7 @@ class Cart extends Component {
                                     </View>
                                 ) : <LoadingIndicator loading={isLoading} />}
                         </View>
-                        <View style={{ display: (items.length > 0) ? 'none' : null, padding: 25 }}>
+                        <View style={{ display: (items.length > 0) ? 'none' : null, padding: units.unit6 }}>
                             <Paragraph style={{ fontWeight: 'bold', textAlign: 'center' }}>No items in cart</Paragraph>
                         </View>
                     </View>

@@ -11,6 +11,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
 import { updateOrder, getOrders } from '../actions/orders/index';
+import units from '../components/styles/units';
 
 class ChangeDate extends Component {
 
@@ -61,8 +62,8 @@ class ChangeDate extends Component {
                 {/* loading indicator end */}
 
                 {/* change date form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: 25 }}>Change Date</Header>
-                <View style={{ padding: 12 }}>
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Date</Header>
+                <View style={{ padding: units.unit5 }}>
                     <View>
                         <DateSelect
                             mode="date"

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Modal, Image } from 'react-native';
 import Link from '../UI/Link';
 import Paragraph from '../UI/Paragraph';
+import units from '../../components/styles/units';
 
 class ImageDetails extends Component {
 
@@ -21,10 +22,10 @@ class ImageDetails extends Component {
                     visible={isOpen}
                     presentationStyle="fullScreen"
                 >
-                    <View style={{ marginTop: 50 }}>
-                        <View style={{ padding: 12 }}>
+                    <View style={{ marginTop: units.unit7 }}>
+                        <View style={{ padding: units.unit5 }}>
                             <Link text="Back" onPress={() => close()} />
-                            <Paragraph style={{ fontSize: 25, marginBottom: 25, marginTop: 12 }}>Image Details</Paragraph>
+                            <Paragraph style={{ fontSize: units.unit6, marginBottom: units.unit6, marginTop: units.unit5 }}>Image Details</Paragraph>
                             <Image
                                 source={{ uri: url }}
                                 style={{ width: '100%', height: 200 }}

@@ -18,6 +18,7 @@ import getProductMeasurements from '../helpers/getProductMeasurements';
 import calculateMaterials from '../helpers/calculateMaterials';
 import calculateLabor from '../helpers/calculateLabor';
 import delimit from '../helpers/delimit';
+import units from '../components/styles/units';
 
 class Product extends Component {
 
@@ -156,21 +157,21 @@ class Product extends Component {
                     source={{ uri: image }}
                     style={{ width: '100%', height: 200 }}
                 >
-                    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', padding: 12 }}>
-                        <View style={{ backgroundColor: '#fff', padding: 12 }}>
-                            <Paragraph style={{ fontWeight: 'bold', fontSize: 25 }}>{capitalize(name)}</Paragraph>
+                    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', padding: units.unit5 }}>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold', fontSize: units.unit6 }}>{capitalize(name)}</Paragraph>
                         </View>
                     </View>
                 </ImageBackground>
 
                 {/* product info */}
-                <View style={{ padding: 12 }}>
-                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                        <View style={{ marginBottom: 12 }}>
+                <View style={{ padding: units.unit5 }}>
+                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                        <View style={{ marginBottom: units.unit5 }}>
                             <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
                             <Paragraph>${delimit(price.toFixed(2))} / each</Paragraph>
                         </View>
-                        <View style={{ marginBottom: 12 }}>
+                        <View style={{ marginBottom: units.unit5 }}>
                             <Paragraph style={{ fontWeight: 'bold' }}>Description</Paragraph>
                             <Paragraph>{description}</Paragraph>
                         </View>

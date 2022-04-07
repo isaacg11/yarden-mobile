@@ -10,6 +10,7 @@ import Button from '../UI/Button';
 import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
 import { getMessages } from '../../actions/messages/index';
+import units from '../../components/styles/units';
 
 class Inbox extends Component {
 
@@ -79,8 +80,8 @@ class Inbox extends Component {
                 />
 
                 {/* status filter */}
-                <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5, marginBottom: 12 }}>
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Filter</Paragraph>
+                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Filter</Paragraph>
                     <Dropdown
                         value={status}
                         onChange={(value) => this.setStatus(value)}
@@ -102,11 +103,11 @@ class Inbox extends Component {
                     const lastIndex = (conversation.length - 1);
                     const latestMessage = conversation[lastIndex];
                     return (
-                        <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }} key={index}>
-                            <View style={{ marginBottom: 12 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>From</Paragraph>
+                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }} key={index}>
+                            <View style={{ marginBottom: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>From</Paragraph>
                                 <Paragraph>{latestMessage.sender.first_name} {latestMessage.sender.last_name[0]}.</Paragraph>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Date</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Date</Paragraph>
                                 <Paragraph>{moment(latestMessage.dt_created).format('MM/DD/YYYY')}</Paragraph>
                             </View>
                             <Divider />
@@ -121,8 +122,8 @@ class Inbox extends Component {
                     )
                 })}
                 {(inbox.length < 1) && (
-                    <View style={{ marginBottom: 12 }}>
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12, textAlign: 'center' }}>No messages found</Paragraph>
+                    <View style={{ marginBottom: units.unit5 }}>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No messages found</Paragraph>
                     </View>
                 )}
             </View>

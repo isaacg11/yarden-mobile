@@ -6,7 +6,9 @@ import moment from 'moment';
 import { SafeAreaView, View, Image } from 'react-native';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
+import Header from '../components/UI/Header';
 import { getReferrals } from '../actions/referrals/index';
+import units from '../components/styles/units';
 
 class Referrals extends Component {
 
@@ -21,7 +23,7 @@ class Referrals extends Component {
 
         // format referrals
         this.formatReferrals();
-        
+
     }
 
     formatReferrals() {
@@ -52,14 +54,17 @@ class Referrals extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Paragraph style={{ fontSize: 25, textAlign: 'center', marginTop: 25, marginBottom: 25 }}>Referrals</Paragraph>
-                <View style={{ padding: 12 }}>
+
+                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                    Referrals
+                </Header>
+                <View style={{ padding: units.unit5 }}>
 
                     {/* QR code */}
-                    <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Yarden Referral Program</Paragraph>
-                        <Paragraph style={{ marginTop: 12 }}>Share this QR with your family and friends. Upon signing up for service, you will both get 1 FREE month of gardening maintenance!</Paragraph>
-                        <View style={{ marginTop: 12, display: 'flex', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Yarden Referral Program</Paragraph>
+                        <Paragraph style={{ marginTop: units.unit5 }}>Share this QR with your family and friends. Upon signing up for service, you will both get 1 FREE month of gardening maintenance!</Paragraph>
+                        <View style={{ marginTop: units.unit5, display: 'flex', alignItems: 'center' }}>
                             <Image source={{ uri: qrCode }} style={{ width: 200, height: 200 }} />
                         </View>
                     </View>

@@ -7,6 +7,7 @@ import Paragraph from '../../components/UI/Paragraph';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
 import vars from '../../vars/index';
+import units from '../../components/styles/units';
 
 class PaymentSchedule extends Component {
 
@@ -62,21 +63,21 @@ class PaymentSchedule extends Component {
         } = this.state;
 
         return (
-            <View style={{ padding: 12 }}>
-                <View style={{ backgroundColor: '#fff', padding: 12, borderRadius: 5 }}>
-                    <View style={{ marginBottom: 12 }}>
+            <View style={{ padding: units.unit5 }}>
+                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                    <View style={{ marginBottom: units.unit5 }}>
                         <Paragraph>Upon checking out, your card will be charged today ({moment().format('MM/DD/YYYY')}) for the first payment.</Paragraph>
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Payment #1</Paragraph>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Payment #1</Paragraph>
                         <Paragraph>
                             {(materialsTotal > 0) && `- Materials${"\n"}`}
                             {(deliveryTotal > 0) && `- Delivery${"\n"}`}
                             {(rentalTotal > 0) && `- Rentals${"\n"}`}
                             {(disposalTotal > 0) && `- Disposal${"\n"}`}
                         </Paragraph>
-                        <Paragraph style={{ marginBottom: 12 }}>TOTAL: ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))}</Paragraph>
+                        <Paragraph style={{ marginBottom: units.unit5 }}>TOTAL: ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))}</Paragraph>
                         <Divider />
-                        <Paragraph style={{ marginTop: 12 }}>Once the work is completed, your card will be charged for the second payment.</Paragraph>
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: 12 }}>Payment #2</Paragraph>
+                        <Paragraph style={{ marginTop: units.unit5 }}>Once the work is completed, your card will be charged for the second payment.</Paragraph>
+                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Payment #2</Paragraph>
                         <Paragraph>
                             {(laborTotal > 0) && `- Labor${"\n"}`}
                         </Paragraph>
