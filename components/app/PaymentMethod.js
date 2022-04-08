@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import {connect} from 'react-redux';
 import Button from '../../components/UI/Button';
-import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
 import CreditCard from './CreditCard';
 import units from '../../components/styles/units';
@@ -42,7 +41,6 @@ class PaymentMethod extends Component {
                   }}>
                   No payment method found
                 </Paragraph>
-                <Divider />
                 <Button
                   text="Add Card +"
                   onPress={() => this.setState({isOpen: true})}
@@ -58,7 +56,6 @@ class PaymentMethod extends Component {
                   {user.payment_info.card_exp_month}/
                   {user.payment_info.card_exp_year})
                 </Paragraph>
-                <Divider />
                 <Button
                   text="Edit"
                   onPress={() => this.setState({isOpen: true})}

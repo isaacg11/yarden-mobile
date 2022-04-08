@@ -5,7 +5,6 @@ import {bindActionCreators} from 'redux';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 import Dropdown from '../UI/Dropdown';
-import Paragraph from '../UI/Paragraph';
 import Header from '../UI/Header';
 import formatCardNumber from '../../helpers/formatCardNumber';
 import formatExpDate from '../../helpers/formatExpDate';
@@ -176,9 +175,7 @@ class CreditCard extends Component {
                       flexDirection: 'row',
                     }}>
                     <Text>{this.state.number || '####-####-####-####'}</Text>
-
-                    {/* TODO: Expiration date updates while user is typing */}
-                    <Text>{this.state.date || 'MM/YY'}</Text>
+                    <Text>{this.state.expDate || 'MM/YY'}</Text>
                   </View>
                 </View>
               </View>
@@ -218,7 +215,10 @@ class CreditCard extends Component {
               <View>
                 <Input
                   label="Card Number"
-                  onChange={value => this.setState({number: value})}
+                  onChange={value => {
+                    if(value.length > 19) return;
+                    this.setState({number: value});
+                  }}
                   value={formatCardNumber(this.state.number)}
                   placeholder="####-####-####-####"
                 />
@@ -226,7 +226,10 @@ class CreditCard extends Component {
               <View>
                 <Input
                   label="Exp. Date"
-                  onChange={value => this.setState({expDate: value})}
+                  onChange={value => {
+                    if(value.length > 5) return;
+                    this.setState({expDate: value});
+                  }}
                   value={formatExpDate(this.state.expDate)}
                   placeholder="MM/YY"
                 />
