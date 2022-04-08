@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Paragraph from './Paragraph';
 import colors from '../styles/colors';
 import units from '../../components/styles/units';
+import fonts from '../styles/fonts';
 
 class Collapse extends Component {
   state = {};
@@ -20,7 +21,27 @@ class Collapse extends Component {
     const {isOpen} = this.state;
 
     return (
-      <View style={{backgroundColor: '#fff', padding: units.unit5, borderRadius: 5}}>
+      <View
+        style={{
+          backgroundColor: colors.white75,
+          width: '100%',
+          justifyContent: 'space-between',
+          marginBottom: units.unit4,
+          shadowColor: colors.greenC10,
+          padding: units.unit5,
+          borderWidth: 1,
+          borderColor: colors.greenC10,
+          borderTopColor: 'white',
+          borderBottomColor: colors.greenC25,
+          borderRadius: units.unit4,
+          shadowOffset: {
+            width: 0,
+            height: 8,
+          },
+          shadowOpacity: 1,
+          shadowRadius: 8,
+          shadowColor: colors.greenC10,
+        }}>
         <TouchableOpacity onPress={() => this.setState({isOpen: !isOpen})}>
           <View
             style={{
@@ -34,7 +55,7 @@ class Collapse extends Component {
             <Paragraph style={{fontWeight: 'bold'}}>{title}</Paragraph>
             <Ionicons
               name={`caret-${isOpen ? 'up' : 'down'}`}
-              size={30}
+              size={fonts.h2}
               style={{alignSelf: 'flex-end'}}
               color={colors.purpleB}
             />

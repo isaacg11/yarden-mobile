@@ -1,139 +1,140 @@
-
-import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {SafeAreaView, View, ScrollView} from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import { alert } from '../components/UI/SystemAlert';
+import {alert} from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
 import PlantList from '../components/app/PlantList';
 import PlantAvailability from '../components/app/PlantAvailability';
 import getSeason from '../helpers/getSeason';
 import setPlants from '../helpers/setPlants';
-import { getPlants } from '../actions/plants/index';
+import {getPlants} from '../actions/plants/index';
 import units from '../components/styles/units';
 
 class Garden extends Component {
+  state = {
+    selectedPlants: [],
+  };
 
-    state = {
-        selectedPlants: []
-    }
+  async componentDidMount() {
+    // show loading indicator
+    this.setState({isLoading: true});
 
-    async componentDidMount() {
+    // set current season
+    const season = getSeason();
 
-        // show loading indicator
-        this.setState({ isLoading: true });
+    // get all plants associated with the current season
+    await this.props.getPlants(`season=${season}`);
 
-        // set current season
-        const season = getSeason();
+    // set plants
+    const plants = setPlants(this.props.plants);
 
-        // get all plants associated with the current season
-        await this.props.getPlants(`season=${season}`);
+    // update UI
+    this.setState({
+      vegetables: plants.vegetables,
+      herbs: plants.herbs,
+      fruit: plants.fruit,
+      isLoading: false,
+    });
+  }
 
-        // set plants
-        const plants = setPlants(this.props.plants);
+  next() {
+    // if user selected too many plants, show error message
+    if (this.state.selectedPlants.length > 20)
+      return alert(
+        'You selected too many plants. Please adjust your selection to a maximum of 20 plants',
+      );
 
-        // update UI
-        this.setState({
-            vegetables: plants.vegetables,
-            herbs: plants.herbs,
-            fruit: plants.fruit,
-            isLoading: false
-        })
-    }
+    // set garden plants
+    const plants = setPlants(this.state.selectedPlants);
 
-    next() {
-        // if user selected too many plants, show error message
-        if(this.state.selectedPlants.length > 20) return alert('You selected too many plants. Please adjust your selection to a maximum of 20 plants');
+    // set plants
+    const vegetables = plants.vegetables;
+    const fruit = plants.fruit;
+    const herbs = plants.herbs;
 
-        // set garden plants
-        const plants = setPlants(this.state.selectedPlants);
+    // combine quote and plants
+    const quoteAndPlants = {
+      quoteTitle: this.props.route.params.title,
+      ...{vegetables, herbs, fruit},
+    };
 
-        // set plants
-        const vegetables = plants.vegetables;
-        const fruit = plants.fruit;
-        const herbs = plants.herbs;
+    // set plant selections
+    const plantSelections = [quoteAndPlants];
 
-        // combine quote and plants
-        const quoteAndPlants = {
-            quoteTitle: this.props.route.params.title,
-            ...{ vegetables, herbs, fruit }
-        }
+    // combine quote and plants
+    const params = {
+      ...this.props.route.params,
+      ...{plantSelections},
+      ...{isCheckout: true},
+    };
 
-        // set plant selections
-        const plantSelections = [quoteAndPlants];
+    // navigate to plan enrollment
+    this.props.navigation.navigate('Enrollment', params);
+  }
 
-        // combine quote and plants
-        const params = {
-            ...this.props.route.params,
-            ...{ plantSelections },
-            ...{isCheckout: true}
-        }
+  render() {
+    const {selectedPlants, isLoading} = this.state;
 
-        // navigate to plan enrollment
-        this.props.navigation.navigate('Enrollment', params);
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+        }}>
+        {/* loading indicator */}
+        <LoadingIndicator loading={isLoading} />
 
-    }
+        <ScrollView>
+          <Header
+            type="h4"
+            style={{textAlign: 'center', marginTop: units.unit3}}>
+            Garden Setup
+          </Header>
+          <View style={{padding: 0}}>
+            {/* plant list */}
+            <View style={{marginBottom: units.unit5}}>
+              <PlantList
+                plants={this.state}
+                selectedPlants={selectedPlants}
+                onSelect={selected => this.setState({selectedPlants: selected})}
+              />
+            </View>
 
-    render() {
+            {/* plant availability */}
+            <PlantAvailability />
 
-        const {
-            selectedPlants,
-            isLoading
-        } = this.state;
-
-        return (
-            <SafeAreaView style={{
-                flex: 1,
-                width: "100%",
-            }}>
-                {/* loading indicator */}
-                <LoadingIndicator loading={isLoading} />
-
-                <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Garden Setup</Header>
-                    <View style={{ padding: units.unit5 }}>
-
-                        {/* plant list */}
-                        <View style={{ marginBottom: units.unit5 }}>
-                            <PlantList
-                                plants={this.state}
-                                selectedPlants={selectedPlants}
-                                onSelect={(selected) => this.setState({ selectedPlants: selected })}
-                            />
-                        </View>
-
-                        {/* plant availability */}
-                        <PlantAvailability />
-
-                        {/* navigation button */}
-                        <View>
-                            <Button
-                                disabled={(selectedPlants.length < 5)}
-                                text="Continue"
-                                onPress={() => this.next()}
-                                variant="primary"
-                            />
-                        </View>
-
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        )
-    }
+            {/* navigation button */}
+            <View>
+              <Button
+                disabled={selectedPlants.length < 5}
+                text="Continue"
+                onPress={() => this.next()}
+                variant="primary"
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        plants: state.plants
-    }
+  return {
+    plants: state.plants,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        getPlants
-    }, dispatch)
+  return bindActionCreators(
+    {
+      getPlants,
+    },
+    dispatch,
+  );
 }
 
 Garden = connect(mapStateToProps, mapDispatchToProps)(Garden);
