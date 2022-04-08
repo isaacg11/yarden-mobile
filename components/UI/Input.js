@@ -6,7 +6,7 @@ import fonts from '../styles/fonts';
 
 const componentStyles = StyleSheet.create({
   input: {
-    marginBottom: units.unit3,
+    marginBottom: units.unit4,
     borderBottomWidth: 1,
     padding: units.unit4,
     borderColor: colors.purpleB,
@@ -25,12 +25,12 @@ const componentStyles = StyleSheet.create({
     padding: units.unit4,
     backgroundColor: colors.greenC10,
   },
-  label: {
-    fontSize: fonts.h4,
-    marginBottom: units.unit2,
-    color: colors.purpleB,
-    fontWeight: 'bold',
-  },
+  //   label: {
+  //     fontSize: fonts.h4,
+  //     marginBottom: units.unit2,
+  //     color: colors.purpleB,
+  //     fontWeight: 'bold',
+  //   },
 });
 
 class Input extends Component {
@@ -49,7 +49,7 @@ class Input extends Component {
 
     return (
       <View>
-        <Text style={componentStyles.label}>{this.props.label}</Text>
+        <Text style={fonts.inputLabel}>{this.props.label}</Text>
         <TextInput
           multiline={multiline}
           numberOfLines={numberOfLines}

@@ -14,6 +14,7 @@ const componentStyles = StyleSheet.create({
     backgroundColor: colors.greenC10,
     display: 'flex',
     alignItems: 'center',
+    marginBottom: units.unit4,
   },
   label: {
     fontSize: fonts.h4,
@@ -30,7 +31,7 @@ class Dropdown extends Component {
     return (
       <View>
         {this.props.label && (
-          <Text style={componentStyles.label}>{this.props.label}</Text>
+          <Text style={fonts.inputLabel}>{this.props.label}</Text>
         )}
 
         <View style={componentStyles.dropdown}>
