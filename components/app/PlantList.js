@@ -28,7 +28,7 @@ class PlantList extends Component {
               marginTop: units.unit5,
               marginBottom: units.unit5,
               display: index < 1 ? null : 'none',
-              color: '#737373',
+              color: colors.greenE75,
             }}>
             {p.class.name} vegetables
           </Paragraph>
@@ -174,7 +174,7 @@ class PlantList extends Component {
               style={{
                 textAlign: 'center',
                 fontWeight: 'bold',
-                color: '#737373',
+                color: colors.greenE75,
               }}>
               Selected: {selectedPlants.length}
             </Paragraph>
