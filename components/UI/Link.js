@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Linking, TouchableOpacity, Text } from 'react-native';
+import React, {Component} from 'react';
+import {Linking, TouchableOpacity, Text} from 'react-native';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
@@ -43,7 +43,7 @@ class Link extends Component {
   };
 
   render() {
-    const { text, color, url } = this.props;
+    const {text, color, url} = this.props;
     const linkStyles = this.getlinkStyles(color);
 
     return (
@@ -54,11 +54,9 @@ class Link extends Component {
 
           // if a url is passed in, open to a new web page
           Linking.openURL(url);
-        }}
-      >
+        }}>
         <Text style={{...linkStyles}}>{text}</Text>
       </TouchableOpacity>
-
     );
   }
 }
