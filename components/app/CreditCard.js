@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import {ScrollView, View, Modal, ActivityIndicator, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import { alert } from '../../components/UI/SystemAlert';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 import Dropdown from '../UI/Dropdown';
 import Header from '../UI/Header';
+import CardBrand from '../UI/CardBrand';
 import formatCardNumber from '../../helpers/formatCardNumber';
 import formatExpDate from '../../helpers/formatExpDate';
 import {
@@ -36,6 +38,7 @@ class CreditCard extends Component {
 
     // format card info
     const card = {
+      name: this.state.name,
       number: number,
       expMonth: parseInt(this.state.expDate.split('/')[0]),
       expYear: parseInt(this.state.expDate.split('/')[1]),
@@ -80,19 +83,30 @@ class CreditCard extends Component {
 
       // update user with payment info
       await this.props.updateUser(null, {paymentInfo: info});
+    } else {
+
+      // render error
+      alert('Invalid card');
     }
 
     // close the card modal
     this.props.close();
 
     // hide loading indicator
-    this.setState({isLoading: false});
+    this.setState({
+      isLoading: false,
+      name: '',
+      number: '',
+      expDate: '',
+      cvv: '',
+      type: ''
+    });
   }
 
   render() {
     const {isOpen = false, newCard, close} = this.props;
 
-    const {number, expDate, cvv, type, isLoading} = this.state;
+    const {name, number, expDate, cvv, type, isLoading} = this.state;
 
     const cardVisual = {
       backgroundColor: colors.white75,
@@ -128,7 +142,6 @@ class CreditCard extends Component {
               <Header style={{fontSize: fonts.h2, marginBottom: units.unit5}}>
                 {newCard ? 'Add' : 'Update'} Card
               </Header>
-
               {/* TODO: depending on card type, conditionally render a card type logo, MasterCard, Visa, etc */}
               <View style={{...cardVisual}}>
                 <View
@@ -144,7 +157,7 @@ class CreditCard extends Component {
                       fontWeight: 'bold',
                       fontFamily: fonts.default,
                     }}>
-                    {this.state.type || 'LOGO'}
+                    <CardBrand brand={this.state.type} /> 
                   </Text>
                   <View
                     style={{
@@ -165,7 +178,7 @@ class CreditCard extends Component {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <Text>{this.state.name || 'Jane Doe'}</Text>
+                    <Text>{name || 'Jane Doe'}</Text>
                     <Text>{this.state.cvv || '123'}</Text>
                   </View>
                   <View
@@ -208,7 +221,7 @@ class CreditCard extends Component {
                 <Input
                   label="Cardholder Name"
                   onChange={value => this.setState({name: value})}
-                  value={this.state.name}
+                  value={name}
                   placeholder="Ex. Jane Doe"
                 />
               </View>
@@ -247,7 +260,7 @@ class CreditCard extends Component {
                 <View>
                   <View style={{marginBottom: units.unit4}}>
                     <Button
-                      disabled={!type || !number || !expDate || !cvv}
+                      disabled={!type || !name || !number || !expDate || !cvv}
                       text="Save"
                       onPress={() => this.save()}
                       variant="primary"
