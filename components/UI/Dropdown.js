@@ -44,7 +44,6 @@ class Dropdown extends Component {
             Icon={() => <Ionicons name={'chevron-down'} size={fonts.h2} />}
             textInputProps={{
               style: {
-                fontFamily: fonts.default,
                 fontSize: fonts.h3,
               },
             }}

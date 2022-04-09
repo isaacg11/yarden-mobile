@@ -13,7 +13,6 @@ const componentStyles = StyleSheet.create({
     padding: units.unit4,
     backgroundColor: colors.greenC10,
     fontSize: fonts.h3,
-    fontFamily: fonts.default,
   },
   textarea: {
     height: units.unit6,
@@ -25,12 +24,6 @@ const componentStyles = StyleSheet.create({
     padding: units.unit4,
     backgroundColor: colors.greenC10,
   },
-  //   label: {
-  //     fontSize: fonts.h4,
-  //     marginBottom: units.unit2,
-  //     color: colors.purpleB,
-  //     fontWeight: 'bold',
-  //   },
 });
 
 class Input extends Component {

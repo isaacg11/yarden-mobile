@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {ScrollView, View, Modal, ActivityIndicator, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { alert } from '../../components/UI/SystemAlert';
+import {alert} from '../../components/UI/SystemAlert';
 import Button from '../UI/Button';
+import Link from '../UI/Link';
 import Input from '../UI/Input';
 import Dropdown from '../UI/Dropdown';
 import Header from '../UI/Header';
@@ -84,7 +85,6 @@ class CreditCard extends Component {
       // update user with payment info
       await this.props.updateUser(null, {paymentInfo: info});
     } else {
-
       // render error
       alert('Invalid card');
     }
@@ -99,7 +99,7 @@ class CreditCard extends Component {
       number: '',
       expDate: '',
       cvv: '',
-      type: ''
+      type: '',
     });
   }
 
@@ -151,14 +151,9 @@ class CreditCard extends Component {
                     alignItems: 'center',
                     flexDirection: 'row',
                   }}>
-                  <Text
-                    style={{
-                      color: colors.purple0,
-                      fontWeight: 'bold',
-                      fontFamily: fonts.default,
-                    }}>
-                    <CardBrand brand={this.state.type} /> 
-                  </Text>
+                  <View>
+                    <CardBrand brand={this.state.type} />
+                  </View>
                   <View
                     style={{
                       backgroundColor: colors.greenC50,
@@ -229,7 +224,7 @@ class CreditCard extends Component {
                 <Input
                   label="Card Number"
                   onChange={value => {
-                    if(value.length > 19) return;
+                    if (value.length > 19) return;
                     this.setState({number: value});
                   }}
                   value={formatCardNumber(this.state.number)}
@@ -240,7 +235,7 @@ class CreditCard extends Component {
                 <Input
                   label="Exp. Date"
                   onChange={value => {
-                    if(value.length > 5) return;
+                    if (value.length > 5) return;
                     this.setState({expDate: value});
                   }}
                   value={formatExpDate(this.state.expDate)}
@@ -257,20 +252,22 @@ class CreditCard extends Component {
                 />
               </View>
               {!isLoading && (
-                <View>
-                  <View style={{marginBottom: units.unit4}}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View>
+                    <Link text="Cancel" onPress={() => close()} />
+                  </View>
+                  <View>
                     <Button
                       disabled={!type || !name || !number || !expDate || !cvv}
                       text="Save"
                       onPress={() => this.save()}
                       variant="primary"
-                    />
-                  </View>
-                  <View>
-                    <Button
-                      text="Cancel"
-                      onPress={() => close()}
-                      variant="btn2"
                     />
                   </View>
                 </View>
