@@ -12,7 +12,10 @@ class Materials extends Component {
 
         return (
             <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
-                <Table data={materials} />
+                <Table 
+                    data={materials} 
+                    excludedColumns={['name']}
+                />
             </View>
         )
     }

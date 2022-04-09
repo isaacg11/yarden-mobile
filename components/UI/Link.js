@@ -1,8 +1,7 @@
-import React, {Component} from 'react';
-import {Linking} from 'react-native';
+import React, { Component } from 'react';
+import { Linking, TouchableOpacity, Text } from 'react-native';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import Paragraph from './Paragraph';
 
 class Link extends Component {
   getlinkStyles(color) {
@@ -44,21 +43,22 @@ class Link extends Component {
   };
 
   render() {
-    const {text, color} = this.props;
+    const { text, color, url } = this.props;
     const linkStyles = this.getlinkStyles(color);
 
     return (
-      <Paragraph
-        style={{...linkStyles}}
+      <TouchableOpacity
         onPress={() => {
           // if a callback prop is passed in, run the function
           if (this.props.onPress) return this.props.onPress();
 
           // if a url is passed in, open to a new web page
           Linking.openURL(url);
-        }}>
-        {text}
-      </Paragraph>
+        }}
+      >
+        <Text style={{...linkStyles}}>{text}</Text>
+      </TouchableOpacity>
+
     );
   }
 }
