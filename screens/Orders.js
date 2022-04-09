@@ -100,7 +100,9 @@ class Orders extends Component {
           {/* loading indicator start */}
           <LoadingIndicator loading={isLoading} />
 
-          <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+          <Header
+            type="h4"
+            style={{textAlign: 'center', marginTop: units.unit6}}>
             Orders {orders.total && orders.total > 0 ? `(${orders.total})` : ''}
           </Header>
           <View style={{padding: units.unit5}}>
@@ -112,10 +114,6 @@ class Orders extends Component {
                 borderRadius: 5,
                 marginBottom: units.unit5,
               }}>
-              <Paragraph
-                style={{marginBottom: 4, letterSpacing: 2, fontSize: fonts.h7}}>
-                FILTER
-              </Paragraph>
               <Dropdown
                 label="Filter"
                 value={filters.orders}
@@ -164,11 +162,13 @@ class Orders extends Component {
 
                   {/* order info */}
                   <View style={{marginBottom: units.unit5}}>
-                    <Paragraph style={{fontWeight: 'bold', marginTop: units.unit5}}>
+                    <Paragraph
+                      style={{fontWeight: 'bold', marginTop: units.unit5}}>
                       Service
                     </Paragraph>
                     <Paragraph>{order.type}</Paragraph>
-                    <Paragraph style={{fontWeight: 'bold', marginTop: units.unit5}}>
+                    <Paragraph
+                      style={{fontWeight: 'bold', marginTop: units.unit5}}>
                       Date
                     </Paragraph>
                     <Paragraph>

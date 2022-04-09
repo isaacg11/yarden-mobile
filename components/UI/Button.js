@@ -58,6 +58,7 @@ class Button extends Component {
       borderTopColor: colors.green4,
       borderBottomColor: colors.greenB50,
       fontSize: fonts.h5,
+      minWidth: units.unit7,
 
       shadowColor: colors.greenC10,
       shadowOffset: {
@@ -123,7 +124,7 @@ class Button extends Component {
     const buttonStyles = this.getButtonStyles(variant);
     const buttonVariant = this.getVariantStyles();
     const buttonVariantText = this.getVariantTextStyles();
-    const disabledStyles = (disabled) ? {opacity: 0.5} : {};
+    const disabledStyles = disabled ? {opacity: 0.5} : {};
 
     return (
       <TouchableOpacity
