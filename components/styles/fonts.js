@@ -13,7 +13,8 @@ const h7 = (h6 * 3) / 4;
 const h8 = (h7 * 3) / 4; // since we're using a 'perfect fourth' ratio, scaling these fonts down from h6 means using 3/4 instead of 1 + (1/3)
 
 const label = {
-  fontSize: h4,
+  fontSize: h5,
+  lineHeight: h4,
   marginBottom: units.unit2,
   color: colors.greenC50,
   fontFamily: 'Futura-Medium',
@@ -24,6 +25,13 @@ const label = {
 const inputLabel = {
   ...label,
   color: colors.purpleB,
+};
+
+const header = {
+  fontSize: h2,
+  lineHeight: h1,
+  fontWeight: 'bold',
+  color: colors.purpleE75,
 };
 
 // fonts
@@ -39,6 +47,8 @@ const fonts = {
   h7: h7,
   h8: h8,
   inputLabel: inputLabel,
+  label: label,
+  header: header,
 };
 
 export default fonts;

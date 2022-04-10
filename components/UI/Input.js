@@ -54,8 +54,9 @@ class Input extends Component {
           value={type === 'numeric' ? value.replace(/[^0-9]/g, '') : value}
           placeholder={placeholder}
           secureTextEntry={password}
+          color={colors.greenE75}
           editable={disabled ? false : true}
-          placeholderTextColor={colors.greenD25} //greenC-25
+          placeholderTextColor={colors.purpleD25} //greenC-25
           selectionColor={colors.purple0} //purple0
         />
       </View>

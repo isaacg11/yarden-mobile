@@ -41,7 +41,13 @@ class Dropdown extends Component {
             placeholder={placeholder ? {label: placeholder} : {label: ''}}
             onValueChange={value => onChange(value)}
             items={options}
-            Icon={() => <Ionicons name={'chevron-down'} size={fonts.h2} />}
+            Icon={() => (
+              <Ionicons
+                name={'chevron-down'}
+                color={colors.purpleB}
+                size={fonts.h2}
+              />
+            )}
             textInputProps={{
               style: {
                 fontSize: fonts.h3,

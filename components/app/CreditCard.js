@@ -137,9 +137,19 @@ class CreditCard extends Component {
           visible={isOpen}
           presentationStyle="fullScreen">
           <ScrollView
-            style={{marginTop: units.unit5, backgroundColor: colors.greenE10}}>
-            <View style={{padding: units.unit5}}>
-              <Header style={{fontSize: fonts.h2, marginBottom: units.unit5}}>
+            style={{
+              backgroundColor: colors.greenE10,
+              paddingVertical: units.unit5,
+              paddingHorizontal: units.unit4 + units.unit3,
+              paddingBottom: units.unit6,
+            }}>
+            <View>
+              <Header
+                style={{
+                  ...fonts.header,
+                  paddingTop: units.unit5,
+                  paddingBottom: units.unit4,
+                }}>
                 {newCard ? 'Add' : 'Update'} Card
               </Header>
               {/* TODO: depending on card type, conditionally render a card type logo, MasterCard, Visa, etc */}
@@ -147,11 +157,15 @@ class CreditCard extends Component {
                 <View
                   style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-end',
                     alignItems: 'center',
                     flexDirection: 'row',
                   }}>
-                  <View>
+                  <View
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                    }}>
                     <CardBrand brand={this.state.type} />
                   </View>
                   <View
@@ -263,6 +277,7 @@ class CreditCard extends Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    marginBottom: units.unit6,
                   }}>
                   <View>
                     <Link text="Cancel" onPress={() => close()} />
