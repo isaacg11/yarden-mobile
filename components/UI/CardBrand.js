@@ -34,7 +34,7 @@ class CardBrand extends Component {
       return (
         <Text
           style={{
-            color: colors.purple0,
+            color: colors.purpleC50,
             fontFamily: fonts.default,
           }}>
           Select type...

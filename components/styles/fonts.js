@@ -26,6 +26,13 @@ const inputLabel = {
   color: colors.purpleB,
 };
 
+const header = {
+  fontSize: h2,
+  lineHeight: h1,
+  fontWeight: 'bold',
+  color: colors.greenE75,
+};
+
 // fonts
 const fonts = {
   default: 'Futura-Medium',
@@ -39,6 +46,8 @@ const fonts = {
   h7: h7,
   h8: h8,
   inputLabel: inputLabel,
+  label: label,
+  header: header,
 };
 
 export default fonts;

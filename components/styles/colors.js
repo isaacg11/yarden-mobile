@@ -60,18 +60,42 @@ let green5 = `hsla(${hue}, ${saturation}, ${lightness + 45}%, ${alpha})`;
 let purpleE = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 45
 }%, ${alpha})`;
+let purpleE95 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 45
+}%, 0.95)`;
+let purpleE90 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 45
+}%, 0.90)`;
+let purpleE75 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 45
+}%, 0.75)`;
+let purpleE50 = `hsla(${hue + purple}, ${saturation}, ${lightness - 45}%, 0.5)`;
+let purpleE25 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 45
+}%, 0.25)`;
+let purpleE10 = `hsla(${hue + purple}, ${saturation}, ${lightness - 45}%, 0.1)`;
+let purpleE5 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.05)`;
 let purpleD = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 40
 }%, ${alpha})`;
+
 let purpleC = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 30
 }%, ${alpha})`;
-let purpleC95 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.95)`;
-let purpleC90 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.90)`;
-let purpleC75 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.75)`;
-let purpleC50 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.5)`;
-let purpleC25 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.25)`;
-let purpleC10 = `hsla(${hue + purple}, ${saturation}, ${lightness}%, 0.1)`;
+let purpleC95 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 30
+}%, 0.95)`;
+let purpleC90 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 30
+}%, 0.90)`;
+let purpleC75 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 30
+}%, 0.75)`;
+let purpleC50 = `hsla(${hue + purple}, ${saturation}, ${lightness - 30}%, 0.5)`;
+let purpleC25 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 30
+}%, 0.25)`;
+let purpleC10 = `hsla(${hue + purple}, ${saturation}, ${lightness - 30}%, 0.1)`;
 let purpleC5 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.05)`;
 let purpleB = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 20
@@ -151,6 +175,13 @@ const colors = {
   green4,
   green5,
   purpleE,
+  purpleE95,
+  purpleE90,
+  purpleE75,
+  purpleE50,
+  purpleE25,
+  purpleE10,
+  purpleE5,
   purpleD,
   purpleC,
   purpleC95,
