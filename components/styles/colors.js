@@ -75,10 +75,25 @@ let purpleE25 = `hsla(${hue + purple}, ${saturation}, ${
 }%, 0.25)`;
 let purpleE10 = `hsla(${hue + purple}, ${saturation}, ${lightness - 45}%, 0.1)`;
 let purpleE5 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.05)`;
+
 let purpleD = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 40
 }%, ${alpha})`;
-
+let purpleD95 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 40
+}%, 0.95)`;
+let purpleD90 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 40
+}%, 0.90)`;
+let purpleD75 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 40
+}%, 0.75)`;
+let purpleD50 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.5)`;
+let purpleD25 = `hsla(${hue + purple}, ${saturation}, ${
+  lightness - 40
+}%, 0.25)`;
+let purpleD10 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.1)`;
+let purpleD5 = `hsla(${hue + purple}, ${saturation}, ${lightness - 40}%, 0.05)`;
 let purpleC = `hsla(${hue + purple}, ${saturation}, ${
   lightness - 30
 }%, ${alpha})`;
@@ -183,6 +198,13 @@ const colors = {
   purpleE10,
   purpleE5,
   purpleD,
+  purpleD95,
+  purpleD90,
+  purpleD75,
+  purpleD50,
+  purpleD25,
+  purpleD10,
+  purpleD5,
   purpleC,
   purpleC95,
   purpleC90,

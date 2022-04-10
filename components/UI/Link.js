@@ -28,6 +28,7 @@ class Link extends Component {
     purple: {
       ...this.sizing,
       color: colors.purpleB,
+      fontFamily: fonts.default,
       opacity: this.props.disabled ? 0.5 : 1,
     },
     white: {

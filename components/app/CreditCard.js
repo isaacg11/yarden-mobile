@@ -139,8 +139,9 @@ class CreditCard extends Component {
           <ScrollView
             style={{
               backgroundColor: colors.greenE10,
-              paddingTop: units.unit5,
+              paddingVertical: units.unit5,
               paddingHorizontal: units.unit4 + units.unit3,
+              paddingBottom: units.unit6,
             }}>
             <View>
               <Header
@@ -271,6 +272,7 @@ class CreditCard extends Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    marginBottom: units.unit6,
                   }}>
                   <View>
                     <Link text="Cancel" onPress={() => close()} />
