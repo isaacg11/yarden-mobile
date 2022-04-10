@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {ScrollView, View, Modal, ActivityIndicator, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import creditCardType from "credit-card-type";
+import creditCardType from 'credit-card-type';
 import {alert} from '../../components/UI/SystemAlert';
 import Button from '../UI/Button';
 import Link from '../UI/Link';
@@ -213,30 +213,27 @@ class CreditCard extends Component {
                 <Input
                   label="Card Number"
                   onChange={value => {
-
                     // if user already entered 16 digits, do not add more numbers
                     if (value.length > 19) return;
 
                     // set initial update
                     let update = {
                       number: value,
-                      type: ''
+                      type: '',
                     };
 
                     // if user has entered at least 4 numbers {...}
-                    if(value.length > 3) {
-
+                    if (value.length > 3) {
                       // get card types
                       const cardTypes = creditCardType(value);
 
                       // if card type
-                      if(cardTypes && cardTypes.length > 0) {
-
+                      if (cardTypes && cardTypes.length > 0) {
                         // set card type
                         let cardType = cardTypes[0].type;
 
                         // replace dashes with spaces
-                        cardType = cardType.replace(/-/g, " ");
+                        cardType = cardType.replace(/-/g, ' ');
 
                         // add type to update
                         update.type = cardType;
@@ -250,6 +247,7 @@ class CreditCard extends Component {
                   placeholder="####-####-####-####"
                 />
               </View>
+
               <View>
                 <Input
                   label="Exp. Date"
@@ -270,6 +268,7 @@ class CreditCard extends Component {
                   placeholder="CVV"
                 />
               </View>
+
               {!isLoading && (
                 <View
                   style={{
@@ -277,7 +276,7 @@ class CreditCard extends Component {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: units.unit6,
+                    marginTop: units.unit6,
                   }}>
                   <View>
                     <Link text="Cancel" onPress={() => close()} />
