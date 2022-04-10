@@ -22,6 +22,7 @@
     "blob-to-buffer": "^1.2.9",
     "buffer": "^6.0.3",
     "compressorjs": "^1.1.1",
+    "credit-card-type": "^9.1.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "react": "17.0.2",
