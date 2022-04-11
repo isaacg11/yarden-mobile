@@ -4,11 +4,11 @@ import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
 import Button from '../components/UI/Button';
-import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
@@ -16,6 +16,7 @@ import ChangeOrders from '../components/app/ChangeOrders';
 import { getOrders, updateOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class OrderDetails extends Component {
 
@@ -133,7 +134,13 @@ class OrderDetails extends Component {
                                 <Button
                                     text="Request Changes"
                                     onPress={() => this.requestChanges()}
-                                    variant="secondary"
+                                    icon={(
+                                        <Ionicons
+                                            name="create-outline"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
                                 />
                             </View>
                         )}

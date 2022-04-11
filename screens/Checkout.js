@@ -48,7 +48,7 @@ class Checkout extends Component {
                     <View style={{ padding: units.unit5 }}>
 
                         {/* payment method */}
-                        <View style={{ marginTop: units.unit5 }}>
+                        <View>
                             <Collapse
                                 title="Payment Method"
                                 open={true}
@@ -59,7 +59,7 @@ class Checkout extends Component {
                         </View>
 
                         {/* payment schedule */}
-                        <View style={{ marginTop: units.unit5 }}>
+                        <View>
                             <Collapse
                                 title="Payment Schedule"
                                 content={
@@ -72,7 +72,7 @@ class Checkout extends Component {
                         </View>
 
                         {/* approval */}
-                        <View style={{ marginTop: units.unit5 }}>
+                        <View>
                             <Collapse
                                 title="Payment Approval"
                                 open={true}

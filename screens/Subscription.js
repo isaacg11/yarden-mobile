@@ -148,23 +148,21 @@ class Subscription extends Component {
                                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Current Billing Period</Paragraph>
                                 <Paragraph>{`${moment(subscription.current_period_start * 1000).format('MM/DD/YYYY')} - ${moment(subscription.current_period_end * 1000).format('MM/DD/YYYY')}`}</Paragraph>
                             </View>
-                            <Divider />
-                            <View style={{ marginBottom: units.unit5 }}>
-                                <Button
-                                    text="Change Plan"
-                                    onPress={() => this.props.navigation.navigate('Change Plan', { currentPlan: plan })}
-                                    variant="secondary"
-                                />
-                            </View>
-                            <Divider />
-                            <View>
-                                <Button
-                                    text="Cancel Subscription"
-                                    onPress={() => this.cancel()}
-                                    variant="secondary"
-                                />
-                            </View>
                         </Card>
+                        <View style={{ marginBottom: units.unit5 }}>
+                            <Button
+                                text="Change Plan"
+                                onPress={() => this.props.navigation.navigate('Change Plan', { currentPlan: plan })}
+                                variant="secondary"
+                            />
+                        </View>
+                        <View>
+                            <Button
+                                text="Cancel Subscription"
+                                onPress={() => this.cancel()}
+                                variant="secondary"
+                            />
+                        </View>
                     </View>
                 )}
                 {/* subscription end */}
@@ -173,19 +171,18 @@ class Subscription extends Component {
                 {(!plan && !subscription) && (
                     <View style={{ padding: units.unit5 }}>
                         <Card>
-                            <View style={{ marginBottom: units.unit5 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No subscription found</Paragraph>
-                                <Paragraph style={{ marginTop: units.unit5 }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
-                            </View>
-                            <Divider />
                             <View>
-                                <Button
-                                    text="View Plans"
-                                    onPress={() => this.props.navigation.navigate('Enrollment', { isCheckout: false })}
-                                    variant="secondary"
-                                />
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No subscription found</Paragraph>
+                                <Paragraph style={{ marginTop: units.unit4, textAlign: 'center' }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
                             </View>
                         </Card>
+                        <View style={{marginTop: units.unit4}}>
+                            <Button
+                                text="View Plans"
+                                onPress={() => this.props.navigation.navigate('Enrollment', { isCheckout: false })}
+                                variant="secondary"
+                            />
+                        </View>
                     </View>
                 )}
                 {/* no subscription end */}

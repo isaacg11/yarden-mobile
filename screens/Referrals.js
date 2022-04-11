@@ -64,18 +64,17 @@ class Referrals extends Component {
                     {/* QR code */}
                     <Card>
                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Yarden Referral Program</Paragraph>
-                        <Paragraph style={{ marginTop: units.unit5 }}>Share this QR with your family and friends. Upon signing up for service, you will both get 1 FREE month of gardening maintenance!</Paragraph>
+                        <Paragraph style={{ marginTop: units.unit4 }}>Share this QR with your family and friends. Upon signing up for service, you will both get 1 FREE month of gardening maintenance!</Paragraph>
                         <View style={{ marginTop: units.unit5, display: 'flex', alignItems: 'center' }}>
                             <Image source={{ uri: qrCode }} style={{ width: 200, height: 200 }} />
                         </View>
                     </Card>
 
                     {/* navigation button */}
-                    <View>
+                    <View style={{marginTop: units.unit4}}>
                         <Button
                             text="View Referral History"
                             onPress={() => this.viewReferralHistory()}
-                            variant="secondary"
                         />
                     </View>
                 </View>

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
@@ -17,6 +18,7 @@ import { sendSms } from '../actions/sms/index';
 import formatAddress from '../helpers/formatAddress';
 import config from '../config/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class RequestQuoteChange extends Component {
 
@@ -79,7 +81,7 @@ class RequestQuoteChange extends Component {
             }
         } else {
             // finish submission
-            this.finish({text: `${systemMessage}\n\n${userMessage}`}, quote);
+            this.finish({ text: `${systemMessage}\n\n${userMessage}` }, quote);
         }
     }
 
@@ -140,15 +142,15 @@ class RequestQuoteChange extends Component {
         await this.props.sendEmail(notification);
 
         // if vendor is assigned to quote {...}
-        if(quote.vendor) {
+        if (quote.vendor) {
 
             // format sms message
             const sms = {
                 from: config.phoneNumber,
-                to: quote.vendor.phone_number.replace(/\D/g,''),
+                to: quote.vendor.phone_number.replace(/\D/g, ''),
                 body: `${greeting} ${context} ${message.text}`
             }
-    
+
             // send sms notification to vendor
             await this.props.sendSms(sms);
         }
@@ -194,15 +196,21 @@ class RequestQuoteChange extends Component {
                                 placeholder="Enter message here..."
                             />
                         </View>
-                        <View>
-                            <Button
-                                text="Submit"
-                                onPress={() => this.submit()}
-                                variant="primary"
-                                disabled={!message}
-                            />
-                        </View>
                     </Card>
+                    <View style={{ marginTop: units.unit4 }}>
+                        <Button
+                            text="Submit"
+                            onPress={() => this.submit()}
+                            disabled={!message}
+                            icon={(
+                                <Ionicons
+                                    name="checkmark"
+                                    size={units.unit4}
+                                    color={colors.purpleB}
+                                />
+                            )}
+                        />
+                    </View>
                 </View>
                 {/* change request form end */}
 

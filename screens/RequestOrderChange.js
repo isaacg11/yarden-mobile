@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -18,6 +19,7 @@ import { sendSms } from '../actions/sms/index';
 import formatAddress from '../helpers/formatAddress';
 import config from '../config/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class RequestOrderChange extends Component {
 
@@ -28,7 +30,7 @@ class RequestOrderChange extends Component {
     async submit() {
 
         // show loading indicator
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
         // set order
         const order = this.props.route.params;
@@ -90,7 +92,7 @@ class RequestOrderChange extends Component {
             }
         } else {
             // finish submission
-            this.finish({text: `${systemMessage}\n\n${userMessage}`}, order);
+            this.finish({ text: `${systemMessage}\n\n${userMessage}` }, order);
         }
     }
 
@@ -111,8 +113,8 @@ class RequestOrderChange extends Component {
         // set intial text value
         let text = this.state.message;
 
-         // set address
-         const address = formatAddress(order.customer);
+        // set address
+        const address = formatAddress(order.customer);
 
         // if vendor {...}
         if (order.vendor) {
@@ -151,15 +153,15 @@ class RequestOrderChange extends Component {
         await this.props.sendEmail(notification);
 
         // if vendor is assigned to order {...}
-        if(order.vendor) {
+        if (order.vendor) {
 
             // format sms message
             const sms = {
                 from: config.phoneNumber,
-                to: order.vendor.phone_number.replace(/\D/g,''),
+                to: order.vendor.phone_number.replace(/\D/g, ''),
                 body: `${greeting} ${context} ${message.text}`
             }
-    
+
             // send sms notification to vendor
             await this.props.sendSms(sms);
         }
@@ -205,15 +207,21 @@ class RequestOrderChange extends Component {
                                 placeholder="Enter message here..."
                             />
                         </View>
-                        <View>
-                            <Button
-                                text="Submit"
-                                onPress={() => this.submit()}
-                                variant="primary"
-                                disabled={!message}
-                            />
-                        </View>
                     </Card>
+                    <View style={{ marginTop: units.unit4 }}>
+                        <Button
+                            text="Submit"
+                            onPress={() => this.submit()}
+                            disabled={!message}
+                            icon={(
+                                <Ionicons
+                                    name="checkmark"
+                                    size={units.unit4}
+                                    color={colors.purpleB}
+                                />
+                            )}
+                        />
+                    </View>
                 </View>
                 {/* change request form end */}
 

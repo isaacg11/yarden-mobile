@@ -142,7 +142,9 @@ class Button extends Component {
           <Paragraph style={{...buttonStyles.text, ...buttonVariantText}}>
             {text}
           </Paragraph>
-          {icon}
+          <View style={{marginLeft: units.unit2}}>
+            {icon}
+          </View>
         </View>
       </TouchableOpacity>
     );

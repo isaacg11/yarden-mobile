@@ -77,6 +77,7 @@ class PasswordReset extends Component {
                 <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
+                            label="Email"
                             onChange={(value) => this.setState({ email: value })}
                             value={email}
                             placeholder="Email"

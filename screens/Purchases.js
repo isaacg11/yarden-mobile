@@ -9,7 +9,6 @@ import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import Button from '../components/UI/Button';
 import Paginate from '../components/UI/Paginate';
-import Divider from '../components/UI/Divider';
 import Card from '../components/UI/Card';
 import { getPurchases } from '../actions/purchases/index';
 import calculateQuote from '../helpers/calculateQuote';
@@ -102,7 +101,7 @@ class Purchase extends Component {
                             const purchaseTotal = total + tax + processingFee;
 
                             return (
-                                <Card key={index} style={{ marginBottom: units.unit5 }}>
+                                <Card key={index} style={{ marginBottom: units.unit4 }}>
                                     <View style={{ marginBottom: units.unit5 }}>
                                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Order Placed</Paragraph>
                                         <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
@@ -111,14 +110,14 @@ class Purchase extends Component {
                                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Total</Paragraph>
                                         <Paragraph>${(purchaseTotal).toFixed(2)}</Paragraph>
                                     </View>
-                                    <Divider />
                                     <View>
                                         <Button
+                                            small
                                             text="View Details"
+                                            variant="btn2"
                                             onPress={() => {
                                                 this.props.navigation.navigate('Quote Details', purchase.order.bid)
                                             }}
-                                            variant="secondary"
                                         />
                                     </View>
                                 </Card>

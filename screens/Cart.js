@@ -7,6 +7,7 @@ import { SafeAreaView, Image, View, TouchableOpacity, ScrollView } from 'react-n
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
+import Link from '../components/UI/Link';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
@@ -22,6 +23,7 @@ import applyProductRules from '../helpers/applyProductRules';
 import getProductMeasurements from '../helpers/getProductMeasurements';
 import vars from '../vars/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Cart extends Component {
 
@@ -35,7 +37,7 @@ class Cart extends Component {
     }
 
     async setQuotes() {
-        
+
         // set initial product ids
         let productIds = '';
 
@@ -103,7 +105,7 @@ class Cart extends Component {
             item.product.variants.forEach((variant, index) => {
 
                 // if delivery, add to quote
-                if(variant.line_items.delivery) quote.line_items.delivery = variant.line_items.delivery;
+                if (variant.line_items.delivery) quote.line_items.delivery = variant.line_items.delivery;
 
                 // add labor hours
                 laborHours += (variant.line_items.labor.qty * variant.qty);
@@ -117,7 +119,7 @@ class Cart extends Component {
                 // set description
                 quote.description += `${(firstIteration) ? '' : ' '}(${variant.qty}) ${item.product.name} - ${variant.name}${(lastIteration) ? '' : ','}`;
 
-                const dimensions = getProductMeasurements(variant.dimensions, variant.qty);                
+                const dimensions = getProductMeasurements(variant.dimensions, variant.qty);
                 combinedDimensions.sqft += dimensions.sqft;
                 combinedDimensions.cf += dimensions.cf;
                 combinedDimensions.vf += dimensions.vf;
@@ -133,19 +135,19 @@ class Cart extends Component {
                     if (!itemExists) {
                         if (rules.length > 0) {
                             quoteMaterials.push(material);
-                        } else {                            
+                        } else {
                             const qty = { qty: variant.qty };
                             const newItem = {
                                 ...material,
                                 ...qty
-                            }                            
+                            }
                             quoteMaterials.push(newItem);
                         }
                     }
                 })
 
                 // if garden bed {...}
-                if(item.product.name === 'garden bed') {
+                if (item.product.name === 'garden bed') {
                     beds.push({
                         qty: variant.qty,
                         width: variant.dimensions.width,
@@ -164,14 +166,14 @@ class Cart extends Component {
             }
 
             // if product is for garden beds {...}
-            if(item.product.name === 'garden bed') {
+            if (item.product.name === 'garden bed') {
 
                 let materialList = [];
 
                 // remove irrigation items from materials
                 quoteMaterials.forEach((material) => {
                     const isIrrigationItem = this.props.irrigation.find((irr) => irr.item._id === material._id);
-                    if(!isIrrigationItem) materialList.push(material);
+                    if (!isIrrigationItem) materialList.push(material);
                 })
 
                 // set quote materials
@@ -275,8 +277,8 @@ class Cart extends Component {
         const params = JSON.stringify(this.state.quotes)
 
         // navigate user to product details
-        this.props.navigation.navigate('Purchase Details', { quotes: params }); 
-        
+        this.props.navigation.navigate('Purchase Details', { quotes: params });
+
     }
 
     getListItems() {
@@ -315,7 +317,7 @@ class Cart extends Component {
 
         // render items
         return list.map((li, index) => (
-            <Card key={index} style={{ marginBottom: (index === (list.length - 1)) ? 0 : units.unit5 }}>
+            <Card key={index} style={{ marginBottom: (index === (list.length - 1)) ? 0 : units.unit4 }}>
                 <View style={{ display: 'flex', flexDirection: 'row', height: 100, marginTop: units.unit5, marginBottom: units.unit5 }}>
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate('Product', { product: li.item.product, variant: li.variant })}>
                         <Image source={{ uri: li.variant.image }} style={{ width: '100%', height: '100%' }} />
@@ -379,24 +381,27 @@ class Cart extends Component {
                 {/* items list */}
                 <ScrollView>
                     <View style={{ padding: units.unit5 }}>
-                        
-                        <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Cart</Header>
+                        <Header type="h4" style={{ textAlign: 'center', marginBottom: units.unit5 }}>Cart</Header>
                         <View style={{ display: (items.length > 0) ? null : 'none' }}>
                             {
                                 (!isLoading) ? (
                                     <View>
                                         {this.renderItems()}
-                                        <View>
+                                        <View style={{ marginTop: units.unit4 }}>
                                             <Button
                                                 text="Proceed to Checkout"
                                                 onPress={() => this.goToCheckout()}
-                                                variant="primary"
+                                                icon={(
+                                                    <Ionicons
+                                                        name="arrow-forward-outline"
+                                                        size={units.unit4}
+                                                        color={colors.purpleB}
+                                                    />
+                                                )}
                                             />
-                                            <Button
-                                                text="Back to Dashboard"
-                                                onPress={() => this.props.navigation.navigate('Dashboard')}
-                                                variant="secondary"
-                                            />
+                                            <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                                                <Link text="Back to Dashboard" onPress={() => this.props.navigation.navigate('Dashboard')} />
+                                            </View>
                                         </View>
                                     </View>
                                 ) : <LoadingIndicator loading={isLoading} />}

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
-import Card from '../../components/UI/Card';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
 import vars from '../../vars/index';
@@ -15,7 +14,7 @@ class QuoteSummary extends Component {
     const q = calculateQuoteCost(quote.line_items);
 
     return (
-      <Card>
+      <View>
         <View style={{marginBottom: units.unit5, marginTop: units.unit5}}>
           <Paragraph style={{fontWeight: 'bold', color: colors.greenE75}}>
             {quote.description}
@@ -163,7 +162,7 @@ class QuoteSummary extends Component {
             )}
           </Paragraph>
         </View>
-      </Card>
+      </View>
     );
   }
 }

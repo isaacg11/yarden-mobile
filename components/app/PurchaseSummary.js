@@ -50,7 +50,7 @@ class PurchaseSummary extends Component {
     } = this.state;
 
     return (
-      <Card>
+      <View>
         {quotes.map((quote, index) => {
           const q = calculateQuoteCost(quote.line_items);
 
@@ -202,7 +202,7 @@ class PurchaseSummary extends Component {
             )}
           </Paragraph>
         </View>
-      </Card>
+      </View>
     );
   }
 }

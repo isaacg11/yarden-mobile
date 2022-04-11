@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {SafeAreaView, ImageBackground, View} from 'react-native';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { SafeAreaView, ImageBackground, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Card from '../components/UI/Card';
 import AddToCart from '../components/app/AddToCart';
-import {getItems} from '../actions/items/index';
-import {getRules} from '../actions/rules/index';
-import {getIrrigation} from '../actions/irrigation/index';
+import { getItems } from '../actions/items/index';
+import { getRules } from '../actions/rules/index';
+import { getIrrigation } from '../actions/irrigation/index';
 import capitalize from '../helpers/capitalize';
 import updateCart from '../helpers/updateCart';
 import applyProductRules from '../helpers/applyProductRules';
@@ -19,6 +20,7 @@ import calculateMaterials from '../helpers/calculateMaterials';
 import calculateLabor from '../helpers/calculateLabor';
 import delimit from '../helpers/delimit';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Product extends Component {
   state = {
@@ -28,7 +30,7 @@ class Product extends Component {
 
   async componentDidMount() {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set selected product
     let selectedProduct = this.props.route.params.product;
@@ -113,19 +115,18 @@ class Product extends Component {
     await this.props.getItems();
 
     // open add to cart modal
-    this.setState({isOpen: true});
+    this.setState({ isOpen: true });
   }
 
   render() {
-    const {description} = this.props.route.params.product;
+    const { description } = this.props.route.params.product;
 
-    const {image} = this.props.route.params.variant;
+    const { image } = this.props.route.params.variant;
 
-    const {qty, isOpen, price, isLoading} = this.state;
+    const { qty, isOpen, price, isLoading } = this.state;
 
-    const name = `${capitalize(this.props.route.params.product.name)} - ${
-      this.props.route.params.variant.name
-    }`;
+    const name = `${capitalize(this.props.route.params.product.name)} - ${this.props.route.params.variant.name
+      }`;
 
     return (
       <SafeAreaView
@@ -140,15 +141,15 @@ class Product extends Component {
         <AddToCart
           isOpen={isOpen}
           onViewCart={() => this.props.navigation.navigate('Cart')}
-          close={() => this.setState({isOpen: false})}
-          product={{name, image, description}}
+          close={() => this.setState({ isOpen: false })}
+          product={{ name, image, description }}
           qty={qty}
         />
 
         {/* product image */}
         <ImageBackground
-          source={{uri: image}}
-          style={{width: '100%', height: 200}}>
+          source={{ uri: image }}
+          style={{ width: '100%', height: 200 }}>
           <View
             style={{
               position: 'absolute',
@@ -161,7 +162,7 @@ class Product extends Component {
               padding: units.unit5,
             }}>
             <Card>
-              <Paragraph style={{fontWeight: 'bold', fontSize: fonts.h3}}>
+              <Paragraph style={{ fontWeight: 'bold', fontSize: fonts.h3 }}>
                 {capitalize(name)}
               </Paragraph>
             </Card>
@@ -169,32 +170,38 @@ class Product extends Component {
         </ImageBackground>
 
         {/* product info */}
-        <View style={{padding: units.unit5}}>
+        <View style={{ padding: units.unit5 }}>
           <Card>
-            <View style={{marginBottom: units.unit5}}>
-              <Paragraph style={{fontWeight: 'bold'}}>Price</Paragraph>
+            <View style={{ marginBottom: units.unit5 }}>
+              <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
               <Paragraph>${delimit(price.toFixed(2))} / each</Paragraph>
             </View>
-            <View style={{marginBottom: units.unit5}}>
-              <Paragraph style={{fontWeight: 'bold'}}>Description</Paragraph>
+            <View style={{ marginBottom: units.unit5 }}>
+              <Paragraph style={{ fontWeight: 'bold' }}>Description</Paragraph>
               <Paragraph>{description}</Paragraph>
             </View>
             <View>
-              <Paragraph style={{fontWeight: 'bold'}}>Qty</Paragraph>
+              <Paragraph style={{ fontWeight: 'bold' }}>Qty</Paragraph>
               <Input
                 type="numeric"
-                onChange={value => this.setState({qty: value})}
+                onChange={value => this.setState({ qty: value })}
                 value={qty}
                 placeholder="qty"
               />
             </View>
           </Card>
-          <View>
+          <View style={{marginTop: units.unit4}}>
             <Button
               text="Add to Cart"
               onPress={() => this.addToCart()}
-              variant="primary"
               disabled={!qty}
+              icon={(
+                <Ionicons
+                  name="add-outline"
+                  size={units.unit4}
+                  color={colors.purpleB}
+                />
+              )}
             />
           </View>
         </View>

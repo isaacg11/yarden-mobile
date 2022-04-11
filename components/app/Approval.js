@@ -694,7 +694,7 @@ class Approval extends Component {
                 />
 
                 {/* approval start */}
-                <Card>
+                <View>
                     <Paragraph style={{ marginBottom: units.unit5 }}>
                         By signing, I agree to pay the full amount of ${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))} to {getCompanyName()} for all work listed in section (1a) "Scope of Work" of this contract.
                         I agree to pay the first payment of ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))} today {moment().format('MM/DD/YYYY')}, and a second payment of ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))} once all work has been completed.
@@ -711,7 +711,7 @@ class Approval extends Component {
                             placeholder="Full Name"
                         />
                     </View>
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
                         <CheckBox
                             value={eSignatureAgreement}
                             onValueChange={() => this.setState({ eSignatureAgreement: !eSignatureAgreement })}
@@ -721,7 +721,7 @@ class Approval extends Component {
                             <Paragraph>By checking this box, you agree to the <Link onPress={() => this.setState({ isOpen: true })} text="Electronic Record and Signature Disclosure"></Link></Paragraph>
                         </View>
                     </View>
-                    <View>
+                    <View style={{marginTop: units.unit4}}>
                         <Button
                             text="Approve"
                             onPress={() => this.approve()}
@@ -729,7 +729,7 @@ class Approval extends Component {
                             variant="primary"
                         />
                     </View>
-                </Card>
+                </View>
                 {/* approval end */}
 
             </View>
