@@ -14,7 +14,6 @@ const componentStyles = StyleSheet.create({
     backgroundColor: colors.greenC10,
     display: 'flex',
     alignItems: 'center',
-    marginBottom: units.unit4,
   },
   label: {
     fontSize: fonts.h4,

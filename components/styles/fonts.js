@@ -12,11 +12,24 @@ const h1 = h2 * ratio.fontScaleRatio;
 const h7 = (h6 * 3) / 4;
 const h8 = (h7 * 3) / 4; // since we're using a 'perfect fourth' ratio, scaling these fonts down from h6 means using 3/4 instead of 1 + (1/3)
 
+const paragraph = {
+  fontSize: h3,
+  lineHeight: h2,
+  color: colors.greenE75,
+  textTransform: 'capitalize',
+};
+
+const small = {
+  fontSize: h5,
+  lineHeight: h3,
+  color: colors.greenE50,
+};
+
 const label = {
   fontSize: h5,
   lineHeight: h4,
   marginBottom: units.unit2,
-  color: colors.greenC50,
+  color: colors.purpleE50,
   fontFamily: 'Futura-Medium',
   textTransform: 'uppercase',
   letterSpacing: 1,
@@ -32,6 +45,7 @@ const header = {
   lineHeight: h1,
   fontWeight: 'bold',
   color: colors.purpleE75,
+  textTransform: 'capitalize',
 };
 
 // fonts
@@ -49,6 +63,9 @@ const fonts = {
   inputLabel: inputLabel,
   label: label,
   header: header,
+  paragraph: paragraph,
+  small: small,
+  card: card,
 };
 
 export default fonts;
