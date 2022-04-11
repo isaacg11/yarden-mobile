@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View, Image } from 'react-native';
 import Paragraph from '../UI/Paragraph';
+import Card from '../UI/Card';
 import units from '../../components/styles/units';
 
 class ImageGrid extends Component {
@@ -24,12 +25,12 @@ class ImageGrid extends Component {
         ));
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Images</Paragraph>
                 <View>
                     {(images.length > 0) ? imageList : <View><Paragraph style={{textAlign: 'center', marginTop: units.unit6, marginBottom: units.unit6}}>No images found</Paragraph></View>}
                 </View>
-            </View>
+            </Card>
         )
     }
 }

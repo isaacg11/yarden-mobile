@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
 import Table from '../UI/Table';
-import units from '../../components/styles/units';
+import Card from '../UI/Card';
 
 class Labor extends Component {
 
@@ -10,9 +9,9 @@ class Labor extends Component {
         const { labor }  = this.props;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <Table data={[labor]} />
-            </View>
+            </Card>
         )
     }
 }

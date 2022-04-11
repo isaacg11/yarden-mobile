@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import Divider from '../UI/Divider';
 import Button from '../UI/Button';
 import Paragraph from '../UI/Paragraph';
+import Card from '../UI/Card';
 import moment from 'moment';
 import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 import getOrderDescription from '../../helpers/getOrderDescription';
@@ -19,7 +20,7 @@ class OrderInfo extends Component {
         } = this.props;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <View style={{ marginBottom: units.unit5 }}>
                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Service</Paragraph>
                     <Paragraph>{order.type}</Paragraph>
@@ -57,7 +58,7 @@ class OrderInfo extends Component {
                         </View>
                     </View>
                 )}
-            </View>
+            </Card>
         )
     }
 }

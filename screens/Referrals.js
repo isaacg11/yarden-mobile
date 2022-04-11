@@ -7,6 +7,7 @@ import { SafeAreaView, View, Image } from 'react-native';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import { getReferrals } from '../actions/referrals/index';
 import units from '../components/styles/units';
 
@@ -61,13 +62,13 @@ class Referrals extends Component {
                 <View style={{ padding: units.unit5 }}>
 
                     {/* QR code */}
-                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                    <Card>
                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Yarden Referral Program</Paragraph>
                         <Paragraph style={{ marginTop: units.unit5 }}>Share this QR with your family and friends. Upon signing up for service, you will both get 1 FREE month of gardening maintenance!</Paragraph>
                         <View style={{ marginTop: units.unit5, display: 'flex', alignItems: 'center' }}>
                             <Image source={{ uri: qrCode }} style={{ width: 200, height: 200 }} />
                         </View>
-                    </View>
+                    </Card>
 
                     {/* navigation button */}
                     <View>

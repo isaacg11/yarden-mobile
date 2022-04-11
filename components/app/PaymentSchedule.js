@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import moment from 'moment';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
+import Card from '../../components/UI/Card';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
 import vars from '../../vars/index';
@@ -64,7 +65,7 @@ class PaymentSchedule extends Component {
 
         return (
             <View style={{ padding: units.unit5 }}>
-                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                <Card>
                     <View style={{ marginBottom: units.unit5 }}>
                         <Paragraph>Upon checking out, your card will be charged today ({moment().format('MM/DD/YYYY')}) for the first payment.</Paragraph>
                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Payment #1</Paragraph>
@@ -83,7 +84,7 @@ class PaymentSchedule extends Component {
                         </Paragraph>
                         <Paragraph>TOTAL: ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))}</Paragraph>
                     </View>
-                </View>
+                </Card>
             </View>
         )
     }

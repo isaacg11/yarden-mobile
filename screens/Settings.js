@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import PaymentMethod from '../components/app/PaymentMethod';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import units from '../components/styles/units';
@@ -25,7 +26,7 @@ class Settings extends Component {
                 <ScrollView>
                     <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Settings</Header>
                     <View style={{ padding: units.unit5 }}>
-                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit4 }}>
+                        <Card style={{ marginBottom: units.unit4 }}>
                             <View style={{ marginBottom: units.unit5 }}>
                                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Name</Paragraph>
                                 <Paragraph>{user.first_name} {user.last_name}</Paragraph>
@@ -46,14 +47,14 @@ class Settings extends Component {
                                     variant="secondary"
                                 />
                             </View>
-                        </View>
+                        </Card>
                         {user.payment_info && (
-                            <View style={{ backgroundColor: '#fff', borderRadius: 5 }}>
+                            <Card>
                                 <View style={{ paddingLeft: units.unit5, paddingRight: units.unit5, marginTop: units.unit6 }}>
                                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit3 }}>Payment Method</Paragraph>
                                 </View>
                                 <PaymentMethod />
-                            </View>
+                            </Card>
                         )}
                     </View>
                 </ScrollView>

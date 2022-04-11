@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import Paragraph from '../../components/UI/Paragraph';
+import Card from '../../components/UI/Card';
 import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 import formatAddress from '../../helpers/formatAddress';
 import units from '../../components/styles/units';
@@ -12,7 +13,7 @@ class ChangeOrderInfo extends Component {
         const { changeOrder } = this.props;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <View style={{ marginBottom: units.unit5 }}>
                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Status</Paragraph>
                     <Paragraph>{changeOrder.status}</Paragraph>
@@ -26,7 +27,7 @@ class ChangeOrderInfo extends Component {
                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
                     <Paragraph>{changeOrder.description}</Paragraph>
                 </View>
-            </View>
+            </Card>
         )
     }
 }

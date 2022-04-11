@@ -8,6 +8,7 @@ import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Card from '../components/UI/Card';
 import { updateOrder, getOrders } from '../actions/orders/index';
 import { getConversations, createConversation } from '../actions/conversations/index';
 import { createMessage } from '../actions/messages/index';
@@ -180,7 +181,7 @@ class RequestQuoteChange extends Component {
                 {/* change request form start */}
                 <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Request Changes</Header>
                 <View style={{ padding: units.unit5 }}>
-                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                    <Card>
                         <View>
                             <Paragraph>Please describe the changes you'd like made to your quote</Paragraph>
                         </View>
@@ -201,7 +202,7 @@ class RequestQuoteChange extends Component {
                                 disabled={!message}
                             />
                         </View>
-                    </View>
+                    </Card>
                 </View>
                 {/* change request form end */}
 

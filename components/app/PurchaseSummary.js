@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import {connect} from 'react-redux';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
+import Card from '../../components/UI/Card';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
 import vars from '../../vars/index';
@@ -49,12 +50,7 @@ class PurchaseSummary extends Component {
     } = this.state;
 
     return (
-      <View
-        style={{
-          backgroundColor: '#fff',
-          padding: units.unit5,
-          borderRadius: 5,
-        }}>
+      <Card>
         {quotes.map((quote, index) => {
           const q = calculateQuoteCost(quote.line_items);
 
@@ -206,7 +202,7 @@ class PurchaseSummary extends Component {
             )}
           </Paragraph>
         </View>
-      </View>
+      </Card>
     );
   }
 }
