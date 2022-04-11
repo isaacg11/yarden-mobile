@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import Table from '../UI/Table';
-import Card from '../UI/Card';
 
 class Labor extends Component {
 
@@ -9,9 +9,9 @@ class Labor extends Component {
         const { labor }  = this.props;
 
         return (
-            <Card>
+            <View>
                 <Table data={[labor]} />
-            </Card>
+            </View>
         )
     }
 }

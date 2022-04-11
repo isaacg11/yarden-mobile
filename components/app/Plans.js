@@ -63,8 +63,8 @@ class Plans extends Component {
                 <View style={{ padding: units.unit5 }}>
                     {(plans.map((plan, index) => (
                         <View key={index}>
-                            <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
-                                <View style={{ paddingRight: units.unit5, marginRight: units.unit5 }}>
+                            <View style={{ padding: units.unit3, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{ paddingRight: units.unit4, marginRight: units.unit0 }}>
                                     <CheckBox
                                         disabled={(selectedPlan === 'none') || ((selectedPlan.type && selectedPlan.type !== plan.type))}
                                         value={(selectedPlan.type === plan.type)}
@@ -73,7 +73,7 @@ class Plans extends Component {
                                     />
                                 </View>
                                 <View>
-                                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>{plan.type}</Paragraph>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>{plan.type}</Paragraph>
                                     <Paragraph style={{ marginBottom: units.unit5 }}>${plan.rate.toFixed(2)} / month</Paragraph>
                                 </View>
                             </View>

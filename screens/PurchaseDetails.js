@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import Collapse from '../components/UI/Collapse';
@@ -14,6 +15,7 @@ import combineMaterials from '../helpers/combineMaterials';
 import formatMaterials from '../helpers/formatMaterials';
 import vars from '../vars';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class PurchaseDetails extends Component {
 
@@ -140,7 +142,7 @@ class PurchaseDetails extends Component {
                     <View style={{ padding: units.unit5 }}>
 
                         {/* purchase summary */}
-                        <View style={{ marginTop: units.unit5 }}>
+                        <View>
                             <Collapse
                                 title="Purchase Summary"
                                 open={true}
@@ -153,7 +155,7 @@ class PurchaseDetails extends Component {
                         </View>
 
                         {/* materials */}
-                        <View style={{ marginTop: units.unit5, display: (purchase.line_items.materials.length < 1) ? 'none' : null }}>
+                        <View style={{ display: (purchase.line_items.materials.length < 1) ? 'none' : null }}>
                             <Collapse
                                 title="Materials"
                                 content={
@@ -165,7 +167,7 @@ class PurchaseDetails extends Component {
                         </View>
 
                         {/* labor */}
-                        <View style={{ marginTop: units.unit5, display: (!purchase.line_items.labor) ? 'none' : null }}>
+                        <View style={{ display: (!purchase.line_items.labor) ? 'none' : null }}>
                             <Collapse
                                 title="Labor"
                                 content={
@@ -177,7 +179,7 @@ class PurchaseDetails extends Component {
                         </View>
 
                         {/* delivery */}
-                        <View style={{ marginTop: units.unit5, display: (!purchase.line_items.delivery) ? 'none' : null }}>
+                        <View style={{ display: (!purchase.line_items.delivery) ? 'none' : null }}>
                             <Collapse
                                 title="Delivery"
                                 content={
@@ -194,7 +196,13 @@ class PurchaseDetails extends Component {
                                 <Button
                                     text="Continue"
                                     onPress={() => this.continue()}
-                                    variant="primary"
+                                    icon={(
+                                        <Ionicons
+                                            name="arrow-forward-outline"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
                                 />
                             </View>
                         </View>

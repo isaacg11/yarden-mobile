@@ -6,6 +6,7 @@ import { View, SafeAreaView } from 'react-native';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import Header from '../components/UI/Header';
+import Link from '../components/UI/Link';
 import { login } from '../actions/auth/index';
 import units from '../components/styles/units';
 
@@ -51,6 +52,7 @@ class Login extends Component {
                 <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
+                            label="Email"
                             onChange={(value) => this.setState({ email: value })}
                             value={email}
                             placeholder="Email"
@@ -59,6 +61,7 @@ class Login extends Component {
                     <View>
                         <Input
                             password
+                            label="Password"
                             onChange={(value) => this.setState({ password: value })}
                             value={password}
                             placeholder="Password"
@@ -72,19 +75,11 @@ class Login extends Component {
                             variant="primary"
                         />
                     </View>
-                    <View style={{ marginTop: 15 }}>
-                        <Button
-                            text="Create new account"
-                            onPress={() => this.props.navigation.navigate('Register')}
-                            variant="secondary"
-                        />
+                    <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                        <Link text="Create new account" onPress={() => this.props.navigation.navigate('Register')} />
                     </View>
-                    <View>
-                        <Button
-                            text="Forgot your password?"
-                            onPress={() => this.props.navigation.navigate('Password Reset')}
-                            variant="secondary"
-                        />
+                    <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                        <Link text="Forgot your password?" onPress={() => this.props.navigation.navigate('Password Reset')} />
                     </View>
                 </View>
                 {/* login form end */}

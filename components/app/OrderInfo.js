@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import Divider from '../UI/Divider';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../UI/Button';
 import Paragraph from '../UI/Paragraph';
-import Card from '../UI/Card';
+import Link from '../UI/Link';
 import moment from 'moment';
 import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 import getOrderDescription from '../../helpers/getOrderDescription';
 import units from '../../components/styles/units';
+import colors from '../../components/styles/colors';
 
 class OrderInfo extends Component {
 
     render() {
 
-        const { 
-            order, 
+        const {
+            order,
             onChangeDate,
             onCancel
         } = this.props;
 
         return (
-            <Card>
+            <View>
                 <View style={{ marginBottom: units.unit5 }}>
                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Service</Paragraph>
                     <Paragraph>{order.type}</Paragraph>
@@ -40,25 +41,25 @@ class OrderInfo extends Component {
                 </View>
                 {(order.status === 'pending' && order.type === 'yard assessment') && (
                     <View>
-                        <Divider />
-                        <View style={{ marginBottom: units.unit5 }}>
+                        <View style={{ marginBottom: units.unit3 }}>
                             <Button
                                 text="Change Date"
                                 onPress={() => onChangeDate()}
-                                variant="secondary"
+                                icon={(
+                                    <Ionicons
+                                        name="calendar-outline"
+                                        size={units.unit4}
+                                        color={colors.purpleB}
+                                    />
+                                )}
                             />
                         </View>
-                        <Divider />
-                        <View>
-                            <Button
-                                text="Cancel Order"
-                                onPress={() => onCancel()}
-                                variant="secondary"
-                            />
+                        <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                            <Link text="Cancel Order" onPress={() => onCancel()} />
                         </View>
                     </View>
                 )}
-            </Card>
+            </View>
         )
     }
 }

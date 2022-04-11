@@ -4,6 +4,7 @@ import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Dropdown from '../components/UI/Dropdown';
 import DateSelect from '../components/UI/DateSelect';
 import Button from '../components/UI/Button';
@@ -12,6 +13,7 @@ import { alert } from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
 import { updateOrder, getOrders } from '../actions/orders/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class ChangeDate extends Component {
 
@@ -80,6 +82,7 @@ class ChangeDate extends Component {
                     </View>
                     <View>
                         <Dropdown
+                            label="Time"
                             onChange={(value) => this.setState({ time: value })}
                             options={[
                                 {
@@ -122,12 +125,18 @@ class ChangeDate extends Component {
                             placeholder="Time"
                         />
                     </View>
-                    <View>
+                    <View style={{marginTop: units.unit4}}>
                         <Button
                             text="Save Changes"
                             onPress={() => this.save()}
-                            variant="primary"
                             disabled={!date || !time}
+                            icon={(
+                                <Ionicons
+                                    name="checkmark"
+                                    size={units.unit4}
+                                    color={colors.purpleB}
+                                />
+                            )}
                         />
                     </View>
                 </View>

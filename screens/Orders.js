@@ -167,14 +167,14 @@ class Orders extends Component {
                         : ''}
                     </Paragraph>
                   </View>
-                  <Divider />
                   <View>
                     <Button
                       text="View Details"
                       onPress={() =>
                         this.props.navigation.navigate('Order Details', order)
                       }
-                      variant="secondary"
+                      variant="btn2"
+                      small
                     />
                   </View>
                 </Card>

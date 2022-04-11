@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import {connect} from 'react-redux';
 import Button from '../../components/UI/Button';
-import Card from '../../components/UI/Card';
 import Paragraph from '../../components/UI/Paragraph';
 import CreditCard from './CreditCard';
 import units from '../../components/styles/units';
@@ -25,7 +24,7 @@ class PaymentMethod extends Component {
         />
 
         {/* payment method start */}
-        <Card>
+        <View>
           <View style={{marginBottom: units.unit5}}>
             {!user.payment_info && (
               <View>
@@ -60,7 +59,7 @@ class PaymentMethod extends Component {
               </View>
             )}
           </View>
-        </Card>
+        </View>
         {/* payment method end */}
       </View>
     );

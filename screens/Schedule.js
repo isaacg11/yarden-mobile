@@ -4,6 +4,7 @@ import { View, SafeAreaView } from 'react-native';
 import moment from 'moment-timezone';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import Dropdown from '../components/UI/Dropdown';
@@ -13,6 +14,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import { getGeolocation, getCounty, getServiceArea } from '../actions/location/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Schedule extends Component {
 
@@ -20,7 +22,7 @@ class Schedule extends Component {
         address: '',
         unit: '',
         city: '',
-        state: '',
+        state: 'ca',
         zipCode: '',
         date: '',
         time: ''
@@ -107,6 +109,7 @@ class Schedule extends Component {
                 <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input
+                            label="Street Address"
                             onChange={(value) => this.setState({ address: value })}
                             value={address}
                             placeholder="Street Address"
@@ -114,6 +117,7 @@ class Schedule extends Component {
                     </View>
                     <View>
                         <Input
+                            label="Unit (Optional)"
                             onChange={(value) => this.setState({ unit: value })}
                             value={unit}
                             placeholder="Unit (Optional)"
@@ -121,25 +125,15 @@ class Schedule extends Component {
                     </View>
                     <View>
                         <Input
+                            label="City"
                             onChange={(value) => this.setState({ city: value })}
                             value={city}
                             placeholder="City"
                         />
                     </View>
                     <View>
-                        <Dropdown
-                            onChange={(value) => this.setState({ state: value })}
-                            options={[
-                                {
-                                    label: 'CA',
-                                    value: 'ca'
-                                }
-                            ]}
-                            placeholder="State"
-                        />
-                    </View>
-                    <View>
                         <Input
+                            label="Zip Code"
                             type="numeric"
                             onChange={(value) => this.setState({ zipCode: value })}
                             value={zipCode}
@@ -162,6 +156,7 @@ class Schedule extends Component {
                     </View>
                     <View>
                         <Dropdown
+                            label="Time"
                             onChange={(value) => this.setState({ time: value })}
                             options={[
                                 {
@@ -204,12 +199,19 @@ class Schedule extends Component {
                             placeholder="Time"
                         />
                     </View>
-                    <View>
+                    <View style={{marginTop: units.unit4}}>
                         <Button
                             text="Next"
                             onPress={() => this.next()}
                             variant="primary"
                             disabled={!address || !city || !state || !zipCode || !date || !time}
+                            icon={(
+                                <Ionicons
+                                    name="arrow-forward-outline"
+                                    size={units.unit4}
+                                    color={colors.purpleB}
+                                />
+                            )}
                         />
                     </View>
                 </View>

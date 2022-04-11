@@ -5,10 +5,12 @@ import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import RNQRGenerator from 'rn-qr-generator';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import { createUser, updateUser } from '../actions/user/index';
 import { createOrder } from '../actions/orders/index';
 import { sendEmail } from '../actions/emails/index';
@@ -16,6 +18,7 @@ import { sendAlert } from '../actions/alerts/index';
 import { APP_URL } from '../helpers/getUrl';
 import vars from '../vars/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Confirm extends Component {
 
@@ -202,36 +205,44 @@ class Confirm extends Component {
                 {/* confirmation start */}
                 <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Confirm Appointment</Header>
                 <View style={{ padding: units.unit5 }}>
-                    <View>
-                        <Paragraph style={{ fontWeight: 'bold' }}>Date</Paragraph>
-                        <Paragraph>{date}</Paragraph>
-                    </View>
-                    <View style={{ marginTop: units.unit5 }}>
-                        <Paragraph style={{ fontWeight: 'bold' }}>Time</Paragraph>
-                        <Paragraph>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Paragraph>
-                    </View>
-                    <View style={{ marginTop: units.unit5 }}>
-                        <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
-                        <Paragraph>{`${firstName} ${lastName}`}</Paragraph>
-                    </View>
-                    <View style={{ marginTop: units.unit5 }}>
-                        <Paragraph style={{ fontWeight: 'bold' }}>Location</Paragraph>
-                        <Paragraph>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Paragraph>
-                    </View>
-                    <View style={{ marginTop: units.unit5 }}>
-                        <Paragraph style={{ fontWeight: 'bold' }}>Contact Information</Paragraph>
-                        <Paragraph>{`${phoneNumber}`}</Paragraph>
-                        <Paragraph>{`${email}`}</Paragraph>
-                    </View>
-                    <View style={{ marginTop: units.unit5 }}>
-                        <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
-                        <Paragraph>FREE</Paragraph>
-                    </View>
-                    <View>
+                    <Card>
+                        <View>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Date</Paragraph>
+                            <Paragraph>{date}</Paragraph>
+                        </View>
+                        <View style={{ marginTop: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Time</Paragraph>
+                            <Paragraph>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Paragraph>
+                        </View>
+                        <View style={{ marginTop: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
+                            <Paragraph>{`${firstName} ${lastName}`}</Paragraph>
+                        </View>
+                        <View style={{ marginTop: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Location</Paragraph>
+                            <Paragraph>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Paragraph>
+                        </View>
+                        <View style={{ marginTop: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Contact Information</Paragraph>
+                            <Paragraph>{`${phoneNumber}`}</Paragraph>
+                            <Paragraph>{`${email}`}</Paragraph>
+                        </View>
+                        <View style={{ marginTop: units.unit5 }}>
+                            <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
+                            <Paragraph>FREE</Paragraph>
+                        </View>
+                    </Card>
+                    <View style={{marginTop: units.unit4}}>
                         <Button
                             text="Finish"
                             onPress={() => this.finish()}
-                            variant="primary"
+                            icon={(
+                                <Ionicons
+                                    name="checkmark"
+                                    size={units.unit4}
+                                    color={colors.purpleB}
+                                />
+                            )}
                         />
                     </View>
                 </View>

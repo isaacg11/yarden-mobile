@@ -30,6 +30,7 @@ class DateSelect extends Component {
         return (
             <View>
                 <Input
+                    label="Date"
                     value={value}
                     placeholder={placeholder}
                     onPressIn={() => this.setState({ datePickerIsOpen: true })}

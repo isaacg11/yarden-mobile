@@ -176,7 +176,7 @@ class Enrollment extends Component {
             />
 
             {/* navigation button */}
-            <View>
+            <View style={{marginTop: units.unit4}}>
               <Button
                 disabled={
                   !selectedPlan ||
