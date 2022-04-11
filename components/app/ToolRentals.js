@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import Table from '../UI/Table';
+import Card from '../UI/Card';
 import units from '../../components/styles/units';
 
 class ToolRentals extends Component {
@@ -10,9 +11,9 @@ class ToolRentals extends Component {
         const { rentals }  = this.props;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <Table data={[rentals]} />
-            </View>
+            </Card>
         )
     }
 }

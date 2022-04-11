@@ -4,6 +4,7 @@ import CheckBox from '@react-native-community/checkbox';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
 import Collapse from '../../components/UI/Collapse';
+import Card from '../../components/UI/Card';
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
 
@@ -152,12 +153,7 @@ class PlantList extends Component {
       const fruit = this.renderPlants(plants.fruit);
 
       return (
-        <View
-          style={{
-            backgroundColor: '#fff',
-            padding: units.unit5,
-            borderRadius: units.unit3,
-          }}>
+        <Card>
           <Paragraph
             style={{
               fontWeight: 'bold',
@@ -187,7 +183,7 @@ class PlantList extends Component {
           {Object.keys(fruit).length > 0 && (
             <Collapse title="Fruit" content={fruit} />
           )}
-        </View>
+        </Card>
       );
     }
 

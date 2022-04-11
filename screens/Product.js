@@ -6,6 +6,7 @@ import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
+import Card from '../components/UI/Card';
 import AddToCart from '../components/app/AddToCart';
 import {getItems} from '../actions/items/index';
 import {getRules} from '../actions/rules/index';
@@ -159,22 +160,17 @@ class Product extends Component {
               alignItems: 'center',
               padding: units.unit5,
             }}>
-            <View style={{backgroundColor: '#fff', padding: units.unit5}}>
+            <Card>
               <Paragraph style={{fontWeight: 'bold', fontSize: fonts.h3}}>
                 {capitalize(name)}
               </Paragraph>
-            </View>
+            </Card>
           </View>
         </ImageBackground>
 
         {/* product info */}
         <View style={{padding: units.unit5}}>
-          <View
-            style={{
-              backgroundColor: '#fff',
-              padding: units.unit5,
-              borderRadius: 5,
-            }}>
+          <Card>
             <View style={{marginBottom: units.unit5}}>
               <Paragraph style={{fontWeight: 'bold'}}>Price</Paragraph>
               <Paragraph>${delimit(price.toFixed(2))} / each</Paragraph>
@@ -192,7 +188,7 @@ class Product extends Component {
                 placeholder="qty"
               />
             </View>
-          </View>
+          </Card>
           <View>
             <Button
               text="Add to Cart"

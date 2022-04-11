@@ -9,6 +9,7 @@ import Divider from '../components/UI/Divider';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import { alert } from '../components/UI/SystemAlert';
 import { getSubscription, deleteSubscription } from '../actions/subscriptions/index';
 import { getPlan } from '../actions/plans/index';
@@ -136,7 +137,7 @@ class Subscription extends Component {
                 </Header>
                 {(plan && subscription) && (
                     <View style={{ padding: units.unit5 }}>
-                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                        <Card>
                             <View style={{ marginBottom: units.unit5 }}>
                                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Plan Name</Paragraph>
                                 <Paragraph>{plan.type}</Paragraph>
@@ -163,7 +164,7 @@ class Subscription extends Component {
                                     variant="secondary"
                                 />
                             </View>
-                        </View>
+                        </Card>
                     </View>
                 )}
                 {/* subscription end */}
@@ -171,7 +172,7 @@ class Subscription extends Component {
                 {/* no subscription start */}
                 {(!plan && !subscription) && (
                     <View style={{ padding: units.unit5 }}>
-                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                        <Card>
                             <View style={{ marginBottom: units.unit5 }}>
                                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No subscription found</Paragraph>
                                 <Paragraph style={{ marginTop: units.unit5 }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
@@ -184,7 +185,7 @@ class Subscription extends Component {
                                     variant="secondary"
                                 />
                             </View>
-                        </View>
+                        </Card>
                     </View>
                 )}
                 {/* no subscription end */}

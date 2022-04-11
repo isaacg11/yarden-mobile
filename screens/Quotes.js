@@ -6,15 +6,15 @@ import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
-import Divider from '../components/UI/Divider';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
+import Status from '../components/UI/Status';
+import Card from '../components/UI/Card';
 import {getQuotes} from '../actions/quotes/index';
 import {setFilters} from '../actions/filters/index';
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
-import card from '../components/styles/card';
 
 class Quotes extends Component {
   state = {
@@ -78,18 +78,15 @@ class Quotes extends Component {
           justifyContent: 'space-between',
           display: 'flex',
           flexDirection: 'column',
-          width: '100%',
-          paddingTop: units.unit5,
-          paddingHorizontal: units.unit4 + units.unit3,
+          width: '100%'
         }}>
         {/* loading indicator */}
         <LoadingIndicator loading={isLoading} />
 
-        <ScrollView style={{overflow: 'visible'}}>
+        <ScrollView style={{overflow: 'visible', padding: units.unit5}}>
           <Header
             type="h4"
             style={{
-              ...fonts.header,
               marginBottom: units.unit5,
             }}>
             Quotes{' '}
@@ -122,13 +119,7 @@ class Quotes extends Component {
             {/* quotes start */}
             {quotes.list &&
               quotes.list.map((quote, index) => (
-                <View
-                  key={index}
-                  style={{
-                    ...card,
-                    padding: units.unit4,
-                    marginTop: units.unit4,
-                  }}>
+                <Card key={index} style={{marginTop: units.unit4}}>
                   <View>
                     <View
                       style={{
@@ -136,7 +127,6 @@ class Quotes extends Component {
                         display: 'flex',
                         justifyContent: 'center',
                       }}>
-                      {/* <Paragraph style={{...fonts.label}}>Title</Paragraph> */}
                       <Text
                         style={{
                           fontSize: fonts.h3,
@@ -146,38 +136,9 @@ class Quotes extends Component {
                         }}>
                         {quote.title}
                       </Text>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'flex-start',
-                        }}>
-                        <View
-                          style={{
-                            backgroundColor: colors.greenC10,
-                            paddingHorizontal: units.unit3,
-                            borderRadius: units.unit3,
-                          }}>
-                          <Text
-                            style={{
-                              ...fonts.small,
-                              textTransform: 'capitalize',
-                            }}>
-                            {quote.status}
-                          </Text>
-                        </View>
-                      </View>
+                      <Status status={quote.status} />
                     </View>
-                    {/* <View> */}
-                    {/* <Paragraph style={{...fonts.label}}>
-                        Description
-                      </Paragraph> */}
-                    {/* <Text style={{...fonts.paragraph}}>
-                        {quote.description}
-                      </Text> */}
-                    {/* </View> */}
                   </View>
-                  {/* <Divider /> */}
                   <View
                     style={{
                       width: '100%',
@@ -191,7 +152,7 @@ class Quotes extends Component {
                       small
                     />
                   </View>
-                </View>
+                </Card>
               ))}
 
             {/* pagination */}

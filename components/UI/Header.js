@@ -14,9 +14,7 @@ const h2 = h3 * ratio.fontScaleRatio;
 const h1 = h2 * ratio.fontScaleRatio;
 
 const componentStyles = StyleSheet.create({
-    header: {
-        fontFamily: fonts.default,
-    }
+    header: fonts.header
 });
 
 class Header extends Component {

@@ -64,8 +64,7 @@ const fonts = {
   label: label,
   header: header,
   paragraph: paragraph,
-  small: small,
-  card: card,
+  small: small
 };
 
 export default fonts;

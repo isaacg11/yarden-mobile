@@ -152,7 +152,6 @@ class CreditCard extends Component {
                 }}>
                 {newCard ? 'Add' : 'Update'} Card
               </Header>
-              {/* TODO: depending on card type, conditionally render a card type logo, MasterCard, Visa, etc */}
               <View style={{...cardVisual}}>
                 <View
                   style={{

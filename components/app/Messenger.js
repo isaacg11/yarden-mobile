@@ -14,6 +14,7 @@ import LoadingIndicator from '../UI/LoadingIndicator';
 import Divider from '../UI/Divider';
 import Link from '../UI/Link';
 import Paragraph from '../UI/Paragraph';
+import Card from '../UI/Card';
 import { createMessage, getMessages, updateMessage } from '../../actions/messages/index';
 import { getConversations } from '../../actions/conversations/index';
 import uploadImage from '../../helpers/uploadImage';
@@ -261,7 +262,7 @@ class Messenger extends Component {
                     close={() => this.setState({ isOpen: false, imageUrl: null })}
                 />
 
-                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                <Card>
                     <View style={{ marginBottom: units.unit5 }}>
 
                         {/* message receiver dropdown */}
@@ -357,7 +358,7 @@ class Messenger extends Component {
                             />
                         </View>
                     </View>
-                </View>
+                </Card>
             </View>
         )
     }

@@ -10,6 +10,7 @@ import Header from '../components/UI/Header';
 import Button from '../components/UI/Button';
 import Paginate from '../components/UI/Paginate';
 import Divider from '../components/UI/Divider';
+import Card from '../components/UI/Card';
 import { getPurchases } from '../actions/purchases/index';
 import calculateQuote from '../helpers/calculateQuote';
 import vars from '../vars/index';
@@ -101,7 +102,7 @@ class Purchase extends Component {
                             const purchaseTotal = total + tax + processingFee;
 
                             return (
-                                <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                                <Card key={index} style={{ marginBottom: units.unit5 }}>
                                     <View style={{ marginBottom: units.unit5 }}>
                                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Order Placed</Paragraph>
                                         <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
@@ -120,7 +121,7 @@ class Purchase extends Component {
                                             variant="secondary"
                                         />
                                     </View>
-                                </View>
+                                </Card>
                             )
                         })}
 

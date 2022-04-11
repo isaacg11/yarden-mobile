@@ -6,7 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Badge from '../UI/Badge';
 import Paragraph from '../UI/Paragraph';
 import { getItems } from '../../actions/items/index';
-import units from '../../components/styles/units';
+import units from '../styles/units';
+import Card from '../UI/Card';
 
 class ShoppingInfo extends Component {
 
@@ -58,7 +59,7 @@ class ShoppingInfo extends Component {
         } = this.state;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <Paragraph style={{marginBottom: units.unit5}}>CART</Paragraph>
@@ -73,7 +74,7 @@ class ShoppingInfo extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </Card>
         )
     }
 }

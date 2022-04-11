@@ -7,6 +7,7 @@ import moment from 'moment';
 import Dropdown from '../UI/Dropdown';
 import Divider from '../UI/Divider';
 import Button from '../UI/Button';
+import Card from '../UI/Card';
 import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
 import { getMessages } from '../../actions/messages/index';
@@ -80,30 +81,28 @@ class Inbox extends Component {
                 />
 
                 {/* status filter */}
-                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
-                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Filter</Paragraph>
-                    <Dropdown
-                        value={status}
-                        onChange={(value) => this.setStatus(value)}
-                        options={[
-                            {
-                                label: 'Unread',
-                                value: 'unread',
-                            },
-                            {
-                                label: 'All Messages',
-                                value: 'all messages',
-                            }
-                        ]}
-                    />
-                </View>
+                <Dropdown
+                    label="Filter"
+                    value={status}
+                    onChange={(value) => this.setStatus(value)}
+                    options={[
+                        {
+                            label: 'Unread',
+                            value: 'unread',
+                        },
+                        {
+                            label: 'All Messages',
+                            value: 'all messages',
+                        }
+                    ]}
+                />
 
                 {/* inbox messages */}
                 {inbox.map((conversation, index) => {
                     const lastIndex = (conversation.length - 1);
                     const latestMessage = conversation[lastIndex];
                     return (
-                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }} key={index}>
+                        <Card key={index}>
                             <View style={{ marginBottom: units.unit5 }}>
                                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>From</Paragraph>
                                 <Paragraph>{latestMessage.sender.first_name} {latestMessage.sender.last_name[0]}.</Paragraph>
@@ -118,7 +117,7 @@ class Inbox extends Component {
                                     variant="secondary"
                                 />
                             </View>
-                        </View>
+                        </Card>
                     )
                 })}
                 {(inbox.length < 1) && (

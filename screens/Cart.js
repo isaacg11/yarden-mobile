@@ -11,6 +11,7 @@ import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import { getItems } from '../actions/items/index';
 import { getRules } from '../actions/rules/index';
 import { getIrrigation } from '../actions/irrigation/index';
@@ -314,7 +315,7 @@ class Cart extends Component {
 
         // render items
         return list.map((li, index) => (
-            <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: (index === (list.length - 1)) ? 0 : units.unit5 }}>
+            <Card key={index} style={{ marginBottom: (index === (list.length - 1)) ? 0 : units.unit5 }}>
                 <View style={{ display: 'flex', flexDirection: 'row', height: 100, marginTop: units.unit5, marginBottom: units.unit5 }}>
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => this.props.navigation.navigate('Product', { product: li.item.product, variant: li.variant })}>
                         <Image source={{ uri: li.variant.image }} style={{ width: '100%', height: '100%' }} />
@@ -351,7 +352,7 @@ class Cart extends Component {
                         </View>
                     </View>
                 </View>
-            </View>
+            </Card>
         ));
     }
 

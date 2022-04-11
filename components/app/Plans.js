@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Divider from '../UI/Divider';
 import Paragraph from '../UI/Paragraph';
+import Card from '../UI/Card';
 import units from '../../components/styles/units';
 
 class Plans extends Component {
@@ -53,7 +54,7 @@ class Plans extends Component {
         const { selectedPlan } = this.state;
 
         return (
-            <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+            <Card>
                 <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Plan Selection</Paragraph>
                 <Paragraph style={{ marginBottom: units.unit5 }}>
                     Please select a plan from the list below. 1st Month FREE! Cancel anytime.
@@ -101,7 +102,7 @@ class Plans extends Component {
                         </View>
                     </View>
                 </View>
-            </View>
+            </Card>
         )
     }
 }

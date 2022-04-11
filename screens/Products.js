@@ -85,16 +85,12 @@ class Products extends Component {
                           alignItems: 'center',
                           padding: units.unit5,
                         }}>
-                        <View
-                          style={{
-                            backgroundColor: '#fff',
-                            padding: units.unit5,
-                          }}>
+                        <Card>
                           <Paragraph
                             style={{fontWeight: 'bold', fontSize: fonts.h3}}>
                             {capitalize(product.name)} - {variant.name}
                           </Paragraph>
-                        </View>
+                        </Card>
                       </View>
                     </ImageBackground>
                   </View>

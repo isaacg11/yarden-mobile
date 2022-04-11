@@ -9,6 +9,7 @@ import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Divider from '../components/UI/Divider';
 import Paragraph from '../components/UI/Paragraph';
+import Card from '../components/UI/Card';
 import Header from '../components/UI/Header';
 import { alert } from '../components/UI/SystemAlert';
 import { updateUser } from '../actions/user/index';
@@ -175,7 +176,7 @@ class ChangePlan extends Component {
                     <View style={{ padding: units.unit5 }}>
 
                         {/* plan list start */}
-                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                        <Card>
                             <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Current Plan</Paragraph>
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Paragraph style={{ marginBottom: units.unit5, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Paragraph>
@@ -207,7 +208,7 @@ class ChangePlan extends Component {
                                     </View>
                                 )))}
                             </View>
-                        </View>
+                        </Card>
                         {/* plan list end */}
 
                         {/* navigation button */}

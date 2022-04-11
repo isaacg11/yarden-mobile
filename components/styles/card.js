@@ -1,4 +1,3 @@
-import ratio from '../styles/ratio';
 import units from '../styles/units';
 import colors from './colors';
 
@@ -12,6 +11,7 @@ const card = {
   shadowOpacity: 1,
   shadowRadius: 8,
   borderRadius: units.unit3,
+  padding: units.unit4
 };
 
 export default card;

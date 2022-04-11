@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -11,10 +11,10 @@ import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
-import {getOrders} from '../actions/orders/index';
-import {getChangeOrders} from '../actions/changeOrders/index';
-import {setFilters} from '../actions/filters/index';
-import fonts from '../components/styles/fonts';
+import Card from '../components/UI/Card';
+import { getOrders } from '../actions/orders/index';
+import { getChangeOrders } from '../actions/changeOrders/index';
+import { setFilters } from '../actions/filters/index';
 import units from '../components/styles/units';
 
 class Orders extends Component {
@@ -36,7 +36,7 @@ class Orders extends Component {
     });
 
     // set new status
-    await this.props.setFilters({orders: status});
+    await this.props.setFilters({ orders: status });
 
     // set order query
     const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
@@ -59,12 +59,12 @@ class Orders extends Component {
     }
 
     // show loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   paginate(direction) {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set intitial page
     let page = 1;
@@ -76,19 +76,19 @@ class Orders extends Component {
     if (direction === 'back') page = this.state.page - 1;
 
     // set new page
-    this.setState({page: page}, async () => {
+    this.setState({ page: page }, async () => {
       // set status
       await this.setStatus(this.state.status);
 
       // hide loading indicator
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
     });
   }
 
   render() {
-    const {isLoading, page, limit} = this.state;
+    const { isLoading, page, limit } = this.state;
 
-    const {orders, changeOrders, filters} = this.props;
+    const { orders, changeOrders, filters } = this.props;
 
     return (
       <SafeAreaView
@@ -100,48 +100,37 @@ class Orders extends Component {
           {/* loading indicator start */}
           <LoadingIndicator loading={isLoading} />
 
-          <Header
-            type="h4"
-            style={{textAlign: 'center', marginTop: units.unit6}}>
-            Orders {orders.total && orders.total > 0 ? `(${orders.total})` : ''}
-          </Header>
-          <View style={{padding: units.unit5}}>
-            {/* status filter */}
-            <View
+
+          <View style={{ padding: units.unit5 }}>
+            <Header
+              type="h4"
               style={{
-                backgroundColor: '#fff',
-                padding: units.unit5,
-                borderRadius: 5,
                 marginBottom: units.unit5,
               }}>
-              <Dropdown
-                label="Filter"
-                value={filters.orders}
-                onChange={value => this.setStatus(value)}
-                options={[
-                  {
-                    label: 'Pending',
-                    value: 'pending',
-                  },
-                  {
-                    label: 'Complete',
-                    value: 'complete',
-                  },
-                ]}
-              />
-            </View>
+              Orders {orders.total && orders.total > 0 ? `(${orders.total})` : ''}
+            </Header>
+
+            {/* status filter */}
+            <Dropdown
+              label="Filter"
+              value={filters.orders}
+              onChange={value => this.setStatus(value)}
+              options={[
+                {
+                  label: 'Pending',
+                  value: 'pending',
+                },
+                {
+                  label: 'Complete',
+                  value: 'complete',
+                },
+              ]}
+            />
 
             {/* order list */}
             {orders.list &&
               orders.list.map((order, index) => (
-                <View
-                  key={index}
-                  style={{
-                    backgroundColor: '#fff',
-                    padding: units.unit5,
-                    borderRadius: 5,
-                    marginBottom: units.unit5,
-                  }}>
+                <Card key={index} style={{ marginTop: units.unit4 }}>
                   {/* change order notification */}
                   {changeOrders.length > 0 &&
                     changeOrders.find(c => c.order._id === order._id) && (
@@ -161,14 +150,14 @@ class Orders extends Component {
                     )}
 
                   {/* order info */}
-                  <View style={{marginBottom: units.unit5}}>
+                  <View style={{ marginBottom: units.unit5 }}>
                     <Paragraph
-                      style={{fontWeight: 'bold', marginTop: units.unit5}}>
+                      style={{ fontWeight: 'bold', marginTop: units.unit5 }}>
                       Service
                     </Paragraph>
                     <Paragraph>{order.type}</Paragraph>
                     <Paragraph
-                      style={{fontWeight: 'bold', marginTop: units.unit5}}>
+                      style={{ fontWeight: 'bold', marginTop: units.unit5 }}>
                       Date
                     </Paragraph>
                     <Paragraph>
@@ -188,12 +177,12 @@ class Orders extends Component {
                       variant="secondary"
                     />
                   </View>
-                </View>
+                </Card>
               ))}
 
             {/* pagination */}
             {orders.list && orders.total > limit && (
-              <View style={{marginBottom: units.unit5}}>
+              <View style={{ marginBottom: units.unit5 }}>
                 <Paginate
                   page={page}
                   limit={limit}
@@ -205,7 +194,7 @@ class Orders extends Component {
 
             {/* no orders */}
             {orders.list && orders.list.length < 1 && (
-              <View style={{marginBottom: units.unit5}}>
+              <View style={{ marginBottom: units.unit5 }}>
                 <Paragraph
                   style={{
                     fontWeight: 'bold',

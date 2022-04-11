@@ -16,11 +16,10 @@ class Messages extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
-                        Messages
-                    </Header>
                     <View style={{ padding: units.unit5 }}>
-
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>
+                            Messages
+                        </Header>
                         {/* inbox */}
                         <Inbox
                             onSelectConversation={(conversationId) => this.props.navigation.navigate('Message', { conversationId: conversationId })}

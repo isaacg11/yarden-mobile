@@ -4,6 +4,7 @@ import { View, SafeAreaView, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Table from '../components/UI/Table';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import units from '../components/styles/units';
 
 class ReferralHistory extends Component {
@@ -22,9 +23,9 @@ class ReferralHistory extends Component {
                         Referral History
                     </Header>
                     <View style={{ padding: units.unit5 }}>
-                        <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                        <Card>
                             <Table data={referrals} />
-                        </View>
+                        </Card>
                     </View>
                 </ScrollView >
             </SafeAreaView>

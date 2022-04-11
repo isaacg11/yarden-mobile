@@ -5,6 +5,7 @@ import { View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
+import Card from '../UI/Card';
 import { getProductCategories } from '../../actions/productCategories/index';
 import capitalize from '../../helpers/capitalize';
 import units from '../../components/styles/units';
@@ -60,14 +61,14 @@ class ProductCategories extends Component {
 
                     // render category
                     return (
-                        <View key={index} style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                        <Card key={index} style={{ marginTop: units.unit4 }}>
                             <TouchableOpacity onPress={() => onPress(category)}>
                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Paragraph style={{ fontWeight: 'bold' }}>{capitalize(category.name)}</Paragraph>
                                     <Ionicons name="arrow-forward" size={30} color="#CCCCCC" />
                                 </View>
                             </TouchableOpacity>
-                        </View>
+                        </Card>
                     )
                 }))}
             </View>

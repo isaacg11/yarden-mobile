@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Card from '../components/UI/Card';
 import { alert } from '../components/UI/SystemAlert';
-import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import { updateUser } from '../actions/user/index';
@@ -72,7 +72,7 @@ class ChangeSettings extends Component {
                 {/* change date form start */}
                 <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Settings</Header>
                 <View style={{ padding: units.unit5 }}>
-                    <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5, marginBottom: units.unit5 }}>
+                    <Card style={{ marginBottom: units.unit5 }}>
                         <View>
                             <Input
                                 onChange={(value) => this.setState({ firstName: value })}
@@ -108,7 +108,7 @@ class ChangeSettings extends Component {
                                 variant="primary"
                             />
                         </View>
-                    </View>
+                    </Card>
                 </View>
                 {/* change date form end */}
 

@@ -12,6 +12,7 @@ import Link from '../../components/UI/Link';
 import LoadingIndicator from '../../components/UI/LoadingIndicator';
 import Paragraph from '../../components/UI/Paragraph';
 import { alert } from '../../components/UI/SystemAlert';
+import Card from '../../components/UI/Card';
 import ElectronicSignatureAgreement from '../../components/app/ElectronicSignatureAgreement';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
@@ -693,7 +694,7 @@ class Approval extends Component {
                 />
 
                 {/* approval start */}
-                <View style={{ backgroundColor: '#fff', padding: units.unit5, borderRadius: 5 }}>
+                <Card>
                     <Paragraph style={{ marginBottom: units.unit5 }}>
                         By signing, I agree to pay the full amount of ${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))} to {getCompanyName()} for all work listed in section (1a) "Scope of Work" of this contract.
                         I agree to pay the first payment of ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))} today {moment().format('MM/DD/YYYY')}, and a second payment of ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))} once all work has been completed.
@@ -728,7 +729,7 @@ class Approval extends Component {
                             variant="primary"
                         />
                     </View>
-                </View>
+                </Card>
                 {/* approval end */}
 
             </View>
