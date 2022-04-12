@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
+import Label from '../UI/Label';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';
 import vars from '../../vars/index';
@@ -15,12 +16,15 @@ class QuoteSummary extends Component {
 
     return (
       <View>
-        <View style={{marginBottom: units.unit5, marginTop: units.unit5}}>
-          <Paragraph style={{fontWeight: 'bold', color: colors.greenE75}}>
+        <View style={{marginTop: units.unit5}}>
+          <Paragraph
+            style={{color: colors.greenE75, marginBottom: units.unit5}}>
             {quote.description}
           </Paragraph>
         </View>
-        <View style={{paddingLeft: units.unit5}}>
+        <View>
+          <Label>Line Items</Label>
+
           <View
             style={{
               display: quote.line_items.materials ? 'flex' : 'none',
@@ -82,12 +86,10 @@ class QuoteSummary extends Component {
             <Paragraph>${delimit(q.disposalTotal.toFixed(2))}</Paragraph>
           </View>
         </View>
-        <View style={{marginBottom: units.unit5, marginTop: units.unit5}}>
-          <Paragraph style={{fontWeight: 'bold', color: colors.greenE75}}>
-            Taxes and Fees
-          </Paragraph>
+        <View style={{marginTop: units.unit5}}>
+          <Label>Taxes and Fees</Label>
         </View>
-        <View style={{paddingLeft: units.unit5}}>
+        <View>
           <View
             style={{
               flex: 1,

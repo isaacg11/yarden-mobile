@@ -1,7 +1,6 @@
-
-import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {SafeAreaView, View, ScrollView} from 'react-native';
+import {connect} from 'react-redux';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import Collapse from '../components/UI/Collapse';
@@ -13,182 +12,174 @@ import Disposal from '../components/app/Disposal';
 import QuoteSummary from '../components/app/QuoteSummary';
 import QuoteInfo from '../components/app/QuoteInfo';
 import Button from '../components/UI/Button';
+import Link from '../components/UI/Link';
 import units from '../components/styles/units';
+import fonts from '../components/styles/fonts';
 
 class QuoteDetails extends Component {
+  state = {};
 
-    state = {}
+  proceedToCheckout() {
+    // format quote
+    const quote = this.props.route.params;
 
-    proceedToCheckout() {
-        // format quote
-        const quote = this.props.route.params;
-
-        // if installation or revive {...}
-        if (quote.type === 'installation' || quote.type === 'revive') {
-
-            // if no garden info {...}
-            if (!this.props.user.garden_info) {
-
-                // navigate to garden screen
-                return this.props.navigation.navigate('Garden', quote);
-            }
-        }
-
-        // navigate to checkout screen
-        this.props.navigation.navigate('Checkout', quote);
-
+    // if installation or revive {...}
+    if (quote.type === 'installation' || quote.type === 'revive') {
+      // if no garden info {...}
+      if (!this.props.user.garden_info) {
+        // navigate to garden screen
+        return this.props.navigation.navigate('Garden', quote);
+      }
     }
 
-    requestChanges() {
-        // navigate to request change page
-        this.props.navigation.navigate('Request Quote Change', { quote: this.props.route.params });
-    }
+    // navigate to checkout screen
+    this.props.navigation.navigate('Checkout', quote);
+  }
 
-    render() {
+  requestChanges() {
+    // navigate to request change page
+    this.props.navigation.navigate('Request Quote Change', {
+      quote: this.props.route.params,
+    });
+  }
 
-        const quote = this.props.route.params;
-        const { isLoading } = this.state;
+  render() {
+    const quote = this.props.route.params;
+    const {isLoading} = this.state;
 
-        return (
-            <SafeAreaView style={{
-                flex: 1,
-                width: "100%",
-            }}>
-                <ScrollView>
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+        }}>
+        <ScrollView style={{padding: units.unit4 + units.unit3}}>
+          {/* loading indicator */}
+          <LoadingIndicator loading={isLoading} />
 
-                    {/* loading indicator */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
+          <Header
+            type="h4"
+            style={{...fonts.header, marginBottom: units.unit4}}>
+            Quote Details
+          </Header>
 
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Quote Details</Header>
-                    <View style={{ padding: units.unit5 }}>
+          <View>
+            {/* quote info */}
+            <View>
+              <Collapse
+                title="Quote Info"
+                open={true}
+                content={<QuoteInfo quote={quote} />}
+              />
+            </View>
 
-                        {(quote.line_items) && (
-                            // quote summary
-                            <View>
-                                <Collapse
-                                    title="Quote Summary"
-                                    open={true}
-                                    content={
-                                        <QuoteSummary
-                                            quote={quote}
-                                        />
-                                    }
-                                />
-                            </View>
-                        )}
+            {quote.line_items && (
+              // quote summary
+              <View>
+                <Collapse
+                  title="Quote Summary"
+                  content={<QuoteSummary quote={quote} />}
+                />
+              </View>
+            )}
 
-                        {/* quote info */}
-                        <View>
-                            <Collapse
-                                title="Quote Info"
-                                open={!quote.line_items}
-                                content={
-                                    <QuoteInfo
-                                        quote={quote}
-                                    />
-                                }
-                            />
-                        </View>
+            {quote.line_items && (
+              <View>
+                {/* materials */}
+                <View
+                  style={{
+                    display: !quote.line_items.materials ? 'none' : null,
+                  }}>
+                  <Collapse
+                    title="Materials"
+                    content={
+                      <Materials materials={quote.line_items.materials} />
+                    }
+                  />
+                </View>
 
-                        {(quote.line_items) && (
-                            <View>
-                                {/* materials */}
-                                <View style={{ display: (!quote.line_items.materials) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Materials"
-                                        content={
-                                            <Materials
-                                                materials={quote.line_items.materials}
-                                            />
-                                        }
-                                    />
-                                </View>
+                {/* labor */}
+                <View
+                  style={{
+                    display: !quote.line_items.labor ? 'none' : null,
+                  }}>
+                  <Collapse
+                    title="Labor"
+                    content={<Labor labor={quote.line_items.labor} />}
+                  />
+                </View>
 
-                                {/* labor */}
-                                <View style={{ display: (!quote.line_items.labor) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Labor"
-                                        content={
-                                            <Labor
-                                                labor={quote.line_items.labor}
-                                            />
-                                        }
-                                    />
-                                </View>
+                {/* delivery */}
+                <View
+                  style={{
+                    display: !quote.line_items.delivery ? 'none' : null,
+                  }}>
+                  <Collapse
+                    title="Delivery"
+                    content={<Delivery delivery={quote.line_items.delivery} />}
+                  />
+                </View>
 
-                                {/* delivery */}
-                                <View style={{ display: (!quote.line_items.delivery) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Delivery"
-                                        content={
-                                            <Delivery
-                                                delivery={quote.line_items.delivery}
-                                            />
-                                        }
-                                    />
-                                </View>
+                {/* tool rentals */}
+                <View
+                  style={{
+                    display: !quote.line_items.rentals ? 'none' : null,
+                  }}>
+                  <Collapse
+                    title="Tool Rentals"
+                    content={<ToolRentals rentals={quote.line_items.rentals} />}
+                  />
+                </View>
 
-                                {/* tool rentals */}
-                                <View style={{ display: (!quote.line_items.rentals) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Tool Rentals"
-                                        content={
-                                            <ToolRentals
-                                                rentals={quote.line_items.rentals}
-                                            />
-                                        }
-                                    />
-                                </View>
+                {/* disposal */}
+                <View
+                  style={{
+                    display: !quote.line_items.disposal ? 'none' : null,
+                  }}>
+                  <Collapse
+                    title="Disposal"
+                    content={<Disposal disposal={quote.line_items.disposal} />}
+                  />
+                </View>
+              </View>
+            )}
 
-                                {/* disposal */}
-                                <View style={{ display: (!quote.line_items.disposal) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Disposal"
-                                        content={
-                                            <Disposal
-                                                disposal={quote.line_items.disposal}
-                                            />
-                                        }
-                                    />
-                                </View>
-                            </View>
-                        )}
-
-                        {/* navigation buttons */}
-                        {(quote.status === 'pending approval') && (
-                            <View>
-                                <View>
-                                    <Button
-                                        text="Proceed to checkout"
-                                        onPress={() => this.proceedToCheckout()}
-                                        variant="primary"
-                                    />
-                                </View>
-                                <View>
-                                    <Button
-                                        text="Request Changes"
-                                        onPress={() => this.requestChanges()}
-                                        variant="secondary"
-                                    />
-                                </View>
-                            </View>
-                        )}
-
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        )
-    }
+            {/* navigation buttons */}
+            {quote.status === 'pending approval' && (
+              <View
+                style={{
+                  marginBottom: units.unit5,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <View>
+                  <Link
+                    text="Request Changes"
+                    onPress={() => this.requestChanges()}
+                  />
+                </View>
+                <View style={{marginBottom: units.unit3}}>
+                  <Button
+                    text="Checkout"
+                    onPress={() => this.proceedToCheckout()}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        user: state.user
-    }
+  return {
+    user: state.user,
+  };
 }
-
 
 QuoteDetails = connect(mapStateToProps, null)(QuoteDetails);
 

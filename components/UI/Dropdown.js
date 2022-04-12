@@ -25,7 +25,7 @@ const componentStyles = StyleSheet.create({
 
 class Dropdown extends Component {
   render() {
-    const {placeholder, options, onChange, value, disabled} = this.props;
+    const {placeholder, options, onChange, value, disabled, style} = this.props;
 
     return (
       <View>
@@ -33,7 +33,7 @@ class Dropdown extends Component {
           <Text style={fonts.inputLabel}>{this.props.label}</Text>
         )}
 
-        <View style={componentStyles.dropdown}>
+        <View style={{...componentStyles.dropdown, ...style}}>
           <RNPickerSelect
             disabled={disabled}
             value={value}

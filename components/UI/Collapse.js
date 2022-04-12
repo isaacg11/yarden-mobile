@@ -52,7 +52,9 @@ class Collapse extends Component {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <Paragraph style={{fontWeight: 'bold'}}>{title}</Paragraph>
+            <Paragraph style={{color: colors.greenD75, fontSize: fonts.h3}}>
+              {title}
+            </Paragraph>
             <Ionicons
               name={`caret-${isOpen ? 'up' : 'down'}`}
               size={fonts.h2}

@@ -28,7 +28,7 @@ const small = {
 const label = {
   fontSize: h5,
   lineHeight: h4,
-  marginBottom: units.unit2,
+  marginBottom: units.unit1,
   color: colors.purpleE50,
   fontFamily: 'Futura-Medium',
   textTransform: 'uppercase',
@@ -38,6 +38,7 @@ const label = {
 const inputLabel = {
   ...label,
   color: colors.purpleB,
+  marginBottom: units.unit2,
 };
 
 const header = {
@@ -46,6 +47,7 @@ const header = {
   fontWeight: 'bold',
   color: colors.purpleE75,
   textTransform: 'capitalize',
+  fontFamily: 'Futura-Medium',
 };
 
 // fonts
@@ -64,7 +66,7 @@ const fonts = {
   label: label,
   header: header,
   paragraph: paragraph,
-  small: small
+  small: small,
 };
 
 export default fonts;
