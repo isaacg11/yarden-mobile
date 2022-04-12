@@ -21,18 +21,21 @@ class Status extends Component {
 
   badgeStyles = {
     requested: {
-      backgroundColor: 'red',
+      backgroundColor: colors.indigoC10,
+      color: colors.indigo0,
     },
     pending: {
       backgroundColor: colors.greenC10,
+      color: colors.greenB,
     },
     complete: {
-      backgroundColor: 'green',
+      backgroundColor: colors.greenB,
+      color: colors.white,
     },
   };
 
   render() {
-    const {status} = this.props;
+    const {status, styles} = this.props;
     const linkStyles = this.getlinkStyles(status);
 
     return (
@@ -52,6 +55,8 @@ class Status extends Component {
           <Text
             style={{
               ...fonts.small,
+              ...styles,
+              ...{color: linkStyles.color},
               textTransform: 'capitalize',
             }}>
             {status}
