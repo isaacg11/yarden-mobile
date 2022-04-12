@@ -123,7 +123,7 @@ class Plants extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Plants Setup</Header>
+                    <Header type="h4" style={{ marginTop: units.unit6 }}>Plants Setup</Header>
                     <View style={{ padding: units.unit5 }}>
 
                         {/* plant list */}

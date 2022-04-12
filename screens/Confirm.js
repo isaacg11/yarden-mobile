@@ -196,57 +196,60 @@ class Confirm extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator start */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-                {/* loading indicator end */}
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    {/* loading indicator start */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
+                    {/* loading indicator end */}
 
-                {/* confirmation start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Confirm Appointment</Header>
-                <View style={{ padding: units.unit5 }}>
-                    <Card>
-                        <View>
-                            <Paragraph style={{ fontWeight: 'bold' }}>Date</Paragraph>
-                            <Paragraph>{date}</Paragraph>
+                    {/* confirmation start */}
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Confirm Appointment</Header>
+                    <View>
+                        <Card>
+                            <View>
+                                <Paragraph style={{ fontWeight: 'bold' }}>Date</Paragraph>
+                                <Paragraph>{date}</Paragraph>
+                            </View>
+                            <View style={{ marginTop: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold' }}>Time</Paragraph>
+                                <Paragraph>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Paragraph>
+                            </View>
+                            <View style={{ marginTop: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
+                                <Paragraph>{`${firstName} ${lastName}`}</Paragraph>
+                            </View>
+                            <View style={{ marginTop: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold' }}>Location</Paragraph>
+                                <Paragraph>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Paragraph>
+                            </View>
+                            <View style={{ marginTop: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold' }}>Contact Information</Paragraph>
+                                <Paragraph>{`${phoneNumber}`}</Paragraph>
+                                <Paragraph>{`${email}`}</Paragraph>
+                            </View>
+                            <View style={{ marginTop: units.unit5 }}>
+                                <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
+                                <Paragraph>FREE</Paragraph>
+                            </View>
+                        </Card>
+                        <View style={{ marginTop: units.unit4 }}>
+                            <Button
+                                text="Finish"
+                                onPress={() => this.finish()}
+                                icon={(
+                                    <Ionicons
+                                        name="checkmark"
+                                        size={units.unit4}
+                                        color={colors.purpleB}
+                                    />
+                                )}
+                            />
                         </View>
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Paragraph style={{ fontWeight: 'bold' }}>Time</Paragraph>
-                            <Paragraph>{moment(time, `HH:mm:ss`).format(`h:mm A`)}</Paragraph>
-                        </View>
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
-                            <Paragraph>{`${firstName} ${lastName}`}</Paragraph>
-                        </View>
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Paragraph style={{ fontWeight: 'bold' }}>Location</Paragraph>
-                            <Paragraph>{`${address}${(unit) ? ` ${unit} ` : ''}, ${city} ${state} ${zipCode}`}</Paragraph>
-                        </View>
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Paragraph style={{ fontWeight: 'bold' }}>Contact Information</Paragraph>
-                            <Paragraph>{`${phoneNumber}`}</Paragraph>
-                            <Paragraph>{`${email}`}</Paragraph>
-                        </View>
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Paragraph style={{ fontWeight: 'bold' }}>Price</Paragraph>
-                            <Paragraph>FREE</Paragraph>
-                        </View>
-                    </Card>
-                    <View style={{marginTop: units.unit4}}>
-                        <Button
-                            text="Finish"
-                            onPress={() => this.finish()}
-                            icon={(
-                                <Ionicons
-                                    name="checkmark"
-                                    size={units.unit4}
-                                    color={colors.purpleB}
-                                />
-                            )}
-                        />
                     </View>
+                    {/* confirmation end */}
+
                 </View>
-                {/* confirmation end */}
 
             </SafeAreaView>
         )

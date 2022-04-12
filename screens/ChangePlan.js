@@ -172,7 +172,7 @@ class ChangePlan extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Plan</Header>
+                    <Header type="h4" style={{ marginTop: units.unit6 }}>Change Plan</Header>
                     <View style={{ padding: units.unit5 }}>
 
                         {/* plan list start */}

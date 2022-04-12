@@ -38,56 +38,58 @@ class Checkout extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                    {/* loading indicator */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
+                        {/* loading indicator */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
 
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Checkout</Header>
-                    <View style={{ padding: units.unit5 }}>
-
-                        {/* payment method */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Checkout</Header>
                         <View>
-                            <Collapse
-                                title="Payment Method"
-                                open={true}
-                                content={
-                                    <PaymentMethod />
-                                }
-                            />
-                        </View>
 
-                        {/* payment schedule */}
-                        <View>
-                            <Collapse
-                                title="Payment Schedule"
-                                content={
-                                    <PaymentSchedule
-                                        quote={this.props.route.params}
-                                        quotes={this.props.route.params.quotes}
-                                    />
-                                }
-                            />
-                        </View>
+                            {/* payment method */}
+                            <View>
+                                <Collapse
+                                    title="Payment Method"
+                                    open={true}
+                                    content={
+                                        <PaymentMethod />
+                                    }
+                                />
+                            </View>
 
-                        {/* approval */}
-                        <View>
-                            <Collapse
-                                title="Payment Approval"
-                                open={true}
-                                content={
-                                    <Approval
-                                        quote={this.props.route.params}
-                                        quotes={this.props.route.params.quotes}
-                                        plantSelections={this.props.route.params.plantSelections}
-                                        plan={this.props.route.params.plan}
-                                        isChangeOrder={this.props.route.params.isChangeOrder}
-                                        isPurchase={this.props.route.params.isPurchase}
-                                        onApproved={() => this.onApproved()}
-                                    />
-                                }
-                            />
+                            {/* payment schedule */}
+                            <View>
+                                <Collapse
+                                    title="Payment Schedule"
+                                    content={
+                                        <PaymentSchedule
+                                            quote={this.props.route.params}
+                                            quotes={this.props.route.params.quotes}
+                                        />
+                                    }
+                                />
+                            </View>
+
+                            {/* approval */}
+                            <View>
+                                <Collapse
+                                    title="Payment Approval"
+                                    open={true}
+                                    content={
+                                        <Approval
+                                            quote={this.props.route.params}
+                                            quotes={this.props.route.params.quotes}
+                                            plantSelections={this.props.route.params.plantSelections}
+                                            plan={this.props.route.params.plan}
+                                            isChangeOrder={this.props.route.params.isChangeOrder}
+                                            isPurchase={this.props.route.params.isPurchase}
+                                            onApproved={() => this.onApproved()}
+                                        />
+                                    }
+                                />
+                            </View>
                         </View>
                     </View>
                 </ScrollView>

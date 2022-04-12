@@ -677,7 +677,8 @@ class Approval extends Component {
         } = this.state;
 
         const {
-            quote
+            quote,
+            user
         } = this.props;
 
         return (
@@ -725,7 +726,7 @@ class Approval extends Component {
                         <Button
                             text="Approve"
                             onPress={() => this.approve()}
-                            disabled={!userSignature || !eSignatureAgreement}
+                            disabled={!userSignature || !eSignatureAgreement || (!user.payment_info)}
                             variant="primary"
                         />
                     </View>

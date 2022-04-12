@@ -44,45 +44,47 @@ class Login extends Component {
         return (
             <SafeAreaView style={{
                 flex: 1,
-                width: "100%",
+                width: "100%"
             }}>
 
-                {/* login form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Sign In</Header>
-                <View style={{ padding: units.unit5 }}>
+                <View style={{padding: units.unit3 + units.unit4}}>
+                    {/* login form start */}
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Sign In</Header>
                     <View>
-                        <Input
-                            label="Email"
-                            onChange={(value) => this.setState({ email: value })}
-                            value={email}
-                            placeholder="Email"
-                        />
+                        <View>
+                            <Input
+                                label="Email"
+                                onChange={(value) => this.setState({ email: value })}
+                                value={email}
+                                placeholder="Email"
+                            />
+                        </View>
+                        <View>
+                            <Input
+                                password
+                                label="Password"
+                                onChange={(value) => this.setState({ password: value })}
+                                value={password}
+                                placeholder="Password"
+                            />
+                        </View>
+                        <View>
+                            <Button
+                                disabled={!email || !password}
+                                text="Continue"
+                                onPress={() => this.login()}
+                                variant="primary"
+                            />
+                        </View>
+                        <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                            <Link text="Create new account" onPress={() => this.props.navigation.navigate('Register')} />
+                        </View>
+                        <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                            <Link text="Forgot your password?" onPress={() => this.props.navigation.navigate('Password Reset')} />
+                        </View>
                     </View>
-                    <View>
-                        <Input
-                            password
-                            label="Password"
-                            onChange={(value) => this.setState({ password: value })}
-                            value={password}
-                            placeholder="Password"
-                        />
-                    </View>
-                    <View>
-                        <Button
-                            disabled={!email || !password}
-                            text="Continue"
-                            onPress={() => this.login()}
-                            variant="primary"
-                        />
-                    </View>
-                    <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
-                        <Link text="Create new account" onPress={() => this.props.navigation.navigate('Register')} />
-                    </View>
-                    <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
-                        <Link text="Forgot your password?" onPress={() => this.props.navigation.navigate('Password Reset')} />
-                    </View>
+                    {/* login form end */}
                 </View>
-                {/* login form end */}
 
             </SafeAreaView>
         )

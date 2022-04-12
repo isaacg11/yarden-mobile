@@ -10,6 +10,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
 import Button from '../components/UI/Button';
 import Header from '../components/UI/Header';
+import Card from '../components/UI/Card';
 import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
@@ -79,71 +80,66 @@ class OrderDetails extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        {/* loading indicator */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
 
-                    {/* loading indicator */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>
+                            Order Details
+                        </Header>
+                        <View>
 
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
-                        Order Details
-                    </Header>
-                    <View style={{ padding: units.unit5 }}>
+                            {/* order info */}
+                            <Card>
+                                <OrderInfo
+                                    order={order}
+                                    onChangeDate={() => this.props.navigation.navigate('Change Date', { orderId: order._id })}
+                                    onCancel={() => this.cancel()}
+                                />
+                            </Card>
 
-                        {/* order info */}
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Collapse
-                                title="Order Info"
-                                open={true}
-                                content={
-                                    <OrderInfo
-                                        order={order}
-                                        onChangeDate={() => this.props.navigation.navigate('Change Date', { orderId: order._id })}
-                                        onCancel={() => this.cancel()}
+                            {/* change orders */}
+                            {(changeOrders.length > 0) && (
+                                <View>
+                                    <Collapse
+                                        title={`Change Orders (${changeOrders.length})`}
+                                        open={changeOrders.find((changeOrder) => changeOrder.status === 'pending approval')}
+                                        content={
+                                            <ChangeOrders
+                                                changeOrders={changeOrders}
+                                                onPress={(changeOrder) => this.props.navigation.navigate('Change Order Details', changeOrder)}
+                                            />
+                                        }
                                     />
-                                }
-                            />
+                                </View>
+                            )}
+
+                            {/* order images */}
+                            {(order.images.length > 0) && (
+                                <View>
+                                    <ImageGrid images={order.images} />
+                                </View>
+                            )}
+
+                            {/* navigation button */}
+                            {(order.type === 'installation' || order.type === 'revive' || order.type === 'misc') && (
+                                <View style={{marginTop: units.unit4}}>
+                                    <Button
+                                        text="Request Changes"
+                                        onPress={() => this.requestChanges()}
+                                        icon={(
+                                            <Ionicons
+                                                name="create-outline"
+                                                size={units.unit4}
+                                                color={colors.purpleB}
+                                            />
+                                        )}
+                                    />
+                                </View>
+                            )}
                         </View>
-
-                        {/* change orders */}
-                        {(changeOrders.length > 0) && (
-                            <View style={{ marginTop: units.unit5 }}>
-                                <Collapse
-                                    title={`Change Orders (${changeOrders.length})`}
-                                    open={changeOrders.find((changeOrder) => changeOrder.status === 'pending approval')}
-                                    content={
-                                        <ChangeOrders
-                                            changeOrders={changeOrders}
-                                            onPress={(changeOrder) => this.props.navigation.navigate('Change Order Details', changeOrder)}
-                                        />
-                                    }
-                                />
-                            </View>
-                        )}
-
-                        {/* order images */}
-                        {(order.images.length > 0) && (
-                            <View style={{ marginTop: units.unit5 }}>
-                                <ImageGrid images={order.images} />
-                            </View>
-                        )}
-
-                        {/* navigation button */}
-                        {(order.type === 'installation' || order.type === 'revive' || order.type === 'misc') && (
-                            <View>
-                                <Button
-                                    text="Request Changes"
-                                    onPress={() => this.requestChanges()}
-                                    icon={(
-                                        <Ionicons
-                                            name="create-outline"
-                                            size={units.unit4}
-                                            color={colors.purpleB}
-                                        />
-                                    )}
-                                />
-                            </View>
-                        )}
                     </View>
                 </ScrollView>
             </SafeAreaView>
