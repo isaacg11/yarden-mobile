@@ -6,10 +6,12 @@ import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
+import Divider from '../components/UI/Divider';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
 import Status from '../components/UI/Status';
 import Card from '../components/UI/Card';
+import Link from '../components/UI/Link';
 import {getQuotes} from '../actions/quotes/index';
 import {setFilters} from '../actions/filters/index';
 import units from '../components/styles/units';
@@ -78,12 +80,13 @@ class Quotes extends Component {
           justifyContent: 'space-between',
           display: 'flex',
           flexDirection: 'column',
-          width: '100%'
+          width: '100%',
         }}>
         {/* loading indicator */}
         <LoadingIndicator loading={isLoading} />
 
-        <ScrollView style={{overflow: 'visible', padding: units.unit5}}>
+        <ScrollView
+          style={{overflow: 'visible', padding: units.unit4 + units.unit3}}>
           <Header
             type="h4"
             style={{
@@ -117,43 +120,61 @@ class Quotes extends Component {
             </View>
 
             {/* quotes start */}
-            {quotes.list &&
-              quotes.list.map((quote, index) => (
-                <Card key={index} style={{marginTop: units.unit4}}>
+            <View style={{marginTop: units.unit4}}>
+              {quotes.list &&
+                quotes.list.map((quote, index) => (
                   <View>
                     <View
+                      key={index}
                       style={{
-                        marginBottom: units.unit4,
+                        marginVertical: units.unit4,
                         display: 'flex',
-                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                       }}>
-                      <Text
+                      <View>
+                        <View
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: fonts.h3,
+                              fontWeight: 'bold',
+                              color: colors.greenE75,
+                              textTransform: 'capitalize',
+                              marginBottom: units.unit1,
+                            }}>
+                            {quote.title}
+                          </Text>
+                          <Status status={quote.status} />
+                        </View>
+                      </View>
+                      <View
                         style={{
-                          fontSize: fonts.h3,
-                          fontWeight: 'bold',
-                          color: colors.greenE75,
-                          textTransform: 'capitalize',
+                          display: 'flex',
+                          alignItems: 'flex-end',
+                          flexDirection: 'row',
                         }}>
-                        {quote.title}
-                      </Text>
-                      <Status status={quote.status} />
+                        <Link
+                          text="View Details"
+                          onPress={() =>
+                            this.props.navigation.navigate(
+                              'Quote Details',
+                              quote,
+                            )
+                          }
+                          variant="btn2"
+                          small
+                        />
+                      </View>
                     </View>
+                    <Divider />
                   </View>
-                  <View
-                    style={{
-                      width: '100%',
-                    }}>
-                    <Button
-                      text="View Details"
-                      onPress={() =>
-                        this.props.navigation.navigate('Quote Details', quote)
-                      }
-                      variant="btn2"
-                      small
-                    />
-                  </View>
-                </Card>
-              ))}
+                ))}
+            </View>
 
             {/* pagination */}
             {quotes.list && quotes.total > limit && (
