@@ -80,83 +80,85 @@ class Register extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                    {/* loading indicator start */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
-                    {/* loading indicator end */}
+                        {/* loading indicator start */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
+                        {/* loading indicator end */}
 
-                    {/* registration form start */}
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>New Account</Header>
-                    <View style={{ padding: units.unit5 }}>
+                        {/* registration form start */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>New Account</Header>
                         <View>
-                            <Input
-                                label="First Name"
-                                onChange={(value) => this.setState({ firstName: value })}
-                                value={firstName}
-                                placeholder="First Name"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                label="Last Name"
-                                onChange={(value) => this.setState({ lastName: value })}
-                                value={lastName}
-                                placeholder="Last Name"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                label="Email"
-                                onChange={(value) => this.setState({ email: value })}
-                                value={email}
-                                placeholder="Email"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                label="Phone Number"
-                                onChange={(value) => this.setState({ phoneNumber: value })}
-                                value={formatPhoneNumber(phoneNumber)}
-                                placeholder="Phone Number"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                password
-                                label="Password"
-                                onChange={(value) => this.setState({ password: value })}
-                                value={password}
-                                placeholder="Password"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                password
-                                label="Confirm Password"
-                                onChange={(value) => this.setState({ confirmPassword: value })}
-                                value={confirmPassword}
-                                placeholder="Confirm Password"
-                            />
-                        </View>
-                        <View>
-                            <Button
-                                text="Next"
-                                variant="primary"
-                                onPress={() => this.next()}
-                                disabled={!firstName || !lastName || !email || !phoneNumber || !password || !confirmPassword}
-                                icon={(
-                                    <Ionicons
-                                        name="arrow-forward-outline"
-                                        size={units.unit4}
-                                        color={colors.purpleB}
-                                    />
-                                )}
-                            />
-                        </View>
-                        <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
-                            <Link text="Already have an account? Log in" onPress={() => navigation.navigate('Login')} />
+                            <View>
+                                <Input
+                                    label="First Name"
+                                    onChange={(value) => this.setState({ firstName: value })}
+                                    value={firstName}
+                                    placeholder="First Name"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Last Name"
+                                    onChange={(value) => this.setState({ lastName: value })}
+                                    value={lastName}
+                                    placeholder="Last Name"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Email"
+                                    onChange={(value) => this.setState({ email: value })}
+                                    value={email}
+                                    placeholder="Email"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Phone Number"
+                                    onChange={(value) => this.setState({ phoneNumber: value })}
+                                    value={formatPhoneNumber(phoneNumber)}
+                                    placeholder="Phone Number"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    password
+                                    label="Password"
+                                    onChange={(value) => this.setState({ password: value })}
+                                    value={password}
+                                    placeholder="Password"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    password
+                                    label="Confirm Password"
+                                    onChange={(value) => this.setState({ confirmPassword: value })}
+                                    value={confirmPassword}
+                                    placeholder="Confirm Password"
+                                />
+                            </View>
+                            <View>
+                                <Button
+                                    text="Next"
+                                    variant="primary"
+                                    onPress={() => this.next()}
+                                    disabled={!firstName || !lastName || !email || !phoneNumber || !password || !confirmPassword}
+                                    icon={(
+                                        <Ionicons
+                                            name="arrow-forward-outline"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
+                                />
+                            </View>
+                            <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                                <Link text="Already have an account? Log in" onPress={() => navigation.navigate('Login')} />
+                            </View>
                         </View>
                     </View>
                 </ScrollView>

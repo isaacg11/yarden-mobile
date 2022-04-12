@@ -57,90 +57,93 @@ class ChangeDate extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator start */}
-                <LoadingIndicator 
-                    loading={isLoading}
-                />
-                {/* loading indicator end */}
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    {/* loading indicator start */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
+                    {/* loading indicator end */}
 
-                {/* change date form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Date</Header>
-                <View style={{ padding: units.unit5 }}>
+                    {/* change date form start */}
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Change Date</Header>
                     <View>
-                        <DateSelect
-                            mode="date"
-                            value={date}
-                            date={new Date()}
-                            placeholder="Appointment Date"
-                            minDate={new Date(minDate)}
-                            onConfirm={(value) => {
-                                this.setState({
-                                    date: moment(value).format('MM/DD/YYYY')
-                                });
-                            }}
-                        />
+                        <View>
+                            <DateSelect
+                                mode="date"
+                                value={date}
+                                date={new Date()}
+                                placeholder="Appointment Date"
+                                minDate={new Date(minDate)}
+                                onConfirm={(value) => {
+                                    this.setState({
+                                        date: moment(value).format('MM/DD/YYYY')
+                                    });
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <Dropdown
+                                label="Time"
+                                onChange={(value) => this.setState({ time: value })}
+                                options={[
+                                    {
+                                        label: '9:00 AM',
+                                        value: '09'
+                                    },
+                                    {
+                                        label: '10:00 AM',
+                                        value: '10'
+                                    },
+                                    {
+                                        label: '11:00 AM',
+                                        value: '11'
+                                    },
+                                    {
+                                        label: '12:00 PM',
+                                        value: '12'
+                                    },
+                                    {
+                                        label: '1:00 PM',
+                                        value: '13'
+                                    },
+                                    {
+                                        label: '2:00 PM',
+                                        value: '14'
+                                    },
+                                    {
+                                        label: '3:00 PM',
+                                        value: '15'
+                                    },
+                                    {
+                                        label: '4:00 PM',
+                                        value: '16'
+                                    },
+                                    {
+                                        label: '5:00 PM',
+                                        value: '17'
+                                    },
+                                ]}
+                                placeholder="Time"
+                            />
+                        </View>
+                        <View style={{ marginTop: units.unit4 }}>
+                            <Button
+                                text="Save Changes"
+                                onPress={() => this.save()}
+                                disabled={!date || !time}
+                                icon={(
+                                    <Ionicons
+                                        name="checkmark"
+                                        size={units.unit4}
+                                        color={colors.purpleB}
+                                    />
+                                )}
+                            />
+                        </View>
                     </View>
-                    <View>
-                        <Dropdown
-                            label="Time"
-                            onChange={(value) => this.setState({ time: value })}
-                            options={[
-                                {
-                                    label: '9:00 AM',
-                                    value: '09'
-                                },
-                                {
-                                    label: '10:00 AM',
-                                    value: '10'
-                                },
-                                {
-                                    label: '11:00 AM',
-                                    value: '11'
-                                },
-                                {
-                                    label: '12:00 PM',
-                                    value: '12'
-                                },
-                                {
-                                    label: '1:00 PM',
-                                    value: '13'
-                                },
-                                {
-                                    label: '2:00 PM',
-                                    value: '14'
-                                },
-                                {
-                                    label: '3:00 PM',
-                                    value: '15'
-                                },
-                                {
-                                    label: '4:00 PM',
-                                    value: '16'
-                                },
-                                {
-                                    label: '5:00 PM',
-                                    value: '17'
-                                },
-                            ]}
-                            placeholder="Time"
-                        />
-                    </View>
-                    <View style={{marginTop: units.unit4}}>
-                        <Button
-                            text="Save Changes"
-                            onPress={() => this.save()}
-                            disabled={!date || !time}
-                            icon={(
-                                <Ionicons
-                                    name="checkmark"
-                                    size={units.unit4}
-                                    color={colors.purpleB}
-                                />
-                            )}
-                        />
-                    </View>
+                    {/* change date form end */}
+
                 </View>
-                {/* change date form end */}
 
             </SafeAreaView>
         )

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Header from '../components/UI/Header';
@@ -30,7 +30,9 @@ class Logout extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Logging Out...</Header>
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    <Header type="h4" style={{ marginTop: units.unit6 }}>Logging Out...</Header>
+                </View>
             </SafeAreaView>
         )
     }

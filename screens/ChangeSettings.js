@@ -70,7 +70,7 @@ class ChangeSettings extends Component {
                 {/* loading indicator end */}
 
                 {/* change date form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Settings</Header>
+                <Header type="h4" style={{ marginTop: units.unit6 }}>Change Settings</Header>
                 <View style={{ padding: units.unit5 }}>
                     <Card style={{ marginBottom: units.unit5 }}>
                         <View>

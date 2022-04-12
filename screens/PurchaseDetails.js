@@ -132,14 +132,15 @@ class PurchaseDetails extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
                     {/* loading indicator */}
                     <LoadingIndicator
                         loading={isLoading}
                     />
 
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Purchase Details</Header>
-                    <View style={{ padding: units.unit5 }}>
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Purchase Details</Header>
+                    <View>
 
                         {/* purchase summary */}
                         <View>
@@ -207,7 +208,7 @@ class PurchaseDetails extends Component {
                             </View>
                         </View>
                     </View>
-
+                                        </View>
                 </ScrollView>
             </SafeAreaView>
         )

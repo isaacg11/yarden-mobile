@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../components/UI/Header';
-import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
 import units from '../components/styles/units';
@@ -18,12 +17,12 @@ class Welcome extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <View style={{padding: units.unit5}}>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6, marginBottom: units.unit3 }}>Welcome to Yarden!</Header>
-                    <Card>
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Welcome to Yarden!</Header>
+                    <View>
                         <Paragraph style={{marginBottom: units.unit3}}>Great job!</Paragraph>
                         <Paragraph>Your appointment has been scheduled. A gardener will meet with you at the scheduled time / date to discuss your garden options.</Paragraph>
-                    </Card>
+                    </View>
                     <View style={{marginTop: units.unit3}}>
                         <Button
                             text="Continue to dashboard"

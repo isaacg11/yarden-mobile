@@ -19,7 +19,7 @@ class ReferralHistory extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                    <Header type="h4" style={{ marginTop: units.unit6 }}>
                         Referral History
                     </Header>
                     <View style={{ padding: units.unit5 }}>

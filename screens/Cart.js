@@ -380,8 +380,8 @@ class Cart extends Component {
 
                 {/* items list */}
                 <ScrollView>
-                    <View style={{ padding: units.unit5 }}>
-                        <Header type="h4" style={{ textAlign: 'center', marginBottom: units.unit5 }}>Cart</Header>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Cart</Header>
                         <View style={{ display: (items.length > 0) ? null : 'none' }}>
                             {
                                 (!isLoading) ? (
