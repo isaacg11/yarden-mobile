@@ -15,6 +15,7 @@ import Card from '../components/UI/Card';
 import {getProducts} from '../actions/products/index';
 import capitalize from '../helpers/capitalize';
 import units from '../components/styles/units';
+import fonts from '../components/styles/fonts';
 
 class Products extends Component {
   state = {};
