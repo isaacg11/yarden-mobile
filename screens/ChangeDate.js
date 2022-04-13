@@ -125,7 +125,7 @@ class ChangeDate extends Component {
                   value: '17',
                 },
               ]}
-              placeholder="Time"
+              placeholder="Choose a new time..."
             />
           </View>
           <View style={{marginTop: units.unit4}}>
@@ -134,11 +134,7 @@ class ChangeDate extends Component {
               onPress={() => this.save()}
               disabled={!date || !time}
               icon={
-                <Ionicons
-                  name="checkmark"
-                  size={units.unit4}
-                  color={colors.purpleB}
-                />
+                <Ionicons name="save" size={fonts.h4} color={colors.purpleB} />
               }
             />
           </View>
