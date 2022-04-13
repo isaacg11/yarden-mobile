@@ -60,7 +60,7 @@ class Plans extends Component {
                     Please select a plan from the list below. 1st Month FREE! Cancel anytime.
                 </Paragraph>
                 <Divider />
-                <View style={{ padding: units.unit5 }}>
+                <View>
                     {(plans.map((plan, index) => (
                         <View key={index}>
                             <View style={{ padding: units.unit3, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
@@ -84,8 +84,8 @@ class Plans extends Component {
                         </View>
                     )))}
                     <View style={{display: (isCheckout) ? null : 'none'}}>
-                        <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
-                            <View style={{ paddingRight: units.unit5, marginRight: units.unit5 }}>
+                        <View style={{ padding: units.unit3, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ paddingRight: units.unit4, marginRight: units.unit0 }}>
                                 <CheckBox
                                     disabled={(selectedPlan.type)}
                                     onValueChange={() => this.onSelect('none')}

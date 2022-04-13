@@ -68,7 +68,7 @@ class PasswordConfirm extends Component {
                 {/* loading indicator end */}
 
                 {/* password confirm start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Password Confirm</Header>
+                <Header type="h4" style={{ marginTop: units.unit6 }}>Password Confirm</Header>
                 <View style={{ padding: units.unit5 }}>
                     <View>
                         <Input

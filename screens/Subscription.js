@@ -132,7 +132,7 @@ class Subscription extends Component {
                 />
 
                 {/* subscription start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>
+                <Header type="h4" style={{ marginTop: units.unit6 }}>
                     Subscription
                 </Header>
                 {(plan && subscription) && (

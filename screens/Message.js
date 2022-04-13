@@ -14,7 +14,7 @@ class Message extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Messenger</Header>
+                <Header type="h4" style={{ marginTop: units.unit6 }}>Messenger</Header>
                 <View style={{ padding: units.unit5 }}>
 
                     {/* messenger */}

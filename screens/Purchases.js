@@ -83,69 +83,71 @@ class Purchase extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-
                 <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Purchases</Header>
-                    <View style={{ padding: units.unit5 }}>
 
-                        {/* purchases */}
-                        {purchases.list && purchases.list.map((purchase, index) => {
-                            const calculatedQuote = calculateQuote(purchase.order.bid.line_items);
-                            const total = (calculatedQuote.materialsTotal + calculatedQuote.laborTotal + calculatedQuote.deliveryTotal + calculatedQuote.rentalTotal + calculatedQuote.disposalTotal);
-                            const tax = (calculatedQuote.materialsTotal * vars.tax.ca);
-                            const processingFee = (total + tax) * vars.fees.payment_processing;
-                            const purchaseTotal = total + tax + processingFee;
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                            return (
-                                <Card key={index} style={{ marginBottom: units.unit4 }}>
-                                    <View style={{ marginBottom: units.unit5 }}>
-                                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Order Placed</Paragraph>
-                                        <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
-                                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
-                                        <Paragraph>{purchase.order.description}</Paragraph>
-                                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Total</Paragraph>
-                                        <Paragraph>${(purchaseTotal).toFixed(2)}</Paragraph>
-                                    </View>
-                                    <View>
-                                        <Button
-                                            small
-                                            text="View Details"
-                                            variant="btn2"
-                                            onPress={() => {
-                                                this.props.navigation.navigate('Quote Details', purchase.order.bid)
-                                            }}
-                                        />
-                                    </View>
-                                </Card>
-                            )
-                        })}
+                        {/* loading indicator */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
 
-                        {/* pagination */}
-                        {(purchases.list && (purchases.total > limit)) && (
-                            <View style={{ marginBottom: units.unit5 }}>
-                                <Paginate
-                                    page={page}
-                                    limit={limit}
-                                    total={purchases.total}
-                                    onPaginate={(direction) => this.paginate(direction)}
-                                />
-                            </View>
-                        )}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Purchases</Header>
+                        <View>
 
-                        {/* no purchases UI */}
-                        {(purchases.list && purchases.list.length < 1) && (
-                            <View style={{ marginBottom: units.unit5 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No purchases found</Paragraph>
-                            </View>
-                        )}
+                            {/* purchases */}
+                            {purchases.list && purchases.list.map((purchase, index) => {
+                                const calculatedQuote = calculateQuote(purchase.order.bid.line_items);
+                                const total = (calculatedQuote.materialsTotal + calculatedQuote.laborTotal + calculatedQuote.deliveryTotal + calculatedQuote.rentalTotal + calculatedQuote.disposalTotal);
+                                const tax = (calculatedQuote.materialsTotal * vars.tax.ca);
+                                const processingFee = (total + tax) * vars.fees.payment_processing;
+                                const purchaseTotal = total + tax + processingFee;
+
+                                return (
+                                    <Card key={index} style={{ marginBottom: units.unit4 }}>
+                                        <View style={{ marginBottom: units.unit5 }}>
+                                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Order Placed</Paragraph>
+                                            <Paragraph>{moment(purchase.dt_created).format('MM/DD/YYYY')}</Paragraph>
+                                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
+                                            <Paragraph>{purchase.order.description}</Paragraph>
+                                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Total</Paragraph>
+                                            <Paragraph>${(purchaseTotal).toFixed(2)}</Paragraph>
+                                        </View>
+                                        <View>
+                                            <Button
+                                                small
+                                                text="View Details"
+                                                variant="btn2"
+                                                onPress={() => {
+                                                    this.props.navigation.navigate('Quote Details', purchase.order.bid)
+                                                }}
+                                            />
+                                        </View>
+                                    </Card>
+                                )
+                            })}
+
+                            {/* pagination */}
+                            {(purchases.list && (purchases.total > limit)) && (
+                                <View style={{ marginBottom: units.unit5 }}>
+                                    <Paginate
+                                        page={page}
+                                        limit={limit}
+                                        total={purchases.total}
+                                        onPaginate={(direction) => this.paginate(direction)}
+                                    />
+                                </View>
+                            )}
+
+                            {/* no purchases UI */}
+                            {(purchases.list && purchases.list.length < 1) && (
+                                <View style={{ marginBottom: units.unit5 }}>
+                                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No purchases found</Paragraph>
+                                </View>
+                            )}
+                        </View>
                     </View>
                 </ScrollView>
-
-
             </SafeAreaView>
         )
     }

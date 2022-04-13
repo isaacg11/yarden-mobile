@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView, Text} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -14,9 +14,9 @@ import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
-import {getOrders} from '../actions/orders/index';
-import {getChangeOrders} from '../actions/changeOrders/index';
-import {setFilters} from '../actions/filters/index';
+import { getOrders } from '../actions/orders/index';
+import { getChangeOrders } from '../actions/changeOrders/index';
+import { setFilters } from '../actions/filters/index';
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
@@ -40,7 +40,7 @@ class Orders extends Component {
     });
 
     // set new status
-    await this.props.setFilters({orders: status});
+    await this.props.setFilters({ orders: status });
 
     // set order query
     const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
@@ -63,12 +63,12 @@ class Orders extends Component {
     }
 
     // show loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   paginate(direction) {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set intitial page
     let page = 1;
@@ -80,19 +80,19 @@ class Orders extends Component {
     if (direction === 'back') page = this.state.page - 1;
 
     // set new page
-    this.setState({page: page}, async () => {
+    this.setState({ page: page }, async () => {
       // set status
       await this.setStatus(this.state.status);
 
       // hide loading indicator
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
     });
   }
 
   render() {
-    const {isLoading, page, limit} = this.state;
+    const { isLoading, page, limit } = this.state;
 
-    const {orders, changeOrders, filters} = this.props;
+    const { orders, changeOrders, filters } = this.props;
 
     return (
       <SafeAreaView
@@ -101,130 +101,132 @@ class Orders extends Component {
           width: '100%',
         }}>
         <ScrollView>
-          {/* loading indicator start */}
-          <LoadingIndicator loading={isLoading} />
 
-          <View style={{padding: units.unit5}}>
-            <Header
-              type="h4"
-              style={{
-                marginBottom: units.unit5,
-              }}>
-              Orders{' '}
-              {orders.total && orders.total > 0 ? `(${orders.total})` : ''}
-            </Header>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+            {/* loading indicator start */}
+            <LoadingIndicator loading={isLoading} />
 
-            {/* status filter */}
-            <Dropdown
-              label="Filter"
-              value={filters.orders}
-              onChange={value => this.setStatus(value)}
-              options={[
-                {
-                  label: 'Pending',
-                  value: 'pending',
-                },
-                {
-                  label: 'Complete',
-                  value: 'complete',
-                },
-              ]}
-              style={{marginBottom: units.unit4}}
-            />
+            <View>
+              <Header
+                type="h4"
+                style={{
+                  marginBottom: units.unit5,
+                }}>
+                Orders{' '}
+                {orders.total && orders.total > 0 ? `(${orders.total})` : ''}
+              </Header>
 
-            {/* order list */}
-            {orders.list &&
-              orders.list.map((order, index) => (
-                <View>
-                  <View
-                    key={index}
-                    style={{
-                      marginVertical: units.unit4,
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}>
-                    {/* change order notification */}
-                    {changeOrders.length > 0 &&
-                      changeOrders.find(c => c.order._id === order._id) && (
+              {/* status filter */}
+              <Dropdown
+                label="Filter"
+                value={filters.orders}
+                onChange={value => this.setStatus(value)}
+                options={[
+                  {
+                    label: 'Pending',
+                    value: 'pending',
+                  },
+                  {
+                    label: 'Complete',
+                    value: 'complete',
+                  },
+                ]}
+                style={{ marginBottom: units.unit4 }}
+              />
+
+              {/* order list */}
+              {orders.list &&
+                orders.list.map((order, index) => (
+                  <View key={index}>
+                    <View
+                      style={{
+                        marginVertical: units.unit4,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                      {/* change order notification */}
+                      {changeOrders.length > 0 &&
+                        changeOrders.find(c => c.order._id === order._id) && (
+                          <View>
+                            <Notification text="Your contractor has sent you a change order. Tap the button below to review and approve." />
+                            <Button
+                              text="Review Change"
+                              onPress={() =>
+                                this.props.navigation.navigate(
+                                  'Change Order Details',
+                                  changeOrders.find(
+                                    c => c.order._id === order._id,
+                                  ),
+                                )
+                              }
+                              variant="primary"
+                            />
+                          </View>
+                        )}
+
+                      {/* order info */}
+                      <View style={{}}>
                         <View>
-                          <Notification text="Your contractor has sent you a change order. Tap the button below to review and approve." />
-                          <Button
-                            text="Review Change"
-                            onPress={() =>
-                              this.props.navigation.navigate(
-                                'Change Order Details',
-                                changeOrders.find(
-                                  c => c.order._id === order._id,
-                                ),
-                              )
-                            }
-                            variant="primary"
-                          />
-                        </View>
-                      )}
-
-                    {/* order info */}
-                    <View style={{}}>
-                      <View>
-                        <Label style={{marginTop: units.unit5}}>
-                          {moment(order.date).format('MM/DD/YYYY')}{' '}
-                          {order.time
-                            ? `@ ${moment(order.time, `HH:mm:ss`).format(
+                          <Label style={{ marginTop: units.unit5 }}>
+                            {moment(order.date).format('MM/DD/YYYY')}{' '}
+                            {order.time
+                              ? `@ ${moment(order.time, `HH:mm:ss`).format(
                                 `h:mm A`,
                               )}`
-                            : ''}
-                        </Label>
-                        <Text
-                          style={{
-                            fontSize: fonts.h3,
-                            textTransform: 'capitalize',
-                            color: colors.greenE75,
-                            fontWeight: 'bold',
-                          }}>
-                          {order.type}
-                        </Text>
+                              : ''}
+                          </Label>
+                          <Text
+                            style={{
+                              fontSize: fonts.h3,
+                              textTransform: 'capitalize',
+                              color: colors.greenE75,
+                              fontWeight: 'bold',
+                            }}>
+                            {order.type}
+                          </Text>
+                        </View>
+                      </View>
+                      <View>
+                        <Link
+                          text="View Details"
+                          onPress={() =>
+                            this.props.navigation.navigate('Order Details', order)
+                          }
+                        />
                       </View>
                     </View>
-                    <View>
-                      <Link
-                        text="View Details"
-                        onPress={() =>
-                          this.props.navigation.navigate('Order Details', order)
-                        }
-                      />
-                    </View>
+                    <Divider />
                   </View>
-                  <Divider />
+                ))}
+
+              {/* pagination */}
+              {orders.list && orders.total > limit && (
+                <View style={{ marginTop: units.unit6, marginBottom: units.unit4 }}>
+                  <Paginate
+                    page={page}
+                    limit={limit}
+                    total={orders.total}
+                    onPaginate={direction => this.paginate(direction)}
+                  />
                 </View>
-              ))}
+              )}
 
-            {/* pagination */}
-            {orders.list && orders.total > limit && (
-              <View style={{marginTop: units.unit6, marginBottom: units.unit4}}>
-                <Paginate
-                  page={page}
-                  limit={limit}
-                  total={orders.total}
-                  onPaginate={direction => this.paginate(direction)}
-                />
-              </View>
-            )}
-
-            {/* no orders */}
-            {orders.list && orders.list.length < 1 && (
-              <View style={{marginBottom: units.unit5}}>
-                <Paragraph
-                  style={{
-                    fontWeight: 'bold',
-                    marginTop: units.unit5,
-                    textAlign: 'center',
-                  }}>
-                  No orders found
-                </Paragraph>
-              </View>
-            )}
+              {/* no orders */}
+              {orders.list && orders.list.length < 1 && (
+                <View style={{ marginBottom: units.unit5 }}>
+                  <Paragraph
+                    style={{
+                      fontWeight: 'bold',
+                      marginTop: units.unit5,
+                      textAlign: 'center',
+                    }}>
+                    No orders found
+                  </Paragraph>
+                </View>
+              )}
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>

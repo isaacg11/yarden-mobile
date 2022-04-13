@@ -174,45 +174,48 @@ class RequestQuoteChange extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator start */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-                {/* loading indicator end */}
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    {/* loading indicator start */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
+                    {/* loading indicator end */}
 
-                {/* change request form start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Request Changes</Header>
-                <View style={{ padding: units.unit5 }}>
-                    <Card>
-                        <View>
-                            <Paragraph>Please describe the changes you'd like made to your quote</Paragraph>
-                        </View>
-                        <View>
-                            <Input
-                                onChange={(value) => this.setState({ message: value })}
-                                value={message}
-                                multiline={true}
-                                numberOfLines={3}
-                                placeholder="Enter message here..."
+                    {/* change request form start */}
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Request Changes</Header>
+                    <View>
+                        <Card>
+                            <View>
+                                <Paragraph>Please describe the changes you'd like made to your quote</Paragraph>
+                            </View>
+                            <View>
+                                <Input
+                                    onChange={(value) => this.setState({ message: value })}
+                                    value={message}
+                                    multiline={true}
+                                    numberOfLines={3}
+                                    placeholder="Enter message here..."
+                                />
+                            </View>
+                        </Card>
+                        <View style={{ marginTop: units.unit4 }}>
+                            <Button
+                                text="Submit"
+                                onPress={() => this.submit()}
+                                disabled={!message}
+                                icon={(
+                                    <Ionicons
+                                        name="checkmark"
+                                        size={units.unit4}
+                                        color={colors.purpleB}
+                                    />
+                                )}
                             />
                         </View>
-                    </Card>
-                    <View style={{ marginTop: units.unit4 }}>
-                        <Button
-                            text="Submit"
-                            onPress={() => this.submit()}
-                            disabled={!message}
-                            icon={(
-                                <Ionicons
-                                    name="checkmark"
-                                    size={units.unit4}
-                                    color={colors.purpleB}
-                                />
-                            )}
-                        />
                     </View>
+                    {/* change request form end */}
+
                 </View>
-                {/* change request form end */}
 
             </SafeAreaView>
         )

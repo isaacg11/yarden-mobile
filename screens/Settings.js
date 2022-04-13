@@ -24,7 +24,7 @@ class Settings extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Settings</Header>
+                    <Header type="h4" style={{ marginTop: units.unit6 }}>Settings</Header>
                     <View style={{ padding: units.unit5 }}>
                         <Card style={{ marginBottom: units.unit4 }}>
                             <View style={{ marginBottom: units.unit5 }}>

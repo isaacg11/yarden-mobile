@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Button from '../components/UI/Button';
-import {alert} from '../components/UI/SystemAlert';
+import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import Plans from '../components/app/Plans';
 import CreditCard from '../components/app/CreditCard';
-import {getPlans} from '../actions/plans/index';
-import {updateUser} from '../actions/user/index';
-import {createSubscription} from '../actions/subscriptions/index';
-import {createOrder, getOrders} from '../actions/orders/index';
+import { getPlans } from '../actions/plans/index';
+import { updateUser } from '../actions/user/index';
+import { createSubscription } from '../actions/subscriptions/index';
+import { createOrder, getOrders } from '../actions/orders/index';
 import getOrderDescription from '../helpers/getOrderDescription';
 import units from '../components/styles/units';
 
@@ -21,13 +21,13 @@ class Enrollment extends Component {
 
   async componentDidMount() {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // get all plans
     await this.props.getPlans();
 
     // hide loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   async next() {
@@ -45,7 +45,7 @@ class Enrollment extends Component {
       // combine quote, plants, and plan
       const quoteAndPlantsAndPlan = {
         ...quoteAndPlants,
-        ...{plan: plan},
+        ...{ plan: plan },
       };
 
       // navigate to checkout
@@ -62,25 +62,23 @@ class Enrollment extends Component {
         // if no payment info {...}
 
         // show the credit card modal
-        this.setState({isOpen: true});
+        this.setState({ isOpen: true });
 
         // show warning
         return alert('Please add a payment method', 'No Payment Method Found');
       } else {
         alert(
-          `Upon clicking the OK button, you will be enrolled in Yarden's "${
-            this.state.selectedPlan.type
+          `Upon clicking the OK button, you will be enrolled in Yarden's "${this.state.selectedPlan.type
           }" for routine garden maintenance. A total payment of $${this.state.selectedPlan.rate.toFixed(
             2,
           )} will be charged today ${moment().format(
             'MM/DD/YYYY',
-          )} using the credit card on file ending in ${
-            this.props.user.payment_info.card_last4
+          )} using the credit card on file ending in ${this.props.user.payment_info.card_last4
           }`,
           'Start Subscription?',
           async () => {
             // show loading indicator
-            this.setState({isLoading: true});
+            this.setState({ isLoading: true });
 
             // enroll customer in subscription plan
             await this.startSubscription();
@@ -89,7 +87,7 @@ class Enrollment extends Component {
             this.props.navigation.navigate('Subscription');
 
             // show loading indicator
-            this.setState({isLoading: false});
+            this.setState({ isLoading: false });
           },
           true,
         );
@@ -139,11 +137,11 @@ class Enrollment extends Component {
   }
 
   render() {
-    const {isLoading, selectedPlan, isOpen} = this.state;
+    const { isLoading, selectedPlan, isOpen } = this.state;
 
-    const {plans, user} = this.props;
+    const { plans, user } = this.props;
 
-    const {isCheckout} = this.props.route.params;
+    const { isCheckout } = this.props.route.params;
 
     return (
       <SafeAreaView
@@ -151,44 +149,47 @@ class Enrollment extends Component {
           flex: 1,
           width: '100%',
         }}>
-        {/* loading indicator */}
-        <LoadingIndicator loading={isLoading} />
+        <View style={{ padding: units.unit3 + units.unit4 }}>
 
-        {/* customer card */}
-        <CreditCard
-          newCard={!user.payment_info}
-          isOpen={isOpen}
-          close={() => this.setState({isOpen: false})}
-        />
+          {/* loading indicator */}
+          <LoadingIndicator loading={isLoading} />
 
-        <ScrollView>
-          <Header
-            type="h4"
-            style={{textAlign: 'center', marginTop: units.unit6}}>
-            Maintenance Plans
-          </Header>
-          <View style={{padding: units.unit5}}>
-            {/* plan list */}
-            <Plans
-              plans={plans}
-              onSelect={plan => this.setState({selectedPlan: plan})}
-              isCheckout={isCheckout}
-            />
+          {/* customer card */}
+          <CreditCard
+            newCard={!user.payment_info}
+            isOpen={isOpen}
+            close={() => this.setState({ isOpen: false })}
+          />
 
-            {/* navigation button */}
-            <View style={{marginTop: units.unit4}}>
-              <Button
-                disabled={
-                  !selectedPlan ||
-                  (selectedPlan !== 'none' && !selectedPlan.type)
-                }
-                text="Continue"
-                onPress={() => this.next()}
-                variant="primary"
+          <ScrollView>
+            <Header
+              type="h4"
+              style={{ marginBottom: units.unit5 }}>
+              Maintenance Plans
+            </Header>
+            <View>
+              {/* plan list */}
+              <Plans
+                plans={plans}
+                onSelect={plan => this.setState({ selectedPlan: plan })}
+                isCheckout={isCheckout}
               />
+
+              {/* navigation button */}
+              <View style={{ marginTop: units.unit4 }}>
+                <Button
+                  disabled={
+                    !selectedPlan ||
+                    (selectedPlan !== 'none' && !selectedPlan.type)
+                  }
+                  text="Continue"
+                  onPress={() => this.next()}
+                  variant="primary"
+                />
+              </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </SafeAreaView>
     );
   }

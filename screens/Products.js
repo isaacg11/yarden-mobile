@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   SafeAreaView,
   View,
@@ -12,7 +12,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
-import {getProducts} from '../actions/products/index';
+import { getProducts } from '../actions/products/index';
 import capitalize from '../helpers/capitalize';
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
@@ -22,7 +22,7 @@ class Products extends Component {
 
   async componentDidMount() {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // get products
     await this.props.getProducts(
@@ -30,7 +30,7 @@ class Products extends Component {
     );
 
     // hide loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -39,11 +39,11 @@ class Products extends Component {
   }
 
   render() {
-    const {name} = this.props.route.params.category;
+    const { name } = this.props.route.params.category;
 
-    const {products} = this.props;
+    const { products } = this.props;
 
-    const {isLoading} = this.state;
+    const { isLoading } = this.state;
 
     return (
       <SafeAreaView
@@ -51,54 +51,57 @@ class Products extends Component {
           flex: 1,
           width: '100%',
         }}>
-        {/* loading indicator */}
-        <LoadingIndicator loading={isLoading} />
-
         <ScrollView>
-          <Header
-            type="h4"
-            style={{textAlign: 'center', marginTop: units.unit6}}>
-            {capitalize(name)}
-          </Header>
-          <View style={{padding: units.unit5}}>
-            {/* products list */}
-            {products.map(product => {
-              return product.variants.map((variant, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    this.props.navigation.navigate('Product', {
-                      product: product,
-                      variant: variant,
-                    })
-                  }>
-                  <View style={{marginBottom: units.unit5}}>
-                    <ImageBackground
-                      source={{uri: variant.image}}
-                      style={{width: '100%', height: 200}}>
-                      <View
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          padding: units.unit5,
-                        }}>
-                        <Card>
-                          <Paragraph
-                            style={{fontWeight: 'bold', fontSize: fonts.h3}}>
-                            {capitalize(product.name)} - {variant.name}
-                          </Paragraph>
-                        </Card>
-                      </View>
-                    </ImageBackground>
-                  </View>
-                </TouchableOpacity>
-              ));
-            })}
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+
+            {/* loading indicator */}
+            <LoadingIndicator loading={isLoading} />
+
+            <Header
+              type="h4"
+              style={{ marginBottom: units.unit5 }}>
+              {capitalize(name)}
+            </Header>
+            <View>
+              {/* products list */}
+              {products.map(product => {
+                return product.variants.map((variant, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      this.props.navigation.navigate('Product', {
+                        product: product,
+                        variant: variant,
+                      })
+                    }>
+                    <View style={{ marginBottom: units.unit5 }}>
+                      <ImageBackground
+                        source={{ uri: variant.image }}
+                        style={{ width: '100%', height: 200 }}>
+                        <View
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: units.unit5,
+                          }}>
+                          <Card>
+                            <Paragraph
+                              style={{ fontWeight: 'bold', fontSize: fonts.h3 }}>
+                              {capitalize(product.name)} - {variant.name}
+                            </Paragraph>
+                          </Card>
+                        </View>
+                      </ImageBackground>
+                    </View>
+                  </TouchableOpacity>
+                ));
+              })}
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>

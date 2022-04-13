@@ -47,7 +47,7 @@ class ChangeOrderDetails extends Component {
                         loading={isLoading}
                     />
 
-                    <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Change Order</Header>
+                    <Header type="h4" style={{ marginTop: units.unit6 }}>Change Order</Header>
                     <View style={{ padding: units.unit5 }}>
 
                         {(changeOrder.line_items) && (

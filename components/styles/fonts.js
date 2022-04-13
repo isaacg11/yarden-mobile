@@ -2,7 +2,7 @@ import ratio from '../styles/ratio';
 import units from '../styles/units';
 import colors from './colors';
 
-// header sizes
+// header sizes // don't change the order of these
 const h6 = units.unit3;
 const h5 = h6 * ratio.fontScaleRatio;
 const h4 = h5 * ratio.fontScaleRatio;
@@ -10,7 +10,7 @@ const h3 = h4 * ratio.fontScaleRatio;
 const h2 = h3 * ratio.fontScaleRatio;
 const h1 = h2 * ratio.fontScaleRatio;
 const h7 = (h6 * 3) / 4;
-const h8 = (h7 * 3) / 4; // since we're using a 'perfect fourth' ratio, scaling these fonts down from h6 means using 3/4 instead of 1 + (1/3)
+const h8 = (h7 * 3) / 4;
 
 const paragraph = {
   fontSize: h3,
@@ -28,8 +28,8 @@ const small = {
 const label = {
   fontSize: h5,
   lineHeight: h4,
-  marginBottom: units.unit1,
-  color: colors.purpleE50,
+  // marginBottom: units.unit1,
+  color: colors.greenD50,
   fontFamily: 'Futura-Medium',
   textTransform: 'uppercase',
   letterSpacing: 1,

@@ -123,9 +123,8 @@ class Quotes extends Component {
             <View style={{marginTop: units.unit4}}>
               {quotes.list &&
                 quotes.list.map((quote, index) => (
-                  <View>
+                  <View key={index}>
                     <View
-                      key={index}
                       style={{
                         marginVertical: units.unit4,
                         display: 'flex',

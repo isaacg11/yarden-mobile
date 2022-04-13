@@ -66,33 +66,37 @@ class PasswordReset extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                {/* loading indicator start */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-                {/* loading indicator end */}
 
-                {/* password reset start */}
-                <Header type="h4" style={{ textAlign: 'center', marginTop: units.unit6 }}>Password Reset</Header>
-                <View style={{ padding: units.unit5 }}>
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    {/* loading indicator start */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
+                    {/* loading indicator end */}
+
+                    {/* password reset start */}
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Password Reset</Header>
                     <View>
-                        <Input
-                            label="Email"
-                            onChange={(value) => this.setState({ email: value })}
-                            value={email}
-                            placeholder="Email"
-                        />
+                        <View>
+                            <Input
+                                label="Email"
+                                onChange={(value) => this.setState({ email: value })}
+                                value={email}
+                                placeholder="Email"
+                            />
+                        </View>
+                        <View>
+                            <Button
+                                text="Continue"
+                                onPress={() => this.reset()}
+                                variant="primary"
+                                disabled={!email}
+                            />
+                        </View>
                     </View>
-                    <View>
-                        <Button
-                            text="Continue"
-                            onPress={() => this.reset()}
-                            variant="primary"
-                            disabled={!email}
-                        />
-                    </View>
+                    {/* password reset end */}
+
                 </View>
-                {/* password reset end */}
 
             </SafeAreaView>
         )

@@ -16,7 +16,7 @@ class Shop extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
-                    <View style={{ padding: units.unit5 }}>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
                         <Header type="h4" style={{ marginBottom: units.unit5 }}>
                             Shop
                         </Header>
