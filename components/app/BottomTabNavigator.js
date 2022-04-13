@@ -68,15 +68,33 @@ class BottomTabNavigator extends Component {
   renderIcon(route) {
     switch (route) {
       case 'Orders':
-        return <Ionicons name={'reader-outline'} size={30} />;
+        return (
+          <Ionicons name={'reader-outline'} color={'white'} size={fonts.h2} />
+        );
       case 'Quotes':
-        return <Ionicons name={'layers-outline'} size={30} />;
+        return (
+          <Ionicons name={'layers-outline'} color={'white'} size={fonts.h2} />
+        );
       case 'Shop':
-        return <Ionicons name={'cart-outline'} size={30} />;
+        return (
+          <Ionicons name={'cart-outline'} color={'white'} size={fonts.h2} />
+        );
       case 'Messages':
-        return <Ionicons name={'file-tray-outline'} size={30} />;
+        return (
+          <Ionicons
+            name={'file-tray-outline'}
+            color={'white'}
+            size={fonts.h2}
+          />
+        );
       default:
-        return <Ionicons name={'ios-information-circle'} size={30} />;
+        return (
+          <Ionicons
+            name={'ios-information-circle'}
+            color={'white'}
+            size={fonts.h2}
+          />
+        );
     }
   }
 
@@ -100,8 +118,16 @@ class BottomTabNavigator extends Component {
             headerShown: false,
             tabBarActiveTintColor: colors.green0,
             tabBarInactiveTintColor: 'white',
-            tabBarActiveBackgroundColor: colors.purpleA,
-            tabBarInactiveBackgroundColor: colors.purpleB,
+            tabBarActiveBackgroundColor: colors.purpleE,
+            tabBarInactiveBackgroundColor: colors.purpleE,
+            tabBarLabelStyle: {
+              fontFamily: fonts.default,
+            },
+            tabBarStyle: {
+              backgroundColor: colors.purpleE,
+              paddingVertical: units.unit4,
+              height: units.unit6 + units.unit5,
+            },
           })}>
           <Tab.Screen
             name="Orders"
