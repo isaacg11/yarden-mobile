@@ -95,7 +95,7 @@ class OrderDetails extends Component {
                             <Card>
                                 <OrderInfo
                                     order={order}
-                                    onChangeDate={() => this.props.navigation.navigate('Change Date', { orderId: order._id })}
+                                    onChangeDate={() => this.props.navigation.navigate('Change Date', { order })}
                                     onCancel={() => this.cancel()}
                                 />
                             </Card>

@@ -143,6 +143,7 @@ class Register extends Component {
                             </View>
                             <View>
                                 <Button
+                                    alignIconRight
                                     text="Next"
                                     variant="primary"
                                     onPress={() => this.next()}

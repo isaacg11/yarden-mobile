@@ -4,7 +4,10 @@ import fonts from '../styles/fonts';
 
 class Label extends Component {
   render() {
-    return <Text style={{...fonts.label}}>{this.props.children}</Text>;
+
+    const { style } = this.props;
+
+    return <Text style={{...fonts.label, ...style}}>{this.props.children}</Text>;
   }
 }
 

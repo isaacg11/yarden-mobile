@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -12,6 +13,8 @@ import Header from '../components/UI/Header';
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
 import { updateUser } from '../actions/user/index';
 import units from '../components/styles/units';
+import fonts from '../components/styles/fonts';
+import colors from '../components/styles/colors';
 
 class ChangeSettings extends Component {
 
@@ -69,48 +72,58 @@ class ChangeSettings extends Component {
                 />
                 {/* loading indicator end */}
 
-                {/* change date form start */}
-                <Header type="h4" style={{ marginTop: units.unit6 }}>Change Settings</Header>
-                <View style={{ padding: units.unit5 }}>
-                    <Card style={{ marginBottom: units.unit5 }}>
-                        <View>
-                            <Input
-                                onChange={(value) => this.setState({ firstName: value })}
-                                value={firstName}
-                                placeholder="First Name"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                onChange={(value) => this.setState({ lastName: value })}
-                                value={lastName}
-                                placeholder="Last Name"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                onChange={(value) => this.setState({ email: value })}
-                                value={email}
-                                placeholder="Email"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                onChange={(value) => this.setState({ phoneNumber: value })}
-                                value={formatPhoneNumber(phoneNumber)}
-                                placeholder="Phone Number"
-                            />
-                        </View>
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+
+                    {/* change date form start */}
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Change Settings</Header>
+                    <View>
+                        <Card style={{ marginBottom: units.unit4 }}>
+                            <View>
+                                <Input
+                                    label="First Name"
+                                    onChange={(value) => this.setState({ firstName: value })}
+                                    value={firstName}
+                                    placeholder="First Name"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Last Name"
+                                    onChange={(value) => this.setState({ lastName: value })}
+                                    value={lastName}
+                                    placeholder="Last Name"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Email"
+                                    onChange={(value) => this.setState({ email: value })}
+                                    value={email}
+                                    placeholder="Email"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Phone Number"
+                                    onChange={(value) => this.setState({ phoneNumber: value })}
+                                    value={formatPhoneNumber(phoneNumber)}
+                                    placeholder="Phone Number"
+                                />
+                            </View>
+                        </Card>
                         <View>
                             <Button
                                 text="Save Changes"
                                 onPress={() => this.save()}
-                                variant="primary"
+                                icon={
+                                    <Ionicons name="save" size={fonts.h4} color={colors.purpleB} />
+                                }
                             />
                         </View>
-                    </Card>
+                    </View>
+                    {/* change date form end */}
+
                 </View>
-                {/* change date form end */}
 
             </SafeAreaView>
         )

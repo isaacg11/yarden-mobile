@@ -203,6 +203,7 @@ class Schedule extends Component {
                         </View>
                         <View style={{ marginTop: units.unit4 }}>
                             <Button
+                                alignIconRight
                                 text="Next"
                                 onPress={() => this.next()}
                                 variant="primary"

@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Text} from 'react-native';
-import {Provider} from 'react-redux';
+import { Text } from 'react-native';
+import { Provider } from 'react-redux';
 import store from './config/store';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
@@ -38,6 +38,7 @@ import Purchases from './screens/Purchases';
 import Plants from './screens/Plants';
 import ReferralHistory from './screens/ReferralHistory';
 import units from './components/styles/units';
+import colors from './components/styles/colors';
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -62,6 +63,15 @@ const linking = {
 
 // set header logo
 const logo = <Mark size={units.unit5} />;
+
+// set app theme (AFTER V1 RELEASE; Note: There is an issue with the transition when updating background color)
+// const AppTheme = {
+//   dark: false,
+//   colors: {
+//     background: colors.greenC5,
+//     card: colors.greenC5,
+//   }
+// };
 
 // main app render
 function App() {

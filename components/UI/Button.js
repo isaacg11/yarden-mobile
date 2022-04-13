@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import fonts from '../styles/fonts';
 import units from '../styles/units';
 import colors from '../styles/colors';
@@ -119,16 +119,23 @@ class Button extends Component {
   };
 
   render() {
-    const {onPress, text = 'Submit', variant, disabled, icon} = this.props;
+    const {
+      onPress,
+      text = 'Submit',
+      variant,
+      disabled,
+      icon,
+      alignIconRight
+    } = this.props;
 
     const buttonStyles = this.getButtonStyles(variant);
     const buttonVariant = this.getVariantStyles();
     const buttonVariantText = this.getVariantTextStyles();
-    const disabledStyles = disabled ? {opacity: 0.5} : {};
+    const disabledStyles = disabled ? { opacity: 0.5 } : {};
 
     return (
       <TouchableOpacity
-        style={{...buttonStyles.button, ...buttonVariant, ...disabledStyles}}
+        style={{ ...buttonStyles.button, ...buttonVariant, ...disabledStyles }}
         onPress={value => onPress(value)}
         underlayColor="#fff"
         disabled={disabled}>
@@ -139,10 +146,11 @@ class Button extends Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {icon && <View style={{marginRight: units.unit3}}>{icon}</View>}
-          <Paragraph style={{...buttonStyles.text, ...buttonVariantText}}>
+          {icon && !alignIconRight && <View style={{ marginRight: units.unit3 }}>{icon}</View>}
+          <Paragraph style={{ ...buttonStyles.text, ...buttonVariantText }}>
             {text}
           </Paragraph>
+          {icon && alignIconRight && <View style={{ marginLeft: units.unit3 }}>{icon}</View>}
         </View>
       </TouchableOpacity>
     );

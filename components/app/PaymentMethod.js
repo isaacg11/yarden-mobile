@@ -25,7 +25,7 @@ class PaymentMethod extends Component {
 
         {/* payment method start */}
         <View>
-          <View style={{marginBottom: units.unit5}}>
+          <View>
             {!user.payment_info && (
               <View>
                 <Paragraph
@@ -45,7 +45,7 @@ class PaymentMethod extends Component {
             )}
             {user.payment_info && (
               <View>
-                <Paragraph style={{marginBottom: units.unit5}}>
+                <Paragraph style={{marginBottom: units.unit4}}>
                   {user.payment_info.card_brand} ending in{' '}
                   {user.payment_info.card_last4} (Exp:{' '}
                   {user.payment_info.card_exp_month}/

@@ -2,6 +2,9 @@ import ratio from '../styles/ratio';
 import units from '../styles/units';
 import colors from './colors';
 
+const defaultFont = 'Futura-Medium';
+const defaultBold = 'Futura-Bold';
+
 // header sizes // don't change the order of these
 const h6 = units.unit3;
 const h5 = h6 * ratio.fontScaleRatio;
@@ -30,7 +33,7 @@ const label = {
   lineHeight: h4,
   // marginBottom: units.unit1,
   color: colors.greenD50,
-  fontFamily: 'Futura-Medium',
+  fontFamily: defaultFont,
   textTransform: 'uppercase',
   letterSpacing: 1,
 };
@@ -47,13 +50,22 @@ const header = {
   fontWeight: 'bold',
   color: colors.purpleE75,
   textTransform: 'capitalize',
-  fontFamily: 'Futura-Medium',
+  fontFamily: defaultFont,
+};
+
+const link = {
+  purple: {
+    fontSize: h4,
+    lineHeight: h3,
+    color: colors.purpleB,
+    fontFamily: defaultFont,
+  }
 };
 
 // fonts
 const fonts = {
-  default: 'Futura-Medium',
-  bold: 'Futura-Bold',
+  default: defaultFont,
+  bold: defaultBold,
   h6: h6,
   h5: h5,
   h4: h4,
@@ -67,6 +79,7 @@ const fonts = {
   header: header,
   paragraph: paragraph,
   small: small,
+  link: link
 };
 
 export default fonts;
