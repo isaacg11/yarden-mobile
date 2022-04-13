@@ -139,7 +139,7 @@ class Button extends Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{marginRight: units.unit3}}>{icon}</View>
+          {icon && <View style={{marginRight: units.unit3}}>{icon}</View>}
           <Paragraph style={{...buttonStyles.text, ...buttonVariantText}}>
             {text}
           </Paragraph>
