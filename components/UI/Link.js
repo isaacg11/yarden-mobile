@@ -1,54 +1,33 @@
-import React, {Component} from 'react';
-import {Linking, TouchableOpacity, Text} from 'react-native';
-import colors from '../styles/colors';
+import React, { Component } from 'react';
+import { Linking, TouchableOpacity, Text, View } from 'react-native';
 import fonts from '../styles/fonts';
+import units from '../styles/units';
 
 class Link extends Component {
   getlinkStyles(color) {
     // render linkStyles styled based on color
     switch (color) {
       case 'link':
-        return this.linkStyles.purple;
-      case 'purple':
-        return this.linkStyles.purple;
-      case 'white':
-        return this.linkStyles.white;
-      case 'green':
-        return this.linkStyles.green;
+        return fonts.link.purple;
       default:
-        return this.linkStyles.purple;
+        return fonts.link.purple;
     }
   }
 
-  linkStyles = {
-    sizing: {
-      fontSize: fonts.h4,
-      lineHeight: fonts.h3,
-    },
-    purple: {
-      ...this.sizing,
-      color: colors.purpleB,
-      fontFamily: fonts.default,
-      opacity: this.props.disabled ? 0.5 : 1,
-    },
-    white: {
-      ...this.sizing,
-      color: 'white',
-      opacity: this.props.disabled ? 0.5 : 1,
-    },
-    green: {
-      ...this.sizing,
-      color: colors.green0,
-      opacity: this.props.disabled ? 0.5 : 1,
-    },
-  };
-
   render() {
-    const {text, color, url} = this.props;
+    const {
+      text,
+      color,
+      url,
+      icon,
+      alignIconRight
+    } = this.props;
+
     const linkStyles = this.getlinkStyles(color);
 
     return (
       <TouchableOpacity
+        style={{ display: 'flex', flexDirection: 'row', alignContent: 'center' }}
         onPress={() => {
           // if a callback prop is passed in, run the function
           if (this.props.onPress) return this.props.onPress();
@@ -56,7 +35,13 @@ class Link extends Component {
           // if a url is passed in, open to a new web page
           Linking.openURL(url);
         }}>
-        <Text style={{...linkStyles}}>{text}</Text>
+        {icon && !alignIconRight && (
+          <View style={{ marginRight: units.unit3 }}>{icon}</View>
+        )}
+        <Text style={{ ...linkStyles }}>{text}</Text>
+        {icon && alignIconRight && (
+          <View style={{ marginLeft: units.unit3 }}>{icon}</View>
+        )}
       </TouchableOpacity>
     );
   }

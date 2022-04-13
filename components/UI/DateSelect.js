@@ -1,10 +1,34 @@
 
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment-timezone';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from './Input';
+import Label from './Label';
 import Paragraph from './Paragraph';
+import units from '../styles/units';
+import colors from '../styles/colors';
+import fonts from '../styles/fonts';
+
+const dropdownStyles = StyleSheet.create({
+    dropdown: {
+        borderWidth: 1,
+        padding: units.unit4,
+        borderColor: colors.purpleB,
+        backgroundColor: colors.greenC10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    label: {
+        fontSize: fonts.h4,
+        marginBottom: units.unit2,
+        color: colors.purpleB,
+        fontWeight: 'bold',
+    },
+});
 
 class DateSelect extends Component {
 
@@ -19,7 +43,8 @@ class DateSelect extends Component {
             minDate = null,
             maxDate = null,
             mode,
-            date
+            date,
+            appearance
         } = this.props;
 
         const {
@@ -27,20 +52,42 @@ class DateSelect extends Component {
             validationError
         } = this.state;
 
+        const isNewDate = moment(value).format('MM/DD/YYYY') !== moment().format('MM/DD/YYYY');
+
         return (
             <View>
-                <Input
-                    label="Date"
-                    value={value}
-                    placeholder={placeholder}
-                    onPressIn={() => this.setState({ datePickerIsOpen: true })}
-                    onChange={() => this.setState({ datePickerIsOpen: true })}
-                />
+                {appearance === 'dropdown' ? (
+                    <Pressable onPressIn={() => this.setState({ datePickerIsOpen: true })}>
+                        <Label style={{ color: colors.purpleB, marginBottom: units.unit2, }}>DATE</Label>
+                        <View style={dropdownStyles.dropdown}>
+                            <Text style={{ fontSize: fonts.h3 }}>
+                                {
+                                    isNewDate ?
+                                    moment(value).format('MM/DD/YYYY') :
+                                    'Choose a new date...'
+                                }
+                            </Text>
+                            <Ionicons
+                                name="chevron-down-outline"
+                                size={units.unit4 + units.unit3}
+                                color={colors.purpleB}
+                            />
+                        </View>
+                    </Pressable>
+                ) :
+                    <Input
+                        label="Date"
+                        value={value}
+                        placeholder={placeholder}
+                        onPressIn={() => this.setState({ datePickerIsOpen: true })}
+                        onChange={() => this.setState({ datePickerIsOpen: true })}
+                    />
+                }                
                 <DatePicker
                     modal
                     mode={mode}
                     open={datePickerIsOpen}
-                    date={date}
+                    date={new Date(isNewDate ? value : date)}
                     minimumDate={minDate}
                     maximumDate={maxDate}
                     onConfirm={async (info) => {

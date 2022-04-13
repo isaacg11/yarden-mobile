@@ -38,6 +38,7 @@ class Input extends Component {
       multiline = false,
       numberOfLines = 1,
       disabled = false,
+      style
     } = this.props;
 
     return (
@@ -48,7 +49,7 @@ class Input extends Component {
           numberOfLines={numberOfLines}
           autoCapitalize="none"
           keyboardType={type}
-          style={multiline ? componentStyles.textarea : componentStyles.input}
+          style={multiline ? componentStyles.textarea : {...componentStyles.input, ...style}}
           onChangeText={value => onChange(value)}
           onPressIn={value => (onPressIn ? onPressIn(value) : null)}
           value={type === 'numeric' ? value.replace(/[^0-9]/g, '') : value}

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, Text} from 'react-native';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, Text } from 'react-native';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Dropdown from '../components/UI/Dropdown';
@@ -9,9 +9,9 @@ import Label from '../components/UI/Label';
 import DateSelect from '../components/UI/DateSelect';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import {alert} from '../components/UI/SystemAlert';
+import { alert } from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
-import {updateOrder, getOrders} from '../actions/orders/index';
+import { updateOrder, getOrders } from '../actions/orders/index';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
@@ -22,7 +22,7 @@ class ChangeDate extends Component {
 
   async save() {
     // render loading indicator
-    await this.setState({isLoading: true});
+    await this.setState({ isLoading: true });
 
     // format new date
     const newDate = {
@@ -31,7 +31,7 @@ class ChangeDate extends Component {
     };
 
     // update order with new date
-    await this.props.updateOrder(this.props.route.params.orderId, newDate);
+    await this.props.updateOrder(this.props.route.params.order._id, newDate);
 
     // get pending orders
     await this.props.getOrders(
@@ -39,7 +39,7 @@ class ChangeDate extends Component {
     );
 
     // hide loading indicator
-    await this.setState({isLoading: false});
+    await this.setState({ isLoading: false });
 
     // render success alert
     alert('Your order date has been changed', 'Success!', () =>
@@ -48,8 +48,8 @@ class ChangeDate extends Component {
   }
 
   render() {
-    const {date, time, isLoading} = this.state;
-
+    const { date, time, isLoading } = this.state;
+    const { order } = this.props.route.params;
     const minDate = moment().add(3, 'days');
 
     return (
@@ -74,7 +74,7 @@ class ChangeDate extends Component {
           {/* change date form start */}
 
           <View>
-            <Header type="h4" style={{marginBottom: units.unit5}}>
+            <Header type="h4" style={{ marginBottom: units.unit5 }}>
               Change Date
             </Header>
 
@@ -95,8 +95,8 @@ class ChangeDate extends Component {
                     ...card,
                     paddingHorizontal: units.unit5,
                   }}>
-                  <Text style={{...fonts.label, color: colors.greenD50}}>
-                    THU
+                  <Text style={{ ...fonts.label, color: colors.greenD50 }}>
+                    {moment(order.date).format('dddd')}
                   </Text>
                   <Text
                     style={{
@@ -104,15 +104,17 @@ class ChangeDate extends Component {
                       lineHeight: fonts.h1,
                       color: colors.greenD50,
                     }}>
-                    04/03
+                    {moment(order.date).format('MM/DD')}
                   </Text>
-                  <Text style={{...fonts.small, color: colors.greenD50}}>
-                    10 AM
+                  <Text style={{ ...fonts.small, color: colors.greenD50 }}>
+                    {`${moment(order.time, `HH:mm:ss`).format(
+                      `h:mm A`,
+                    )}`}
                   </Text>
                 </View>
               </View>
 
-              <View style={{marginTop: fonts.h4}}>
+              <View style={{ marginTop: fonts.h4 }}>
                 <Ionicons
                   name="arrow-forward"
                   size={fonts.h1}
@@ -134,7 +136,7 @@ class ChangeDate extends Component {
                       color: colors.greenE75,
                       fontWeight: 'bold',
                     }}>
-                    day
+                    {date ? moment(date).format('dddd') : 'day'}
                   </Text>
                   <Text
                     style={{
@@ -143,7 +145,7 @@ class ChangeDate extends Component {
                       color: colors.greenE75,
                       fontWeight: 'bold',
                     }}>
-                    mm/dd
+                    {date ? moment(date).format('MM/DD') : 'mm/dd'}
                   </Text>
                   <Text
                     style={{
@@ -151,12 +153,14 @@ class ChangeDate extends Component {
                       color: colors.greenE75,
                       fontWeight: 'bold',
                     }}>
-                    Time...
+                    {time ? `${moment(time, `HH:mm:ss`).format(
+                      `h:mm A`,
+                    )}` : 'Time...'}
                   </Text>
                 </View>
               </View>
             </View>
-            <View>
+            <View style={{marginBottom: units.unit4}}>
               <DateSelect
                 mode="date"
                 value={date}
@@ -165,15 +169,16 @@ class ChangeDate extends Component {
                 minDate={new Date(minDate)}
                 onConfirm={value => {
                   this.setState({
-                    date: moment(value).format('MM/DD/YYYY'),
+                    date: value,
                   });
                 }}
+                appearance="dropdown"
               />
             </View>
             <View>
               <Dropdown
                 label="Time"
-                onChange={value => this.setState({time: value})}
+                onChange={value => this.setState({ time: value })}
                 options={[
                   {
                     label: '9:00 AM',
@@ -217,7 +222,7 @@ class ChangeDate extends Component {
             </View>
           </View>
 
-          <View style={{marginTop: units.unit4}}>
+          <View style={{ marginTop: units.unit4 }}>
             <Button
               text="Save Changes"
               onPress={() => this.save()}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import Button from '../UI/Button';
+import Divider from '../UI/Divider';
 import Paragraph from '../UI/Paragraph';
 import Link from '../UI/Link';
 import Status from '../UI/Status';
@@ -24,7 +24,7 @@ class OrderInfo extends Component {
         return (
             <View>
                 <View>
-                    <View style={{ marginTop: units.unit5 }}>
+                    <View>
                         <Paragraph
                             style={{
                                 fontSize: fonts.h3,
@@ -40,13 +40,29 @@ class OrderInfo extends Component {
                             Description
                         </Text>
                         <Text>{order.description}</Text>
-                        <View>
-                            <Text style={{ ...fonts.label, marginTop: units.unit5 }}>
-                                Date
-                            </Text>
-                            <Text>
-                                {moment(order.estimated_start_dt).format('MM/DD/YYYY')}
-                            </Text>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: units.unit5 }}>
+                            <View>
+                                <Text style={{ ...fonts.label }}>
+                                    Date
+                                </Text>
+                                <Text>
+                                    {moment(order.date).format('MM/DD/YYYY')}
+                                </Text>
+                            </View>
+                            {(order.status === 'pending' && order.type === 'yard assessment') && (
+                                <Link
+                                    text="Change"
+                                    onPress={() => onChangeDate()}
+                                    icon={(
+                                        <Ionicons
+                                            name="create-outline"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
+                                />
+                            )}
+
                         </View>
                         <Paragraph style={{ ...fonts.label, marginTop: units.unit5 }}>
                             Customer/Address
@@ -74,32 +90,20 @@ class OrderInfo extends Component {
                             {/* zip */}
                             <Text>{order.customer.zip_code}</Text>
                         </View>
-
                         <Text style={{ ...fonts.label, marginTop: units.unit5 }}>Email</Text>
                         <Text>{order.customer.email}</Text>
-                        <Text>{formatPhoneNumber(order.customer.phone_number)}</Text>
+                        <Text style={{ marginBottom: units.unit4 }}>{formatPhoneNumber(order.customer.phone_number)}</Text>
+
+                        {(order.status === 'pending' && order.type === 'yard assessment') && (
+                            <View>
+                                <Divider />
+                                <View style={{ marginTop: units.unit5, marginBottom: units.unit5, display: 'flex', alignItems: 'center' }}>
+                                    <Link text="Cancel Order" onPress={() => onCancel()} />
+                                </View>
+                            </View>
+                        )}
                     </View>
                 </View>
-                {(order.status === 'pending' && order.type === 'yard assessment') && (
-                    <View>
-                        <View style={{ marginBottom: units.unit3 }}>
-                            <Button
-                                text="Change Date"
-                                onPress={() => onChangeDate()}
-                                icon={(
-                                    <Ionicons
-                                        name="calendar-outline"
-                                        size={units.unit4}
-                                        color={colors.purpleB}
-                                    />
-                                )}
-                            />
-                        </View>
-                        <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
-                            <Link text="Cancel Order" onPress={() => onCancel()} />
-                        </View>
-                    </View>
-                )}
             </View>
         )
     }

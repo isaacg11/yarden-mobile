@@ -55,12 +55,10 @@ class Referrals extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-
-                <Header type="h4" style={{ marginTop: units.unit6 }}>
-                    Referrals
-                </Header>
-                <View style={{ padding: units.unit5 }}>
-
+                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    <Header type="h4" style={{ marginBottom: units.unit5 }}>
+                        Referrals
+                    </Header>
                     {/* QR code */}
                     <Card>
                         <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Yarden Referral Program</Paragraph>
@@ -71,7 +69,7 @@ class Referrals extends Component {
                     </Card>
 
                     {/* navigation button */}
-                    <View style={{marginTop: units.unit4}}>
+                    <View style={{ marginTop: units.unit4 }}>
                         <Button
                             text="View Referral History"
                             onPress={() => this.viewReferralHistory()}

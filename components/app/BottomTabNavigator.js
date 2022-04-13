@@ -65,24 +65,24 @@ class BottomTabNavigator extends Component {
     }
   }
 
-  renderIcon(route) {
+  renderIcon(route, focused) {
     switch (route) {
       case 'Orders':
         return (
-          <Ionicons name={'reader-outline'} color={'white'} size={fonts.h2} />
+          <Ionicons name={focused ? 'reader' : 'reader-outline'} color={'white'} size={fonts.h2} />
         );
       case 'Quotes':
         return (
-          <Ionicons name={'layers-outline'} color={'white'} size={fonts.h2} />
+          <Ionicons name={focused ? 'layers' : 'layers-outline'} color={'white'} size={fonts.h2} />
         );
       case 'Shop':
         return (
-          <Ionicons name={'cart-outline'} color={'white'} size={fonts.h2} />
+          <Ionicons name={focused ? 'cart' : 'cart-outline'} color={'white'} size={fonts.h2} />
         );
       case 'Messages':
         return (
           <Ionicons
-            name={'file-tray-outline'}
+            name={focused ? 'file-tray' : 'file-tray-outline'}
             color={'white'}
             size={fonts.h2}
           />
@@ -112,7 +112,7 @@ class BottomTabNavigator extends Component {
         <Tab.Navigator
           screenOptions={({route}) => ({
             tabBarIcon: ({focused, color, size}) => {
-              const icon = this.renderIcon(route.name);
+              const icon = this.renderIcon(route.name, focused);
               return icon;
             },
             headerShown: false,

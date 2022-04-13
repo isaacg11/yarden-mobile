@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Table from '../components/UI/Table';
 import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
+import Paragraph from '../components/UI/Paragraph';
 import units from '../components/styles/units';
 
 class ReferralHistory extends Component {
@@ -18,14 +19,25 @@ class ReferralHistory extends Component {
                 flex: 1,
                 width: "100%",
             }}>
+
+
                 <ScrollView>
-                    <Header type="h4" style={{ marginTop: units.unit6 }}>
-                        Referral History
-                    </Header>
-                    <View style={{ padding: units.unit5 }}>
-                        <Card>
-                            <Table data={referrals} />
-                        </Card>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>
+                            Referral History
+                        </Header>
+                        <View>
+                            {(referrals && referrals.length > 0) ? (
+                                <Card>
+                                    <Table data={referrals} />
+                                </Card>
+                            ) : (
+                                <Paragraph style={{textAlign: 'center', marginTop: units.unit4}}>
+                                    No referral history
+                                </Paragraph>
+                            )}
+
+                        </View>
                     </View>
                 </ScrollView >
             </SafeAreaView>
