@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {SafeAreaView, View, Text} from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import moment from 'moment';
@@ -14,6 +14,7 @@ import {updateOrder, getOrders} from '../actions/orders/index';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
+import card from '../components/styles/card';
 
 class ChangeDate extends Component {
   state = {};
@@ -55,7 +56,7 @@ class ChangeDate extends Component {
         style={{
           flex: 1,
           width: '100%',
-          backgroundColor: 'white',
+          backgroundColor: colors.greenC5,
         }}>
         {/* loading indicator start */}
         <LoadingIndicator loading={isLoading} />
@@ -64,70 +65,149 @@ class ChangeDate extends Component {
         <View
           style={{
             padding: units.unit3 + units.unit4,
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            display: 'flex',
+            flex: 1,
           }}>
           {/* change date form start */}
-          <Header type="h4" style={{marginBottom: units.unit5}}>
-            Change Date
-          </Header>
+
           <View>
-            <DateSelect
-              mode="date"
-              value={date}
-              date={new Date()}
-              placeholder="Choose a new date..."
-              minDate={new Date(minDate)}
-              onConfirm={value => {
-                this.setState({
-                  date: moment(value).format('MM/DD/YYYY'),
-                });
-              }}
-            />
+            <Header type="h4" style={{marginBottom: units.unit5}}>
+              Change Date
+            </Header>
+            <View
+              style={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+                flexDirection: 'row',
+                marginBottom: units.unit5,
+              }}>
+              <View
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  ...card,
+                  paddingHorizontal: units.unit5,
+                }}>
+                <Text style={{...fonts.label, color: colors.greenD50}}>
+                  THU
+                </Text>
+                <Text
+                  style={{
+                    fontSize: fonts.h2,
+                    lineHeight: fonts.h1,
+                    color: colors.greenD50,
+                  }}>
+                  03
+                </Text>
+                <Text style={{...fonts.small, color: colors.greenD50}}>
+                  10 AM
+                </Text>
+              </View>
+              <View>
+                <Ionicons
+                  name="arrow-forward"
+                  size={fonts.h1}
+                  color={colors.greenA}
+                />
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  ...card,
+                  paddingHorizontal: units.unit5,
+                }}>
+                <Text
+                  style={{
+                    ...fonts.label,
+                    color: colors.greenE75,
+                    fontWeight: 'bold',
+                  }}>
+                  FRI
+                </Text>
+                <Text
+                  style={{
+                    fontSize: fonts.h2,
+                    lineHeight: fonts.h1,
+                    color: colors.greenE75,
+                    fontWeight: 'bold',
+                  }}>
+                  04
+                </Text>
+                <Text
+                  style={{
+                    ...fonts.small,
+                    color: colors.greenE75,
+                    fontWeight: 'bold',
+                  }}>
+                  09 AM
+                </Text>
+              </View>
+            </View>
+            <View>
+              <DateSelect
+                mode="date"
+                value={date}
+                date={new Date()}
+                placeholder="Choose a new date..."
+                minDate={new Date(minDate)}
+                onConfirm={value => {
+                  this.setState({
+                    date: moment(value).format('MM/DD/YYYY'),
+                  });
+                }}
+              />
+            </View>
+            <View>
+              <Dropdown
+                label="Time"
+                onChange={value => this.setState({time: value})}
+                options={[
+                  {
+                    label: '9:00 AM',
+                    value: '09',
+                  },
+                  {
+                    label: '10:00 AM',
+                    value: '10',
+                  },
+                  {
+                    label: '11:00 AM',
+                    value: '11',
+                  },
+                  {
+                    label: '12:00 PM',
+                    value: '12',
+                  },
+                  {
+                    label: '1:00 PM',
+                    value: '13',
+                  },
+                  {
+                    label: '2:00 PM',
+                    value: '14',
+                  },
+                  {
+                    label: '3:00 PM',
+                    value: '15',
+                  },
+                  {
+                    label: '4:00 PM',
+                    value: '16',
+                  },
+                  {
+                    label: '5:00 PM',
+                    value: '17',
+                  },
+                ]}
+                placeholder="Choose a new time..."
+              />
+            </View>
           </View>
-          <View>
-            <Dropdown
-              label="Time"
-              onChange={value => this.setState({time: value})}
-              options={[
-                {
-                  label: '9:00 AM',
-                  value: '09',
-                },
-                {
-                  label: '10:00 AM',
-                  value: '10',
-                },
-                {
-                  label: '11:00 AM',
-                  value: '11',
-                },
-                {
-                  label: '12:00 PM',
-                  value: '12',
-                },
-                {
-                  label: '1:00 PM',
-                  value: '13',
-                },
-                {
-                  label: '2:00 PM',
-                  value: '14',
-                },
-                {
-                  label: '3:00 PM',
-                  value: '15',
-                },
-                {
-                  label: '4:00 PM',
-                  value: '16',
-                },
-                {
-                  label: '5:00 PM',
-                  value: '17',
-                },
-              ]}
-              placeholder="Choose a new time..."
-            />
-          </View>
+
           <View style={{marginTop: units.unit4}}>
             <Button
               text="Save Changes"
@@ -139,6 +219,7 @@ class ChangeDate extends Component {
             />
           </View>
         </View>
+
         {/* change date form end */}
       </SafeAreaView>
     );
