@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Dropdown from '../components/UI/Dropdown';
+import Label from '../components/UI/Label';
 import DateSelect from '../components/UI/DateSelect';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -76,75 +77,83 @@ class ChangeDate extends Component {
             <Header type="h4" style={{marginBottom: units.unit5}}>
               Change Date
             </Header>
+
             <View
               style={{
                 display: 'flex',
-                justifyContent: 'space-evenly',
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 flexDirection: 'row',
                 marginBottom: units.unit5,
               }}>
-              <View
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  ...card,
-                  paddingHorizontal: units.unit5,
-                }}>
-                <Text style={{...fonts.label, color: colors.greenD50}}>
-                  THU
-                </Text>
-                <Text
-                  style={{
-                    fontSize: fonts.h2,
-                    lineHeight: fonts.h1,
-                    color: colors.greenD50,
-                  }}>
-                  03
-                </Text>
-                <Text style={{...fonts.small, color: colors.greenD50}}>
-                  10 AM
-                </Text>
-              </View>
               <View>
+                <Label>Current Date</Label>
+                <View
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    ...card,
+                    paddingHorizontal: units.unit5,
+                  }}>
+                  <Text style={{...fonts.label, color: colors.greenD50}}>
+                    THU
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fonts.h2,
+                      lineHeight: fonts.h1,
+                      color: colors.greenD50,
+                    }}>
+                    04/03
+                  </Text>
+                  <Text style={{...fonts.small, color: colors.greenD50}}>
+                    10 AM
+                  </Text>
+                </View>
+              </View>
+
+              <View style={{marginTop: fonts.h4}}>
                 <Ionicons
                   name="arrow-forward"
                   size={fonts.h1}
                   color={colors.greenA}
                 />
               </View>
-              <View
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  ...card,
-                  paddingHorizontal: units.unit5,
-                }}>
-                <Text
+              <View>
+                <Label>New Date</Label>
+                <View
                   style={{
-                    ...fonts.label,
-                    color: colors.greenE75,
-                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    ...card,
+                    paddingHorizontal: units.unit5,
                   }}>
-                  FRI
-                </Text>
-                <Text
-                  style={{
-                    fontSize: fonts.h2,
-                    lineHeight: fonts.h1,
-                    color: colors.greenE75,
-                    fontWeight: 'bold',
-                  }}>
-                  04
-                </Text>
-                <Text
-                  style={{
-                    ...fonts.small,
-                    color: colors.greenE75,
-                    fontWeight: 'bold',
-                  }}>
-                  09 AM
-                </Text>
+                  <Text
+                    style={{
+                      ...fonts.label,
+                      color: colors.greenE75,
+                      fontWeight: 'bold',
+                    }}>
+                    day
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fonts.h2,
+                      lineHeight: fonts.h1,
+                      color: colors.greenE75,
+                      fontWeight: 'bold',
+                    }}>
+                    mm/dd
+                  </Text>
+                  <Text
+                    style={{
+                      ...fonts.small,
+                      color: colors.greenE75,
+                      fontWeight: 'bold',
+                    }}>
+                    Time...
+                  </Text>
+                </View>
               </View>
             </View>
             <View>
