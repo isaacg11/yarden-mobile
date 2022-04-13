@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
-import {View, Modal, ScrollView} from 'react-native';
+import {View, Modal, ScrollView, Text} from 'react-native';
 import Link from '../UI/Link';
-import Paragraph from '../UI/Paragraph';
+import Header from '../UI/Header';
+import Label from '../UI/Label';
 import units from '../../components/styles/units';
 import fonts from '../../components/styles/fonts';
+import colors from '../styles/colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class ElectronicSignatureAgreement extends Component {
   render() {
@@ -16,26 +19,36 @@ class ElectronicSignatureAgreement extends Component {
           animationType="slide"
           visible={isOpen}
           presentationStyle="fullScreen">
-          <View style={{marginTop: units.unit7}}>
+          <View style={{marginTop: units.unit5}}>
             <View style={{padding: units.unit5}}>
               <ScrollView>
-                <Link text="Back" onPress={() => close()} />
-                <Paragraph
-                  style={{
-                    fontSize: fonts.h3,
-                    marginBottom: units.unit6,
-                    marginTop: units.unit5,
-                  }}>
+                <Link
+                  icon={
+                    <Ionicons
+                      name="chevron-back"
+                      size={fonts.h3}
+                      color={colors.purpleB}
+                    />
+                  }
+                  text={'Back'}
+                  onPress={() => close()}
+                />
+                <Header type="h4" style={{marginTop: units.unit4}}>
                   Electronic Record and Signature Disclosure
-                </Paragraph>
-                <Paragraph>
+                </Header>
+
+                <Text style={{color: colors.purpleD75}}>
+                  {'\n'}
                   Please read this Electronic Record and Signature Disclosure
                   (“Disclosure”) carefully. It contains important information.
+                </Text>
+                <Label>
                   {'\n'}
                   {'\n'}
                   In this Disclosure:
-                  {'\n'}
-                  {'\n'}
+                </Label>
+
+                <Text style={{...fonts.small}}>
                   “We,” “us,” and “our” means the person or organization using
                   the Yarden Sign Service to present you with Communications to
                   review and/or sign, and our current and future affiliates and
@@ -69,8 +82,8 @@ class ElectronicSignatureAgreement extends Component {
                   enforceable as a handwritten signature on a paper document.
                   {'\n'}
                   {'\n'}
-                  1. Scope of Your Consent
                   {'\n'}
+                  <Label>1. Scope of Your Consent</Label>
                   {'\n'}
                   This Disclosure applies to all Communications that we may
                   provide to you through the Yarden Sign Service. Your consent
@@ -82,8 +95,8 @@ class ElectronicSignatureAgreement extends Component {
                   manually, should we choose to do so.
                   {'\n'}
                   {'\n'}
-                  2. Keeping and Obtaining Paper Copies
                   {'\n'}
+                  <Label>2. Keeping and Obtaining Paper Copies</Label>
                   {'\n'}
                   You will have the opportunity to print out and retain a copy
                   of all the Communications you review or sign at our request
@@ -101,8 +114,8 @@ class ElectronicSignatureAgreement extends Component {
                   disclosed to you before you are charged.
                   {'\n'}
                   {'\n'}
-                  3. System Requirements
                   {'\n'}
+                  <Label>3. System Requirements</Label>
                   {'\n'}
                   To review and sign Communications electronically using the
                   Yarden Sign Service, you must have:
@@ -131,8 +144,8 @@ class ElectronicSignatureAgreement extends Component {
                   Transaction. Beta versions of software are not supported.
                   {'\n'}
                   {'\n'}
-                  4. How to Withdraw Your Consent
                   {'\n'}
+                  <Label>4. How to Withdraw Your Consent</Label>
                   {'\n'}
                   If you decide to withdraw your consent to the use of
                   electronic signatures and records before you complete the
@@ -158,8 +171,8 @@ class ElectronicSignatureAgreement extends Component {
                   the future.
                   {'\n'}
                   {'\n'}
-                  5. Updating Contact Information
                   {'\n'}
+                  <Label>5. Updating Contact Information</Label>
                   {'\n'}
                   You may update your contact information with us at any time
                   by:
@@ -171,8 +184,8 @@ class ElectronicSignatureAgreement extends Component {
                   we make available to you for updating contact information.
                   {'\n'}
                   {'\n'}
-                  6. Consent and Acknowledgment
                   {'\n'}
+                  <Label>6. Consent and Acknowledgment</Label>
                   {'\n'}
                   By checking the box indicating your agreement to use
                   electronic records and signatures, you are:
@@ -187,7 +200,7 @@ class ElectronicSignatureAgreement extends Component {
                   along with you or on your behalf; and Confirming that you are
                   able to receive, access, and view the information presented
                   electronically via the methods described above.
-                </Paragraph>
+                </Text>
               </ScrollView>
             </View>
           </View>
