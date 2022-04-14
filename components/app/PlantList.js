@@ -1,11 +1,9 @@
-import React, {Component} from 'react';
-import {View, Image, Text} from 'react-native';
+import React, { Component } from 'react';
+import { View, Image, Text } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
 import Label from '../../components/UI/Label';
 import Collapse from '../../components/UI/Collapse';
-import Card from '../../components/UI/Card';
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
@@ -125,7 +123,7 @@ class PlantList extends Component {
     let select = !this.state[plant.name] ? true : false;
 
     // set selection state
-    this.setState({[plant.name]: select});
+    this.setState({ [plant.name]: select });
 
     // set selected plants
     let selectedPlants = this.state.selectedPlants;
@@ -144,17 +142,24 @@ class PlantList extends Component {
   }
 
   render() {
-    const {selectedPlants} = this.state;
-    const {plants, title = 'Plant Selection'} = this.props;
+    const { selectedPlants } = this.state;
+    const { plants, title = 'Plant Selection' } = this.props;
 
     if (plants && plants.vegetables && plants.herbs && plants.fruit) {
+
+      // set available plants
       const vegetables = this.renderPlants(plants.vegetables);
       const herbs = this.renderHerbs(plants.herbs);
       const fruit = this.renderPlants(plants.fruit);
-      console.log(selectedPlants);
+
+      // set selected plants
+      const selectedVegetables = selectedPlants.filter((plant) => plant.category.name === 'vegetable');
+      const selectedHerbs = selectedPlants.filter((plant) => plant.category.name === 'herb');
+      const selectedFruit = selectedPlants.filter((plant) => plant.category.name === 'fruit');
+
       return (
         <View>
-          <Text style={{marginBottom: units.unit6, color: colors.greenD75}}>
+          <Text style={{ marginBottom: units.unit6, color: colors.greenD75 }}>
             Select a minimum of 5 plants, and a maximum of 20
           </Text>
           <View
@@ -174,6 +179,8 @@ class PlantList extends Component {
               Selected: {selectedPlants.length}
             </Paragraph>
           </View>
+
+          {/* vegetables */}
           {Object.keys(vegetables).length > 0 && (
             <Collapse
               title={
@@ -184,7 +191,7 @@ class PlantList extends Component {
                     justifyContent: 'center',
                   }}>
                   <Paragraph
-                    style={{fontSize: fonts.h3, color: colors.greenD75}}>
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
                     Vegetables
                   </Paragraph>
                   <Text
@@ -193,16 +200,67 @@ class PlantList extends Component {
                       color: colors.purpleB,
                       fontFamily: fonts.default,
                     }}>
-                    {vegetables.length} Selected
+                    {selectedVegetables.length} Selected
                   </Text>
                 </View>
               }
               content={vegetables}
             />
           )}
-          {herbs.length > 0 && <Collapse title="Herbs" content={herbs} />}
+
+          {/* herbs */}
+          {herbs.length > 0 && (
+            <Collapse
+              title={
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Paragraph
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                    Herbs
+                  </Paragraph>
+                  <Text
+                    style={{
+                      ...fonts.small,
+                      color: colors.purpleB,
+                      fontFamily: fonts.default,
+                    }}>
+                    {selectedHerbs.length} Selected
+                  </Text>
+                </View>
+              }
+              content={herbs} />
+          )}
+
+          {/* fruit */}
           {Object.keys(fruit).length > 0 && (
-            <Collapse title="Fruit" content={fruit} />
+            <Collapse
+              title={
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Paragraph
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                    Fruit
+                  </Paragraph>
+                  <Text
+                    style={{
+                      ...fonts.small,
+                      color: colors.purpleB,
+                      fontFamily: fonts.default,
+                    }}>
+                    {selectedFruit.length} Selected
+                  </Text>
+                </View>
+              }
+              content={fruit}
+            />
           )}
         </View>
       );

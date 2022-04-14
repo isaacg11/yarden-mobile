@@ -12,6 +12,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import {APP_URL} from '../helpers/getUrl';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -47,6 +48,12 @@ class Dashboard extends Component {
     // set header logo
     const logo = <Mark size={units.unit5} />;
 
+    const appHeaderStyle = {
+      backgroundColor: colors.purpleB
+    };
+
+    const appHeaderTint = 'white';
+
     if (qrCode) {
       return (
         <Drawer.Navigator>
@@ -55,6 +62,8 @@ class Dashboard extends Component {
             component={BottomTabNavigator}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Drawer.Screen
@@ -62,6 +71,8 @@ class Dashboard extends Component {
             component={Referrals}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
             initialParams={{
               qrCode: qrCode,
@@ -72,6 +83,8 @@ class Dashboard extends Component {
             component={Subscription}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Drawer.Screen
@@ -79,6 +92,8 @@ class Dashboard extends Component {
             component={Settings}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Drawer.Screen
@@ -87,6 +102,8 @@ class Dashboard extends Component {
             options={{
               headerLeft: displayNone,
               header: displayNone,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
         </Drawer.Navigator>

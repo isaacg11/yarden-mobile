@@ -51,7 +51,7 @@ class DateSelect extends Component {
             datePickerIsOpen,
             validationError
         } = this.state;
-
+        
         const isNewDate = moment(value).format('MM/DD/YYYY') !== moment().format('MM/DD/YYYY');
 
         return (
