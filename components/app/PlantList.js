@@ -154,7 +154,7 @@ class PlantList extends Component {
       console.log(selectedPlants);
       return (
         <View>
-          <Text style={{marginBottom: units.unit6}}>
+          <Text style={{marginBottom: units.unit6, color: colors.greenD75}}>
             Select a minimum of 5 plants, and a maximum of 20
           </Text>
           <View
