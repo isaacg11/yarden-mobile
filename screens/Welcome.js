@@ -25,6 +25,7 @@ class Welcome extends Component {
                     </View>
                     <View style={{marginTop: units.unit3}}>
                         <Button
+                            alignIconRight
                             text="Continue to dashboard"
                             onPress={() => this.props.navigation.navigate('Dashboard')}
                             icon={(

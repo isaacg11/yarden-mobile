@@ -12,7 +12,6 @@ import Link from '../../components/UI/Link';
 import LoadingIndicator from '../../components/UI/LoadingIndicator';
 import Paragraph from '../../components/UI/Paragraph';
 import { alert } from '../../components/UI/SystemAlert';
-import Card from '../../components/UI/Card';
 import ElectronicSignatureAgreement from '../../components/app/ElectronicSignatureAgreement';
 import calculateQuoteCost from '../../helpers/calculateQuote';
 import delimit from '../../helpers/delimit';

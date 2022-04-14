@@ -24,7 +24,6 @@ class Schedule extends Component {
         city: '',
         state: 'ca',
         zipCode: '',
-        date: '',
         time: ''
     }
 
@@ -142,7 +141,7 @@ class Schedule extends Component {
                                 placeholder="Zip Code"
                             />
                         </View>
-                        <View>
+                        <View style={{marginBottom: units.unit4}}>
                             <DateSelect
                                 mode="date"
                                 value={date}
@@ -154,6 +153,7 @@ class Schedule extends Component {
                                         date: moment(value).format('MM/DD/YYYY')
                                     });
                                 }}
+                                appearance="dropdown"
                             />
                         </View>
                         <View>

@@ -1,9 +1,9 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './config/store';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
@@ -64,6 +64,12 @@ const linking = {
 // set header logo
 const logo = <Mark size={units.unit5} />;
 
+const appHeaderStyle = {
+  backgroundColor: colors.purpleB
+};
+
+const appHeaderTint = 'white';
+
 // set app theme (AFTER V1 RELEASE; Note: There is an issue with the transition when updating background color)
 // const AppTheme = {
 //   dark: false,
@@ -84,6 +90,8 @@ function App() {
             component={Splash}
             options={{
               headerLeft: displayNone,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -92,6 +100,8 @@ function App() {
             options={{
               headerLeft: displayNone,
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -107,6 +117,8 @@ function App() {
             component={Register}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -114,6 +126,8 @@ function App() {
             component={Schedule}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -121,6 +135,8 @@ function App() {
             component={Confirm}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -129,6 +145,8 @@ function App() {
             options={{
               headerLeft: displayNone,
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -136,6 +154,8 @@ function App() {
             component={PasswordReset}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -144,6 +164,8 @@ function App() {
             options={{
               title: 'Password Confirm',
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -151,6 +173,8 @@ function App() {
             component={OrderDetails}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -158,6 +182,8 @@ function App() {
             component={ChangeDate}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -165,6 +191,8 @@ function App() {
             component={Logout}
             options={{
               headerLeft: displayNone,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -172,6 +200,8 @@ function App() {
             component={ChangeSettings}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -179,6 +209,8 @@ function App() {
             component={QuoteDetails}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -186,6 +218,8 @@ function App() {
             component={Checkout}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -194,6 +228,8 @@ function App() {
             options={{
               headerLeft: displayNone,
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -201,6 +237,8 @@ function App() {
             component={Garden}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -208,6 +246,8 @@ function App() {
             component={Enrollment}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -215,6 +255,8 @@ function App() {
             component={ChangeOrderDetails}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -222,6 +264,8 @@ function App() {
             component={ChangePlan}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -229,6 +273,8 @@ function App() {
             component={Message}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -236,6 +282,8 @@ function App() {
             component={RequestQuoteChange}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -243,6 +291,8 @@ function App() {
             component={RequestOrderChange}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -251,6 +301,8 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerLeft: displayNone,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -258,6 +310,8 @@ function App() {
             component={Products}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -265,6 +319,8 @@ function App() {
             component={Product}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -272,6 +328,8 @@ function App() {
             component={Cart}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -279,6 +337,8 @@ function App() {
             component={PurchaseDetails}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -286,6 +346,8 @@ function App() {
             component={Purchases}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -293,6 +355,8 @@ function App() {
             component={Plants}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
           <Stack.Screen
@@ -300,6 +364,8 @@ function App() {
             component={ReferralHistory}
             options={{
               headerTitle: () => logo,
+              headerStyle: appHeaderStyle,
+              headerTintColor: appHeaderTint
             }}
           />
         </Stack.Navigator>
