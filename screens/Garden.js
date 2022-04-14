@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {SafeAreaView, View, ScrollView} from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import { alert } from '../components/UI/SystemAlert';
+import {alert} from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
 import PlantList from '../components/app/PlantList';
 import PlantAvailability from '../components/app/PlantAvailability';
 import getSeason from '../helpers/getSeason';
 import setPlants from '../helpers/setPlants';
-import { getPlants } from '../actions/plants/index';
+import {getPlants} from '../actions/plants/index';
 import units from '../components/styles/units';
 
 class Garden extends Component {
@@ -20,7 +20,7 @@ class Garden extends Component {
 
   async componentDidMount() {
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     // set current season
     const season = getSeason();
@@ -58,7 +58,7 @@ class Garden extends Component {
     // combine quote and plants
     const quoteAndPlants = {
       quoteTitle: this.props.route.params.title,
-      ...{ vegetables, herbs, fruit },
+      ...{vegetables, herbs, fruit},
     };
 
     // set plant selections
@@ -67,8 +67,8 @@ class Garden extends Component {
     // combine quote and plants
     const params = {
       ...this.props.route.params,
-      ...{ plantSelections },
-      ...{ isCheckout: true },
+      ...{plantSelections},
+      ...{isCheckout: true},
     };
 
     // navigate to plan enrollment
@@ -76,7 +76,7 @@ class Garden extends Component {
   }
 
   render() {
-    const { selectedPlants, isLoading } = this.state;
+    const {selectedPlants, isLoading} = this.state;
 
     return (
       <SafeAreaView
@@ -85,23 +85,20 @@ class Garden extends Component {
           width: '100%',
         }}>
         <ScrollView>
-          <View style={{ padding: units.unit3 + units.unit4 }}>
+          <View style={{padding: units.unit3 + units.unit4}}>
             {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
-
-            <Header
-              type="h4"
-              style={{ marginBottom: units.unit5 }}>
-              Garden Setup
-            </Header>
-            <View style={{ padding: 0 }}>
+            <Header type="h4">Garden Setup</Header>
+            <View style={{padding: 0}}>
               {/* plant list */}
-              <View style={{ marginBottom: units.unit4 }}>
+              <View style={{marginBottom: units.unit4}}>
                 <PlantList
                   plants={this.state}
                   selectedPlants={selectedPlants}
-                  onSelect={selected => this.setState({ selectedPlants: selected })}
+                  onSelect={selected =>
+                    this.setState({selectedPlants: selected})
+                  }
                 />
               </View>
 
@@ -109,7 +106,7 @@ class Garden extends Component {
               <PlantAvailability />
 
               {/* navigation button */}
-              <View style={{marginTop: units.unit4}}>
+              <View style={{marginTop: units.unit5}}>
                 <Button
                   disabled={selectedPlants.length < 5}
                   text="Continue"

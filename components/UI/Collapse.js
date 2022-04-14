@@ -47,7 +47,6 @@ class Collapse extends Component {
             style={{
               display: 'flex',
               flex: 1,
-              alignSelf: 'stretch',
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -58,7 +57,7 @@ class Collapse extends Component {
             <Ionicons
               name={`caret-${isOpen ? 'up' : 'down'}`}
               size={fonts.h2}
-              style={{alignSelf: 'flex-end'}}
+              style={{alignSelf: 'center'}}
               color={colors.purpleB}
             />
           </View>

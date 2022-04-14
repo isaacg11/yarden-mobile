@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, Text} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Divider from '../../components/UI/Divider';
 import Paragraph from '../../components/UI/Paragraph';
+import Label from '../../components/UI/Label';
 import Collapse from '../../components/UI/Collapse';
 import Card from '../../components/UI/Card';
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
+import fonts from '../styles/fonts';
 
 class PlantList extends Component {
   state = {
@@ -70,7 +72,6 @@ class PlantList extends Component {
             />
             <Paragraph>{p.name}</Paragraph>
           </View>
-          <Divider />
         </View>
       ));
     });
@@ -115,7 +116,6 @@ class PlantList extends Component {
           />
           <Paragraph>{h.name}</Paragraph>
         </View>
-        <Divider />
       </View>
     ));
   }
@@ -151,39 +151,60 @@ class PlantList extends Component {
       const vegetables = this.renderPlants(plants.vegetables);
       const herbs = this.renderHerbs(plants.herbs);
       const fruit = this.renderPlants(plants.fruit);
-
+      console.log(selectedPlants);
       return (
-        <Card>
-          <Paragraph
-            style={{
-              fontWeight: 'bold',
-              marginTop: units.unit5,
-              marginBottom: units.unit5,
-            }}>
-            {title}
-          </Paragraph>
-          <Paragraph style={{marginBottom: units.unit6}}>
+        <View>
+          <Text style={{marginBottom: units.unit6}}>
             Select a minimum of 5 plants, and a maximum of 20
-          </Paragraph>
-          <View style={{paddingBottom: units.unit6}}>
+          </Text>
+          <View
+            style={{
+              paddingBottom: units.unit3,
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Label>{title}</Label>
+
             <Paragraph
               style={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-                color: colors.greenE75,
+                color: colors.purpleB,
               }}>
               Selected: {selectedPlants.length}
             </Paragraph>
           </View>
-          <Divider />
           {Object.keys(vegetables).length > 0 && (
-            <Collapse title="Vegetables" content={vegetables} />
+            <Collapse
+              title={
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Paragraph
+                    style={{fontSize: fonts.h3, color: colors.greenD75}}>
+                    Vegetables
+                  </Paragraph>
+                  <Text
+                    style={{
+                      ...fonts.small,
+                      color: colors.purpleB,
+                      fontFamily: fonts.default,
+                    }}>
+                    {vegetables.length} Selected
+                  </Text>
+                </View>
+              }
+              content={vegetables}
+            />
           )}
           {herbs.length > 0 && <Collapse title="Herbs" content={herbs} />}
           {Object.keys(fruit).length > 0 && (
             <Collapse title="Fruit" content={fruit} />
           )}
-        </Card>
+        </View>
       );
     }
 
