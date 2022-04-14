@@ -32,7 +32,7 @@ const label = {
   fontSize: h5,
   lineHeight: h4,
   // marginBottom: units.unit1,
-  color: colors.greenD50,
+  color: colors.greenD25,
   fontFamily: defaultFont,
   textTransform: 'uppercase',
   letterSpacing: 1,
@@ -59,7 +59,7 @@ const link = {
     lineHeight: h3,
     color: colors.purpleB,
     fontFamily: defaultFont,
-  }
+  },
 };
 
 // fonts
@@ -79,7 +79,7 @@ const fonts = {
   header: header,
   paragraph: paragraph,
   small: small,
-  link: link
+  link: link,
 };
 
 export default fonts;

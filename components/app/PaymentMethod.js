@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
+import Link from '../UI/Link';
 import Button from '../../components/UI/Button';
 import Paragraph from '../../components/UI/Paragraph';
 import CreditCard from './CreditCard';
 import units from '../../components/styles/units';
+import fonts from '../styles/fonts';
+import colors from '../styles/colors';
 
 class PaymentMethod extends Component {
   state = {};
@@ -44,17 +47,30 @@ class PaymentMethod extends Component {
               </View>
             )}
             {user.payment_info && (
-              <View>
-                <Paragraph style={{marginBottom: units.unit4}}>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={{color: colors.greenD75, fontSize: fonts.h3}}>
                   {user.payment_info.card_brand} ending in{' '}
-                  {user.payment_info.card_last4} (Exp:{' '}
-                  {user.payment_info.card_exp_month}/
-                  {user.payment_info.card_exp_year})
-                </Paragraph>
-                <Button
+                  {user.payment_info.card_last4}
+                  {'\n'}
+                  <Text
+                    style={{
+                      ...fonts.small,
+                      lineHeight: fonts.h5,
+                      color: colors.greenD75,
+                    }}>
+                    (Exp: {user.payment_info.card_exp_month}/
+                    {user.payment_info.card_exp_year})
+                  </Text>
+                </Text>
+                <Link
                   text="Edit"
                   onPress={() => this.setState({isOpen: true})}
-                  variant="secondary"
                 />
               </View>
             )}

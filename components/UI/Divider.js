@@ -10,6 +10,7 @@ class Divider extends Component {
           height: 1,
           width: '100%',
           backgroundColor: colors.greenD10,
+          ...this.props.style,
         }}></View>
     );
   }

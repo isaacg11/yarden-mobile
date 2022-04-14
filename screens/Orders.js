@@ -139,7 +139,7 @@ class Orders extends Component {
                   <View key={index}>
                     <View
                       style={{
-                        marginVertical: units.unit4,
+                        marginVertical: units.unit4 + units.unit3,
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -166,16 +166,25 @@ class Orders extends Component {
                         )}
 
                       {/* order info */}
-                      <View style={{}}>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        <View
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginRight: units.unit3,
+                          }}>
+                          <Label>{moment(order.date).format('ddd')} </Label>
+                          <Paragraph style={{color: colors.greenD50}}>
+                            {moment(order.date).format('MM/DD')}{' '}
+                          </Paragraph>
+                        </View>
                         <View>
-                          <Label>
-                            {moment(order.date).format('MM/DD/YYYY')}{' '}
-                            {order.time
-                              ? `@ ${moment(order.time, `HH:mm:ss`).format(
-                                  `h:mm A`,
-                                )}`
-                              : ''}
-                          </Label>
                           <Text
                             style={{
                               fontSize: fonts.h3,
@@ -185,6 +194,13 @@ class Orders extends Component {
                             }}>
                             {order.type}
                           </Text>
+                          <Label>
+                            {order.time
+                              ? `${moment(order.time, `HH:mm:ss`).format(
+                                  `h:mm A`,
+                                )}`
+                              : ''}
+                          </Label>
                         </View>
                       </View>
                       <View>

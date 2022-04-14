@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Provider } from 'react-redux';
+import {Text, View} from 'react-native';
+import {Provider} from 'react-redux';
 import store from './config/store';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
@@ -65,7 +65,7 @@ const linking = {
 const logo = <Mark size={units.unit5} />;
 
 const appHeaderStyle = {
-  backgroundColor: colors.purpleB
+  backgroundColor: colors.purpleB,
 };
 
 const appHeaderTint = 'white';
@@ -91,7 +91,7 @@ function App() {
             options={{
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -101,7 +101,7 @@ function App() {
               headerLeft: displayNone,
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -118,7 +118,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -127,7 +127,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -136,7 +136,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -146,7 +146,7 @@ function App() {
               headerLeft: displayNone,
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -155,7 +155,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -165,7 +165,7 @@ function App() {
               title: 'Password Confirm',
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -174,7 +174,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -183,7 +183,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -192,7 +192,7 @@ function App() {
             options={{
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -201,7 +201,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -210,7 +210,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -219,7 +219,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -229,7 +229,7 @@ function App() {
               headerLeft: displayNone,
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -238,7 +238,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -247,7 +247,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -256,7 +256,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -265,7 +265,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -274,7 +274,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -283,7 +283,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -292,7 +292,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -302,7 +302,7 @@ function App() {
               headerTitle: () => logo,
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -311,7 +311,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -320,7 +320,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -329,7 +329,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -338,7 +338,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -347,7 +347,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -356,7 +356,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
           <Stack.Screen
@@ -365,7 +365,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
+              headerTintColor: appHeaderTint,
             }}
           />
         </Stack.Navigator>
