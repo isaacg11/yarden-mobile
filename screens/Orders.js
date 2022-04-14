@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView, Text } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {SafeAreaView, View, ScrollView, Text} from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import moment from 'moment';
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -14,9 +14,9 @@ import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
-import { getOrders } from '../actions/orders/index';
-import { getChangeOrders } from '../actions/changeOrders/index';
-import { setFilters } from '../actions/filters/index';
+import {getOrders} from '../actions/orders/index';
+import {getChangeOrders} from '../actions/changeOrders/index';
+import {setFilters} from '../actions/filters/index';
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
@@ -40,7 +40,7 @@ class Orders extends Component {
     });
 
     // set new status
-    await this.props.setFilters({ orders: status });
+    await this.props.setFilters({orders: status});
 
     // set order query
     const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
@@ -63,12 +63,12 @@ class Orders extends Component {
     }
 
     // show loading indicator
-    this.setState({ isLoading: false });
+    this.setState({isLoading: false});
   }
 
   paginate(direction) {
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     // set intitial page
     let page = 1;
@@ -80,19 +80,19 @@ class Orders extends Component {
     if (direction === 'back') page = this.state.page - 1;
 
     // set new page
-    this.setState({ page: page }, async () => {
+    this.setState({page: page}, async () => {
       // set status
       await this.setStatus(this.state.status);
 
       // hide loading indicator
-      this.setState({ isLoading: false });
+      this.setState({isLoading: false});
     });
   }
 
   render() {
-    const { isLoading, page, limit } = this.state;
+    const {isLoading, page, limit} = this.state;
 
-    const { orders, changeOrders, filters } = this.props;
+    const {orders, changeOrders, filters} = this.props;
 
     return (
       <SafeAreaView
@@ -101,8 +101,7 @@ class Orders extends Component {
           width: '100%',
         }}>
         <ScrollView>
-
-          <View style={{ padding: units.unit3 + units.unit4 }}>
+          <View style={{padding: units.unit3 + units.unit4}}>
             {/* loading indicator start */}
             <LoadingIndicator loading={isLoading} />
 
@@ -131,7 +130,7 @@ class Orders extends Component {
                     value: 'complete',
                   },
                 ]}
-                style={{ marginBottom: units.unit4 }}
+                style={{marginBottom: units.unit4}}
               />
 
               {/* order list */}
@@ -169,12 +168,12 @@ class Orders extends Component {
                       {/* order info */}
                       <View style={{}}>
                         <View>
-                          <Label style={{ marginTop: units.unit5 }}>
+                          <Label>
                             {moment(order.date).format('MM/DD/YYYY')}{' '}
                             {order.time
                               ? `@ ${moment(order.time, `HH:mm:ss`).format(
-                                `h:mm A`,
-                              )}`
+                                  `h:mm A`,
+                                )}`
                               : ''}
                           </Label>
                           <Text
@@ -192,7 +191,10 @@ class Orders extends Component {
                         <Link
                           text="View Details"
                           onPress={() =>
-                            this.props.navigation.navigate('Order Details', order)
+                            this.props.navigation.navigate(
+                              'Order Details',
+                              order,
+                            )
                           }
                         />
                       </View>
@@ -203,7 +205,8 @@ class Orders extends Component {
 
               {/* pagination */}
               {orders.list && orders.total > limit && (
-                <View style={{ marginTop: units.unit6, marginBottom: units.unit4 }}>
+                <View
+                  style={{marginTop: units.unit6, marginBottom: units.unit4}}>
                   <Paginate
                     page={page}
                     limit={limit}
@@ -215,7 +218,7 @@ class Orders extends Component {
 
               {/* no orders */}
               {orders.list && orders.list.length < 1 && (
-                <View style={{ marginBottom: units.unit5 }}>
+                <View style={{marginBottom: units.unit5}}>
                   <Paragraph
                     style={{
                       fontWeight: 'bold',
