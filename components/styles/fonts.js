@@ -32,7 +32,7 @@ const label = {
   fontSize: h5,
   lineHeight: h4,
   // marginBottom: units.unit1,
-  color: colors.greenD25,
+  color: colors.greenD50,
   fontFamily: defaultFont,
   textTransform: 'uppercase',
   letterSpacing: 1,
