@@ -177,7 +177,7 @@ class Orders extends Component {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            marginRight: units.unit3,
+                            marginHorizontal: units.unit4,
                           }}>
                           <Label>{moment(order.date).format('ddd')} </Label>
                           <Paragraph style={{color: colors.greenD50}}>
