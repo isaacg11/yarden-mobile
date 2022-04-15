@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
 import Link from '../UI/Link';
 import Button from '../../components/UI/Button';
 import Paragraph from '../../components/UI/Paragraph';
@@ -13,9 +13,9 @@ class PaymentMethod extends Component {
   state = {};
 
   render() {
-    const {user} = this.props;
+    const { user } = this.props;
 
-    const {isOpen} = this.state;
+    const { isOpen } = this.state;
 
     return (
       <View>
@@ -23,27 +23,27 @@ class PaymentMethod extends Component {
         <CreditCard
           newCard={!user.payment_info}
           isOpen={isOpen}
-          close={() => this.setState({isOpen: false})}
+          close={() => this.setState({ isOpen: false })}
         />
 
         {/* payment method start */}
         <View>
           <View>
             {!user.payment_info && (
-              <View>
-                <Paragraph
-                  style={{
-                    textAlign: 'center',
-                    marginBottom: units.unit5,
-                    marginTop: units.unit5,
-                  }}>
-                  No payment method found
-                </Paragraph>
-                <Button
-                  text="Add Card +"
-                  onPress={() => this.setState({isOpen: true})}
-                  variant="secondary"
-                />
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                  <Text style={{color: colors.greenD75, fontSize: fonts.h3}}>
+                    No payment method found
+                  </Text>
+                  <Link
+                    text="Add Card"
+                    onPress={() => this.setState({isOpen: true})}
+                  />
               </View>
             )}
             {user.payment_info && (
@@ -54,7 +54,7 @@ class PaymentMethod extends Component {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={{color: colors.greenD75, fontSize: fonts.h3}}>
+                <Text style={{ color: colors.greenD75, fontSize: fonts.h3 }}>
                   {user.payment_info.card_brand} ending in{' '}
                   {user.payment_info.card_last4}
                   {'\n'}
@@ -70,7 +70,7 @@ class PaymentMethod extends Component {
                 </Text>
                 <Link
                   text="Edit"
-                  onPress={() => this.setState({isOpen: true})}
+                  onPress={() => this.setState({ isOpen: true })}
                 />
               </View>
             )}

@@ -49,10 +49,12 @@ class Dashboard extends Component {
     const logo = <Mark size={units.unit5} />;
 
     const appHeaderStyle = {
-      backgroundColor: colors.purpleB
+      elevation: 0,
+      shadowOpacity: 0,
+      borderBottomWidth: 0,
     };
 
-    const appHeaderTint = 'white';
+    const appHeaderTint = colors.purpleB;
 
     if (qrCode) {
       return (

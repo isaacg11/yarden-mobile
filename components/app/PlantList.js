@@ -203,6 +203,7 @@ class PlantList extends Component {
                     style={{
                       ...fonts.small,
                       color: colors.purpleB,
+                      opacity: selectedVegetables.length < 1 ? 0.5 : 1,
                       fontFamily: fonts.default,
                     }}>
                     {selectedVegetables.length} Selected
@@ -232,6 +233,7 @@ class PlantList extends Component {
                       ...fonts.small,
                       color: colors.purpleB,
                       fontFamily: fonts.default,
+                      opacity: selectedHerbs.length < 1 ? 0.5 : 1,
                     }}>
                     {selectedHerbs.length} Selected
                   </Text>
@@ -260,6 +262,7 @@ class PlantList extends Component {
                       ...fonts.small,
                       color: colors.purpleB,
                       fontFamily: fonts.default,
+                      opacity: selectedFruit.length < 1 ? 0.5 : 1,
                     }}>
                     {selectedFruit.length} Selected
                   </Text>

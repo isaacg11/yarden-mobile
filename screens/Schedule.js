@@ -58,7 +58,8 @@ class Schedule extends Component {
             ...this.props.route.params,
             ...this.state,
             ...{ geolocation: geolocation },
-            ...{ county: county }
+            ...{ county: county },
+            ...{date: moment(this.state.date).format('MM/DD/YYYY')}
         }
 
         // navigate to next screen
@@ -150,7 +151,7 @@ class Schedule extends Component {
                                 minDate={new Date(minDate)}
                                 onConfirm={(value) => {
                                     this.setState({
-                                        date: moment(value).format('MM/DD/YYYY')
+                                        date: value
                                     });
                                 }}
                                 appearance="dropdown"

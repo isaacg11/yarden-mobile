@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {Provider} from 'react-redux';
+import { Text, View } from 'react-native';
+import { Provider } from 'react-redux';
 import store from './config/store';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
@@ -65,25 +65,27 @@ const linking = {
 const logo = <Mark size={units.unit5} />;
 
 const appHeaderStyle = {
-  backgroundColor: colors.purpleB,
+  elevation: 0,
+  shadowOpacity: 0,
+  borderBottomWidth: 0,
 };
 
-const appHeaderTint = 'white';
+const appHeaderTint = colors.purpleB;
 
 // set app theme (AFTER V1 RELEASE; Note: There is an issue with the transition when updating background color)
-// const AppTheme = {
-//   dark: false,
-//   colors: {
-//     background: colors.greenC5,
-//     card: colors.greenC5,
-//   }
-// };
+const AppTheme = {
+  dark: false,
+  colors: {
+    background: 'white',
+    card: 'white',
+  }
+};
 
 // main app render
 function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer linking={linking}>
+      <NavigationContainer linking={linking} theme={AppTheme}>
         <Stack.Navigator initialRouteName="Splash">
           <Stack.Screen
             name="Splash"
@@ -91,6 +93,7 @@ function App() {
             options={{
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
+              headerShadowVisible: false,
               headerTintColor: appHeaderTint,
             }}
           />
@@ -101,6 +104,7 @@ function App() {
               headerLeft: displayNone,
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
+              headerShadowVisible: false,
               headerTintColor: appHeaderTint,
             }}
           />
@@ -118,6 +122,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
+              headerShadowVisible: false,
               headerTintColor: appHeaderTint,
             }}
           />
@@ -128,6 +133,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -137,6 +143,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -147,6 +154,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -156,6 +164,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -166,6 +175,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -175,6 +185,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -184,6 +195,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -193,6 +205,7 @@ function App() {
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -202,6 +215,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -211,6 +225,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -220,6 +235,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -230,6 +246,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -239,6 +256,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -248,6 +266,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -257,6 +276,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -266,6 +286,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -275,6 +296,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -283,6 +305,7 @@ function App() {
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
+              headerShadowVisible: false,
               headerTintColor: appHeaderTint,
             }}
           />
@@ -293,6 +316,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -303,6 +327,7 @@ function App() {
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -312,6 +337,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -321,6 +347,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -330,6 +357,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -339,6 +367,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -348,6 +377,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -357,6 +387,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
           <Stack.Screen
@@ -366,6 +397,7 @@ function App() {
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
               headerTintColor: appHeaderTint,
+              headerShadowVisible: false,
             }}
           />
         </Stack.Navigator>
