@@ -11,14 +11,14 @@ import Dropdown from '../UI/Dropdown';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import LoadingIndicator from '../UI/LoadingIndicator';
-import Divider from '../UI/Divider';
 import Link from '../UI/Link';
 import Paragraph from '../UI/Paragraph';
-import Card from '../UI/Card';
+import Label from '../UI/Label';
 import { createMessage, getMessages, updateMessage } from '../../actions/messages/index';
 import { getConversations } from '../../actions/conversations/index';
 import uploadImage from '../../helpers/uploadImage';
 import units from '../../components/styles/units';
+import colors from '../styles/colors';
 
 class Messenger extends Component {
 
@@ -262,22 +262,12 @@ class Messenger extends Component {
                     close={() => this.setState({ isOpen: false, imageUrl: null })}
                 />
 
-                <Card>
+                <View>
                     <View style={{ marginBottom: units.unit5 }}>
-
-                        {/* message receiver dropdown */}
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>To</Paragraph>
-                        <Dropdown
-                            disabled={true}
-                            value={receiver}
-                            options={contacts}
-                            onChange={(value) => {
-                                this.setValue(value);
-                            }}
-                        />
+                        <Label style={{color: colors.purpleB}}>To</Label>
+                        <Paragraph style={{marginBottom: units.unit4}}>{receiver}</Paragraph>
 
                         {/* conversation thread */}
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Conversation</Paragraph>
                         <View style={{ backgroundColor: '#F7F7F7', height: 200, borderWidth: 1, padding: units.unit5, display: 'flex' }}>
                             <ScrollView
                                 ref={ref => { this.scrollView = ref }}
@@ -323,7 +313,6 @@ class Messenger extends Component {
                         </View>
 
                         {/* message input */}
-                        <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Message</Paragraph>
                         <Input
                             onChange={(value) => this.setState({ message: value })}
                             value={message}
@@ -338,27 +327,25 @@ class Messenger extends Component {
                                 <Paragraph>Attachments ({attachments.length})</Paragraph>
                                 <Link text="Delete" onPress={() => this.setState({ attachments: [] })}></Link>
                             </View>
-                            <Divider />
                         </View>
 
                         {/* buttons */}
                         <View>
                             <Button
+                                style={{marginBottom: units.unit4}}
+                                variant="btn2"
                                 text="Attach Files"
                                 icon={<Ionicons name={'attach'} size={30} />}
                                 onPress={() => this.attachFile()}
-                                variant="secondary"
                             />
-
                             <Button
                                 text="Send"
                                 disabled={!message}
                                 onPress={() => this.sendMessage()}
-                                variant="primary"
                             />
                         </View>
                     </View>
-                </Card>
+                </View>
             </View>
         )
     }

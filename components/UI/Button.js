@@ -125,7 +125,8 @@ class Button extends Component {
       variant,
       disabled,
       icon,
-      alignIconRight
+      alignIconRight,
+      style
     } = this.props;
 
     const buttonStyles = this.getButtonStyles(variant);
@@ -135,7 +136,7 @@ class Button extends Component {
 
     return (
       <TouchableOpacity
-        style={{ ...buttonStyles.button, ...buttonVariant, ...disabledStyles }}
+        style={{ ...buttonStyles.button, ...buttonVariant, ...disabledStyles, ...style}}
         onPress={value => onPress(value)}
         underlayColor="#fff"
         disabled={disabled}>

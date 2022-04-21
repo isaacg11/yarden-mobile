@@ -199,7 +199,14 @@ class BottomTabNavigator extends Component {
           <Tab.Screen
             name="Messages"
             component={Messages}
-            options={{tabBarBadge: inbox.length > 0 ? inbox.length : null}}
+            options={{
+              tabBarBadge: inbox.length > 0 ? inbox.length : null,
+              tabBarBadgeStyle: {
+                backgroundColor: '#ff6060',
+                color: 'white',
+                fontWeight: 'bold',
+              },
+            }}
             listeners={({navigation}) => ({
               tabPress: async e => {
                 // Prevent default action

@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Dropdown from '../UI/Dropdown';
-import Divider from '../UI/Divider';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
 import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
+import Label from '../UI/Label';
 import { getMessages } from '../../actions/messages/index';
 import units from '../../components/styles/units';
 
@@ -102,22 +102,23 @@ class Inbox extends Component {
                     const lastIndex = (conversation.length - 1);
                     const latestMessage = conversation[lastIndex];
                     return (
-                        <Card key={index}>
-                            <View style={{ marginBottom: units.unit5 }}>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>From</Paragraph>
-                                <Paragraph>{latestMessage.sender.first_name} {latestMessage.sender.last_name[0]}.</Paragraph>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Date</Paragraph>
-                                <Paragraph>{moment(latestMessage.dt_created).format('MM/DD/YYYY')}</Paragraph>
-                            </View>
-                            <Divider />
-                            <View>
+                        <View key={index}>
+                            <Card>
+                                <View style={{ marginBottom: units.unit5 }}>
+                                    <Label style={{ marginTop: units.unit5 }}>From</Label>
+                                    <Paragraph>{latestMessage.sender.first_name} {latestMessage.sender.last_name[0]}.</Paragraph>
+                                    <Label style={{ marginTop: units.unit5 }}>Date</Label>
+                                    <Paragraph>{moment(latestMessage.dt_created).format('MM/DD/YYYY')}</Paragraph>
+                                </View>
+                            </Card>
+                            <View style={{marginTop: units.unit4}}>
                                 <Button
                                     text="View Message"
                                     onPress={() => onSelectConversation(latestMessage.conversation_id)}
                                     variant="secondary"
                                 />
                             </View>
-                        </Card>
+                        </View>
                     )
                 })}
                 {(inbox.length < 1) && (

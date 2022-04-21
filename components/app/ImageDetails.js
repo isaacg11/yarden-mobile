@@ -3,6 +3,7 @@ import {View, Modal, Image} from 'react-native';
 import Link from '../UI/Link';
 import Paragraph from '../UI/Paragraph';
 import units from '../../components/styles/units';
+import fonts from '../../components/styles/fonts';
 
 class ImageDetails extends Component {
   render() {

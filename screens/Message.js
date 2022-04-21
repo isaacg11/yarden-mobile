@@ -14,16 +14,12 @@ class Message extends Component {
                 flex: 1,
                 width: "100%",
             }}>
-                <Header type="h4" style={{ marginTop: units.unit6 }}>Messenger</Header>
-                <View style={{ padding: units.unit5 }}>
+                <View style={{padding: units.unit5}}>
+                    <Header type="h4" style={{marginBottom: units.unit4}}>Messenger</Header>
 
                     {/* messenger */}
-                    <Messenger 
-                        conversationId={this.props.route.params.conversationId}
-                    />
-
+                    <Messenger conversationId={this.props.route.params.conversationId} />
                 </View>
-
             </SafeAreaView>
         )
     }
