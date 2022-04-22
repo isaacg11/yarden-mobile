@@ -414,7 +414,6 @@ class Messenger extends Component {
                   />
                 </View>
                 <Ionicons
-                  style={{marginRight: units.unit3}}
                   name={'send'}
                   onPress={() => this.sendMessage()}
                   color={colors.purpleB}
