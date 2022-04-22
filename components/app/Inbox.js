@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import moment from 'moment';
@@ -11,6 +11,8 @@ import Paragraph from '../UI/Paragraph';
 import Label from '../UI/Label';
 import {getMessages} from '../../actions/messages/index';
 import units from '../../components/styles/units';
+import fonts from '../styles/fonts';
+import colors from '../styles/colors';
 
 class Inbox extends Component {
   state = {
@@ -95,28 +97,39 @@ class Inbox extends Component {
           const latestMessage = conversation[lastIndex];
           return (
             <View key={index}>
-              <Card>
-                <View style={{marginBottom: units.unit5}}>
-                  <Label style={{marginTop: units.unit5}}>From</Label>
-                  <Paragraph>
+              <Card
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginVertical: units.unit3,
+                }}>
+                <View>
+                  <Text
+                    style={{
+                      textTransform: 'capitalize',
+                      fontSize: fonts.h3,
+                      color: colors.greenD90,
+                    }}>
                     {latestMessage.sender.first_name}{' '}
                     {latestMessage.sender.last_name[0]}.
-                  </Paragraph>
-                  <Label style={{marginTop: units.unit5}}>Date</Label>
-                  <Paragraph>
+                  </Text>
+                  <Label>
                     {moment(latestMessage.dt_created).format('MM/DD/YYYY')}
-                  </Paragraph>
+                  </Label>
+                </View>
+                <View>
+                  <Button
+                    small
+                    text="View Message"
+                    onPress={() =>
+                      onSelectConversation(latestMessage.conversation_id)
+                    }
+                    variant="btn3"
+                  />
                 </View>
               </Card>
-              <View style={{marginTop: units.unit4}}>
-                <Button
-                  text="View Message"
-                  onPress={() =>
-                    onSelectConversation(latestMessage.conversation_id)
-                  }
-                  variant="secondary"
-                />
-              </View>
             </View>
           );
         })}

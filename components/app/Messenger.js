@@ -436,7 +436,24 @@ class Messenger extends Component {
                   icon={<Ionicons name={'attach'} size={fonts.h3} />}
                   onPress={() => this.attachFile()}
                 />
-                <Label>Attachments ({attachments.length})</Label>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Label>Attachments ({attachments.length}) </Label>
+                  <Ionicons
+                    name={'trash'}
+                    color={
+                      this.state.attachments.length > 0
+                        ? colors.purpleB
+                        : colors.greenD75
+                    }
+                    size={fonts.h3}
+                    onPress={() => this.setState({attachments: []})}
+                  />
+                </View>
               </View>
             </View>
           </View>
