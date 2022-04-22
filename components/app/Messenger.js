@@ -432,7 +432,13 @@ class Messenger extends Component {
                   small
                   variant="btn3"
                   text="Attach Files"
-                  icon={<Ionicons name={'attach'} size={fonts.h3} />}
+                  icon={
+                    <Ionicons
+                      name={'attach'}
+                      color={colors.purpleB}
+                      size={fonts.h3}
+                    />
+                  }
                   onPress={() => this.attachFile()}
                 />
                 <View
@@ -449,7 +455,7 @@ class Messenger extends Component {
                         ? colors.purpleB
                         : colors.greenD75
                     }
-                    size={fonts.h3}
+                    size={fonts.h4}
                     onPress={() => this.setState({attachments: []})}
                   />
                 </View>
