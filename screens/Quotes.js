@@ -81,6 +81,7 @@ class Quotes extends Component {
           display: 'flex',
           flexDirection: 'column',
           width: '100%',
+          backgroundColor: colors.greenD5,
         }}>
         {/* loading indicator */}
         <LoadingIndicator loading={isLoading} />

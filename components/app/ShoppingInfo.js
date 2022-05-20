@@ -4,10 +4,8 @@ import {connect} from 'react-redux';
 import {View, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Badge from '../UI/Badge';
-import Paragraph from '../UI/Paragraph';
 import Label from '../UI/Label';
 import {getItems} from '../../actions/items/index';
-import units from '../styles/units';
 import Card from '../UI/Card';
 import colors from '../styles/colors';
 
@@ -78,7 +76,7 @@ class ShoppingInfo extends Component {
               justifyContent: 'center',
             }}>
             <TouchableOpacity onPress={() => onSelectPurchases()}>
-              <Ionicons name="receipt-outline" size={40} />
+              <Ionicons name="receipt-outline" size={40} color={colors.purpleB} />
             </TouchableOpacity>
             <Label>Purchases</Label>
           </View>

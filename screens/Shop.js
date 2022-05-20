@@ -5,6 +5,7 @@ import ProductCategories from '../components/app/ProductCategories';
 import ShoppingInfo from '../components/app/ShoppingInfo';
 import Header from '../components/UI/Header';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Shop extends Component {
 
@@ -14,6 +15,7 @@ class Shop extends Component {
             <SafeAreaView style={{
                 flex: 1,
                 width: "100%",
+                backgroundColor: colors.greenD5,
             }}>
                 <ScrollView>
                     <View style={{ padding: units.unit3 + units.unit4 }}>

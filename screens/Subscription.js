@@ -5,7 +5,6 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Button from '../components/UI/Button';
-import Divider from '../components/UI/Divider';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
@@ -16,6 +15,7 @@ import { getPlan } from '../actions/plans/index';
 import { getOrders, updateOrder, updateOrders } from '../actions/orders/index';
 import { updateUser } from '../actions/user/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Subscription extends Component {
 
@@ -124,6 +124,7 @@ class Subscription extends Component {
             <SafeAreaView style={{
                 flex: 1,
                 width: "100%",
+                backgroundColor: colors.greenD5,
             }}>
                 {/* loading indicator */}
                 <LoadingIndicator

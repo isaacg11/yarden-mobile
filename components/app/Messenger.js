@@ -6,14 +6,13 @@ import moment from 'moment';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ImageDetails from '../app/ImageDetails';
-import Dropdown from '../UI/Dropdown';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import LoadingIndicator from '../UI/LoadingIndicator';
-import Link from '../UI/Link';
 import Paragraph from '../UI/Paragraph';
 import Divider from '../UI/Divider';
 import Label from '../UI/Label';
+import {alert} from '../../components/UI/SystemAlert';
 import {
   createMessage,
   getMessages,
@@ -24,7 +23,6 @@ import uploadImage from '../../helpers/uploadImage';
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import calculateLabor from '../../helpers/calculateLabor';
 
 class Messenger extends Component {
   state = {
@@ -132,6 +130,14 @@ class Messenger extends Component {
   }
 
   async sendMessage() {
+
+    // if no text provided {...}
+    if(!this.state.message) {
+
+      // render error
+      return alert('Your message has no text');
+    }
+
     // show loading indicator
     this.setState({isLoading: true});
 
@@ -231,7 +237,6 @@ class Messenger extends Component {
   render() {
     const {
       message,
-      contacts,
       receiver,
       isLoading,
       conversation,
@@ -407,8 +412,6 @@ class Messenger extends Component {
                   <Input
                     onChange={value => this.setState({message: value})}
                     value={message}
-                    //   multiline={true}
-                    //   numberOfLines={1}
                     placeholder="Enter message..."
                     style={{maxWidth: `${100 - units.unit2}%`}}
                   />
@@ -420,7 +423,6 @@ class Messenger extends Component {
                   size={24}
                 />
               </View>
-
               <View
                 style={{
                   display: 'flex',

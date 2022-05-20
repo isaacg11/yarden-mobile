@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { View } from 'react-native';
 import moment from 'moment';
-import Paragraph from '../components/UI/Paragraph';
 import getAuthToken from '../helpers/getAuthToken';
 import getAuthTokenExp from '../helpers/getAuthTokenExp';
 import removeAuthToken from '../helpers/removeAuthToken';
@@ -35,17 +34,16 @@ class Splash extends Component {
                 // if user authenticated, redirect to dashboard
                 if(this.props.user) return this.props.navigation.navigate('Dashboard');
             }
-        } 
-
-        // redirect to login
-        this.props.navigation.navigate('Login');
+        } else {
+            // redirect to login
+            this.props.navigation.navigate('Login');
+        }
     }
 
     render() {
+
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Paragraph>Splash Screen</Paragraph>
-            </View>
+            <View></View>
         )
     }
 }

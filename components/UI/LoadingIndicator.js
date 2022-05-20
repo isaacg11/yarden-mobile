@@ -4,7 +4,6 @@ import colors from '../styles/colors';
 import units from '../styles/units';
 import fonts from '../styles/fonts';
 import {StyleSheet} from 'react-native';
-import {color} from 'react-native-reanimated';
 import Mark from '../../components/app/branding/Mark';
 
 const styles = StyleSheet.create({

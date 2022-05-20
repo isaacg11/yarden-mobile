@@ -13,7 +13,6 @@ import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
-import Card from '../components/UI/Card';
 import {getOrders} from '../actions/orders/index';
 import {getChangeOrders} from '../actions/changeOrders/index';
 import {setFilters} from '../actions/filters/index';
@@ -99,6 +98,7 @@ class Orders extends Component {
         style={{
           flex: 1,
           width: '100%',
+          backgroundColor: colors.greenD5,
         }}>
         <ScrollView>
           <View style={{padding: units.unit3 + units.unit4}}>

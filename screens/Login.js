@@ -4,11 +4,9 @@ import {connect} from 'react-redux';
 import {View, SafeAreaView, Image, Text} from 'react-native';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
-import Header from '../components/UI/Header';
 import Link from '../components/UI/Link';
 import {login} from '../actions/auth/index';
 import units from '../components/styles/units';
-import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
 
 class Login extends Component {

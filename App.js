@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './config/store';
 import { NavigationContainer } from '@react-navigation/native';
@@ -94,7 +94,7 @@ function App() {
               headerLeft: displayNone,
               headerStyle: appHeaderStyle,
               headerShadowVisible: false,
-              headerTintColor: appHeaderTint,
+              headerTintColor: colors.white,
             }}
           />
           <Stack.Screen

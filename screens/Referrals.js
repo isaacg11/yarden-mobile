@@ -10,6 +10,7 @@ import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
 import { getReferrals } from '../actions/referrals/index';
 import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Referrals extends Component {
 
@@ -54,6 +55,7 @@ class Referrals extends Component {
             <SafeAreaView style={{
                 flex: 1,
                 width: "100%",
+                backgroundColor: colors.greenD5,
             }}>
                 <View style={{ padding: units.unit3 + units.unit4 }}>
                     <Header type="h4" style={{ marginBottom: units.unit5 }}>
