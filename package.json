@@ -17,6 +17,7 @@
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/native": "^6.0.5",
     "@react-navigation/native-stack": "^6.2.3",
+    "@sentry/react-native": "^3.4.2",
     "axios": "^0.23.0",
     "base-64": "^1.0.0",
     "blob-to-buffer": "^1.2.9",

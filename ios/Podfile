@@ -26,5 +26,15 @@ target 'yardenMobile' do
   post_install do |installer|
     react_native_post_install(installer)
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+    installer.pods_project.targets.each do |target|
+
+      # Fix for RCT-Folly
+      if target.name == "RCT-Folly"
+        target.build_configurations.each do |config|
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'FOLLY_HAVE_CLOCK_GETTIME=1']
+        end
+      end
+    end
   end
 end

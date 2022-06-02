@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import store from './config/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Sentry from "@sentry/react-native";
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
@@ -39,6 +40,10 @@ import Plants from './screens/Plants';
 import ReferralHistory from './screens/ReferralHistory';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
+
+Sentry.init({ 
+  dsn: 'https://ac125a88d07a40be9ca8dc38d13d8bb9@o160258.ingest.sentry.io/6455224', 
+});
 
 // app navigation config
 const Stack = createNativeStackNavigator();
@@ -406,4 +411,4 @@ function App() {
   );
 }
 
-export default App;
+export default Sentry.wrap(App);

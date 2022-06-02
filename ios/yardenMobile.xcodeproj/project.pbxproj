@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* yardenMobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* yardenMobileTests.m */; };
-		08FD96BF1BB98F85951A6355 /* libPods-yardenMobile-yardenMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F8DB0EEA42DC5BB9F52823F /* libPods-yardenMobile-yardenMobileTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		3D772FBE3668E5EE8FF3E53F /* libPods-yardenMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7828D5F01567E5B5FA7B50 /* libPods-yardenMobile.a */; };
+		43A20D88416244A116A5DF33 /* libPods-yardenMobile-yardenMobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A3F4353F5288DD06D168B1D8 /* libPods-yardenMobile-yardenMobileTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8C4313C29EE84492B5E104AC /* Futura-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC2C7DCAFD4A43A1A302D417 /* Futura-Medium.ttf */; };
+		ADE53387BF07D1FF77F273F4 /* libPods-yardenMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9A8A1697D6FBBB9269F1763 /* libPods-yardenMobile.a */; };
 		D58D75136120400D84F5D78B /* Futura-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAD66EB2F61545ABB154C772 /* Futura-Bold.ttf */; };
 /* End PBXBuildFile section */
 
@@ -32,21 +32,21 @@
 		00E356EE1AD99517003FC87E /* yardenMobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = yardenMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* yardenMobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yardenMobileTests.m; sourceTree = "<group>"; };
+		0C5E392BF38F34A891A427DB /* Pods-yardenMobile-yardenMobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile-yardenMobileTests.debug.xcconfig"; path = "Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* yardenMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yardenMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = yardenMobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = yardenMobile/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = yardenMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = yardenMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = yardenMobile/main.m; sourceTree = "<group>"; };
-		2F8DB0EEA42DC5BB9F52823F /* libPods-yardenMobile-yardenMobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yardenMobile-yardenMobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A7828D5F01567E5B5FA7B50 /* libPods-yardenMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yardenMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		386DDB3F5B7944B697CA3EEE /* Pods-yardenMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile.debug.xcconfig"; path = "Target Support Files/Pods-yardenMobile/Pods-yardenMobile.debug.xcconfig"; sourceTree = "<group>"; };
+		479FBFC0157C13D08716F052 /* Pods-yardenMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile.release.xcconfig"; path = "Target Support Files/Pods-yardenMobile/Pods-yardenMobile.release.xcconfig"; sourceTree = "<group>"; };
+		4CD44673574143C46D7E1C0E /* Pods-yardenMobile-yardenMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile-yardenMobileTests.release.xcconfig"; path = "Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = yardenMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		938BA0485D2B29657C7DF0D3 /* Pods-yardenMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile.release.xcconfig"; path = "Target Support Files/Pods-yardenMobile/Pods-yardenMobile.release.xcconfig"; sourceTree = "<group>"; };
-		9D640981419EE76AEB5DAEC1 /* Pods-yardenMobile-yardenMobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile-yardenMobileTests.release.xcconfig"; path = "Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests.release.xcconfig"; sourceTree = "<group>"; };
-		BAD66EB2F61545ABB154C772 /* Futura-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Futura-Bold.ttf"; path = "../assets/fonts/Futura-Bold.ttf"; sourceTree = "<group>"; };
-		BC2C7DCAFD4A43A1A302D417 /* Futura-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Futura-Medium.ttf"; path = "../assets/fonts/Futura-Medium.ttf"; sourceTree = "<group>"; };
-		CCED99B3EC4AB0E03A44FF38 /* Pods-yardenMobile-yardenMobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile-yardenMobileTests.debug.xcconfig"; path = "Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests.debug.xcconfig"; sourceTree = "<group>"; };
-		E10BB30F9F3732406DFA9B82 /* Pods-yardenMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yardenMobile.debug.xcconfig"; path = "Target Support Files/Pods-yardenMobile/Pods-yardenMobile.debug.xcconfig"; sourceTree = "<group>"; };
+		A3F4353F5288DD06D168B1D8 /* libPods-yardenMobile-yardenMobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yardenMobile-yardenMobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAD66EB2F61545ABB154C772 /* Futura-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Futura-Bold.ttf"; path = "../assets/fonts/Futura-Bold.ttf"; sourceTree = "<group>"; };
+		BC2C7DCAFD4A43A1A302D417 /* Futura-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Futura-Medium.ttf"; path = "../assets/fonts/Futura-Medium.ttf"; sourceTree = "<group>"; };
+		E9A8A1697D6FBBB9269F1763 /* libPods-yardenMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yardenMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -55,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08FD96BF1BB98F85951A6355 /* libPods-yardenMobile-yardenMobileTests.a in Frameworks */,
+				43A20D88416244A116A5DF33 /* libPods-yardenMobile-yardenMobileTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D772FBE3668E5EE8FF3E53F /* libPods-yardenMobile.a in Frameworks */,
+				ADE53387BF07D1FF77F273F4 /* libPods-yardenMobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,12 +103,11 @@
 		2B9AEEB8627212FBE50E14B1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E10BB30F9F3732406DFA9B82 /* Pods-yardenMobile.debug.xcconfig */,
-				938BA0485D2B29657C7DF0D3 /* Pods-yardenMobile.release.xcconfig */,
-				CCED99B3EC4AB0E03A44FF38 /* Pods-yardenMobile-yardenMobileTests.debug.xcconfig */,
-				9D640981419EE76AEB5DAEC1 /* Pods-yardenMobile-yardenMobileTests.release.xcconfig */,
+				386DDB3F5B7944B697CA3EEE /* Pods-yardenMobile.debug.xcconfig */,
+				479FBFC0157C13D08716F052 /* Pods-yardenMobile.release.xcconfig */,
+				0C5E392BF38F34A891A427DB /* Pods-yardenMobile-yardenMobileTests.debug.xcconfig */,
+				4CD44673574143C46D7E1C0E /* Pods-yardenMobile-yardenMobileTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -116,8 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3A7828D5F01567E5B5FA7B50 /* libPods-yardenMobile.a */,
-				2F8DB0EEA42DC5BB9F52823F /* libPods-yardenMobile-yardenMobileTests.a */,
+				E9A8A1697D6FBBB9269F1763 /* libPods-yardenMobile.a */,
+				A3F4353F5288DD06D168B1D8 /* libPods-yardenMobile-yardenMobileTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -161,7 +160,6 @@
 				BC2C7DCAFD4A43A1A302D417 /* Futura-Medium.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,12 +169,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "yardenMobileTests" */;
 			buildPhases = (
-				EAC34B9AC2CE0AA37B93A83F /* [CP] Check Pods Manifest.lock */,
+				F395861A46B8E089AE698AE0 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				819BF8816D91FC7F5A68056F /* [CP] Embed Pods Frameworks */,
-				57D6C25841004FBA17170C73 /* [CP] Copy Pods Resources */,
+				D8988E3F77A747B1D55D5487 /* [CP] Embed Pods Frameworks */,
+				5F5CE509EF6AB3C3FB9780D3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -192,14 +190,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "yardenMobile" */;
 			buildPhases = (
-				9FE5AE945D8C323B5C98E9D6 /* [CP] Check Pods Manifest.lock */,
+				A3B45B0994DE8BBC09980922 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				7369E08575509C26AFC2E4A0 /* [CP] Embed Pods Frameworks */,
-				08A58ED5DE3A212FFA049091 /* [CP] Copy Pods Resources */,
+				6970B9B48C1626B4EF3D7F1A /* [CP] Embed Pods Frameworks */,
+				80109BE021089B5799C68479 /* [CP] Copy Pods Resources */,
+				FB74F987999C413DA61E8953 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -216,7 +215,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1210;
+				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -280,26 +279,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nset -e\n\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		08A58ED5DE3A212FFA049091 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		57D6C25841004FBA17170C73 /* [CP] Copy Pods Resources */ = {
+		5F5CE509EF6AB3C3FB9780D3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -316,8 +298,9 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7369E08575509C26AFC2E4A0 /* [CP] Embed Pods Frameworks */ = {
+		6970B9B48C1626B4EF3D7F1A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -333,24 +316,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		819BF8816D91FC7F5A68056F /* [CP] Embed Pods Frameworks */ = {
+		80109BE021089B5799C68479 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yardenMobile/Pods-yardenMobile-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9FE5AE945D8C323B5C98E9D6 /* [CP] Check Pods Manifest.lock */ = {
+		A3B45B0994DE8BBC09980922 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -372,7 +355,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EAC34B9AC2CE0AA37B93A83F /* [CP] Check Pods Manifest.lock */ = {
+		D8988E3F77A747B1D55D5487 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yardenMobile-yardenMobileTests/Pods-yardenMobile-yardenMobileTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F395861A46B8E089AE698AE0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -393,6 +393,20 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		FB74F987999C413DA61E8953 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -446,15 +460,16 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CCED99B3EC4AB0E03A44FF38 /* Pods-yardenMobile-yardenMobileTests.debug.xcconfig */;
+			baseConfigurationReference = 0C5E392BF38F34A891A427DB /* Pods-yardenMobile-yardenMobileTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = yardenMobileTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -473,12 +488,13 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D640981419EE76AEB5DAEC1 /* Pods-yardenMobile-yardenMobileTests.release.xcconfig */;
+			baseConfigurationReference = 4CD44673574143C46D7E1C0E /* Pods-yardenMobile-yardenMobileTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = yardenMobileTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -497,11 +513,12 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E10BB30F9F3732406DFA9B82 /* Pods-yardenMobile.debug.xcconfig */;
+			baseConfigurationReference = 386DDB3F5B7944B697CA3EEE /* Pods-yardenMobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = 977S3MJP98;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = yardenMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -513,7 +530,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yardengarden.app;
 				PRODUCT_NAME = yardenMobile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -523,11 +540,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 938BA0485D2B29657C7DF0D3 /* Pods-yardenMobile.release.xcconfig */;
+			baseConfigurationReference = 479FBFC0157C13D08716F052 /* Pods-yardenMobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = 977S3MJP98;
 				INFOPLIST_FILE = yardenMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -538,7 +556,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.yardengarden.app;
 				PRODUCT_NAME = yardenMobile;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -594,7 +612,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -653,7 +671,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
