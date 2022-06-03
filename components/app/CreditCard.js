@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {ScrollView, View, Modal, ActivityIndicator, Text} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { ScrollView, View, Modal, ActivityIndicator, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import creditCardType from 'credit-card-type';
-import {alert} from '../../components/UI/SystemAlert';
+import { alert } from '../../components/UI/SystemAlert';
 import Button from '../UI/Button';
 import Link from '../UI/Link';
 import Input from '../UI/Input';
@@ -17,7 +17,7 @@ import {
   deleteCard,
   createCard,
 } from '../../actions/cards/index';
-import {updateUser} from '../../actions/user/index';
+import { updateUser } from '../../actions/user/index';
 import units from '../styles/units';
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
@@ -32,7 +32,7 @@ class CreditCard extends Component {
 
   async save() {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // remove dashes from card number
     const number = this.state.number.replace(/-/g, '');
@@ -78,12 +78,12 @@ class CreditCard extends Component {
         await this.props.deleteCard();
 
         // add new card
-        await this.props.createCard({token: token.id});
+        await this.props.createCard({ token: token.id });
         info.customer_id = this.props.user.payment_info.customer_id;
       }
 
       // update user with payment info
-      await this.props.updateUser(null, {paymentInfo: info});
+      await this.props.updateUser(null, { paymentInfo: info });
     } else {
       // render error
       alert('Invalid card');
@@ -104,9 +104,9 @@ class CreditCard extends Component {
   }
 
   render() {
-    const {isOpen = false, newCard, close} = this.props;
+    const { isOpen = false, newCard, close } = this.props;
 
-    const {name, number, expDate, cvv, type, isLoading} = this.state;
+    const { name, number, expDate, cvv, type, isLoading } = this.state;
 
     const cardVisual = {
       backgroundColor: colors.white75,
@@ -130,181 +130,183 @@ class CreditCard extends Component {
     };
 
     return (
-      <View>
-        {/* card modal start */}
-        <Modal
-          animationType="slide"
-          visible={isOpen}
-          presentationStyle="fullScreen">
-          <ScrollView
-            style={{
-              backgroundColor: colors.greenE10,
-              paddingVertical: units.unit5,
-              paddingHorizontal: units.unit4 + units.unit3,
-              paddingBottom: units.unit6,
-            }}>
-            <View>
-              <Header
-                style={{
-                  ...fonts.header,
-                  paddingTop: units.unit5,
-                  paddingBottom: units.unit4,
-                }}>
-                {newCard ? 'Add' : 'Update'} Card
-              </Header>
-              <View style={{...cardVisual}}>
-                <View
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          {/* card modal start */}
+          <Modal
+            animationType="slide"
+            visible={isOpen}
+            presentationStyle="fullScreen">
+            <ScrollView
+              style={{
+                backgroundColor: colors.greenE10,
+                paddingVertical: units.unit5,
+                paddingHorizontal: units.unit4 + units.unit3,
+                paddingBottom: units.unit6,
+              }}>
+              <View>
+                <Header
                   style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                    flexDirection: 'row',
+                    ...fonts.header,
+                    paddingTop: units.unit5,
+                    paddingBottom: units.unit4,
                   }}>
+                  {newCard ? 'Add' : 'Update'} Card
+                </Header>
+                <View style={{ ...cardVisual }}>
                   <View
                     style={{
-                      position: 'absolute',
-                      left: 0,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                      flexDirection: 'row',
                     }}>
-                    <CardBrand brand={this.state.type} />
+                    <View
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                      }}>
+                      <CardBrand brand={this.state.type} />
+                    </View>
+                    <View
+                      style={{
+                        backgroundColor: colors.greenC50,
+                        height: units.unit5,
+                        width: units.unit5 + units.unit4,
+                        borderWidth: 2,
+                        borderColor: colors.greenC10,
+                        borderTopColor: colors.greenC25,
+                        borderBottomColor: 'white',
+                        borderRadius: units.unit2,
+                      }}></View>
                   </View>
-                  <View
-                    style={{
-                      backgroundColor: colors.greenC50,
-                      height: units.unit5,
-                      width: units.unit5 + units.unit4,
-                      borderWidth: 2,
-                      borderColor: colors.greenC10,
-                      borderTopColor: colors.greenC25,
-                      borderBottomColor: 'white',
-                      borderRadius: units.unit2,
-                    }}></View>
+                  <View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                      }}>
+                      <Text>{name || 'Jane Doe'}</Text>
+                      <Text>{this.state.cvv || '123'}</Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                      }}>
+                      <Text>{this.state.number || '####-####-####-####'}</Text>
+                      <Text>{this.state.expDate || 'MM/YY'}</Text>
+                    </View>
+                  </View>
                 </View>
                 <View>
-                  <View
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <Text>{name || 'Jane Doe'}</Text>
-                    <Text>{this.state.cvv || '123'}</Text>
-                  </View>
-                  <View
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <Text>{this.state.number || '####-####-####-####'}</Text>
-                    <Text>{this.state.expDate || 'MM/YY'}</Text>
-                  </View>
+                  <Input
+                    label="Cardholder Name"
+                    onChange={value => this.setState({ name: value })}
+                    value={name}
+                    placeholder="Ex. Jane Doe"
+                  />
                 </View>
-              </View>
-              <View>
-                <Input
-                  label="Cardholder Name"
-                  onChange={value => this.setState({name: value})}
-                  value={name}
-                  placeholder="Ex. Jane Doe"
-                />
-              </View>
-              <View>
-                <Input
-                  label="Card Number"
-                  onChange={value => {
-                    // if user already entered 16 digits, do not add more numbers
-                    if (value.length > 19) return;
+                <View>
+                  <Input
+                    label="Card Number"
+                    onChange={value => {
+                      // if user already entered 16 digits, do not add more numbers
+                      if (value.length > 19) return;
 
-                    // set initial update
-                    let update = {
-                      number: value,
-                      type: '',
-                    };
+                      // set initial update
+                      let update = {
+                        number: value,
+                        type: '',
+                      };
 
-                    // if user has entered at least 4 numbers {...}
-                    if (value.length > 3) {
-                      // get card types
-                      const cardTypes = creditCardType(value);
+                      // if user has entered at least 4 numbers {...}
+                      if (value.length > 3) {
+                        // get card types
+                        const cardTypes = creditCardType(value);
 
-                      // if card type
-                      if (cardTypes && cardTypes.length > 0) {
-                        // set card type
-                        let cardType = cardTypes[0].type;
+                        // if card type
+                        if (cardTypes && cardTypes.length > 0) {
+                          // set card type
+                          let cardType = cardTypes[0].type;
 
-                        // replace dashes with spaces
-                        cardType = cardType.replace(/-/g, ' ');
+                          // replace dashes with spaces
+                          cardType = cardType.replace(/-/g, ' ');
 
-                        // add type to update
-                        update.type = cardType;
+                          // add type to update
+                          update.type = cardType;
+                        }
                       }
-                    }
 
-                    // update UI
-                    this.setState(update);
-                  }}
-                  value={formatCardNumber(this.state.number)}
-                  placeholder="####-####-####-####"
-                />
-              </View>
-
-              <View>
-                <Input
-                  label="Exp. Date"
-                  onChange={value => {
-                    if (value.length > 5) return;
-                    this.setState({expDate: value});
-                  }}
-                  value={formatExpDate(this.state.expDate)}
-                  placeholder="MM/YY"
-                />
-              </View>
-              <View>
-                <Input
-                  label="CVV"
-                  type="numeric"
-                  onChange={value => this.setState({cvv: value})}
-                  value={this.state.cvv}
-                  placeholder="CVV"
-                />
-              </View>
-
-              {!isLoading && (
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginTop: units.unit6,
-                  }}>
-                  <View>
-                    <Link text="Cancel" onPress={() => close()} />
-                  </View>
-                  <View>
-                    <Button
-                      disabled={!type || !name || !number || !expDate || !cvv}
-                      text="Save"
-                      onPress={() => this.save()}
-                      variant="primary"
-                    />
-                  </View>
+                      // update UI
+                      this.setState(update);
+                    }}
+                    value={formatCardNumber(this.state.number)}
+                    placeholder="####-####-####-####"
+                  />
                 </View>
-              )}
-              {isLoading && (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    paddingTop: units.unit6,
-                  }}>
-                  <ActivityIndicator />
+
+                <View>
+                  <Input
+                    label="Exp. Date"
+                    onChange={value => {
+                      if (value.length > 5) return;
+                      this.setState({ expDate: value });
+                    }}
+                    value={formatExpDate(this.state.expDate)}
+                    placeholder="MM/YY"
+                  />
                 </View>
-              )}
-            </View>
-          </ScrollView>
-        </Modal>
-        {/* card modal end */}
-      </View>
+                <View>
+                  <Input
+                    label="CVV"
+                    type="numeric"
+                    onChange={value => this.setState({ cvv: value })}
+                    value={this.state.cvv}
+                    placeholder="CVV"
+                  />
+                </View>
+
+                {!isLoading && (
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: units.unit6,
+                    }}>
+                    <View>
+                      <Link text="Cancel" onPress={() => close()} />
+                    </View>
+                    <View>
+                      <Button
+                        disabled={!type || !name || !number || !expDate || !cvv}
+                        text="Save"
+                        onPress={() => this.save()}
+                        variant="primary"
+                      />
+                    </View>
+                  </View>
+                )}
+                {isLoading && (
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      paddingTop: units.unit6,
+                    }}>
+                    <ActivityIndicator />
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          </Modal>
+          {/* card modal end */}
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

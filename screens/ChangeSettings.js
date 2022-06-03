@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -62,70 +62,71 @@ class ChangeSettings extends Component {
         } = this.state;
 
         return (
-            <SafeAreaView style={{
-                flex: 1,
-                width: "100%",
-            }}>
-                {/* loading indicator start */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-                {/* loading indicator end */}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={{
+                    flex: 1,
+                    width: "100%",
+                }}>
+                    {/* loading indicator start */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
+                    {/* loading indicator end */}
 
-                <View style={{ padding: units.unit3 + units.unit4 }}>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                    {/* change date form start */}
-                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Change Settings</Header>
-                    <View>
-                        <Card style={{ marginBottom: units.unit4 }}>
-                            <View>
-                                <Input
-                                    label="First Name"
-                                    onChange={(value) => this.setState({ firstName: value })}
-                                    value={firstName}
-                                    placeholder="First Name"
-                                />
-                            </View>
-                            <View>
-                                <Input
-                                    label="Last Name"
-                                    onChange={(value) => this.setState({ lastName: value })}
-                                    value={lastName}
-                                    placeholder="Last Name"
-                                />
-                            </View>
-                            <View>
-                                <Input
-                                    label="Email"
-                                    onChange={(value) => this.setState({ email: value })}
-                                    value={email}
-                                    placeholder="Email"
-                                />
-                            </View>
-                            <View>
-                                <Input
-                                    label="Phone Number"
-                                    onChange={(value) => this.setState({ phoneNumber: value })}
-                                    value={formatPhoneNumber(phoneNumber)}
-                                    placeholder="Phone Number"
-                                />
-                            </View>
-                        </Card>
+                        {/* change date form start */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Change Settings</Header>
                         <View>
-                            <Button
-                                text="Save Changes"
-                                onPress={() => this.save()}
-                                icon={
-                                    <Ionicons name="save" size={fonts.h4} color={colors.purpleB} />
-                                }
-                            />
+                            <Card style={{ marginBottom: units.unit4 }}>
+                                <View>
+                                    <Input
+                                        label="First Name"
+                                        onChange={(value) => this.setState({ firstName: value })}
+                                        value={firstName}
+                                        placeholder="First Name"
+                                    />
+                                </View>
+                                <View>
+                                    <Input
+                                        label="Last Name"
+                                        onChange={(value) => this.setState({ lastName: value })}
+                                        value={lastName}
+                                        placeholder="Last Name"
+                                    />
+                                </View>
+                                <View>
+                                    <Input
+                                        label="Email"
+                                        onChange={(value) => this.setState({ email: value })}
+                                        value={email}
+                                        placeholder="Email"
+                                    />
+                                </View>
+                                <View>
+                                    <Input
+                                        label="Phone Number"
+                                        onChange={(value) => this.setState({ phoneNumber: value })}
+                                        value={formatPhoneNumber(phoneNumber)}
+                                        placeholder="Phone Number"
+                                    />
+                                </View>
+                            </Card>
+                            <View>
+                                <Button
+                                    text="Save Changes"
+                                    onPress={() => this.save()}
+                                    icon={
+                                        <Ionicons name="save" size={fonts.h4} color={colors.purpleB} />
+                                    }
+                                />
+                            </View>
                         </View>
+                        {/* change date form end */}
+
                     </View>
-                    {/* change date form end */}
-
-                </View>
-
-            </SafeAreaView>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
         )
     }
 }

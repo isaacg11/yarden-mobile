@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { View, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import moment from 'moment-timezone';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -59,7 +59,7 @@ class Schedule extends Component {
             ...this.state,
             ...{ geolocation: geolocation },
             ...{ county: county },
-            ...{date: moment(this.state.date).format('MM/DD/YYYY')}
+            ...{ date: moment(this.state.date).format('MM/DD/YYYY') }
         }
 
         // navigate to next screen
@@ -94,136 +94,138 @@ class Schedule extends Component {
         const minDate = moment().add(3, 'days');
 
         return (
-            <SafeAreaView style={{
-                flex: 1,
-                width: "100%",
-            }}>
-                <View style={{ padding: units.unit3 + units.unit4 }}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={{
+                    flex: 1,
+                    width: "100%",
+                }}>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                    {/* loading indicator start */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
-                    {/* loading indicator end */}
+                        {/* loading indicator start */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
+                        {/* loading indicator end */}
 
-                    {/* schedule form start */}
-                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Schedule Appointment</Header>
-                    <View>
+                        {/* schedule form start */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Schedule Appointment</Header>
                         <View>
-                            <Input
-                                label="Street Address"
-                                onChange={(value) => this.setState({ address: value })}
-                                value={address}
-                                placeholder="Street Address"
-                            />
+                            <View>
+                                <Input
+                                    label="Street Address"
+                                    onChange={(value) => this.setState({ address: value })}
+                                    value={address}
+                                    placeholder="Street Address"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Unit (Optional)"
+                                    onChange={(value) => this.setState({ unit: value })}
+                                    value={unit}
+                                    placeholder="Unit (Optional)"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="City"
+                                    onChange={(value) => this.setState({ city: value })}
+                                    value={city}
+                                    placeholder="City"
+                                />
+                            </View>
+                            <View>
+                                <Input
+                                    label="Zip Code"
+                                    type="numeric"
+                                    onChange={(value) => this.setState({ zipCode: value })}
+                                    value={zipCode}
+                                    placeholder="Zip Code"
+                                />
+                            </View>
+                            <View style={{ marginBottom: units.unit4 }}>
+                                <DateSelect
+                                    mode="date"
+                                    value={date}
+                                    date={new Date()}
+                                    placeholder="Appointment Date"
+                                    minDate={new Date(minDate)}
+                                    onConfirm={(value) => {
+                                        this.setState({
+                                            date: value
+                                        });
+                                    }}
+                                    appearance="dropdown"
+                                />
+                            </View>
+                            <View>
+                                <Dropdown
+                                    label="Time"
+                                    onChange={(value) => this.setState({ time: value })}
+                                    options={[
+                                        {
+                                            label: '9:00 AM',
+                                            value: '09'
+                                        },
+                                        {
+                                            label: '10:00 AM',
+                                            value: '10'
+                                        },
+                                        {
+                                            label: '11:00 AM',
+                                            value: '11'
+                                        },
+                                        {
+                                            label: '12:00 PM',
+                                            value: '12'
+                                        },
+                                        {
+                                            label: '1:00 PM',
+                                            value: '13'
+                                        },
+                                        {
+                                            label: '2:00 PM',
+                                            value: '14'
+                                        },
+                                        {
+                                            label: '3:00 PM',
+                                            value: '15'
+                                        },
+                                        {
+                                            label: '4:00 PM',
+                                            value: '16'
+                                        },
+                                        {
+                                            label: '5:00 PM',
+                                            value: '17'
+                                        },
+                                    ]}
+                                    placeholder="Time"
+                                />
+                            </View>
+                            <View style={{ marginTop: units.unit4 }}>
+                                <Button
+                                    alignIconRight
+                                    text="Next"
+                                    onPress={() => this.next()}
+                                    variant="primary"
+                                    disabled={!address || !city || !state || !zipCode || !date || !time}
+                                    icon={(
+                                        <Ionicons
+                                            name="arrow-forward-outline"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
+                                />
+                            </View>
                         </View>
-                        <View>
-                            <Input
-                                label="Unit (Optional)"
-                                onChange={(value) => this.setState({ unit: value })}
-                                value={unit}
-                                placeholder="Unit (Optional)"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                label="City"
-                                onChange={(value) => this.setState({ city: value })}
-                                value={city}
-                                placeholder="City"
-                            />
-                        </View>
-                        <View>
-                            <Input
-                                label="Zip Code"
-                                type="numeric"
-                                onChange={(value) => this.setState({ zipCode: value })}
-                                value={zipCode}
-                                placeholder="Zip Code"
-                            />
-                        </View>
-                        <View style={{marginBottom: units.unit4}}>
-                            <DateSelect
-                                mode="date"
-                                value={date}
-                                date={new Date()}
-                                placeholder="Appointment Date"
-                                minDate={new Date(minDate)}
-                                onConfirm={(value) => {
-                                    this.setState({
-                                        date: value
-                                    });
-                                }}
-                                appearance="dropdown"
-                            />
-                        </View>
-                        <View>
-                            <Dropdown
-                                label="Time"
-                                onChange={(value) => this.setState({ time: value })}
-                                options={[
-                                    {
-                                        label: '9:00 AM',
-                                        value: '09'
-                                    },
-                                    {
-                                        label: '10:00 AM',
-                                        value: '10'
-                                    },
-                                    {
-                                        label: '11:00 AM',
-                                        value: '11'
-                                    },
-                                    {
-                                        label: '12:00 PM',
-                                        value: '12'
-                                    },
-                                    {
-                                        label: '1:00 PM',
-                                        value: '13'
-                                    },
-                                    {
-                                        label: '2:00 PM',
-                                        value: '14'
-                                    },
-                                    {
-                                        label: '3:00 PM',
-                                        value: '15'
-                                    },
-                                    {
-                                        label: '4:00 PM',
-                                        value: '16'
-                                    },
-                                    {
-                                        label: '5:00 PM',
-                                        value: '17'
-                                    },
-                                ]}
-                                placeholder="Time"
-                            />
-                        </View>
-                        <View style={{ marginTop: units.unit4 }}>
-                            <Button
-                                alignIconRight
-                                text="Next"
-                                onPress={() => this.next()}
-                                variant="primary"
-                                disabled={!address || !city || !state || !zipCode || !date || !time}
-                                icon={(
-                                    <Ionicons
-                                        name="arrow-forward-outline"
-                                        size={units.unit4}
-                                        color={colors.purpleB}
-                                    />
-                                )}
-                            />
-                        </View>
+                        {/* schedule form end */}
+
                     </View>
-                    {/* schedule form end */}
 
-                </View>
-
-            </SafeAreaView>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
         )
     }
 }

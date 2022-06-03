@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
@@ -62,43 +62,45 @@ class PasswordReset extends Component {
         } = this.state;
 
         return (
-            <SafeAreaView style={{
-                flex: 1,
-                width: "100%",
-            }}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={{
+                    flex: 1,
+                    width: "100%",
+                }}>
 
-                <View style={{ padding: units.unit3 + units.unit4 }}>
-                    {/* loading indicator start */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
-                    {/* loading indicator end */}
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        {/* loading indicator start */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
+                        {/* loading indicator end */}
 
-                    {/* password reset start */}
-                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Password Reset</Header>
-                    <View>
+                        {/* password reset start */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Password Reset</Header>
                         <View>
-                            <Input
-                                label="Email"
-                                onChange={(value) => this.setState({ email: value })}
-                                value={email}
-                                placeholder="Email"
-                            />
+                            <View>
+                                <Input
+                                    label="Email"
+                                    onChange={(value) => this.setState({ email: value })}
+                                    value={email}
+                                    placeholder="Email"
+                                />
+                            </View>
+                            <View>
+                                <Button
+                                    text="Continue"
+                                    onPress={() => this.reset()}
+                                    variant="primary"
+                                    disabled={!email}
+                                />
+                            </View>
                         </View>
-                        <View>
-                            <Button
-                                text="Continue"
-                                onPress={() => this.reset()}
-                                variant="primary"
-                                disabled={!email}
-                            />
-                        </View>
+                        {/* password reset end */}
+
                     </View>
-                    {/* password reset end */}
 
-                </View>
-
-            </SafeAreaView>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
         )
     }
 }

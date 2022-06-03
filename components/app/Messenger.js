@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {View, ScrollView, Image, TouchableOpacity, Text} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { View, ScrollView, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ImageDetails from '../app/ImageDetails';
 import Input from '../UI/Input';
@@ -12,13 +12,13 @@ import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
 import Divider from '../UI/Divider';
 import Label from '../UI/Label';
-import {alert} from '../../components/UI/SystemAlert';
+import { alert } from '../../components/UI/SystemAlert';
 import {
   createMessage,
   getMessages,
   updateMessage,
 } from '../../actions/messages/index';
-import {getConversations} from '../../actions/conversations/index';
+import { getConversations } from '../../actions/conversations/index';
 import uploadImage from '../../helpers/uploadImage';
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
@@ -26,7 +26,7 @@ import fonts from '../styles/fonts';
 
 class Messenger extends Component {
   state = {
-    contacts: [{label: 'No Contacts', value: 'No Contacts'}],
+    contacts: [{ label: 'No Contacts', value: 'No Contacts' }],
     attachments: [],
   };
 
@@ -45,7 +45,7 @@ class Messenger extends Component {
         // if message is unread for current logged in user {...}
         if (message.receiver._id === this.props.user._id && !message.opened) {
           // update message as read
-          await this.props.updateMessage(message._id, {opened: true});
+          await this.props.updateMessage(message._id, { opened: true });
           openedNewMessage = true;
         }
 
@@ -75,7 +75,7 @@ class Messenger extends Component {
       const receiver = `${participant.first_name} ${participant.last_name}`;
 
       // set contacts
-      const contacts = [{label: receiver, value: receiver}];
+      const contacts = [{ label: receiver, value: receiver }];
 
       // update UI
       this.setState({
@@ -92,14 +92,14 @@ class Messenger extends Component {
   setValue(receiver) {
     const selectedOption =
       receiver !== 'Contacts' ? receiver : this.state.receiver;
-    this.setState({receiver: selectedOption});
+    this.setState({ receiver: selectedOption });
   }
 
   async setContacts() {
     // if no conversations {...}
     if (this.props.conversations.length < 1) {
       // render no contacts
-      this.setState({receiver: 'No Contacts'});
+      this.setState({ receiver: 'No Contacts' });
     } else {
       // set initial value
       let contacts = [];
@@ -119,7 +119,7 @@ class Messenger extends Component {
       });
 
       // set default receiver
-      contacts.unshift({label: 'Contacts', value: 'Contacts'});
+      contacts.unshift({ label: 'Contacts', value: 'Contacts' });
 
       // set contacts
       this.setState({
@@ -132,14 +132,14 @@ class Messenger extends Component {
   async sendMessage() {
 
     // if no text provided {...}
-    if(!this.state.message) {
+    if (!this.state.message) {
 
       // render error
       return alert('Your message has no text');
     }
 
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set intitial attachment value
     let attachments = [];
@@ -245,227 +245,229 @@ class Messenger extends Component {
       imageUrl,
     } = this.state;
 
-    const {user} = this.props;
+    const { user } = this.props;
 
     return (
-      <View
-        style={{
-          flexGrow: 1,
-          justifyContent: 'space-between',
-          alignItems: 'stretch',
-        }}>
-        {/* loading indicator */}
-        <LoadingIndicator loading={isLoading} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View
+          style={{
+            flexGrow: 1,
+            justifyContent: 'space-between',
+            alignItems: 'stretch',
+          }}>
+          {/* loading indicator */}
+          <LoadingIndicator loading={isLoading} />
 
-        {/* image details modal */}
-        <ImageDetails
-          isOpen={isOpen}
-          url={imageUrl}
-          close={() => this.setState({isOpen: false, imageUrl: null})}
-        />
+          {/* image details modal */}
+          <ImageDetails
+            isOpen={isOpen}
+            url={imageUrl}
+            close={() => this.setState({ isOpen: false, imageUrl: null })}
+          />
 
-        <View style={{flex: 1}}>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginVertical: units.unit3,
-              shadowColor: colors.greenC10,
-              shadowOffset: {
-                width: 0,
-                height: 8,
-              },
-              shadowOpacity: 1,
-              shadowRadius: 8,
-            }}>
-            <Label>To: </Label>
-            <Text style={{textTransform: 'capitalize'}}>{receiver}</Text>
-          </View>
-          <Divider />
-
-          <View
-            style={{
-              flexGrow: 1,
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-            {/* conversation thread */}
+          <View style={{ flex: 1 }}>
             <View
               style={{
-                height: 560,
                 display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: units.unit3,
+                shadowColor: colors.greenC10,
+                shadowOffset: {
+                  width: 0,
+                  height: 8,
+                },
+                shadowOpacity: 1,
+                shadowRadius: 8,
               }}>
-              <ScrollView
+              <Label>To: </Label>
+              <Text style={{ textTransform: 'capitalize' }}>{receiver}</Text>
+            </View>
+            <Divider />
+
+            <View
+              style={{
+                flexGrow: 1,
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}>
+              {/* conversation thread */}
+              <View
                 style={{
-                  paddingHorizontal: units.unit3 + units.unit4,
-                }}
-                ref={ref => {
-                  this.scrollView = ref;
-                }}
-                onContentSizeChange={() =>
-                  this.scrollView.scrollToEnd({animated: false})
-                }>
-                {conversation &&
-                  conversation.map((message, index) => (
-                    <View style={{flexDirection: 'row'}} key={index}>
-                      <View
-                        style={{
-                          flex: message.sender._id !== user._id ? 1 : 0,
-                        }}></View>
-                      <View style={{flex: 2}}>
-                        <View style={{marginVertical: units.unit3}}>
-                          <View
-                            style={{
-                              paddingVertical: units.unit3,
-                              paddingHorizontal: units.unit4,
-                              borderRadius: units.unit3,
-                              backgroundColor:
-                                message.sender._id !== user._id
-                                  ? colors.greenB
-                                  : '#ffffff',
-                              shadowColor:
-                                message.sender._id !== user._id
-                                  ? colors.greenB25
-                                  : colors.greenC10,
-                              shadowOffset: {
-                                width: 0,
-                                height: 8,
-                              },
-                              shadowOpacity: 1,
-                              shadowRadius: 8,
-                            }}>
-                            <Text
+                  height: 560,
+                  display: 'flex',
+                }}>
+                <ScrollView
+                  style={{
+                    paddingHorizontal: units.unit3 + units.unit4,
+                  }}
+                  ref={ref => {
+                    this.scrollView = ref;
+                  }}
+                  onContentSizeChange={() =>
+                    this.scrollView.scrollToEnd({ animated: false })
+                  }>
+                  {conversation &&
+                    conversation.map((message, index) => (
+                      <View style={{ flexDirection: 'row' }} key={index}>
+                        <View
+                          style={{
+                            flex: message.sender._id !== user._id ? 1 : 0,
+                          }}></View>
+                        <View style={{ flex: 2 }}>
+                          <View style={{ marginVertical: units.unit3 }}>
+                            <View
                               style={{
-                                lineHeight: fonts.h3,
-                                fontSize: fonts.h4,
-                                width: '100%',
-                                color:
+                                paddingVertical: units.unit3,
+                                paddingHorizontal: units.unit4,
+                                borderRadius: units.unit3,
+                                backgroundColor:
                                   message.sender._id !== user._id
-                                    ? '#ffffff'
-                                    : colors.greenD90,
+                                    ? colors.greenB
+                                    : '#ffffff',
+                                shadowColor:
+                                  message.sender._id !== user._id
+                                    ? colors.greenB25
+                                    : colors.greenC10,
+                                shadowOffset: {
+                                  width: 0,
+                                  height: 8,
+                                },
+                                shadowOpacity: 1,
+                                shadowRadius: 8,
                               }}>
-                              {message.text}
-                            </Text>
-                            {message.attachments.length > 0 &&
-                              message.attachments.map((attachment, i) => (
-                                <View key={i} style={{marginTop: units.unit3}}>
-                                  <TouchableOpacity
-                                    onPress={() =>
-                                      this.setState({
-                                        imageUrl: attachment.url,
-                                        isOpen: true,
-                                      })
-                                    }>
-                                    <Image
-                                      style={{width: '100%', height: 100}}
-                                      source={{uri: attachment.url}}
-                                      alt="message attachment"
-                                    />
-                                  </TouchableOpacity>
-                                </View>
-                              ))}
-                          </View>
-                          <View
-                            style={{
-                              marginTop: units.unit2,
-                            }}>
-                            <Paragraph
+                              <Text
+                                style={{
+                                  lineHeight: fonts.h3,
+                                  fontSize: fonts.h4,
+                                  width: '100%',
+                                  color:
+                                    message.sender._id !== user._id
+                                      ? '#ffffff'
+                                      : colors.greenD90,
+                                }}>
+                                {message.text}
+                              </Text>
+                              {message.attachments.length > 0 &&
+                                message.attachments.map((attachment, i) => (
+                                  <View key={i} style={{ marginTop: units.unit3 }}>
+                                    <TouchableOpacity
+                                      onPress={() =>
+                                        this.setState({
+                                          imageUrl: attachment.url,
+                                          isOpen: true,
+                                        })
+                                      }>
+                                      <Image
+                                        style={{ width: '100%', height: 100 }}
+                                        source={{ uri: attachment.url }}
+                                        alt="message attachment"
+                                      />
+                                    </TouchableOpacity>
+                                  </View>
+                                ))}
+                            </View>
+                            <View
                               style={{
-                                fontSize: fonts.h5,
-                                textAlign:
-                                  message.sender._id !== user._id
-                                    ? 'right'
-                                    : 'left',
-                                color: colors.greenE25,
+                                marginTop: units.unit2,
                               }}>
-                              {moment(message.dt_created).format('MM/DD/YYYY')}{' '}
-                              {message.receiver._id !== user._id
-                                ? message.opened
-                                  ? '• Read'
-                                  : '• Sent'
-                                : ''}
-                            </Paragraph>
+                              <Paragraph
+                                style={{
+                                  fontSize: fonts.h5,
+                                  textAlign:
+                                    message.sender._id !== user._id
+                                      ? 'right'
+                                      : 'left',
+                                  color: colors.greenE25,
+                                }}>
+                                {moment(message.dt_created).format('MM/DD/YYYY')}{' '}
+                                {message.receiver._id !== user._id
+                                  ? message.opened
+                                    ? '• Read'
+                                    : '• Sent'
+                                  : ''}
+                              </Paragraph>
+                            </View>
                           </View>
                         </View>
+                        <View
+                          style={{
+                            flex: message.sender._id !== user._id ? 0 : 1,
+                          }}></View>
                       </View>
-                      <View
-                        style={{
-                          flex: message.sender._id !== user._id ? 0 : 1,
-                        }}></View>
-                    </View>
-                  ))}
-              </ScrollView>
-              <Divider />
-            </View>
+                    ))}
+                </ScrollView>
+                <Divider />
+              </View>
 
-            <View style={{paddingHorizontal: units.unit3 + units.unit4}}>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <View style={{flexGrow: 1}}>
-                  <Input
-                    onChange={value => this.setState({message: value})}
-                    value={message}
-                    placeholder="Enter message..."
-                    style={{maxWidth: `${100 - units.unit2}%`}}
+              <View style={{ paddingHorizontal: units.unit3 + units.unit4 }}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{ flexGrow: 1 }}>
+                    <Input
+                      onChange={value => this.setState({ message: value })}
+                      value={message}
+                      placeholder="Enter message..."
+                      style={{ maxWidth: `${100 - units.unit2}%` }}
+                    />
+                  </View>
+                  <Ionicons
+                    name={'send'}
+                    onPress={() => this.sendMessage()}
+                    color={colors.purpleB}
+                    size={24}
                   />
                 </View>
-                <Ionicons
-                  name={'send'}
-                  onPress={() => this.sendMessage()}
-                  color={colors.purpleB}
-                  size={24}
-                />
-              </View>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <Button
-                  small
-                  variant="btn3"
-                  text="Attach Files"
-                  icon={
-                    <Ionicons
-                      name={'attach'}
-                      color={colors.purpleB}
-                      size={fonts.h3}
-                    />
-                  }
-                  onPress={() => this.attachFile()}
-                />
                 <View
                   style={{
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}>
-                  <Label>Attachments ({attachments.length}) </Label>
-                  <Ionicons
-                    name={'trash'}
-                    color={
-                      this.state.attachments.length > 0
-                        ? colors.purpleB
-                        : colors.greenD75
+                  <Button
+                    small
+                    variant="btn3"
+                    text="Attach Files"
+                    icon={
+                      <Ionicons
+                        name={'attach'}
+                        color={colors.purpleB}
+                        size={fonts.h3}
+                      />
                     }
-                    size={fonts.h4}
-                    onPress={() => this.setState({attachments: []})}
+                    onPress={() => this.attachFile()}
                   />
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Label>Attachments ({attachments.length}) </Label>
+                    <Ionicons
+                      name={'trash'}
+                      color={
+                        this.state.attachments.length > 0
+                          ? colors.purpleB
+                          : colors.greenD75
+                      }
+                      size={fonts.h4}
+                      onPress={() => this.setState({ attachments: [] })}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

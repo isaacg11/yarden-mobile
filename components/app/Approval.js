@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -681,58 +681,60 @@ class Approval extends Component {
         } = this.props;
 
         return (
-            <View>
-                {/* loading indicator */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-
-                {/* agreement modal */}
-                <ElectronicSignatureAgreement
-                    isOpen={isOpen}
-                    close={() => this.setState({ isOpen: false })}
-                />
-
-                {/* approval start */}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View>
-                    <Paragraph style={{ marginBottom: units.unit5 }}>
-                        By signing, I agree to pay the full amount of ${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))} to {getCompanyName()} for all work listed in section (1a) "Scope of Work" of this contract.
-                        I agree to pay the first payment of ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))} today {moment().format('MM/DD/YYYY')}, and a second payment of ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))} once all work has been completed.
-                    </Paragraph>
-                    <Divider />
-                    <Paragraph style={{ marginTop: units.unit5, textDecorationLine: 'underline' }}>Scope of Work (1a)</Paragraph>
-                    <Paragraph style={{ marginBottom: units.unit5 }}>{quote.title} - {quote.description}</Paragraph>
-                    <Divider />
+                    {/* loading indicator */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
+
+                    {/* agreement modal */}
+                    <ElectronicSignatureAgreement
+                        isOpen={isOpen}
+                        close={() => this.setState({ isOpen: false })}
+                    />
+
+                    {/* approval start */}
                     <View>
-                        <Paragraph style={{ marginTop: units.unit5 }}>Add your e-signature to approve the quote</Paragraph>
-                        <Input
-                            onChange={(value) => this.setState({ userSignature: value })}
-                            value={userSignature}
-                            placeholder="Full Name"
-                        />
-                    </View>
-                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-                        <CheckBox
-                            value={eSignatureAgreement}
-                            onValueChange={() => this.setState({ eSignatureAgreement: !eSignatureAgreement })}
-                            boxType="square"
-                        />
-                        <View style={{ paddingLeft: units.unit5, paddingRight: units.unit5 }}>
-                            <Paragraph>By checking this box, you agree to the <Link onPress={() => this.setState({ isOpen: true })} text="Electronic Record and Signature Disclosure"></Link></Paragraph>
+                        <Paragraph style={{ marginBottom: units.unit5 }}>
+                            By signing, I agree to pay the full amount of ${delimit(((materialsTotal + (materialsTotal * vars.tax.ca) + (laborTotal + deliveryTotal + rentalTotal + disposalTotal)) + ((((materialsTotal + laborTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing))).toFixed(2))} to {getCompanyName()} for all work listed in section (1a) "Scope of Work" of this contract.
+                            I agree to pay the first payment of ${delimit(((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca) + (((materialsTotal + deliveryTotal + rentalTotal + disposalTotal) + (materialsTotal * vars.tax.ca)) * vars.fees.payment_processing)).toFixed(2))} today {moment().format('MM/DD/YYYY')}, and a second payment of ${delimit((laborTotal + (laborTotal * vars.fees.payment_processing)).toFixed(2))} once all work has been completed.
+                        </Paragraph>
+                        <Divider />
+                        <Paragraph style={{ marginTop: units.unit5, textDecorationLine: 'underline' }}>Scope of Work (1a)</Paragraph>
+                        <Paragraph style={{ marginBottom: units.unit5 }}>{quote.title} - {quote.description}</Paragraph>
+                        <Divider />
+                        <View>
+                            <Paragraph style={{ marginTop: units.unit5 }}>Add your e-signature to approve the quote</Paragraph>
+                            <Input
+                                onChange={(value) => this.setState({ userSignature: value })}
+                                value={userSignature}
+                                placeholder="Full Name"
+                            />
+                        </View>
+                        <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+                            <CheckBox
+                                value={eSignatureAgreement}
+                                onValueChange={() => this.setState({ eSignatureAgreement: !eSignatureAgreement })}
+                                boxType="square"
+                            />
+                            <View style={{ paddingLeft: units.unit5, paddingRight: units.unit5 }}>
+                                <Paragraph>By checking this box, you agree to the <Link onPress={() => this.setState({ isOpen: true })} text="Electronic Record and Signature Disclosure"></Link></Paragraph>
+                            </View>
+                        </View>
+                        <View style={{ marginTop: units.unit4 }}>
+                            <Button
+                                text="Approve"
+                                onPress={() => this.approve()}
+                                disabled={!userSignature || !eSignatureAgreement || (!user.payment_info)}
+                                variant="primary"
+                            />
                         </View>
                     </View>
-                    <View style={{marginTop: units.unit4}}>
-                        <Button
-                            text="Approve"
-                            onPress={() => this.approve()}
-                            disabled={!userSignature || !eSignatureAgreement || (!user.payment_info)}
-                            variant="primary"
-                        />
-                    </View>
-                </View>
-                {/* approval end */}
+                    {/* approval end */}
 
-            </View>
+                </View>
+            </TouchableWithoutFeedback>
         )
     }
 }
