@@ -1,17 +1,15 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView, Text} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import CheckBox from '@react-native-community/checkbox';
 import vars from '../vars/index';
-import Divider from '../components/UI/Divider';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import Link from '../components/UI/Link';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
-import {alert} from '../components/UI/SystemAlert';
+import { alert } from '../components/UI/SystemAlert';
 import ElectronicSignatureAgreement from '../components/app/ElectronicSignatureAgreement';
 import calculateQuoteCost from '../helpers/calculateQuote';
 import delimit from '../helpers/delimit';
@@ -19,21 +17,21 @@ import getCompanyName from '../helpers/getCompanyName';
 import getScreenShot from '../helpers/getScreenShot';
 import uploadImage from '../helpers/uploadImage';
 import formatAddress from '../helpers/formatAddress';
-import {chargeCard} from '../actions/cards/index';
-import {getIP} from '../actions/location/index';
-import {createApproval} from '../actions/approvals/index';
-import {createOrder, getOrders} from '../actions/orders/index';
-import {createQuote, updateQuote, getQuotes} from '../actions/quotes/index';
-import {sendAlert} from '../actions/alerts/index';
-import {sendEmail} from '../actions/emails/index';
-import {updateUser, getUser} from '../actions/user/index';
-import {sendSms} from '../actions/sms/index';
+import { chargeCard } from '../actions/cards/index';
+import { getIP } from '../actions/location/index';
+import { createApproval } from '../actions/approvals/index';
+import { createOrder, getOrders } from '../actions/orders/index';
+import { createQuote, updateQuote, getQuotes } from '../actions/quotes/index';
+import { sendAlert } from '../actions/alerts/index';
+import { sendEmail } from '../actions/emails/index';
+import { updateUser, getUser } from '../actions/user/index';
+import { sendSms } from '../actions/sms/index';
 import {
   updateChangeOrder,
   getChangeOrders,
   resetChangeOrders,
 } from '../actions/changeOrders/index';
-import {createPurchase} from '../actions/purchases/index';
+import { createPurchase } from '../actions/purchases/index';
 import formatMaterials from '../helpers/formatMaterials';
 import minifyDataToID from '../helpers/minifyDataToID';
 import combinePlants from '../helpers/combinePlants';
@@ -42,7 +40,7 @@ import PaymentMethod from '../components/app/PaymentMethod';
 import Approval from '../components/app/Approval';
 import Collapse from '../components/UI/Collapse';
 import Header from '../components/UI/Header';
-import {getItems} from '../actions/items/index';
+import { getItems } from '../actions/items/index';
 import clearCart from '../helpers/clearCart';
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
@@ -256,7 +254,7 @@ class Checkout extends Component {
       return alert('Please add a payment method');
 
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // calculate total quote cost
     const amount =
@@ -270,7 +268,7 @@ class Checkout extends Component {
         this.state.rentalTotal +
         this.state.disposalTotal +
         this.state.materialsTotal * vars.tax.ca) *
-        vars.fees.payment_processing;
+      vars.fees.payment_processing;
 
     // format from dollars to cents
     const total = parseFloat(amount).toFixed(2) * 100;
@@ -343,7 +341,7 @@ class Checkout extends Component {
         return this.processPurchase(approval.data);
       } else {
         // set initial quote update
-        let updatedQuote = {status: 'approved'};
+        let updatedQuote = { status: 'approved' };
 
         // check to see if the quote is for a garden
         const isGarden = this.props.route.params.product.type.name === 'garden';
@@ -414,18 +412,16 @@ class Checkout extends Component {
     }
 
     // update user with garden info
-    await this.props.updateUser(null, {gardenInfo});
+    await this.props.updateUser(null, { gardenInfo });
   }
 
   async notifyHQ(quote, address, changeOrder) {
     // send slack notification to HQ
     await this.props.sendAlert({
       channel: 'conversions',
-      text: `*New Conversion!* \n${this.props.user.first_name} ${
-        this.props.user.last_name
-      }\n${address}\nTitle: "${
-        changeOrder ? 'Change Order' : quote.title
-      }"\nDescription: "${quote.description}"`,
+      text: `*New Conversion!* \n${this.props.user.first_name} ${this.props.user.last_name
+        }\n${address}\nTitle: "${changeOrder ? 'Change Order' : quote.title
+        }"\nDescription: "${quote.description}"`,
     });
   }
 
@@ -433,10 +429,10 @@ class Checkout extends Component {
     const vendorMessage = changeOrder
       ? `Greetings from Yarden! Your change order has been approved for ${address}. Log in to your Yarden dashboard to view the details.`
       : `Greetings from Yarden! You have been assigned a new work order scheduled for ${moment(
-          date,
-        ).format(
-          'MM-DD-YYYY',
-        )} at ${address}. Log in to your Yarden dashboard to view the details.`;
+        date,
+      ).format(
+        'MM-DD-YYYY',
+      )} at ${address}. Log in to your Yarden dashboard to view the details.`;
 
     const messageSubject = changeOrder
       ? `Yarden - Change order approved`
@@ -733,7 +729,7 @@ class Checkout extends Component {
     await this.onApproved();
 
     // hide loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   render() {
@@ -750,29 +746,30 @@ class Checkout extends Component {
     } = this.state;
 
     const quote = this.props.route.params;
-    const {user} = this.props;
+    const { user } = this.props;
 
     return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          width: '100%',
-        }}>
-        <ScrollView>
-          <View style={{padding: units.unit3 + units.unit4}}>
-            {/* loading indicator */}
-            <LoadingIndicator loading={isLoading} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            width: '100%',
+          }}>
+          <ScrollView>
+            <View style={{ padding: units.unit3 + units.unit4 }}>
+              {/* loading indicator */}
+              <LoadingIndicator loading={isLoading} />
 
-            <Header type="h4" style={{marginBottom: units.unit5}}>
-              Checkout
-            </Header>
-            <Label>Scope of Work (1a)</Label>
-            <Text style={{marginBottom: units.unit5, color: colors.greenD75}}>
-              {quote.title} - {quote.description}
-            </Text>
-            <View>
-              {/* payment schedule */}
-              {/* <View>
+              <Header type="h4" style={{ marginBottom: units.unit5 }}>
+                Checkout
+              </Header>
+              <Label>Scope of Work (1a)</Label>
+              <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
+                {quote.title} - {quote.description}
+              </Text>
+              <View>
+                {/* payment schedule */}
+                {/* <View>
                 <Label>Payment Schedule</Label>
 
                 <PaymentSchedule
@@ -781,8 +778,8 @@ class Checkout extends Component {
                 />
               </View> */}
 
-              {/* approval */}
-              {/* <View>
+                {/* approval */}
+                {/* <View>
                                 <Collapse
                                     title="Payment Approval"
                                     open={true}
@@ -799,150 +796,151 @@ class Checkout extends Component {
                                     }
                                 />
                             </View> */}
-              {/* payment method */}
-              <Label>Payment Method</Label>
+                {/* payment method */}
+                <Label>Payment Method</Label>
 
-              <Card style={{marginBottom: units.unit5}}>
-                <PaymentMethod />
-              </Card>
+                <Card style={{ marginBottom: units.unit5 }}>
+                  <PaymentMethod />
+                </Card>
 
-              {/* approval start */}
+                {/* approval start */}
 
-              <View>
-                {/* agreement modal */}
-                <ElectronicSignatureAgreement
-                  isOpen={isOpen}
-                  close={() => this.setState({isOpen: false})}
-                />
                 <View>
+                  {/* agreement modal */}
+                  <ElectronicSignatureAgreement
+                    isOpen={isOpen}
+                    close={() => this.setState({ isOpen: false })}
+                  />
                   <View>
-                    <Input
-                      label="First/last name"
-                      onChange={value => this.setState({userSignature: value})}
-                      value={userSignature}
-                      placeholder="ex. Jane Doe"
-                    />
-                    <Text
-                      style={{
-                        marginVertical: units.unit4,
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        color: colors.greenD75,
-                      }}>
-                      Add your e-signature to approve the quote
-                    </Text>
-                    <Text
-                      style={{
-                        lineHeight: fonts.h2,
-                        color: colors.greenE75,
-                      }}>
-                      By signing, I agree to pay the full amount of $
-                      <Text style={{fontWeight: 'bold'}}>
-                        {delimit(
-                          (
-                            materialsTotal +
-                            materialsTotal * vars.tax.ca +
-                            (laborTotal +
-                              deliveryTotal +
-                              rentalTotal +
-                              disposalTotal) +
-                            (materialsTotal +
-                              laborTotal +
-                              deliveryTotal +
-                              rentalTotal +
-                              disposalTotal +
-                              materialsTotal * vars.tax.ca) *
-                              vars.fees.payment_processing
-                          ).toFixed(2),
-                        )}
-                      </Text>{' '}
-                      to {getCompanyName()} for all work listed in section (1a)
-                      "Scope of Work" of this contract. I agree to pay the first
-                      payment of{' '}
-                      <Text style={{fontWeight: 'bold'}}>
-                        $
-                        {delimit(
-                          (
-                            materialsTotal +
-                            deliveryTotal +
-                            rentalTotal +
-                            disposalTotal +
-                            materialsTotal * vars.tax.ca +
-                            (materialsTotal +
-                              deliveryTotal +
-                              rentalTotal +
-                              disposalTotal +
-                              materialsTotal * vars.tax.ca) *
-                              vars.fees.payment_processing
-                          ).toFixed(2),
-                        )}
-                      </Text>{' '}
-                      today{' '}
-                      <Text style={{fontWeight: 'bold'}}>
-                        {moment().format('MM/DD/YYYY')}
+                    <View>
+                      <Input
+                        label="First/last name"
+                        onChange={value => this.setState({ userSignature: value })}
+                        value={userSignature}
+                        placeholder="ex. Jane Doe"
+                      />
+                      <Text
+                        style={{
+                          marginVertical: units.unit4,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                          color: colors.greenD75,
+                        }}>
+                        Add your e-signature to approve the quote
                       </Text>
-                      , and a second payment of $
-                      <Text style={{fontWeight: 'bold'}}>
-                        {delimit(
-                          (
-                            laborTotal +
-                            laborTotal * vars.fees.payment_processing
-                          ).toFixed(2),
-                        )}
-                      </Text>{' '}
-                      once all work has been completed.
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                      paddingTop: units.unit5,
-                      paddingBottom: units.unit4,
-                      paddingLeft: units.unit4,
-                    }}>
-                    <CheckBox
-                      value={eSignatureAgreement}
-                      onValueChange={() =>
-                        this.setState({
-                          eSignatureAgreement: !eSignatureAgreement,
-                        })
-                      }
-                      boxType="square"
-                    />
+                      <Text
+                        style={{
+                          lineHeight: fonts.h2,
+                          color: colors.greenE75,
+                        }}>
+                        By signing, I agree to pay the full amount of $
+                        <Text style={{ fontWeight: 'bold' }}>
+                          {delimit(
+                            (
+                              materialsTotal +
+                              materialsTotal * vars.tax.ca +
+                              (laborTotal +
+                                deliveryTotal +
+                                rentalTotal +
+                                disposalTotal) +
+                              (materialsTotal +
+                                laborTotal +
+                                deliveryTotal +
+                                rentalTotal +
+                                disposalTotal +
+                                materialsTotal * vars.tax.ca) *
+                              vars.fees.payment_processing
+                            ).toFixed(2),
+                          )}
+                        </Text>{' '}
+                        to {getCompanyName()} for all work listed in section (1a)
+                        "Scope of Work" of this contract. I agree to pay the first
+                        payment of{' '}
+                        <Text style={{ fontWeight: 'bold' }}>
+                          $
+                          {delimit(
+                            (
+                              materialsTotal +
+                              deliveryTotal +
+                              rentalTotal +
+                              disposalTotal +
+                              materialsTotal * vars.tax.ca +
+                              (materialsTotal +
+                                deliveryTotal +
+                                rentalTotal +
+                                disposalTotal +
+                                materialsTotal * vars.tax.ca) *
+                              vars.fees.payment_processing
+                            ).toFixed(2),
+                          )}
+                        </Text>{' '}
+                        today{' '}
+                        <Text style={{ fontWeight: 'bold' }}>
+                          {moment().format('MM/DD/YYYY')}
+                        </Text>
+                        , and a second payment of $
+                        <Text style={{ fontWeight: 'bold' }}>
+                          {delimit(
+                            (
+                              laborTotal +
+                              laborTotal * vars.fees.payment_processing
+                            ).toFixed(2),
+                          )}
+                        </Text>{' '}
+                        once all work has been completed.
+                      </Text>
+                    </View>
                     <View
                       style={{
-                        paddingLeft: units.unit5,
-                        paddingRight: units.unit5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        paddingTop: units.unit5,
+                        paddingBottom: units.unit4,
+                        paddingLeft: units.unit4,
                       }}>
-                      <View>
-                        <Text>By checking this box, you agree to the </Text>
-                        <Link
-                          onPress={() => this.setState({isOpen: true})}
-                          text="Electronic Record and Signature Disclosure"></Link>
+                      <CheckBox
+                        value={eSignatureAgreement}
+                        onValueChange={() =>
+                          this.setState({
+                            eSignatureAgreement: !eSignatureAgreement,
+                          })
+                        }
+                        boxType="square"
+                      />
+                      <View
+                        style={{
+                          paddingLeft: units.unit5,
+                          paddingRight: units.unit5,
+                        }}>
+                        <View>
+                          <Text>By checking this box, you agree to the </Text>
+                          <Link
+                            onPress={() => this.setState({ isOpen: true })}
+                            text="Electronic Record and Signature Disclosure"></Link>
+                        </View>
                       </View>
                     </View>
+                    <View style={{ marginTop: units.unit4 }}>
+                      <Button
+                        text="Approve"
+                        onPress={() => this.approve()}
+                        disabled={
+                          !userSignature ||
+                          !eSignatureAgreement ||
+                          !user.payment_info
+                        }
+                        variant="primary"
+                      />
+                    </View>
                   </View>
-                  <View style={{marginTop: units.unit4}}>
-                    <Button
-                      text="Approve"
-                      onPress={() => this.approve()}
-                      disabled={
-                        !userSignature ||
-                        !eSignatureAgreement ||
-                        !user.payment_info
-                      }
-                      variant="primary"
-                    />
-                  </View>
+                  {/* approval end */}
                 </View>
-                {/* approval end */}
               </View>
             </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }

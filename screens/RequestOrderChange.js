@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -181,55 +181,57 @@ class RequestOrderChange extends Component {
         } = this.state;
 
         return (
-            <SafeAreaView style={{
-                flex: 1,
-                width: "100%",
-            }}>
-                <View style={{ padding: units.unit3 + units.unit4 }}>
-                    
-                    {/* loading indicator start */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
-                    {/* loading indicator end */}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={{
+                    flex: 1,
+                    width: "100%",
+                }}>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                    {/* change request form start */}
-                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Request Changes</Header>
-                    <View>
-                        <Card>
-                            <View>
-                                <Paragraph>Please describe the changes you'd like made to your order</Paragraph>
-                            </View>
-                            <View>
-                                <Input
-                                    onChange={(value) => this.setState({ message: value })}
-                                    value={message}
-                                    multiline={true}
-                                    numberOfLines={3}
-                                    placeholder="Enter message here..."
+                        {/* loading indicator start */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
+                        {/* loading indicator end */}
+
+                        {/* change request form start */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Request Changes</Header>
+                        <View>
+                            <Card>
+                                <View>
+                                    <Paragraph>Please describe the changes you'd like made to your order</Paragraph>
+                                </View>
+                                <View>
+                                    <Input
+                                        onChange={(value) => this.setState({ message: value })}
+                                        value={message}
+                                        multiline={true}
+                                        numberOfLines={3}
+                                        placeholder="Enter message here..."
+                                    />
+                                </View>
+                            </Card>
+                            <View style={{ marginTop: units.unit4 }}>
+                                <Button
+                                    text="Submit"
+                                    onPress={() => this.submit()}
+                                    disabled={!message}
+                                    icon={(
+                                        <Ionicons
+                                            name="checkmark"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
                                 />
                             </View>
-                        </Card>
-                        <View style={{ marginTop: units.unit4 }}>
-                            <Button
-                                text="Submit"
-                                onPress={() => this.submit()}
-                                disabled={!message}
-                                icon={(
-                                    <Ionicons
-                                        name="checkmark"
-                                        size={units.unit4}
-                                        color={colors.purpleB}
-                                    />
-                                )}
-                            />
                         </View>
+                        {/* change request form end */}
+
                     </View>
-                    {/* change request form end */}
 
-                </View>
-
-            </SafeAreaView>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
         )
     }
 }

@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View} from 'react-native';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
-import {alert} from '../components/UI/SystemAlert';
-import {resetPassword} from '../actions/auth/index';
+import { alert } from '../components/UI/SystemAlert';
+import { resetPassword } from '../actions/auth/index';
 import units from '../components/styles/units';
 
 class PasswordConfirm extends Component {
@@ -15,7 +15,7 @@ class PasswordConfirm extends Component {
 
   async confirm() {
     // render loading indicator
-    await this.setState({isLoading: true});
+    await this.setState({ isLoading: true });
 
     // if passwords do not match, render error
     if (this.state.password !== this.state.confirmPassword)
@@ -37,7 +37,7 @@ class PasswordConfirm extends Component {
     }
 
     // hide loading indicator
-    await this.setState({isLoading: false});
+    await this.setState({ isLoading: false });
   }
 
   throwWarning(message) {
@@ -45,59 +45,61 @@ class PasswordConfirm extends Component {
     alert(message);
 
     // hide loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   render() {
-    const {password, confirmPassword, isLoading} = this.state;
+    const { password, confirmPassword, isLoading } = this.state;
 
     return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          width: '100%',
-          justifyContent: 'center',
-        }}>
-        <View style={{padding: units.unit3 + units.unit4}}>
-          {/* loading indicator start */}
-          <LoadingIndicator loading={isLoading} />
-          {/* loading indicator end */}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            width: '100%',
+            justifyContent: 'center',
+          }}>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+            {/* loading indicator start */}
+            <LoadingIndicator loading={isLoading} />
+            {/* loading indicator end */}
 
-          {/* password confirm start */}
-          <Header type="h4" style={{marginBottom: units.unit4}}>
-            Confirm Password
-          </Header>
-          <View>
+            {/* password confirm start */}
+            <Header type="h4" style={{ marginBottom: units.unit4 }}>
+              Confirm Password
+            </Header>
             <View>
-              <Input
-                label="New Password"
-                password
-                onChange={value => this.setState({password: value})}
-                value={password}
-                placeholder="New Password"
-              />
+              <View>
+                <Input
+                  label="New Password"
+                  password
+                  onChange={value => this.setState({ password: value })}
+                  value={password}
+                  placeholder="New Password"
+                />
+              </View>
+              <View>
+                <Input
+                  label="Confirm Password"
+                  password
+                  onChange={value => this.setState({ confirmPassword: value })}
+                  value={confirmPassword}
+                  placeholder="Confirm Password"
+                />
+              </View>
+              <View>
+                <Button
+                  text="Continue"
+                  onPress={() => this.confirm()}
+                  variant="primary"
+                  disabled={!password || !confirmPassword}
+                />
+              </View>
             </View>
-            <View>
-              <Input
-                label="Confirm Password"
-                password
-                onChange={value => this.setState({confirmPassword: value})}
-                value={confirmPassword}
-                placeholder="Confirm Password"
-              />
-            </View>
-            <View>
-              <Button
-                text="Continue"
-                onPress={() => this.confirm()}
-                variant="primary"
-                disabled={!password || !confirmPassword}
-              />
-            </View>
+            {/* password confirm start */}
           </View>
-          {/* password confirm start */}
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }
