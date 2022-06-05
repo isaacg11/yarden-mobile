@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView, Text } from 'react-native';
+import { SafeAreaView, View, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -36,10 +36,7 @@ import { createPurchase } from '../actions/purchases/index';
 import formatMaterials from '../helpers/formatMaterials';
 import minifyDataToID from '../helpers/minifyDataToID';
 import combinePlants from '../helpers/combinePlants';
-import PaymentSchedule from '../components/app/PaymentSchedule';
 import PaymentMethod from '../components/app/PaymentMethod';
-import Approval from '../components/app/Approval';
-import Collapse from '../components/UI/Collapse';
 import Header from '../components/UI/Header';
 import { getItems } from '../actions/items/index';
 import clearCart from '../helpers/clearCart';
@@ -802,9 +799,9 @@ class Checkout extends Component {
                           lineHeight: fonts.h2,
                           color: colors.greenE75,
                         }}>
-                        By signing, I agree to pay the full amount of $
+                        By signing, I agree to pay the full amount of{' '}
                         <Text style={{ fontWeight: 'bold' }}>
-                          {delimit(
+                          ${delimit(
                             (
                               materialsTotal +
                               materialsTotal * vars.tax.ca +
@@ -847,9 +844,9 @@ class Checkout extends Component {
                         <Text style={{ fontWeight: 'bold' }}>
                           {moment().format('MM/DD/YYYY')}
                         </Text>
-                        , and a second payment of $
+                        , and a second payment of{' '}
                         <Text style={{ fontWeight: 'bold' }}>
-                          {delimit(
+                          ${delimit(
                             (
                               laborTotal +
                               laborTotal * vars.fees.payment_processing

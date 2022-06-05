@@ -389,6 +389,7 @@ class Cart extends Component {
                                         {this.renderItems()}
                                         <View style={{ marginTop: units.unit4 }}>
                                             <Button
+                                                alignIconRight
                                                 text="Proceed to Checkout"
                                                 onPress={() => this.goToCheckout()}
                                                 icon={(

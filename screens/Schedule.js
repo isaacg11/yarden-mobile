@@ -10,12 +10,14 @@ import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import Dropdown from '../components/UI/Dropdown';
 import DateSelect from '../components/UI/DateSelect';
+import Paragraph from '../components/UI/Paragraph';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import { getGeolocation, getCounty, getServiceArea } from '../actions/location/index';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
+import vars from '../vars/index';
 
 class Schedule extends Component {
 
@@ -109,7 +111,8 @@ class Schedule extends Component {
                         {/* loading indicator end */}
 
                         {/* schedule form start */}
-                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Schedule Appointment</Header>
+                        <Header type="h4" style={{ marginBottom: units.unit3 }}>Schedule Appointment</Header>
+                        <Paragraph style={{marginBottom: units.unit5}}>{vars.orderDescriptions.customer.yardAssessment}</Paragraph>
                         <View>
                             <View>
                                 <Input

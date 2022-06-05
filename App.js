@@ -41,6 +41,7 @@ import ReferralHistory from './screens/ReferralHistory';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
 
+// error reporting
 Sentry.init({
   dsn: 'https://ac125a88d07a40be9ca8dc38d13d8bb9@o160258.ingest.sentry.io/6455224',
 });
@@ -69,12 +70,14 @@ const linking = {
 // set header logo
 const logo = <Mark size={units.unit5} />;
 
+// set header style
 const appHeaderStyle = {
   elevation: 0,
   shadowOpacity: 0,
   borderBottomWidth: 0,
 };
 
+// set header tint
 const appHeaderTint = colors.purpleB;
 
 // set app theme (AFTER V1 RELEASE; Note: There is an issue with the transition when updating background color)

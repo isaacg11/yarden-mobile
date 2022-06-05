@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {View, Image, Text} from 'react-native';
+import React, { Component } from 'react';
+import { View, Image, Text } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Paragraph from '../../components/UI/Paragraph';
 import Label from '../../components/UI/Label';
@@ -99,6 +99,10 @@ class PlantList extends Component {
               value={this.state[h.name]}
               onValueChange={() => this.onSelect(h)}
               boxType="square"
+              tintColor={colors.purpleB}
+              onTintColor={colors.green0}
+              onCheckColor={colors.green0}
+              onFillColor={colors.purpleB}
             />
           </View>
           <Image
@@ -123,7 +127,7 @@ class PlantList extends Component {
     let select = !this.state[plant.name] ? true : false;
 
     // set selection state
-    this.setState({[plant.name]: select});
+    this.setState({ [plant.name]: select });
 
     // set selected plants
     let selectedPlants = this.state.selectedPlants;
@@ -142,8 +146,8 @@ class PlantList extends Component {
   }
 
   render() {
-    const {selectedPlants} = this.state;
-    const {plants, title = 'Plant Selection'} = this.props;
+    const { selectedPlants } = this.state;
+    const { plants, title = 'Plant Selection' } = this.props;
 
     if (plants && plants.vegetables && plants.herbs && plants.fruit) {
       // set available plants
@@ -164,7 +168,7 @@ class PlantList extends Component {
 
       return (
         <View>
-          <Text style={{marginBottom: units.unit5, color: colors.greenD75}}>
+          <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
             Select a minimum of 5 plants, and a maximum of 20
           </Text>
           <View
@@ -196,7 +200,7 @@ class PlantList extends Component {
                     justifyContent: 'center',
                   }}>
                   <Paragraph
-                    style={{fontSize: fonts.h3, color: colors.greenD75}}>
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
                     Vegetables
                   </Paragraph>
                   <Text
@@ -225,7 +229,7 @@ class PlantList extends Component {
                     justifyContent: 'center',
                   }}>
                   <Paragraph
-                    style={{fontSize: fonts.h3, color: colors.greenD75}}>
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
                     Herbs
                   </Paragraph>
                   <Text
@@ -254,7 +258,7 @@ class PlantList extends Component {
                     justifyContent: 'center',
                   }}>
                   <Paragraph
-                    style={{fontSize: fonts.h3, color: colors.greenD75}}>
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
                     Fruit
                   </Paragraph>
                   <Text

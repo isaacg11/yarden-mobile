@@ -37,6 +37,10 @@ class Register extends Component {
     if (this.state.password.length < 6)
       return this.throwWarning('Password must contain at least 6 characters');
 
+    // if password does not meet validation requirements, render error
+    if (this.state.phoneNumber.length < 10)
+      return this.throwWarning('Phone number must have 10 digits');
+
     // get users with matching email
     await this.props.getUsers(`email=${this.state.email}`);
 
