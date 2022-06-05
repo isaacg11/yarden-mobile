@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, ScrollView, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, SafeAreaView, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -72,118 +73,122 @@ class Register extends Component {
     const { navigation } = this.props;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            width: '100%',
-          }}>
-          <ScrollView>
-            <View style={{ padding: units.unit3 + units.unit4 }}>
-              {/* loading indicator start */}
-              <LoadingIndicator loading={isLoading} />
-              {/* loading indicator end */}
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}>
+        <KeyboardAwareScrollView>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
 
-              {/* registration form start */}
-              <Header type="h4" style={{ marginBottom: units.unit5 }}>
-                New Account
-              </Header>
+            {/* loading indicator start */}
+            <LoadingIndicator loading={isLoading} />
+            {/* loading indicator end */}
+
+            {/* registration form start */}
+            <Header type="h4" style={{ marginBottom: units.unit5 }}>
+              New Account
+            </Header>
+            <View>
               <View>
-                <View>
-                  <Input
-                    label="First Name"
-                    onChange={value => this.setState({ firstName: value })}
-                    value={firstName}
-                    placeholder="First Name"
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Last Name"
-                    onChange={value => this.setState({ lastName: value })}
-                    value={lastName}
-                    placeholder="Last Name"
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Email"
-                    onChange={value => this.setState({ email: value })}
-                    value={email}
-                    placeholder="Email"
-                  />
-                </View>
-                <View>
-                  <Input
-                    label="Phone Number"
-                    onChange={value => this.setState({ phoneNumber: value })}
-                    value={formatPhoneNumber(phoneNumber)}
-                    placeholder="Phone Number"
-                  />
-                </View>
-                <View>
-                  <Input
-                    password
-                    label="Password"
-                    onChange={value => this.setState({ password: value })}
-                    value={password}
-                    placeholder="Password"
-                  />
-                </View>
-                <View>
-                  <Input
-                    password
-                    label="Confirm Password"
-                    onChange={value => this.setState({ confirmPassword: value })}
-                    value={confirmPassword}
-                    placeholder="Confirm Password"
-                  />
-                </View>
-                <View>
-                  <Button
-                    alignIconRight
-                    text="Next"
-                    variant="primary"
-                    onPress={() => this.next()}
-                    disabled={
-                      !firstName ||
-                      !lastName ||
-                      !email ||
-                      !phoneNumber ||
-                      !password ||
-                      !confirmPassword
-                    }
-                    icon={
-                      <Ionicons
-                        name="arrow-forward-outline"
-                        size={units.unit4}
-                        color={colors.purpleB}
-                      />
-                    }
-                  />
-                </View>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    marginTop: units.unit4,
-                    alignItems: 'center',
-                  }}>
-                  <Text style={{ color: colors.greenD75 }}>
-                    Already have an account?{' '}
-                  </Text>
-                  <Link
-                    text="Log In"
-                    onPress={() => this.props.navigation.navigate('Login')}
-                  />
-                </View>
+                <Input
+                  label="First Name"
+                  onChange={value => this.setState({ firstName: value })}
+                  value={firstName}
+                  placeholder="First Name"
+                />
+              </View>
+              <View>
+                <Input
+                  label="Last Name"
+                  onChange={value => this.setState({ lastName: value })}
+                  value={lastName}
+                  placeholder="Last Name"
+                />
+              </View>
+              <View>
+                <Input
+                  label="Email"
+                  onChange={value => this.setState({ email: value })}
+                  value={email}
+                  placeholder="Email"
+                />
+              </View>
+              <View>
+                <Input
+                  type="numeric"
+                  label="Phone Number"
+                  onChange={value => this.setState({ phoneNumber: value })}
+                  value={formatPhoneNumber(phoneNumber)}
+                  placeholder="Phone Number"
+                />
+              </View>
+              <View>
+                <Input
+                  password
+                  label="Password"
+                  onChange={value => this.setState({ password: value })}
+                  value={password}
+                  placeholder="Password"
+                />
+              </View>
+              <View>
+                <Input
+                  password
+                  label="Confirm Password"
+                  onChange={value => this.setState({ confirmPassword: value })}
+                  value={confirmPassword}
+                  placeholder="Confirm Password"
+                />
+              </View>
+              <View>
+                <Button
+                  alignIconRight
+                  text="Next"
+                  variant="primary"
+                  onPress={() => this.next()}
+                  disabled={
+                    !firstName ||
+                    !lastName ||
+                    !email ||
+                    !phoneNumber ||
+                    !password ||
+                    !confirmPassword
+                  }
+                  icon={
+                    <Ionicons
+                      name="arrow-forward-outline"
+                      size={units.unit4}
+                      color={colors.purpleB}
+                    />
+                  }
+                />
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  marginTop: units.unit4,
+                  alignItems: 'center',
+                }}>
+                <Text style={{ color: colors.greenD75 }}>
+                  Already have an account?{' '}
+                </Text>
+                <Link
+                  text="Log In"
+                  onPress={() => navigation.navigate('Login')}
+                />
               </View>
             </View>
-          </ScrollView>
+          </View>
           {/* registration form end */}
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+
     );
   }
 }

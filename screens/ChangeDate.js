@@ -50,7 +50,7 @@ class ChangeDate extends Component {
   render() {
     const { date, time, isLoading } = this.state;
     const { order } = this.props.route.params;
-    const minDate = moment().add(3, 'days');
+    const minDate = moment().add(3, 'days').startOf('day');
 
     return (
       <SafeAreaView
@@ -180,6 +180,10 @@ class ChangeDate extends Component {
                 label="Time"
                 onChange={value => this.setState({ time: value })}
                 options={[
+                  {
+                    label: 'Same Time',
+                    value: order.time,
+                  },
                   {
                     label: '9:00 AM',
                     value: '09',

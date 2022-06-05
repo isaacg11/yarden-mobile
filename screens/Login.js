@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { View, SafeAreaView, Image, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, SafeAreaView, Image, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import Link from '../components/UI/Link';
@@ -35,14 +36,15 @@ class Login extends Component {
     const { email, password } = this.state;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            width: '100%',
-            justifyContent: 'center',
-            backgroundColor: 'white',
-          }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}>
+
+        <KeyboardAwareScrollView>
           <View style={{ padding: units.unit3 + units.unit4 }}>
             {/* login form start */}
             <View
@@ -105,8 +107,6 @@ class Login extends Component {
               justifyContent: 'center',
               width: '100%',
               alignItems: 'center',
-              position: 'absolute',
-              bottom: units.unit5,
             }}>
             <Text style={{ color: colors.greenD75 }}>Don't have an account? </Text>
             <Link
@@ -114,8 +114,8 @@ class Login extends Component {
               onPress={() => this.props.navigation.navigate('Register')}
             />
           </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     );
   }
 }

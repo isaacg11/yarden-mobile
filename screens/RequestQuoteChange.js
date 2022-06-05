@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -170,11 +171,11 @@ class RequestQuoteChange extends Component {
         } = this.state;
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SafeAreaView style={{
-                    flex: 1,
-                    width: "100%",
-                }}>
+            <SafeAreaView style={{
+                flex: 1,
+                width: "100%",
+            }}>
+                <KeyboardAwareScrollView>
                     <View style={{ padding: units.unit3 + units.unit4 }}>
                         {/* loading indicator start */}
                         <LoadingIndicator
@@ -217,9 +218,8 @@ class RequestQuoteChange extends Component {
                         {/* change request form end */}
 
                     </View>
-
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
+                </KeyboardAwareScrollView>
+            </SafeAreaView>
         )
     }
 }

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { SafeAreaView, Image, View, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView, Image, View, TouchableOpacity, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
@@ -369,51 +369,49 @@ class Cart extends Component {
         } = this.state;
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SafeAreaView style={{
-                    flex: 1,
-                    width: "100%",
-                }}>
-                    {/* loading indicator */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
+            <SafeAreaView style={{
+                flex: 1,
+                width: "100%",
+            }}>
+                {/* loading indicator */}
+                <LoadingIndicator
+                    loading={isLoading}
+                />
 
-                    {/* items list */}
-                    <ScrollView>
-                        <View style={{ padding: units.unit3 + units.unit4 }}>
-                            <Header type="h4" style={{ marginBottom: units.unit5 }}>Cart</Header>
-                            <View style={{ display: (items.length > 0) ? null : 'none' }}>
-                                {
-                                    (!isLoading) ? (
-                                        <View>
-                                            {this.renderItems()}
-                                            <View style={{ marginTop: units.unit4 }}>
-                                                <Button
-                                                    text="Proceed to Checkout"
-                                                    onPress={() => this.goToCheckout()}
-                                                    icon={(
-                                                        <Ionicons
-                                                            name="arrow-forward-outline"
-                                                            size={units.unit4}
-                                                            color={colors.purpleB}
-                                                        />
-                                                    )}
-                                                />
-                                                <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
-                                                    <Link text="Back to Dashboard" onPress={() => this.props.navigation.navigate('Dashboard')} />
-                                                </View>
+                {/* items list */}
+                <ScrollView>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Cart</Header>
+                        <View style={{ display: (items.length > 0) ? null : 'none' }}>
+                            {
+                                (!isLoading) ? (
+                                    <View>
+                                        {this.renderItems()}
+                                        <View style={{ marginTop: units.unit4 }}>
+                                            <Button
+                                                text="Proceed to Checkout"
+                                                onPress={() => this.goToCheckout()}
+                                                icon={(
+                                                    <Ionicons
+                                                        name="arrow-forward-outline"
+                                                        size={units.unit4}
+                                                        color={colors.purpleB}
+                                                    />
+                                                )}
+                                            />
+                                            <View style={{ marginTop: units.unit4, display: 'flex', alignItems: 'center' }}>
+                                                <Link text="Back to Dashboard" onPress={() => this.props.navigation.navigate('Dashboard')} />
                                             </View>
                                         </View>
-                                    ) : <LoadingIndicator loading={isLoading} />}
-                            </View>
-                            <View style={{ display: (items.length > 0) ? 'none' : null, padding: units.unit6 }}>
-                                <Paragraph style={{ fontWeight: 'bold', textAlign: 'center' }}>No items in cart</Paragraph>
-                            </View>
+                                    </View>
+                                ) : <LoadingIndicator loading={isLoading} />}
                         </View>
-                    </ScrollView>
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
+                        <View style={{ display: (items.length > 0) ? 'none' : null, padding: units.unit6 }}>
+                            <Paragraph style={{ fontWeight: 'bold', textAlign: 'center' }}>No items in cart</Paragraph>
+                        </View>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
         )
     }
 }

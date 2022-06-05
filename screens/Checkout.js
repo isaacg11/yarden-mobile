@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView, View, ScrollView, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -749,13 +750,12 @@ class Checkout extends Component {
     const { user } = this.props;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView
           style={{
             flex: 1,
             width: '100%',
           }}>
-          <ScrollView>
+          <KeyboardAwareScrollView>
             <View style={{ padding: units.unit3 + units.unit4 }}>
               {/* loading indicator */}
               <LoadingIndicator loading={isLoading} />
@@ -768,43 +768,12 @@ class Checkout extends Component {
                 {quote.title} - {quote.description}
               </Text>
               <View>
-                {/* payment schedule */}
-                {/* <View>
-                <Label>Payment Schedule</Label>
-
-                <PaymentSchedule
-                  quote={this.props.route.params}
-                  quotes={this.props.route.params.quotes}
-                />
-              </View> */}
-
-                {/* approval */}
-                {/* <View>
-                                <Collapse
-                                    title="Payment Approval"
-                                    open={true}
-                                    content={
-                                        <Approval
-                                            quote={this.props.route.params}
-                                            quotes={this.props.route.params.quotes}
-                                            plantSelections={this.props.route.params.plantSelections}
-                                            plan={this.props.route.params.plan}
-                                            isChangeOrder={this.props.route.params.isChangeOrder}
-                                            isPurchase={this.props.route.params.isPurchase}
-                                            onApproved={() => this.onApproved()}
-                                        />
-                                    }
-                                />
-                            </View> */}
-                {/* payment method */}
                 <Label>Payment Method</Label>
-
                 <Card style={{ marginBottom: units.unit5 }}>
                   <PaymentMethod />
                 </Card>
 
                 {/* approval start */}
-
                 <View>
                   {/* agreement modal */}
                   <ElectronicSignatureAgreement
@@ -938,9 +907,8 @@ class Checkout extends Component {
                 </View>
               </View>
             </View>
-          </ScrollView>
+          </KeyboardAwareScrollView>
         </SafeAreaView>
-      </TouchableWithoutFeedback>
     );
   }
 }

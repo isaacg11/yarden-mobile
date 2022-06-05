@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { SafeAreaView, ImageBackground, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView, ImageBackground, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
@@ -130,24 +131,24 @@ class Product extends Component {
       }`;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            width: '100%',
-          }}>
-          {/* loading indicator */}
-          <LoadingIndicator loading={isLoading} />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+        }}>
+        {/* loading indicator */}
+        <LoadingIndicator loading={isLoading} />
 
-          {/* add to cart modal */}
-          <AddToCart
-            isOpen={isOpen}
-            onViewCart={() => this.props.navigation.navigate('Cart')}
-            close={() => this.setState({ isOpen: false })}
-            product={{ name, image, description }}
-            qty={qty}
-          />
+        {/* add to cart modal */}
+        <AddToCart
+          isOpen={isOpen}
+          onViewCart={() => this.props.navigation.navigate('Cart')}
+          close={() => this.setState({ isOpen: false })}
+          product={{ name, image, description }}
+          qty={qty}
+        />
 
+        <KeyboardAwareScrollView>
           {/* product image */}
           <ImageBackground
             source={{ uri: image }}
@@ -207,8 +208,8 @@ class Product extends Component {
               />
             </View>
           </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     );
   }
 }

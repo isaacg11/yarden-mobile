@@ -118,13 +118,13 @@ class BottomTabNavigator extends Component {
             headerShown: false,
             tabBarActiveTintColor: colors.green0,
             tabBarInactiveTintColor: 'white',
-            tabBarActiveBackgroundColor: colors.purpleE,
-            tabBarInactiveBackgroundColor: colors.purpleE,
+            tabBarActiveBackgroundColor: colors.purpleD,
+            tabBarInactiveBackgroundColor: colors.purpleD,
             tabBarLabelStyle: {
               fontFamily: fonts.default,
             },
             tabBarStyle: {
-              backgroundColor: colors.purpleE,
+              backgroundColor: colors.purpleD,
               paddingVertical: units.unit4,
               height: units.unit6 + units.unit5,
             },

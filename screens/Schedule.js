@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { View, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment-timezone';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -91,14 +92,14 @@ class Schedule extends Component {
             isLoading
         } = this.state;
 
-        const minDate = moment().add(3, 'days');
+        const minDate = moment().add(3, 'days').startOf('day');
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SafeAreaView style={{
-                    flex: 1,
-                    width: "100%",
-                }}>
+            <SafeAreaView style={{
+                flex: 1,
+                width: "100%",
+            }}>
+                <KeyboardAwareScrollView>
                     <View style={{ padding: units.unit3 + units.unit4 }}>
 
                         {/* loading indicator start */}
@@ -223,9 +224,8 @@ class Schedule extends Component {
                         {/* schedule form end */}
 
                     </View>
-
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
+                </KeyboardAwareScrollView>
+            </SafeAreaView>
         )
     }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -681,7 +682,7 @@ class Approval extends Component {
         } = this.props;
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAwareScrollView>
                 <View>
                     {/* loading indicator */}
                     <LoadingIndicator
@@ -734,7 +735,7 @@ class Approval extends Component {
                     {/* approval end */}
 
                 </View>
-            </TouchableWithoutFeedback>
+            </KeyboardAwareScrollView>
         )
     }
 }

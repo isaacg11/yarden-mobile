@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { View, StyleSheet, Pressable, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment-timezone';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -55,7 +56,7 @@ class DateSelect extends Component {
         const isNewDate = moment(value).format('MM/DD/YYYY') !== moment().format('MM/DD/YYYY');
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAwareScrollView>
                 <View>
                     {appearance === 'dropdown' ? (
                         <Pressable onPressIn={() => this.setState({ datePickerIsOpen: true })}>
@@ -92,7 +93,6 @@ class DateSelect extends Component {
                         minimumDate={minDate}
                         maximumDate={maxDate}
                         onConfirm={async (info) => {
-
                             // close date picker
                             await this.setState({ datePickerIsOpen: false });
 
@@ -101,7 +101,7 @@ class DateSelect extends Component {
                             })
 
                             // save info to local state
-                            onConfirm(moment(info).tz('America/Los_Angeles'));
+                            onConfirm(moment(info).tz('America/Los_Angeles').startOf('day'));
 
                         }}
                         onCancel={() => { }}
@@ -110,7 +110,7 @@ class DateSelect extends Component {
                         <Paragraph>{validationError}</Paragraph>
                     )}
                 </View>
-            </TouchableWithoutFeedback>
+            </KeyboardAwareScrollView>
         )
     }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Modal, ActivityIndicator, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Modal, ActivityIndicator, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import creditCardType from 'credit-card-type';
@@ -110,7 +111,7 @@ class CreditCard extends Component {
 
     const cardVisual = {
       backgroundColor: colors.white75,
-      height: units.unit6 + units.unit7,
+      height: units.unit6 + units.unit7 + units.unit4,
       width: '100%',
       justifyContent: 'space-between',
       marginBottom: units.unit4,
@@ -130,14 +131,14 @@ class CreditCard extends Component {
     };
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      // <KeyboardAwareScrollView>
         <View>
           {/* card modal start */}
           <Modal
             animationType="slide"
             visible={isOpen}
             presentationStyle="fullScreen">
-            <ScrollView
+            <KeyboardAwareScrollView
               style={{
                 backgroundColor: colors.greenE10,
                 paddingVertical: units.unit5,
@@ -302,11 +303,11 @@ class CreditCard extends Component {
                   </View>
                 )}
               </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
           </Modal>
           {/* card modal end */}
         </View>
-      </TouchableWithoutFeedback>
+      // </KeyboardAwareScrollView>
     );
   }
 }

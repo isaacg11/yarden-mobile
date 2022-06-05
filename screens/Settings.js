@@ -32,7 +32,7 @@ class Settings extends Component {
                             <Card style={{ marginBottom: units.unit4 }}>
                                 <View style={{ marginBottom: units.unit5 }}>
                                     <Paragraph style={{ fontWeight: 'bold' }}>Name</Paragraph>
-                                    <Paragraph>{user.first_name} {user.last_name}</Paragraph>
+                                    <Paragraph style={{textTransform: 'capitalize'}}>{user.first_name} {user.last_name}</Paragraph>
                                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Email</Paragraph>
                                     <Paragraph>{user.email}</Paragraph>
                                     <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Phone Number</Paragraph>

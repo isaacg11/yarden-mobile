@@ -6,11 +6,11 @@ import store from './config/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as Sentry from "@sentry/react-native";
+import ErrorBoundary from './components/app/ErrorBoundary';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
-import Splash from './screens/Splash';
 import Schedule from './screens/Schedule';
 import Confirm from './screens/Confirm';
 import Welcome from './screens/Welcome';
@@ -41,8 +41,8 @@ import ReferralHistory from './screens/ReferralHistory';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
 
-Sentry.init({ 
-  dsn: 'https://ac125a88d07a40be9ca8dc38d13d8bb9@o160258.ingest.sentry.io/6455224', 
+Sentry.init({
+  dsn: 'https://ac125a88d07a40be9ca8dc38d13d8bb9@o160258.ingest.sentry.io/6455224',
 });
 
 // app navigation config
@@ -89,325 +89,317 @@ const AppTheme = {
 // main app render
 function App() {
   return (
-    <Provider store={store}>
-      <NavigationContainer linking={linking} theme={AppTheme}>
-        <Stack.Navigator initialRouteName="Splash">
-          <Stack.Screen
-            name="Splash"
-            component={Splash}
-            options={{
-              headerLeft: displayNone,
-              headerStyle: appHeaderStyle,
-              headerShadowVisible: false,
-              headerTintColor: colors.white,
-            }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerLeft: displayNone,
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerShadowVisible: false,
-              headerTintColor: appHeaderTint,
-            }}
-          />
-          <Stack.Screen
-            name="Dashboard"
-            component={Dashboard}
-            options={{
-              headerLeft: displayNone,
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={Register}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerShadowVisible: false,
-              headerTintColor: appHeaderTint,
-            }}
-          />
-          <Stack.Screen
-            name="Schedule"
-            component={Schedule}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Confirm"
-            component={Confirm}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Welcome"
-            component={Welcome}
-            options={{
-              headerLeft: displayNone,
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Password Reset"
-            component={PasswordReset}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="PasswordConfirm"
-            component={PasswordConfirm}
-            options={{
-              title: 'Password Confirm',
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Order Details"
-            component={OrderDetails}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Change Date"
-            component={ChangeDate}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Log Out"
-            component={Logout}
-            options={{
-              headerLeft: displayNone,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Change Settings"
-            component={ChangeSettings}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Quote Details"
-            component={QuoteDetails}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Checkout"
-            component={Checkout}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Approved"
-            component={Approved}
-            options={{
-              headerLeft: displayNone,
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Garden"
-            component={Garden}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Enrollment"
-            component={Enrollment}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Change Order Details"
-            component={ChangeOrderDetails}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Change Plan"
-            component={ChangePlan}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Message"
-            component={Message}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Request Quote Change"
-            component={RequestQuoteChange}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerShadowVisible: false,
-              headerTintColor: appHeaderTint,
-            }}
-          />
-          <Stack.Screen
-            name="Request Order Change"
-            component={RequestOrderChange}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Changes Requested"
-            component={ChangesRequested}
-            options={{
-              headerTitle: () => logo,
-              headerLeft: displayNone,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Products"
-            component={Products}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Product"
-            component={Product}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Cart"
-            component={Cart}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Purchase Details"
-            component={PurchaseDetails}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Purchases"
-            component={Purchases}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Plants"
-            component={Plants}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Referral History"
-            component={ReferralHistory}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint,
-              headerShadowVisible: false,
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <NavigationContainer linking={linking} theme={AppTheme}>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{
+                headerLeft: displayNone,
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerShadowVisible: false,
+                headerTintColor: appHeaderTint,
+              }}
+            />
+            <Stack.Screen
+              name="Dashboard"
+              component={Dashboard}
+              options={{
+                headerLeft: displayNone,
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerShadowVisible: false,
+                headerTintColor: appHeaderTint,
+              }}
+            />
+            <Stack.Screen
+              name="Schedule"
+              component={Schedule}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Confirm"
+              component={Confirm}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Welcome"
+              component={Welcome}
+              options={{
+                headerLeft: displayNone,
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Password Reset"
+              component={PasswordReset}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="PasswordConfirm"
+              component={PasswordConfirm}
+              options={{
+                title: 'Password Confirm',
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Order Details"
+              component={OrderDetails}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Change Date"
+              component={ChangeDate}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Log Out"
+              component={Logout}
+              options={{
+                headerLeft: displayNone,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Change Settings"
+              component={ChangeSettings}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Quote Details"
+              component={QuoteDetails}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Checkout"
+              component={Checkout}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Approved"
+              component={Approved}
+              options={{
+                headerLeft: displayNone,
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Garden"
+              component={Garden}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Enrollment"
+              component={Enrollment}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Change Order Details"
+              component={ChangeOrderDetails}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Change Plan"
+              component={ChangePlan}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Message"
+              component={Message}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Request Quote Change"
+              component={RequestQuoteChange}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerShadowVisible: false,
+                headerTintColor: appHeaderTint,
+              }}
+            />
+            <Stack.Screen
+              name="Request Order Change"
+              component={RequestOrderChange}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Changes Requested"
+              component={ChangesRequested}
+              options={{
+                headerTitle: () => logo,
+                headerLeft: displayNone,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Products"
+              component={Products}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Product"
+              component={Product}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Cart"
+              component={Cart}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Purchase Details"
+              component={PurchaseDetails}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Purchases"
+              component={Purchases}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Plants"
+              component={Plants}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Referral History"
+              component={ReferralHistory}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 
