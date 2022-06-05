@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, ScrollView, Image, TouchableOpacity, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -28,6 +29,7 @@ class Messenger extends Component {
   state = {
     contacts: [{ label: 'No Contacts', value: 'No Contacts' }],
     attachments: [],
+    threadHeight: 560
   };
 
   async componentDidMount() {
@@ -138,9 +140,6 @@ class Messenger extends Component {
       return alert('Your message has no text');
     }
 
-    // show loading indicator
-    this.setState({ isLoading: true });
-
     // set intitial attachment value
     let attachments = [];
 
@@ -208,8 +207,7 @@ class Messenger extends Component {
     this.setState({
       conversation: messages,
       message: '',
-      attachments: [],
-      isLoading: false,
+      attachments: []
     });
   }
 
@@ -243,12 +241,16 @@ class Messenger extends Component {
       attachments,
       isOpen,
       imageUrl,
+      threadHeight
     } = this.state;
 
     const { user } = this.props;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAwareScrollView 
+        onKeyboardWillShow={() => this.setState({threadHeight: 240})}
+        onKeyboardWillHide={() => this.setState({threadHeight: 560})}
+        extraHeight={500}>
         <View
           style={{
             flexGrow: 1,
@@ -295,7 +297,7 @@ class Messenger extends Component {
               {/* conversation thread */}
               <View
                 style={{
-                  height: 560,
+                  height: threadHeight,
                   display: 'flex',
                 }}>
                 <ScrollView
@@ -313,7 +315,7 @@ class Messenger extends Component {
                       <View style={{ flexDirection: 'row' }} key={index}>
                         <View
                           style={{
-                            flex: message.sender._id !== user._id ? 1 : 0,
+                            flex: message.sender._id !== user._id ? 0 : 1,
                           }}></View>
                         <View style={{ flex: 2 }}>
                           <View style={{ marginVertical: units.unit3 }}>
@@ -324,12 +326,12 @@ class Messenger extends Component {
                                 borderRadius: units.unit3,
                                 backgroundColor:
                                   message.sender._id !== user._id
-                                    ? colors.greenB
-                                    : '#ffffff',
+                                    ? '#ffffff'
+                                    : colors.greenB,
                                 shadowColor:
                                   message.sender._id !== user._id
-                                    ? colors.greenB25
-                                    : colors.greenC10,
+                                    ? colors.greenC10
+                                    : colors.greenB25,
                                 shadowOffset: {
                                   width: 0,
                                   height: 8,
@@ -344,8 +346,8 @@ class Messenger extends Component {
                                   width: '100%',
                                   color:
                                     message.sender._id !== user._id
-                                      ? '#ffffff'
-                                      : colors.greenD90,
+                                      ? colors.greenD90
+                                      : '#ffffff',
                                 }}>
                                 {message.text}
                               </Text>
@@ -377,8 +379,8 @@ class Messenger extends Component {
                                   fontSize: fonts.h5,
                                   textAlign:
                                     message.sender._id !== user._id
-                                      ? 'right'
-                                      : 'left',
+                                      ? 'left'
+                                      : 'right',
                                   color: colors.greenE25,
                                 }}>
                                 {moment(message.dt_created).format('MM/DD/YYYY')}{' '}
@@ -393,7 +395,7 @@ class Messenger extends Component {
                         </View>
                         <View
                           style={{
-                            flex: message.sender._id !== user._id ? 0 : 1,
+                            flex: message.sender._id !== user._id ? 1 : 0,
                           }}></View>
                       </View>
                     ))}
@@ -467,7 +469,7 @@ class Messenger extends Component {
             </View>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
     );
   }
 }

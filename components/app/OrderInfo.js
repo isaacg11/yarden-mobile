@@ -10,8 +10,25 @@ import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 import units from '../../components/styles/units';
 import colors from '../../components/styles/colors';
 import fonts from '../../components/styles/fonts';
+import vars from '../../vars/index';
 
 class OrderInfo extends Component {
+
+    formatOrderDescription(order) {
+        if(order.type === 'yard assessment') {
+            return vars.orderDescriptions.customer.yardAssessment;
+        } else if(order.type === 'crop rotation') {
+            return vars.orderDescriptions.customer.cropRotation;
+        } else if(order.type === 'full plan') {
+            return vars.orderDescriptions.customer.fullPlan;
+        } else if(order.type === 'assisted plan') {
+            return vars.orderDescriptions.customer.assistedPlan;
+        } else if(order.type === 'initial planting') {
+            return vars.orderDescriptions.customer.initialPlanting;
+        } else {
+            return order.description;
+        }
+    }
 
     render() {
 
@@ -20,6 +37,8 @@ class OrderInfo extends Component {
             onChangeDate,
             onCancel,
         } = this.props;
+
+        const orderDescription = this.formatOrderDescription(order);
 
         return (
             <View>
@@ -35,11 +54,10 @@ class OrderInfo extends Component {
                             {order.type}
                         </Paragraph>
                         <Status status={order.status} />
-
                         <Text style={{ ...fonts.label, marginTop: units.unit5 }}>
                             Description
                         </Text>
-                        <Text>{order.description}</Text>
+                        <Text>{orderDescription}</Text>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: units.unit5 }}>
                             <View>
                                 <Text style={{ ...fonts.label }}>

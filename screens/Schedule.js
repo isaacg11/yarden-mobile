@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { View, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment-timezone';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,12 +10,14 @@ import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import Dropdown from '../components/UI/Dropdown';
 import DateSelect from '../components/UI/DateSelect';
+import Paragraph from '../components/UI/Paragraph';
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import { getGeolocation, getCounty, getServiceArea } from '../actions/location/index';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
+import vars from '../vars/index';
 
 class Schedule extends Component {
 
@@ -91,14 +94,14 @@ class Schedule extends Component {
             isLoading
         } = this.state;
 
-        const minDate = moment().add(3, 'days');
+        const minDate = moment().add(3, 'days').startOf('day');
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SafeAreaView style={{
-                    flex: 1,
-                    width: "100%",
-                }}>
+            <SafeAreaView style={{
+                flex: 1,
+                width: "100%",
+            }}>
+                <KeyboardAwareScrollView>
                     <View style={{ padding: units.unit3 + units.unit4 }}>
 
                         {/* loading indicator start */}
@@ -108,7 +111,8 @@ class Schedule extends Component {
                         {/* loading indicator end */}
 
                         {/* schedule form start */}
-                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Schedule Appointment</Header>
+                        <Header type="h4" style={{ marginBottom: units.unit3 }}>Schedule Appointment</Header>
+                        <Paragraph style={{marginBottom: units.unit5}}>{vars.orderDescriptions.customer.yardAssessment}</Paragraph>
                         <View>
                             <View>
                                 <Input
@@ -223,9 +227,8 @@ class Schedule extends Component {
                         {/* schedule form end */}
 
                     </View>
-
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
+                </KeyboardAwareScrollView>
+            </SafeAreaView>
         )
     }
 }

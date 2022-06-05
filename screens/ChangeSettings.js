@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -62,17 +63,17 @@ class ChangeSettings extends Component {
         } = this.state;
 
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <SafeAreaView style={{
-                    flex: 1,
-                    width: "100%",
-                }}>
-                    {/* loading indicator start */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
-                    {/* loading indicator end */}
+            <SafeAreaView style={{
+                flex: 1,
+                width: "100%",
+            }}>
+                {/* loading indicator start */}
+                <LoadingIndicator
+                    loading={isLoading}
+                />
+                {/* loading indicator end */}
 
+                <KeyboardAwareScrollView>
                     <View style={{ padding: units.unit3 + units.unit4 }}>
 
                         {/* change date form start */}
@@ -125,8 +126,8 @@ class ChangeSettings extends Component {
                         {/* change date form end */}
 
                     </View>
-                </SafeAreaView>
-            </TouchableWithoutFeedback>
+                </KeyboardAwareScrollView>
+            </SafeAreaView>
         )
     }
 }

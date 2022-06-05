@@ -134,81 +134,82 @@ class PurchaseDetails extends Component {
                 <ScrollView>
                     <View style={{ padding: units.unit3 + units.unit4 }}>
 
-                    {/* loading indicator */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
+                        {/* loading indicator */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
 
-                    <Header type="h4" style={{ marginBottom: units.unit5 }}>Purchase Details</Header>
-                    <View>
-
-                        {/* purchase summary */}
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Purchase Details</Header>
                         <View>
-                            <Collapse
-                                title="Purchase Summary"
-                                open={true}
-                                content={
-                                    <PurchaseSummary
-                                        quotes={JSON.parse(quotes)}
-                                    />
-                                }
-                            />
-                        </View>
 
-                        {/* materials */}
-                        <View style={{ display: (purchase.line_items.materials.length < 1) ? 'none' : null }}>
-                            <Collapse
-                                title="Materials"
-                                content={
-                                    <Materials
-                                        materials={purchase.line_items.materials}
-                                    />
-                                }
-                            />
-                        </View>
-
-                        {/* labor */}
-                        <View style={{ display: (!purchase.line_items.labor) ? 'none' : null }}>
-                            <Collapse
-                                title="Labor"
-                                content={
-                                    <Labor
-                                        labor={purchase.line_items.labor}
-                                    />
-                                }
-                            />
-                        </View>
-
-                        {/* delivery */}
-                        <View style={{ display: (!purchase.line_items.delivery) ? 'none' : null }}>
-                            <Collapse
-                                title="Delivery"
-                                content={
-                                    <Delivery
-                                        delivery={purchase.line_items.delivery}
-                                    />
-                                }
-                            />
-                        </View>
-
-                        {/* navigation buttons */}
-                        <View>
+                            {/* purchase summary */}
                             <View>
-                                <Button
-                                    text="Continue"
-                                    onPress={() => this.continue()}
-                                    icon={(
-                                        <Ionicons
-                                            name="arrow-forward-outline"
-                                            size={units.unit4}
-                                            color={colors.purpleB}
+                                <Collapse
+                                    title="Purchase Summary"
+                                    open={true}
+                                    content={
+                                        <PurchaseSummary
+                                            quotes={JSON.parse(quotes)}
                                         />
-                                    )}
+                                    }
                                 />
+                            </View>
+
+                            {/* materials */}
+                            <View style={{ display: (purchase.line_items.materials.length < 1) ? 'none' : null }}>
+                                <Collapse
+                                    title="Materials"
+                                    content={
+                                        <Materials
+                                            materials={purchase.line_items.materials}
+                                        />
+                                    }
+                                />
+                            </View>
+
+                            {/* labor */}
+                            <View style={{ display: (!purchase.line_items.labor) ? 'none' : null }}>
+                                <Collapse
+                                    title="Labor"
+                                    content={
+                                        <Labor
+                                            labor={purchase.line_items.labor}
+                                        />
+                                    }
+                                />
+                            </View>
+
+                            {/* delivery */}
+                            <View style={{ display: (!purchase.line_items.delivery) ? 'none' : null }}>
+                                <Collapse
+                                    title="Delivery"
+                                    content={
+                                        <Delivery
+                                            delivery={purchase.line_items.delivery}
+                                        />
+                                    }
+                                />
+                            </View>
+
+                            {/* navigation buttons */}
+                            <View>
+                                <View>
+                                    <Button
+                                        alignIconRight
+                                        text="Continue"
+                                        onPress={() => this.continue()}
+                                        icon={(
+                                            <Ionicons
+                                                name="arrow-forward-outline"
+                                                size={units.unit4}
+                                                color={colors.purpleB}
+                                            />
+                                        )}
+                                    />
+                                </View>
                             </View>
                         </View>
                     </View>
-                                        </View>
                 </ScrollView>
             </SafeAreaView>
         )

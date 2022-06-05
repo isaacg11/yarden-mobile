@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Input from '../components/UI/Input';
@@ -52,13 +53,14 @@ class PasswordConfirm extends Component {
     const { password, confirmPassword, isLoading } = this.state;
 
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            width: '100%',
-            justifyContent: 'center',
-          }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+          justifyContent: 'center',
+        }}>
+
+        <KeyboardAwareScrollView>
           <View style={{ padding: units.unit3 + units.unit4 }}>
             {/* loading indicator start */}
             <LoadingIndicator loading={isLoading} />
@@ -98,8 +100,8 @@ class PasswordConfirm extends Component {
             </View>
             {/* password confirm start */}
           </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     );
   }
 }
