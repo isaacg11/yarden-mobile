@@ -5,7 +5,7 @@ import RNRestart from 'react-native-restart';
 class ErrorBoundary extends Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: true };
+        this.state = { hasError: false };
     }
 
     static getDerivedStateFromError(error) {
