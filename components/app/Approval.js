@@ -441,7 +441,7 @@ class Approval extends Component {
             messageLabel = 'Order Confirmation';
             customerMessage = (
                 '<p>Hello <b>' + this.props.user.first_name + '</b>,</p>' +
-                '<p>Your order has been confirmed, if you have any questions please let us know!</p>' +
+                '<p>Your order has been confirmed, log in to your Yarden app to view the details.</p>' +
                 '<table style="margin: 0 auto;" width="600px" cellspacing="0" cellpadding="0" border="0">' +
                 '<tr>' +
                 '<td>' +

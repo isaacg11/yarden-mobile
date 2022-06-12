@@ -5,18 +5,17 @@ import {bindActionCreators} from 'redux';
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
-import Button from '../components/UI/Button';
 import Divider from '../components/UI/Divider';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
 import Status from '../components/UI/Status';
-import Card from '../components/UI/Card';
 import Link from '../components/UI/Link';
 import {getQuotes} from '../actions/quotes/index';
 import {setFilters} from '../actions/filters/index';
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
+import truncate from '../helpers/truncate';
 
 class Quotes extends Component {
   state = {
@@ -147,7 +146,7 @@ class Quotes extends Component {
                               textTransform: 'capitalize',
                               marginBottom: units.unit1,
                             }}>
-                            {quote.title}
+                            {truncate(quote.title, 15)}
                           </Text>
                           <Status status={quote.status} />
                         </View>

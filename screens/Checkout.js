@@ -321,8 +321,7 @@ class Checkout extends Component {
 
         // assign order value
         order = this.props.route.params.order;
-      }
-      if (this.props.route.params.isPurchase) {
+      } else if (this.props.route.params.isPurchase) {
         // if approval is for a purchase {...}
 
         // if plant selections {...}
@@ -342,7 +341,10 @@ class Checkout extends Component {
         let updatedQuote = { status: 'approved' };
 
         // check to see if the quote is for a garden
-        const isGarden = this.props.route.params.product.type.name === 'garden';
+        const isGarden = 
+          this.props.route.params.product &&
+          this.props.route.params.product.type &&
+          this.props.route.params.product.type.name === 'garden';
 
         // if garden quote {...}
         if (isGarden) {
@@ -494,7 +496,7 @@ class Checkout extends Component {
         '<p>Hello <b>' +
         this.props.user.first_name +
         '</b>,</p>' +
-        '<p>Your order has been confirmed, if you have any questions please let us know!</p>' +
+        '<p>Your order has been confirmed, log in to your Yarden app to view the details.</p>' +
         '<table style="margin: 0 auto;" width="600px" cellspacing="0" cellpadding="0" border="0">' +
         '<tr>' +
         '<td>' +

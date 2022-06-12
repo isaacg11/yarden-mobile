@@ -137,21 +137,14 @@ class Orders extends Component {
               {orders.list &&
                 orders.list.map((order, index) => (
                   <View key={index}>
-                    <View
-                      style={{
-                        marginVertical: units.unit4 + units.unit3,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}>
-                      {/* change order notification */}
-                      {changeOrders.length > 0 &&
+                    {/* change order notification */}
+                    {changeOrders.length > 0 &&
                         changeOrders.find(c => c.order._id === order._id) && (
                           <View>
-                            <Notification text="Your contractor has sent you a change order. Tap the button below to review and approve." />
+                            <Notification text="You have been sent a change order. Tap the button below to review and approve." />
                             <Button
-                              text="Review Change"
+                              style={{marginTop: units.unit3}}
+                              text="Review Change Order"
                               onPress={() =>
                                 this.props.navigation.navigate(
                                   'Change Order Details',
@@ -164,6 +157,14 @@ class Orders extends Component {
                             />
                           </View>
                         )}
+                    <View
+                      style={{
+                        marginVertical: units.unit4 + units.unit3,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
 
                       {/* order info */}
                       <View
@@ -199,7 +200,7 @@ class Orders extends Component {
                               ? `${moment(order.time, `HH:mm:ss`).format(
                                   `h:mm A`,
                                 )}`
-                              : ''}
+                              : '9:00am - 5:00pm'}
                           </Label>
                         </View>
                       </View>

@@ -92,7 +92,7 @@ class Confirm extends Component {
                 label: 'Appointment Confirmation',
                 body: (
                     '<p>Hello <b>' + info.firstName.trim() + '</b>,</p>' +
-                    '<p>Your appointment has been confirmed, if you have any questions please let us know!</p>' +
+                    '<p>Your appointment has been confirmed, log in to your Yarden app to view the details.</p>' +
                     '<table style="margin: 0 auto;" width="600px" cellspacing="0" cellpadding="0" border="0">' +
                     '<tr>' +
                     '<td>' +

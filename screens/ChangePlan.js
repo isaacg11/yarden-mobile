@@ -172,55 +172,57 @@ class ChangePlan extends Component {
                 <LoadingIndicator loading={isLoading} />
 
                 <ScrollView>
-                    <Header type="h4" style={{ marginTop: units.unit6 }}>Change Plan</Header>
-                    <View style={{ padding: units.unit5 }}>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        <Header type="h4" style={{ marginBottom: units.unit5 }}>Change Plan</Header>
+                        <View>
 
-                        {/* plan list start */}
-                        <Card>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Current Plan</Paragraph>
-                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Paragraph style={{ marginBottom: units.unit5, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Paragraph>
-                                <Paragraph style={{ marginBottom: units.unit5 }}>${currentPlan.rate.toFixed(2)} / month</Paragraph>
-                            </View>
+                            {/* plan list start */}
+                            <Card>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>Current Plan</Paragraph>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Paragraph style={{ marginBottom: units.unit5, fontWeight: 'bold', color: '#4d991a' }}>{currentPlan.type}</Paragraph>
+                                    <Paragraph style={{ marginBottom: units.unit5 }}>${currentPlan.rate.toFixed(2)} / month</Paragraph>
+                                </View>
 
-                            <Divider />
-                            <View style={{ padding: units.unit5 }}>
-                                {(plans.map((plan, index) => (
-                                    <View key={index} style={{ display: (plan.type === currentPlan.type) ? 'none' : null }}>
-                                        <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
-                                            <View style={{ paddingRight: units.unit5, marginRight: units.unit5 }}>
-                                                <CheckBox
-                                                    disabled={(selectedPlan === 'none') || ((selectedPlan.type && selectedPlan.type !== plan.type))}
-                                                    value={(selectedPlan.type === plan.type)}
-                                                    onValueChange={() => this.onSelect(plan)}
-                                                    boxType="square"
-                                                />
+                                <Divider />
+                                <View style={{ padding: units.unit5 }}>
+                                    {(plans.map((plan, index) => (
+                                        <View key={index} style={{ display: (plan.type === currentPlan.type) ? 'none' : null }}>
+                                            <View style={{ padding: units.unit5, flex: 1, alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center' }}>
+                                                <View style={{ paddingRight: units.unit5, marginRight: units.unit5 }}>
+                                                    <CheckBox
+                                                        disabled={(selectedPlan === 'none') || ((selectedPlan.type && selectedPlan.type !== plan.type))}
+                                                        value={(selectedPlan.type === plan.type)}
+                                                        onValueChange={() => this.onSelect(plan)}
+                                                        boxType="square"
+                                                    />
+                                                </View>
+                                                <View>
+                                                    <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>{plan.type}</Paragraph>
+                                                    <Paragraph style={{ marginBottom: units.unit5 }}>${plan.rate.toFixed(2)} / month</Paragraph>
+                                                </View>
                                             </View>
                                             <View>
-                                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, marginBottom: units.unit5 }}>{plan.type}</Paragraph>
-                                                <Paragraph style={{ marginBottom: units.unit5 }}>${plan.rate.toFixed(2)} / month</Paragraph>
+                                                <Paragraph style={{ marginBottom: units.unit5, fontStyle: 'italic' }}>{plan.description}</Paragraph>
+                                                <Divider />
                                             </View>
                                         </View>
-                                        <View>
-                                            <Paragraph style={{ marginBottom: units.unit5, fontStyle: 'italic' }}>{plan.description}</Paragraph>
-                                            <Divider />
-                                        </View>
-                                    </View>
-                                )))}
+                                    )))}
+                                </View>
+                            </Card>
+                            {/* plan list end */}
+
+                            {/* navigation button */}
+                            <View>
+                                <Button
+                                    disabled={!selectedPlan || (selectedPlan !== 'none' && !selectedPlan.type)}
+                                    text="Save Changes"
+                                    onPress={() => this.save()}
+                                    variant="primary"
+                                />
                             </View>
-                        </Card>
-                        {/* plan list end */}
 
-                        {/* navigation button */}
-                        <View>
-                            <Button
-                                disabled={!selectedPlan || (selectedPlan !== 'none' && !selectedPlan.type)}
-                                text="Save Changes"
-                                onPress={() => this.save()}
-                                variant="primary"
-                            />
                         </View>
-
                     </View>
                 </ScrollView>
             </SafeAreaView>

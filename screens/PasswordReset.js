@@ -40,7 +40,7 @@ class PasswordReset extends Component {
                 body: (
                     '<p>Hello <b>' + user.first_name + '</b>,</p>' +
                     '<p>To reset your password, please click the link below.</p>' +
-                    `<a href="${APP_URL}/reset-password?userId=${user._id}&device=mobile">RESET PASSWORD</a>`
+                    `<a href="${APP_URL}/set-password?user=${user._id}&device=mobile">RESET PASSWORD</a>`
                 )
             }
 

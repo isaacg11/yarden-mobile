@@ -41,119 +41,120 @@ class ChangeOrderDetails extends Component {
                 width: "100%",
             }}>
                 <ScrollView>
+                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                        {/* loading indicator start */}
+                        <LoadingIndicator
+                            loading={isLoading}
+                        />
 
-                    {/* loading indicator start */}
-                    <LoadingIndicator
-                        loading={isLoading}
-                    />
+                        <Header type="h4" style={{marginBottom: units.unit4}}>Change Order</Header>
+                        <View>
 
-                    <Header type="h4" style={{ marginTop: units.unit6 }}>Change Order</Header>
-                    <View style={{ padding: units.unit5 }}>
+                            {(changeOrder.line_items) && (
+                                // change order summary
+                                <View>
+                                    <Collapse
+                                        title="Change Order Summary"
+                                        open={true}
+                                        content={
+                                            <QuoteSummary
+                                                quote={changeOrder}
+                                            />
+                                        }
+                                    />
+                                </View>
+                            )}
 
-                        {(changeOrder.line_items) && (
-                            // change order summary
-                            <View style={{ marginTop: units.unit5 }}>
+                            {/* change order info */}
+                            <View>
                                 <Collapse
-                                    title="Change Order Summary"
-                                    open={true}
+                                    title="Change Order Info"
                                     content={
-                                        <QuoteSummary
-                                            quote={changeOrder}
+                                        <ChangeOrderInfo
+                                            changeOrder={changeOrder}
                                         />
                                     }
                                 />
                             </View>
-                        )}
 
-                        {/* change order info */}
-                        <View style={{ marginTop: units.unit5 }}>
-                            <Collapse
-                                title="Change Order Info"
-                                content={
-                                    <ChangeOrderInfo
-                                        changeOrder={changeOrder}
-                                    />
-                                }
-                            />
-                        </View>
-
-                        {(changeOrder.line_items) && (
-                            <View>
-                                {/* materials */}
-                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.materials) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Materials"
-                                        content={
-                                            <Materials
-                                                materials={changeOrder.line_items.materials}
-                                            />
-                                        }
-                                    />
-                                </View>
-
-                                {/* labor */}
-                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.labor) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Labor"
-                                        content={
-                                            <Labor
-                                                labor={changeOrder.line_items.labor}
-                                            />
-                                        }
-                                    />
-                                </View>
-
-                                {/* delivery */}
-                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.delivery) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Delivery"
-                                        content={
-                                            <Delivery
-                                                delivery={changeOrder.line_items.delivery}
-                                            />
-                                        }
-                                    />
-                                </View>
-
-                                {/* tool rentals */}
-                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.rentals) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Tool Rentals"
-                                        content={
-                                            <ToolRentals
-                                                rentals={changeOrder.line_items.rentals}
-                                            />
-                                        }
-                                    />
-                                </View>
-
-                                {/* disposal */}
-                                <View style={{ marginTop: units.unit5, display: (!changeOrder.line_items.disposal) ? 'none' : null }}>
-                                    <Collapse
-                                        title="Disposal"
-                                        content={
-                                            <Disposal
-                                                disposal={changeOrder.line_items.disposal}
-                                            />
-                                        }
-                                    />
-                                </View>
-                            </View>
-                        )}
-
-                        {/* navigation buttons */}
-                        {(changeOrder.status === 'pending approval') && (
-                            <View>
+                            {(changeOrder.line_items) && (
                                 <View>
-                                    <Button
-                                        text="Proceed to checkout"
-                                        onPress={() => this.proceedToCheckout()}
-                                        variant="primary"
-                                    />
-                                </View>
-                            </View>
-                        )}
+                                    {/* materials */}
+                                    <View style={{ display: (!changeOrder.line_items.materials) ? 'none' : null }}>
+                                        <Collapse
+                                            title="Materials"
+                                            content={
+                                                <Materials
+                                                    materials={changeOrder.line_items.materials}
+                                                />
+                                            }
+                                        />
+                                    </View>
 
+                                    {/* labor */}
+                                    <View style={{ display: (!changeOrder.line_items.labor) ? 'none' : null }}>
+                                        <Collapse
+                                            title="Labor"
+                                            content={
+                                                <Labor
+                                                    labor={changeOrder.line_items.labor}
+                                                />
+                                            }
+                                        />
+                                    </View>
+
+                                    {/* delivery */}
+                                    <View style={{ display: (!changeOrder.line_items.delivery) ? 'none' : null }}>
+                                        <Collapse
+                                            title="Delivery"
+                                            content={
+                                                <Delivery
+                                                    delivery={changeOrder.line_items.delivery}
+                                                />
+                                            }
+                                        />
+                                    </View>
+
+                                    {/* tool rentals */}
+                                    <View style={{ display: (!changeOrder.line_items.rentals) ? 'none' : null }}>
+                                        <Collapse
+                                            title="Tool Rentals"
+                                            content={
+                                                <ToolRentals
+                                                    rentals={changeOrder.line_items.rentals}
+                                                />
+                                            }
+                                        />
+                                    </View>
+
+                                    {/* disposal */}
+                                    <View style={{ display: (!changeOrder.line_items.disposal) ? 'none' : null }}>
+                                        <Collapse
+                                            title="Disposal"
+                                            content={
+                                                <Disposal
+                                                    disposal={changeOrder.line_items.disposal}
+                                                />
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                            )}
+
+                            {/* navigation buttons */}
+                            {(changeOrder.status === 'pending approval') && (
+                                <View>
+                                    <View>
+                                        <Button
+                                            text="Proceed to checkout"
+                                            onPress={() => this.proceedToCheckout()}
+                                            variant="primary"
+                                        />
+                                    </View>
+                                </View>
+                            )}
+
+                        </View>
                     </View>
                 </ScrollView>
             </SafeAreaView>

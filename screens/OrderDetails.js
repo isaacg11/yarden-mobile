@@ -102,7 +102,7 @@ class OrderDetails extends Component {
 
                             {/* change orders */}
                             {(changeOrders.length > 0) && (
-                                <View>
+                                <View style={{marginTop: units.unit4}}>
                                     <Collapse
                                         title={`Change Orders (${changeOrders.length})`}
                                         open={changeOrders.find((changeOrder) => changeOrder.status === 'pending approval')}

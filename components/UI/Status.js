@@ -8,7 +8,7 @@ class Status extends Component {
   getlinkStyles(status) {
     // render badgeStyles styled based on color
     switch (status) {
-      case 'bid requested':
+      case ('bid requested' || 'changes requested'):
         return this.badgeStyles.requested;
       case 'pending approval':
         return this.badgeStyles.pending;

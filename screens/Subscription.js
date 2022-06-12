@@ -150,7 +150,7 @@ class Subscription extends Component {
                                 <Paragraph>{`${moment(subscription.current_period_start * 1000).format('MM/DD/YYYY')} - ${moment(subscription.current_period_end * 1000).format('MM/DD/YYYY')}`}</Paragraph>
                             </View>
                         </Card>
-                        <View style={{ marginBottom: units.unit5 }}>
+                        <View style={{ marginTop: units.unit4, marginBottom: units.unit4 }}>
                             <Button
                                 text="Change Plan"
                                 onPress={() => this.props.navigation.navigate('Change Plan', { currentPlan: plan })}

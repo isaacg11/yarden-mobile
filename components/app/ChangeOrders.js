@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import Button from '../UI/Button';
+import { View, Text } from 'react-native';
 import Divider from '../UI/Divider';
-import Paragraph from '../UI/Paragraph';
+import Status from '../UI/Status';
+import Label from '../UI/Label';
+import Link from '../UI/Link';
 import units from '../../components/styles/units';
 
 class ChangeOrders extends Component {
@@ -15,22 +16,20 @@ class ChangeOrders extends Component {
         } = this.props;
 
         return (
-            <View style={{ padding: units.unit5 }}>
+            <View>
                 {changeOrders.map((changeOrder, index) => (
                     <View key={index}>
                         <View style={{ marginBottom: units.unit5 }}>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Description</Paragraph>
-                            <Paragraph>{changeOrder.description}</Paragraph>
-                            <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5 }}>Status</Paragraph>
-                            <Paragraph>{changeOrder.status}</Paragraph>
+                            <Label style={{ marginTop: units.unit5 }}>Status</Label>
+                            <Status status={changeOrder.status} />
+                            <Label style={{ marginTop: units.unit5 }}>Description</Label>
+                            <Text>{changeOrder.description}</Text>
                         </View>
-                        <Divider />
                         <View>
-                            <Button
-                                text="View Details"
-                                onPress={() => onPress(changeOrder)}
-                                variant="secondary"
-                            />
+                            <Divider />
+                            <View style={{ marginTop: units.unit5, display: 'flex', alignItems: 'center' }}>
+                                <Link text="View Details" onPress={() => onPress(changeOrder)} />
+                            </View>
                         </View>
                     </View>
                 ))}

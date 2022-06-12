@@ -31,11 +31,8 @@ class PasswordConfirm extends Component {
       userPassword: this.state.password,
     });
 
-    // if user session {...}
-    if (this.props.user._id) {
-      // redirect to dashboard
-      this.props.navigation.navigate('Dashboard');
-    }
+    // redirect to dashboard
+    this.props.navigation.navigate('Dashboard');
 
     // hide loading indicator
     await this.setState({ isLoading: false });

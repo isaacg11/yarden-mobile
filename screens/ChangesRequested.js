@@ -21,14 +21,15 @@ class ChangesRequested extends Component {
                     <Header type="h4" style={{ marginBottom: units.unit5 }}>Changes Requested!</Header>
                     <View>
                         <Paragraph style={{ textAlign: 'center', marginTop: units.unit3 }}>
-                            Your requested changes have been sent to your Yarden contractor.
+                            Your requested changes have been sent to Yarden.
                         </Paragraph>
                         <Paragraph style={{ marginTop: units.unit4, textAlign: 'center', fontWeight: 'bold' }}>What happens next?</Paragraph>
-                        <Paragraph style={{ marginTop: units.unit5 }}>1. Your contractor will review the changes.</Paragraph>
-                        <Paragraph style={{ marginTop: units.unit5 }}>2. After that, your contractor will contact you to let you know if they can accomodate your request.</Paragraph>
+                        <Paragraph style={{ marginTop: units.unit5 }}>1. Yarden will review the changes.</Paragraph>
+                        <Paragraph style={{ marginTop: units.unit5 }}>2. After that, a Yarden representative will contact you to let you know if we can accomodate your request.</Paragraph>
                         <Paragraph style={{ marginTop: units.unit5 }}>3. Depending on the requested changes, additional payments may be required.</Paragraph>
                         <View style={{ marginTop: units.unit4 }}>
                             <Button
+                                alignIconRight
                                 text="Continue to dashboard"
                                 onPress={() => this.props.navigation.navigate('Dashboard')}
                                 icon={(
