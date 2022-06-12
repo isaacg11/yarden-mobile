@@ -11,7 +11,7 @@ import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
 import { alert } from '../components/UI/SystemAlert';
 import { getSubscription, deleteSubscription } from '../actions/subscriptions/index';
-import { getPlan } from '../actions/plans/index';
+import { getPlans } from '../actions/plans/index';
 import { getOrders, updateOrder, updateOrders } from '../actions/orders/index';
 import { updateUser } from '../actions/user/index';
 import units from '../components/styles/units';
@@ -24,7 +24,8 @@ class Subscription extends Component {
         subscription: null
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this.props.getPlans();
         this.setSubscription();
     }
 
@@ -49,7 +50,7 @@ class Subscription extends Component {
                 })
             } else {
                 // get plan
-                const plan = await this.props.getPlan(this.props.user.garden_info.maintenance_plan);
+                const plan = this.props.plans.find((p) => p.type === this.props.user.garden_info.maintenance_plan);
 
                 // if user has a payment plan id {...}
                 if (this.props.user.payment_info && this.props.user.payment_info.plan_id) {
@@ -206,7 +207,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getSubscription,
-        getPlan,
+        getPlans,
         deleteSubscription,
         getOrders,
         updateOrder,
