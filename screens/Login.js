@@ -86,6 +86,14 @@ class Login extends Component {
                   variant="primary"
                 />
               </View>
+              <View>
+                <Button
+                  text="Learn More"
+                  variant="btn2"
+                  style={{ marginTop: units.unit4 }}
+                  onPress={() => this.props.navigation.navigate('Learn More')}
+                />
+              </View>
               <View
                 style={{
                   marginTop: units.unit4,

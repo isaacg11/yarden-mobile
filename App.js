@@ -38,6 +38,7 @@ import PurchaseDetails from './screens/PurchaseDetails';
 import Purchases from './screens/Purchases';
 import Plants from './screens/Plants';
 import ReferralHistory from './screens/ReferralHistory';
+import LearnMore from './screens/LearnMore';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
 
@@ -392,6 +393,16 @@ function App() {
             <Stack.Screen
               name="Referral History"
               component={ReferralHistory}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Learn More"
+              component={LearnMore}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
