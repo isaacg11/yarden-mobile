@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView, View, Text } from 'react-native';
+import { SafeAreaView, View, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SvgCssUri} from 'react-native-svg';
 import Header from '../components/UI/Header';
 import Button from '../components/UI/Button';
 import Paragraph from '../components/UI/Paragraph';
@@ -37,7 +38,10 @@ class LearnMore extends Component {
                             }}>
                             GROW.
                         </Header>
-                        <Paragraph style={{textAlign: 'center'}}>
+                        <View style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                            <SvgCssUri uri={'https://yarden-garden.s3.us-west-1.amazonaws.com/mobile/grow-01.svg'} />
+                        </View>
+                        <Paragraph style={{ textAlign: 'center' }}>
                             Take the hassle out of gardening - Yarden's expert gardeners will maintain your garden for you, including weed abatement, pest control, harvesting, and more!
                         </Paragraph>
                     </View>
@@ -54,7 +58,10 @@ class LearnMore extends Component {
                             }}>
                             EAT.
                         </Header>
-                        <Paragraph style={{textAlign: 'center'}}>
+                        <View style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                            <SvgCssUri uri={'https://yarden-garden.s3.us-west-1.amazonaws.com/mobile/eat-01.svg'} />
+                        </View>
+                        <Paragraph style={{ textAlign: 'center' }}>
                             Enjoy fresh produce, delivered straight to your front door! With over 100 vareties of vegetables, herbs, and fruit - Yarden will grow the garden that is right for you.
                         </Paragraph>
                     </View>
@@ -71,7 +78,10 @@ class LearnMore extends Component {
                             }}>
                             REPEAT.
                         </Header>
-                        <Paragraph style={{textAlign: 'center'}}>
+                        <View style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                            <SvgCssUri uri={'https://yarden-garden.s3.us-west-1.amazonaws.com/mobile/repeat-01.svg'} />
+                        </View>
+                        <Paragraph style={{ textAlign: 'center' }}>
                             Each time a plant is harvested, Yarden will replace it with another one - keeping your garden growing strong all year long!
                         </Paragraph>
                     </View>
@@ -88,6 +98,10 @@ class LearnMore extends Component {
                             }}>
                             GROW.
                         </Header>
+                        <Image source={{ uri: 'https://yarden-garden.s3.us-west-1.amazonaws.com/mobile/planting-tree-illustration.jpeg' }} style={{ width: '100%', height: 300 }} />
+                        <Paragraph style={{ textAlign: 'center' }}>
+                            Take the hassle out of gardening - Yarden's expert gardeners will maintain your garden for you, including weed abatement, pest control, harvesting, and more!
+                        </Paragraph>
                     </View>
                 )
         }
@@ -157,7 +171,7 @@ class LearnMore extends Component {
                                     }>
                                 </Button>
                             )}
-                            
+
                         </View>
                     </View>
                 </View>
