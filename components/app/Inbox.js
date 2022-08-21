@@ -134,7 +134,7 @@ class Inbox extends Component {
           );
         })}
         {inbox.length < 1 && (
-          <View style={{marginBottom: units.unit5}}>
+          <View style={{marginBottom: units.unit5, marginTop: units.unit4}}>
             <Paragraph
               style={{
                 fontWeight: 'bold',

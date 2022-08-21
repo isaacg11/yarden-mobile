@@ -119,7 +119,7 @@ class Login extends Component {
             <Text style={{ color: colors.greenD75 }}>Don't have an account? </Text>
             <Link
               text="Sign up"
-              onPress={() => this.props.navigation.navigate('Register')}
+              onPress={() => this.props.navigation.navigate('Account Type')}
             />
           </View>
         </KeyboardAwareScrollView>

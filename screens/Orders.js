@@ -42,7 +42,7 @@ class Orders extends Component {
     await this.props.setFilters({orders: status});
 
     // set order query
-    const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
+    const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}${(this.props.user.type === 'gardener') ? `&vendor=${this.props.user._id}` : ''}`;
 
     // if status is pending {...}
     if (status === 'pending') {
@@ -256,6 +256,7 @@ class Orders extends Component {
 
 function mapStateToProps(state) {
   return {
+    user: state.user,
     orders: state.orders,
     changeOrders: state.changeOrders,
     filters: state.filters,

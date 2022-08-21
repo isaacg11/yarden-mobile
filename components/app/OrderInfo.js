@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
-import Divider from '../UI/Divider';
 import Paragraph from '../UI/Paragraph';
 import Link from '../UI/Link';
 import Status from '../UI/Status';
-import formatPhoneNumber from '../../helpers/formatPhoneNumber';
 import units from '../../components/styles/units';
 import colors from '../../components/styles/colors';
 import fonts from '../../components/styles/fonts';
@@ -15,15 +14,15 @@ import vars from '../../vars/index';
 class OrderInfo extends Component {
 
     formatOrderDescription(order) {
-        if(order.type === 'yard assessment') {
+        if (order.type === 'yard assessment') {
             return vars.orderDescriptions.customer.yardAssessment;
-        } else if(order.type === 'crop rotation') {
+        } else if (order.type === 'crop rotation') {
             return vars.orderDescriptions.customer.cropRotation;
-        } else if(order.type === 'full plan') {
+        } else if (order.type === 'full plan') {
             return vars.orderDescriptions.customer.fullPlan;
-        } else if(order.type === 'assisted plan') {
+        } else if (order.type === 'assisted plan') {
             return vars.orderDescriptions.customer.assistedPlan;
-        } else if(order.type === 'initial planting') {
+        } else if (order.type === 'initial planting') {
             return vars.orderDescriptions.customer.initialPlanting;
         } else {
             return order.description;
@@ -108,23 +107,21 @@ class OrderInfo extends Component {
                             {/* zip */}
                             <Text>{order.customer.zip_code}</Text>
                         </View>
-                        <Text style={{ ...fonts.label, marginTop: units.unit5 }}>Email</Text>
-                        <Text>{order.customer.email}</Text>
-                        <Text style={{ marginBottom: units.unit4 }}>{formatPhoneNumber(order.customer.phone_number)}</Text>
-
-                        {(order.status === 'pending' && order.type === 'yard assessment') && (
-                            <View>
-                                <Divider />
-                                <View style={{ marginTop: units.unit5, marginBottom: units.unit5, display: 'flex', alignItems: 'center' }}>
-                                    <Link text="Cancel Order" onPress={() => onCancel()} />
-                                </View>
-                            </View>
-                        )}
                     </View>
                 </View>
             </View>
         )
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        user: state.user
+    };
+}
+
+OrderInfo = connect(mapStateToProps, null)(OrderInfo);
+
+export default OrderInfo;
 
 module.exports = OrderInfo;

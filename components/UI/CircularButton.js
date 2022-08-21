@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import fonts from '../styles/fonts';
 import units from '../styles/units';
 import colors from '../styles/colors';
-import Paragraph from './Paragraph';
 
-class Button extends Component {
+class CircularButton extends Component {
   getButtonStyles(variant) {
     // render buttons styled based on variant
     switch (variant) {
@@ -48,18 +47,16 @@ class Button extends Component {
 
   btnStyle = {
     button: {
-      paddingVertical: 16,
-      paddingHorizontal: 32,
+      paddingVertical: 20,
+      paddingHorizontal: 22,
       display: 'flex',
       backgroundColor: colors.green0,
-      borderRadius: 32,
+      borderRadius: 50,
       borderWidth: 1,
       borderColor: colors.greenB25,
       borderTopColor: colors.green4,
       borderBottomColor: colors.greenB50,
       fontSize: fonts.h5,
-      minWidth: units.unit7,
-
       shadowColor: colors.greenC10,
       shadowOffset: {
         width: 0,
@@ -121,17 +118,14 @@ class Button extends Component {
   render() {
     const {
       onPress,
-      text = 'Submit',
       variant,
       disabled,
       icon,
-      alignIconRight,
       style
     } = this.props;
 
     const buttonStyles = this.getButtonStyles(variant);
     const buttonVariant = this.getVariantStyles();
-    const buttonVariantText = this.getVariantTextStyles();
     const disabledStyles = disabled ? { opacity: 0.5 } : {};
 
     return (
@@ -147,15 +141,11 @@ class Button extends Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {icon && !alignIconRight && <View style={{ marginRight: units.unit3 }}>{icon}</View>}
-          <Paragraph style={{ ...buttonStyles.text, ...buttonVariantText }}>
-            {text}
-          </Paragraph>
-          {icon && alignIconRight && <View style={{ marginLeft: units.unit3 }}>{icon}</View>}
+          {icon}
         </View>
       </TouchableOpacity>
     );
   }
 }
 
-module.exports = Button;
+module.exports = CircularButton;

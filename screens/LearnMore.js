@@ -154,7 +154,7 @@ class LearnMore extends Component {
                             </Button>
                             {(step === 3) ? (
                                 <Button
-                                    onPress={() => this.props.navigation.navigate('Register')}
+                                    onPress={() => this.props.navigation.navigate('Account Type')}
                                     text="Sign Up">
                                 </Button>
                             ) : (

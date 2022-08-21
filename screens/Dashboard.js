@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { connect } from 'react-redux';
 import RNQRGenerator from 'rn-qr-generator';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Mark from '../components/app/branding/Mark';
 import BottomTabNavigator from '../components/app/BottomTabNavigator';
 import Referrals from '../screens/Referrals';
@@ -10,7 +11,7 @@ import Logout from '../screens/Logout';
 import Subscription from '../screens/Subscription';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
-import {APP_URL} from '../helpers/getUrl';
+import { APP_URL } from '../helpers/getUrl';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 
@@ -38,7 +39,8 @@ class Dashboard extends Component {
   }
 
   render() {
-    const {qrCode} = this.state;
+    const { qrCode } = this.state;
+    const { user } = this.props;
 
     // display config
     const displayNone = () => {
@@ -48,41 +50,90 @@ class Dashboard extends Component {
     // set header logo
     const logo = <Mark size={units.unit5} />;
 
+    // set header style
     const appHeaderStyle = {
       elevation: 0,
       shadowOpacity: 0,
       borderBottomWidth: 0,
     };
 
+    // set header tint
     const appHeaderTint = colors.purpleB;
 
-    if (qrCode) {
+    // if customer {...}
+    if(user.type === 'customer') {
+
+      // if QR code {...}
+      if (qrCode) {
+
+        // render customer UI
+        return (
+          <Drawer.Navigator>
+            <Drawer.Screen
+              name="Home"
+              component={BottomTabNavigator}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
+              }}
+            />
+            <Drawer.Screen
+              name="Referrals"
+              component={Referrals}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
+              }}
+              initialParams={{
+                qrCode: qrCode,
+              }}
+            />
+            <Drawer.Screen
+              name="Subscription"
+              component={Subscription}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
+              }}
+            />
+            <Drawer.Screen
+              name="Settings"
+              component={Settings}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
+              }}
+            />
+            <Drawer.Screen
+              name="Log Out"
+              component={Logout}
+              options={{
+                headerLeft: displayNone,
+                header: displayNone,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
+              }}
+            />
+          </Drawer.Navigator>
+        );
+      } else {
+        return <LoadingIndicator isLoading={true} />;
+      }
+    }
+
+    // if gardener {...}
+    if(user.type === 'gardener') {
+
+      // render gardener UI
       return (
         <Drawer.Navigator>
           <Drawer.Screen
             name="Home"
             component={BottomTabNavigator}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
-            }}
-          />
-          <Drawer.Screen
-            name="Referrals"
-            component={Referrals}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
-            }}
-            initialParams={{
-              qrCode: qrCode,
-            }}
-          />
-          <Drawer.Screen
-            name="Subscription"
-            component={Subscription}
             options={{
               headerTitle: () => logo,
               headerStyle: appHeaderStyle,
@@ -110,9 +161,10 @@ class Dashboard extends Component {
           />
         </Drawer.Navigator>
       );
-    } else {
-      return <LoadingIndicator isLoading={true} />;
     }
+
+    return null;
+
   }
 }
 

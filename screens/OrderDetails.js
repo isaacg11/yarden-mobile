@@ -14,6 +14,7 @@ import Card from '../components/UI/Card';
 import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
+import Plants from '../components/app/Plants';
 import { getOrders, updateOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 import units from '../components/styles/units';
@@ -72,6 +73,7 @@ class OrderDetails extends Component {
     render() {
 
         const order = this.props.route.params;
+        const { user } =  this.props;
         const { isLoading, changeOrders } = this.state;
 
         return (
@@ -102,7 +104,7 @@ class OrderDetails extends Component {
 
                             {/* change orders */}
                             {(changeOrders.length > 0) && (
-                                <View style={{marginTop: units.unit4}}>
+                                <View style={{ marginTop: units.unit4 }}>
                                     <Collapse
                                         title={`Change Orders (${changeOrders.length})`}
                                         open={changeOrders.find((changeOrder) => changeOrder.status === 'pending approval')}
@@ -123,15 +125,50 @@ class OrderDetails extends Component {
                                 </View>
                             )}
 
-                            {/* navigation button */}
-                            {(order.type === 'installation' || order.type === 'revive' || order.type === 'misc') && (
-                                <View style={{marginTop: units.unit4}}>
+                            {/* request changes button */}
+                            {(order.status === 'pending' && user.type === 'customer') && (order.type === 'installation' || order.type === 'revive' || order.type === 'misc') && (
+                                <View style={{ marginTop: units.unit4 }}>
                                     <Button
                                         text="Request Changes"
                                         onPress={() => this.requestChanges()}
                                         icon={(
                                             <Ionicons
                                                 name="create-outline"
+                                                size={units.unit4}
+                                                color={colors.purpleB}
+                                            />
+                                        )}
+                                    />
+                                </View>
+                            )}
+
+                            {/* upload results button */}
+                            {(order.status === 'pending' && user.type === 'gardener' && order.type === 'initial planting') && (
+                                <View style={{ marginTop: units.unit4 }}>
+                                    <View>
+                                        <Collapse
+                                            title="Vegetables"
+                                            content={<Plants plants={order.bid.line_items.vegetables} />}
+                                        />
+                                    </View>
+                                    <View>
+                                        <Collapse
+                                            title="Herbs"
+                                            content={<Plants plants={order.bid.line_items.herbs} />}
+                                        />
+                                    </View>
+                                    <View>
+                                        <Collapse
+                                            title="Fruit"
+                                            content={<Plants plants={order.bid.line_items.fruit} />}
+                                        />
+                                    </View>
+                                    <Button
+                                        text="Build Garden Map"
+                                        onPress={() => this.props.navigation.navigate('Beds', { order })}
+                                        icon={(
+                                            <Ionicons
+                                                name="grid-outline"
                                                 size={units.unit4}
                                                 color={colors.purpleB}
                                             />
@@ -147,6 +184,12 @@ class OrderDetails extends Component {
     }
 }
 
+function mapStateToProps(state) {
+    return {
+        user: state.user
+    };
+}
+
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getOrders,
@@ -155,7 +198,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch)
 }
 
-OrderDetails = connect(null, mapDispatchToProps)(OrderDetails);
+OrderDetails = connect(mapStateToProps, mapDispatchToProps)(OrderDetails);
 
 export default OrderDetails;
 
