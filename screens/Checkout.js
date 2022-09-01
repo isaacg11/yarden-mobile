@@ -342,9 +342,8 @@ class Checkout extends Component {
 
         // check to see if the quote is for a garden
         const isGarden = 
-          this.props.route.params.product &&
-          this.props.route.params.product.type &&
-          this.props.route.params.product.type.name === 'garden';
+          this.props.route.params.type === 'installation' ||
+          this.props.route.params.type === 'revive'
 
         // if garden quote {...}
         if (isGarden) {
