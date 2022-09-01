@@ -54,7 +54,7 @@ class PlantMenu extends Component {
                         </View>
                         <View>
                             <Label>Planted</Label>
-                            <Text>0 / {plant.qty}</Text>
+                            <Text>{plant.planted ? plant.planted : 0} / {plant.qty}</Text>
                         </View>
                     </View>
                     <View

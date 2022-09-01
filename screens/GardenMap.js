@@ -9,6 +9,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import Paragraph from '../components/UI/Paragraph';
 import CircularButton from '../components/UI/CircularButton';
+import { alert } from '../components/UI/SystemAlert';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
@@ -72,7 +73,10 @@ class GardenMap extends Component {
 
     selectPlotPoint(plotPoint) {
 
+        // if a plant is queued to move {...}
         if (this.state.plantQueuedToMove) {
+
+            // move plant
             return this.movePlant(plotPoint);
         }
 
@@ -159,7 +163,8 @@ class GardenMap extends Component {
 
         // update UI
         this.setState({
-            plotPoints
+            plotPoints,
+            selectedPlotPoint: plotPoint
         });
     }
 
@@ -178,10 +183,6 @@ class GardenMap extends Component {
 
                     // if column plant id matches selected plant id {...}
                     if (column.plant.id._id === p.plant.id._id) {
-
-                        console.log('Group exists for:');
-                        console.log(p.plant.id.name);
-
                         existingGroups += 1;
                     }
                 }
@@ -266,6 +267,7 @@ class GardenMap extends Component {
                         // set anchor
                         column.anchor = anchor;
                         column.group = groupNumber;
+                        column.image = column.plant.id.common_type.image;
                     }
                 }
             })
@@ -274,10 +276,52 @@ class GardenMap extends Component {
         // update UI
         this.setState({
             plotPoints
+        }, () => {
+            this.updatePlantedList(p.plant, p.additionalQty);
         });
     }
 
+    updatePlantedList(p, qty) {
+
+        // set initial plant category
+        let plantCategory = null;
+
+        // determine category
+        if(p.id.category.name === 'vegetable') {
+            plantCategory = 'vegetables';
+        } else if(p.id.category.name === 'herb') {
+            plantCategory = 'herbs';
+        } else if(p.id.category.name === 'fruit') {
+            plantCategory = 'fruit';
+        }
+
+        // get plants by category
+        let plants = this.state[`${plantCategory}`];
+
+        // iterate through plants
+        plants.forEach((plant) => {
+
+            // if matching plant is found {...}
+            if(plant.id._id === p.id._id) {
+
+                // calculate new planted value
+                let currentPlanted = plant.planted ? plant.planted : 0;
+
+                // set new planted value
+                plant.planted = currentPlanted + qty;
+            }
+        })
+
+        // update UI
+        this.setState({
+            [`${plantCategory}`]: plants
+        })
+    }
+
     removePlant() {
+
+        // set initial plant value
+        let p = null;
 
         // get plot points
         let plotPoints = this.state.plotPoints;
@@ -291,6 +335,9 @@ class GardenMap extends Component {
                 // if column is selected {...}
                 if (column.selected) {
 
+                    // set plant
+                    p = column.plant;
+
                     // reset column (removes plant)
                     column.id = column.id;
                     column.plant = null;
@@ -298,6 +345,7 @@ class GardenMap extends Component {
                     delete column.moveQueue;
                     delete column.anchor;
                     delete column.group;
+                    delete column.image;
                 }
             })
         })
@@ -305,6 +353,8 @@ class GardenMap extends Component {
         // update UI
         this.setState({
             plotPoints
+        }, () => {
+            this.updatePlantedList(p, -1);
         });
     }
 
@@ -382,6 +432,7 @@ class GardenMap extends Component {
                         column.plant = plantQueuedToMove.plant;
                         column.anchor = plantQueuedToMove.anchor;
                         column.group = plantQueuedToMove.group;
+                        column.image = plantQueuedToMove.image;
                     }
                 })
             })
@@ -418,6 +469,7 @@ class GardenMap extends Component {
                     delete column.moveQueue;
                     delete column.anchor;
                     delete column.group;
+                    delete column.image;
                 }
             })
         })
@@ -481,17 +533,16 @@ class GardenMap extends Component {
                                             borderColor: (column.moveQueue) ? 'blue' : 'black',
                                             backgroundColor: (column.selected) ? 'yellow' : 'white'
                                         }}>
-                                        <Image
-                                            source={{ uri: (column.plant) ? column.plant.id.common_type.image : null }}
-                                            style={{
-                                                width: 50,
-                                                // flex: 1,
-                                                height: 50,
-                                                // resizeMode: 'contain',
-                                                // marginVertical: units.unit6,
-                                            }}
-                                        />
-                                        {/* <Text>{(column.plant) && `${column.plant.id.common_type.name} #${column.group}`}</Text> */}
+                                        {column.image && (
+                                            <Image
+                                                source={{ uri: column.image }}
+                                                style={{
+                                                    width: 50,
+                                                    height: 50,
+                                                }}
+                                            />
+                                        )}
+
                                     </View>
                                 </TouchableOpacity>
                             ))}
@@ -508,6 +559,7 @@ class GardenMap extends Component {
             plantMenuIsOpen,
             plantInfoIsOpen,
             selectedPlant,
+            selectedPlotPoint,
             vegetables,
             herbs,
             fruit
@@ -573,7 +625,13 @@ class GardenMap extends Component {
                                         size={fonts.h3}
                                     />
                                 }
-                                onPress={() => this.setState({ plantMenuIsOpen: true })}
+                                onPress={() => {
+                                    if(selectedPlotPoint.plant) {
+                                        alert('Your selected plot point already has a plant. If you want to start a different plant, delete the current plant and try again.');
+                                    } else {
+                                        this.setState({ plantMenuIsOpen: true });
+                                    }
+                                }}
                             />
                             <CircularButton
                                 style={{ marginLeft: units.unit3 }}
