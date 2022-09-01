@@ -39,12 +39,21 @@ import Purchases from './screens/Purchases';
 import Plants from './screens/Plants';
 import ReferralHistory from './screens/ReferralHistory';
 import LearnMore from './screens/LearnMore';
+import AccountType from './screens/AccountType';
+import Application from './screens/Application';
+import Submit from './screens/Submit';
+import AccountPending from './screens/AccountPending';
+import AccountActivation from './screens/AccountActivation';
+import Beds from './screens/Beds';
+import Bed from './screens/Bed';
+import GardenMap from './screens/GardenMap';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
 
 // error reporting
 Sentry.init({
   dsn: 'https://ac125a88d07a40be9ca8dc38d13d8bb9@o160258.ingest.sentry.io/6455224',
+  enableNative: false
 });
 
 // app navigation config
@@ -59,6 +68,7 @@ const displayNone = () => {
 const config = {
   screens: {
     PasswordConfirm: 'password-confirm/:userId',
+    AccountActivation: 'account-activation/:applicationId',
   },
 };
 
@@ -168,7 +178,7 @@ function App() {
               }}
             />
             <Stack.Screen
-              name="PasswordConfirm"
+              name="PasswordConfirm" // name must have no spaces for deep linking to work
               component={PasswordConfirm}
               options={{
                 title: 'Password Confirm',
@@ -403,6 +413,86 @@ function App() {
             <Stack.Screen
               name="Learn More"
               component={LearnMore}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Account Type"
+              component={AccountType}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Application"
+              component={Application}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Submit"
+              component={Submit}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Account Pending"
+              component={AccountPending}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="AccountActivation" // name must have no spaces for deep linking to work
+              component={AccountActivation}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Beds"
+              component={Beds}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Bed"
+              component={Bed}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Garden Map"
+              component={GardenMap}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,

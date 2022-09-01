@@ -2,7 +2,8 @@ import { GET_FILTERS } from '../actions/filters/types';
 
 let initialState = {
     orders: 'pending',
-    quotes: 'pending approval'
+    quotes: 'pending approval',
+    reminders: 'pending'
 };
 
 export default function (state = initialState, action) {

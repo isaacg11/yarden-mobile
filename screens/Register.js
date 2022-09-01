@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ProfileImage from '../components/app/ProfileImage';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import { alert } from '../components/UI/SystemAlert';
@@ -29,15 +30,18 @@ class Register extends Component {
     // render loading indicator
     await this.setState({ isLoading: true });
 
-    // if password fields do not match, render error
-    if (this.state.password !== this.state.confirmPassword)
-      return this.throwWarning('Password fields must match');
+    if (this.props.route.params.accountType === 'customer') {
+      
+      // if password fields do not match, render error
+      if (this.state.password !== this.state.confirmPassword)
+        return this.throwWarning('Password fields must match');
 
-    // if password does not meet validation requirements, render error
-    if (this.state.password.length < 6)
-      return this.throwWarning('Password must contain at least 6 characters');
+      // if password does not meet validation requirements, render error
+      if (this.state.password.length < 6)
+        return this.throwWarning('Password must contain at least 6 characters');
+    }
 
-    // if password does not meet validation requirements, render error
+    // if phone number does not meet validation requirements, render error
     if (this.state.phoneNumber.length < 10)
       return this.throwWarning('Phone number must have 10 digits');
 
@@ -48,8 +52,11 @@ class Register extends Component {
     if (this.props.users.length > 0)
       return this.throwWarning('Account already exists');
 
+    // set redirect based on account type
+    const redirect = (this.props.route.params.accountType === 'customer') ? 'Schedule' : 'Application';
+
     // navigate to schedule screen
-    await this.props.navigation.navigate('Schedule', this.state);
+    await this.props.navigation.navigate(redirect, this.state);
 
     // hide loading indicator
     this.setState({ isLoading: false });
@@ -96,6 +103,11 @@ class Register extends Component {
               New Account
             </Header>
             <View>
+              {(this.props.route.params.accountType === 'gardener') && (
+                <View style={{ marginBottom: units.unit4 }}>
+                  <ProfileImage onSelect={(img) => this.setState({ profileImage: img })} />
+                </View>
+              )}
               <View>
                 <Input
                   label="First Name"
@@ -129,24 +141,28 @@ class Register extends Component {
                   placeholder="Phone Number"
                 />
               </View>
-              <View>
-                <Input
-                  password
-                  label="Password"
-                  onChange={value => this.setState({ password: value })}
-                  value={password}
-                  placeholder="Password"
-                />
-              </View>
-              <View>
-                <Input
-                  password
-                  label="Confirm Password"
-                  onChange={value => this.setState({ confirmPassword: value })}
-                  value={confirmPassword}
-                  placeholder="Confirm Password"
-                />
-              </View>
+              {(this.props.route.params.accountType === 'customer') && (
+                <View>
+                  <View>
+                    <Input
+                      password
+                      label="Password"
+                      onChange={value => this.setState({ password: value })}
+                      value={password}
+                      placeholder="Password"
+                    />
+                  </View>
+                  <View>
+                    <Input
+                      password
+                      label="Confirm Password"
+                      onChange={value => this.setState({ confirmPassword: value })}
+                      value={confirmPassword}
+                      placeholder="Confirm Password"
+                    />
+                  </View>
+                </View>
+              )}
               <View>
                 <Button
                   alignIconRight
@@ -158,8 +174,13 @@ class Register extends Component {
                     !lastName ||
                     !email ||
                     !phoneNumber ||
-                    !password ||
-                    !confirmPassword
+                    (
+                      this.props.route.params.accountType === 'customer' && (
+                        !password ||
+                        !confirmPassword
+                      )
+                    )
+
                   }
                   icon={
                     <Ionicons

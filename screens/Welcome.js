@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../components/UI/Header';
 import Button from '../components/UI/Button';
@@ -21,7 +21,7 @@ class Welcome extends Component {
                     <Header type="h4" style={{ marginBottom: units.unit5 }}>Welcome to Yarden!</Header>
                     <View>
                         <Paragraph style={{marginBottom: units.unit3}}>Great job!</Paragraph>
-                        <Paragraph>Your appointment has been scheduled. A gardener will meet with you at the scheduled time / date to discuss your garden options.</Paragraph>
+                        <Text>Your appointment has been scheduled. A gardener will meet with you at the scheduled time / date to discuss your garden options.</Text>
                     </View>
                     <View style={{marginTop: units.unit3}}>
                         <Button

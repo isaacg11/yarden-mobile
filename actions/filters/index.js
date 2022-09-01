@@ -7,6 +7,7 @@ export function setFilters(filters) {
 
         if(filters.orders) payload.orders = filters.orders;
         if(filters.quotes) payload.quotes = filters.quotes;
+        if(filters.reminders) payload.reminders = filters.reminders;
 
         dispatch({type: GET_FILTERS, payload: payload});
     }

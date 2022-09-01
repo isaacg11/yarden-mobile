@@ -1,19 +1,21 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../UI/LoadingIndicator';
 import Orders from '../../screens/Orders';
 import Quotes from '../../screens/Quotes';
 import Shop from '../../screens/Shop';
 import Messages from '../../screens/Messages';
-import {getQuotes} from '../../actions/quotes/index';
-import {getConversations} from '../../actions/conversations/index';
-import {getMessages} from '../../actions/messages/index';
-import {getOrders} from '../../actions/orders/index';
-import {getChangeOrders} from '../../actions/changeOrders/index';
-import {getUser} from '../../actions/user/index';
+import Reminders from '../../screens/Reminders';
+import { getQuotes } from '../../actions/quotes/index';
+import { getConversations } from '../../actions/conversations/index';
+import { getMessages } from '../../actions/messages/index';
+import { getOrders } from '../../actions/orders/index';
+import { getChangeOrders } from '../../actions/changeOrders/index';
+import { getUser } from '../../actions/user/index';
+import { getReminders } from '../../actions/reminders/index';
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
 import units from '../styles/units';
@@ -57,11 +59,11 @@ class BottomTabNavigator extends Component {
 
         // if last iteration of loop, set inbox and render UI
         if (index === this.props.conversations.length - 1)
-          this.setState({inbox: conversations, renderTabNavigator: true});
+          this.setState({ inbox: conversations, renderTabNavigator: true });
       });
     } else {
       // render UI
-      this.setState({renderTabNavigator: true});
+      this.setState({ renderTabNavigator: true });
     }
   }
 
@@ -74,6 +76,10 @@ class BottomTabNavigator extends Component {
       case 'Quotes':
         return (
           <Ionicons name={focused ? 'layers' : 'layers-outline'} color={'white'} size={fonts.h2} />
+        );
+      case 'Reminders':
+        return (
+          <Ionicons name={focused ? 'calendar' : 'calendar-outline'} color={'white'} size={fonts.h2} />
         );
       case 'Shop':
         return (
@@ -99,146 +105,275 @@ class BottomTabNavigator extends Component {
   }
 
   render() {
-    const {inbox, renderTabNavigator} = this.state;
+    const { inbox, renderTabNavigator } = this.state;
 
-    const {quotes, filters, orders, user} = this.props;
+    const { quotes, filters, orders, user } = this.props;
 
     const isPendingApproval =
       quotes.list &&
       quotes.list.find(quote => quote.status === 'pending approval');
 
+    // if tab nav ready to render {...}
     if (renderTabNavigator) {
-      return (
-        <Tab.Navigator
-          screenOptions={({route}) => ({
-            tabBarIcon: ({focused, color, size}) => {
-              const icon = this.renderIcon(route.name, focused);
-              return icon;
-            },
-            headerShown: false,
-            tabBarActiveTintColor: colors.green0,
-            tabBarInactiveTintColor: 'white',
-            tabBarActiveBackgroundColor: colors.purpleD,
-            tabBarInactiveBackgroundColor: colors.purpleD,
-            tabBarLabelStyle: {
-              fontFamily: fonts.default,
-            },
-            tabBarStyle: {
-              backgroundColor: colors.purpleD,
-              paddingVertical: units.unit4,
-              height: units.unit6 + units.unit5,
-            },
-          })}>
-          <Tab.Screen
-            name="Orders"
-            component={Orders}
-            listeners={({navigation}) => ({
-              tabPress: async e => {
-                // Prevent default action
-                e.preventDefault();
 
-                // set order query
-                const query = `status=${filters.orders}&page=${1}&limit=${5}`;
+      // if user type is customer {...}
+      if (user.type === 'customer') {
 
-                // if status is pending {...}
-                if (filters.orders === 'pending') {
-                  // get pending orders
-                  await this.props.getOrders(query);
+        // render customer UI
+        return (
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                const icon = this.renderIcon(route.name, focused);
+                return icon;
+              },
+              headerShown: false,
+              tabBarActiveTintColor: colors.green0,
+              tabBarInactiveTintColor: 'white',
+              tabBarActiveBackgroundColor: colors.purpleD,
+              tabBarInactiveBackgroundColor: colors.purpleD,
+              tabBarLabelStyle: {
+                fontFamily: fonts.default,
+              },
+              tabBarStyle: {
+                backgroundColor: colors.purpleD,
+                paddingVertical: units.unit4,
+                height: units.unit6 + units.unit5,
+              },
+            })}>
+            <Tab.Screen
+              name="Orders"
+              component={Orders}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
 
-                  if (orders.list) {
-                    // iterate through order list
-                    await orders.list.forEach(async order => {
-                      // get pending change orders
-                      await this.props.getChangeOrders(
-                        `order=${order._id}&status=pending approval`,
-                      );
-                    });
+                  // set order query
+                  const query = `status=${filters.orders}&page=${1}&limit=${5}`;
+
+                  // if status is pending {...}
+                  if (filters.orders === 'pending') {
+                    // get pending orders
+                    await this.props.getOrders(query);
+
+                    if (orders.list) {
+                      // iterate through order list
+                      await orders.list.forEach(async order => {
+                        // get pending change orders
+                        await this.props.getChangeOrders(
+                          `order=${order._id}&status=pending approval`,
+                        );
+                      });
+                    }
+                  } else {
+                    // get completed orders
+                    await this.props.getOrders(query);
                   }
-                } else {
+
+                  // navigate to orders
+                  navigation.jumpTo('Orders');
+                },
+              })}
+            />
+
+            <Tab.Screen
+              name="Quotes"
+              component={Quotes}
+              options={{
+                tabBarBadge:
+                  quotes.list && quotes.list.length > 0 && isPendingApproval
+                    ? quotes.list.length
+                    : null,
+                tabBarBadgeStyle: {
+                  backgroundColor: '#ff6060',
+                  color: 'white',
+                  fontWeight: 'bold',
+                },
+              }}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
+
+                  // set order query
+                  const query = `status=${filters.quotes}&page=${1}&limit=${5}`;
+
                   // get completed orders
-                  await this.props.getOrders(query);
-                }
+                  await this.props.getQuotes(query);
 
-                // navigate to orders
-                navigation.jumpTo('Orders');
+                  // navigate to quotes
+                  navigation.jumpTo('Quotes');
+                },
+              })}
+            />
+
+            <Tab.Screen
+              name="Messages"
+              component={Messages}
+              options={{
+                tabBarBadge: inbox.length > 0 ? inbox.length : null,
+                tabBarBadgeStyle: {
+                  backgroundColor: '#ff6060',
+                  color: 'white',
+                  fontWeight: 'bold',
+                },
+              }}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
+
+                  // get conversations
+                  await this.props.getConversations(`users=${user._id}`);
+
+                  // navigate to messages
+                  navigation.jumpTo('Messages');
+                },
+              })}
+            />
+
+            <Tab.Screen
+              name="Shop"
+              component={Shop}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
+
+                  // get user
+                  await this.props.getUser(`${user._id}`);
+
+                  // navigate to shop
+                  navigation.jumpTo('Shop');
+                },
+              })}
+            />
+          </Tab.Navigator>
+        );
+      }
+
+      // if user is a gardener {...}
+      if (user.type === 'gardener') {
+
+        // render gardener UI
+        return (
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                const icon = this.renderIcon(route.name, focused);
+                return icon;
               },
-            })}
-          />
-
-          <Tab.Screen
-            name="Quotes"
-            component={Quotes}
-            options={{
-              tabBarBadge:
-                quotes.list && quotes.list.length > 0 && isPendingApproval
-                  ? quotes.list.length
-                  : null,
-              tabBarBadgeStyle: {
-                backgroundColor: '#ff6060',
-                color: 'white',
-                fontWeight: 'bold',
+              headerShown: false,
+              tabBarActiveTintColor: colors.green0,
+              tabBarInactiveTintColor: 'white',
+              tabBarActiveBackgroundColor: colors.purpleD,
+              tabBarInactiveBackgroundColor: colors.purpleD,
+              tabBarLabelStyle: {
+                fontFamily: fonts.default,
               },
-            }}
-            listeners={({navigation}) => ({
-              tabPress: async e => {
-                // Prevent default action
-                e.preventDefault();
-
-                // set order query
-                const query = `status=${filters.quotes}&page=${1}&limit=${5}`;
-
-                // get completed orders
-                await this.props.getQuotes(query);
-
-                // navigate to quotes
-                navigation.jumpTo('Quotes');
+              tabBarStyle: {
+                backgroundColor: colors.purpleD,
+                paddingVertical: units.unit4,
+                height: units.unit6 + units.unit5,
               },
-            })}
-          />
+            })}>
+            <Tab.Screen
+              name="Orders"
+              component={Orders}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
 
-          <Tab.Screen
-            name="Messages"
-            component={Messages}
-            options={{
-              tabBarBadge: inbox.length > 0 ? inbox.length : null,
-              tabBarBadgeStyle: {
-                backgroundColor: '#ff6060',
-                color: 'white',
-                fontWeight: 'bold',
-              },
-            }}
-            listeners={({navigation}) => ({
-              tabPress: async e => {
-                // Prevent default action
-                e.preventDefault();
+                  // set order query
+                  const query = `status=${filters.orders}&page=${1}&limit=${5}&vendor=${user._id}`;
 
-                // get conversations
-                await this.props.getConversations(`users=${user._id}`);
+                  // if status is pending {...}
+                  if (filters.orders === 'pending') {
+                    // get pending orders
+                    await this.props.getOrders(query);
 
-                // navigate to messages
-                navigation.jumpTo('Messages');
-              },
-            })}
-          />
+                    if (orders.list) {
+                      // iterate through order list
+                      await orders.list.forEach(async order => {
+                        // get pending change orders
+                        await this.props.getChangeOrders(
+                          `order=${order._id}&status=pending approval`,
+                        );
+                      });
+                    }
+                  } else {
+                    // get completed orders
+                    await this.props.getOrders(query);
+                  }
 
-          <Tab.Screen
-            name="Shop"
-            component={Shop}
-            listeners={({navigation}) => ({
-              tabPress: async e => {
-                // Prevent default action
-                e.preventDefault();
+                  // navigate to orders
+                  navigation.jumpTo('Orders');
+                },
+              })}
+            />
 
-                // get user
-                await this.props.getUser(`${user._id}`);
+            <Tab.Screen
+              name="Reminders"
+              component={Reminders}
+              // options={{
+              //   tabBarBadge:
+              //     quotes.list && quotes.list.length > 0 && isPendingApproval
+              //       ? quotes.list.length
+              //       : null,
+              //   tabBarBadgeStyle: {
+              //     backgroundColor: '#ff6060',
+              //     color: 'white',
+              //     fontWeight: 'bold',
+              //   },
+              // }}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
 
-                // navigate to shop
-                navigation.jumpTo('Shop');
-              },
-            })}
-          />
-        </Tab.Navigator>
-      );
+                  // set order query
+                  const query = `status=${filters.reminders}&page=${1}&limit=${5}`;
+
+                  // get reminders
+                  await this.props.getReminders(query);
+
+                  // navigate to quotes
+                  navigation.jumpTo('Reminders');
+                },
+              })}
+            />
+
+            <Tab.Screen
+              name="Messages"
+              component={Messages}
+              options={{
+                tabBarBadge: inbox.length > 0 ? inbox.length : null,
+                tabBarBadgeStyle: {
+                  backgroundColor: '#ff6060',
+                  color: 'white',
+                  fontWeight: 'bold',
+                },
+              }}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // Prevent default action
+                  e.preventDefault();
+
+                  // get conversations
+                  await this.props.getConversations(`users=${user._id}`);
+
+                  // navigate to messages
+                  navigation.jumpTo('Messages');
+                },
+              })}
+            />
+
+          </Tab.Navigator>
+        );
+      }
+
     } else {
       return <LoadingIndicator loading={true} />;
     }
@@ -264,6 +399,7 @@ function mapDispatchToProps(dispatch) {
       getOrders,
       getChangeOrders,
       getUser,
+      getReminders
     },
     dispatch,
   );
