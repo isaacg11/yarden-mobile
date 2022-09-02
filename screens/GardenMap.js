@@ -130,7 +130,6 @@ class GardenMap extends Component {
 
                             // if column anchor does not match plot point anchor {...}
                             if (
-                                // (column.plant && plotPoint.plant) &&
                                 (column.anchor !== plotPoint.anchor)
                             ) {
 
@@ -164,7 +163,7 @@ class GardenMap extends Component {
         // update UI
         this.setState({
             plotPoints,
-            selectedPlotPoint: plotPoint
+            selectedPlotPoint: (plotPoint.selected) ? plotPoint : null
         });
     }
 
@@ -193,6 +192,12 @@ class GardenMap extends Component {
     }
 
     async addPlant(p) {
+
+        // check for spaces available
+        const spaceAvailable = await this.validateAvailableSpace(p);
+
+        // if no space available, render warning
+        if (!spaceAvailable) return alert(`Insufficient space available for "${p.additionalQty} ${p.plant.id.name} ${p.plant.id.common_type.name}". Please try again and make sure there are at least ${p.additionalQty * p.plant.id.quadrant_size} spaces available to the right of the selected square.`);
 
         // get quadrant size
         const quadrantSize = p.additionalQty * p.plant.id.quadrant_size;
@@ -275,10 +280,127 @@ class GardenMap extends Component {
 
         // update UI
         this.setState({
-            plotPoints
+            plotPoints,
+            selectedPlotPoint: null
         }, () => {
             this.updatePlantedList(p.plant, p.additionalQty);
         });
+    }
+
+    async validateAvailableSpace(p) {
+
+        // get quadrant size
+        const quadrantSize = p.additionalQty * p.plant.id.quadrant_size;
+
+        // get plot points
+        let plotPoints = this.state.plotPoints;
+
+        // set initial selected plot point
+        let selectedPlotPoint = null;
+
+        // set initial column index
+        let columnIndex = -1;
+
+        // set initial space available
+        let spaceAvailable = true;
+
+        let totalPlotPoints = 0;
+
+        plotPoints.forEach((plotPoint) => totalPlotPoints += plotPoint.length);
+
+        // iterate through plot points
+        plotPoints.forEach((row) => {
+
+            // iterate through rows
+            row.forEach((column) => {
+
+                // increment row index
+                columnIndex += 1;
+
+                // if selected column found {...}
+                if (column.selected) {
+
+                    // set selected plot point
+                    selectedPlotPoint = columnIndex;
+                }
+
+                // if selectedPlotPoint has been set {...}
+                if (selectedPlotPoint !== null) {
+
+                    // if not enough space available {...}
+                    if ((selectedPlotPoint + quadrantSize) > totalPlotPoints) {
+
+                        // set space available to false
+                        spaceAvailable = false;
+                    }
+
+                    // if row index is less than selected plot point index plus quadrant size {...}
+                    if (columnIndex < (selectedPlotPoint + quadrantSize)) {
+
+                        // if plant is found {...}
+                        if (column.plant) {
+
+                            // set space available to false
+                            spaceAvailable = false;
+                        }
+                    }
+                }
+            })
+        })
+
+        return spaceAvailable;
+    }
+
+    async validateAvailableSpaceOnMove(p, index) {
+
+        // get quadrant size
+        const quadrantSize = p.plant.id.quadrant_size;
+
+        // get plot points
+        let plotPoints = this.state.plotPoints;
+
+        // set initial selected plot point
+        let selectedPlotPoint = index - 1;
+
+        // set initial column index
+        let columnIndex = -1;
+
+        // set initial space available
+        let spaceAvailable = true;
+
+        let totalPlotPoints = 0;
+
+        plotPoints.forEach((plotPoint) => totalPlotPoints += plotPoint.length);
+
+        // iterate through plot points
+        plotPoints.forEach((row) => {
+
+            // iterate through rows
+            row.forEach((column) => {
+
+                // increment row index
+                columnIndex += 1;
+
+                // if not enough space available {...}
+                if ((selectedPlotPoint + quadrantSize) > totalPlotPoints) {
+
+                    // set space available to false
+                    spaceAvailable = false;
+                }
+
+                if((columnIndex >= selectedPlotPoint) && (columnIndex <= (selectedPlotPoint + quadrantSize))) {
+
+                    // if plant is found {...}
+                    if (column.plant) {
+
+                        // set space available to false
+                        spaceAvailable = false;
+                    }
+                }
+            })
+        })
+
+        return spaceAvailable;
     }
 
     updatePlantedList(p, qty) {
@@ -287,11 +409,11 @@ class GardenMap extends Component {
         let plantCategory = null;
 
         // determine category
-        if(p.id.category.name === 'vegetable') {
+        if (p.id.category.name === 'vegetable') {
             plantCategory = 'vegetables';
-        } else if(p.id.category.name === 'herb') {
+        } else if (p.id.category.name === 'herb') {
             plantCategory = 'herbs';
-        } else if(p.id.category.name === 'fruit') {
+        } else if (p.id.category.name === 'fruit') {
             plantCategory = 'fruit';
         }
 
@@ -302,7 +424,7 @@ class GardenMap extends Component {
         plants.forEach((plant) => {
 
             // if matching plant is found {...}
-            if(plant.id._id === p.id._id) {
+            if (plant.id._id === p.id._id) {
 
                 // calculate new planted value
                 let currentPlanted = plant.planted ? plant.planted : 0;
@@ -352,7 +474,8 @@ class GardenMap extends Component {
 
         // update UI
         this.setState({
-            plotPoints
+            plotPoints,
+            selectedPlotPoint: null
         }, () => {
             this.updatePlantedList(p, -1);
         });
@@ -374,6 +497,9 @@ class GardenMap extends Component {
                 // iterate through rows
                 row.forEach((column) => {
 
+                    // unselect all plot points
+                    column.selected = false;
+
                     // if column is selected {...}
                     if (column.anchor === c.anchor) {
 
@@ -393,12 +519,27 @@ class GardenMap extends Component {
             // update UI
             this.setState({
                 plotPoints,
-                plantQueuedToMove
+                plantQueuedToMove,
+                selectPlotPoint: null
             });
         }
     }
 
-    movePlant(plotPoint) {
+    async movePlant(plotPoint) {
+
+        // check to see if there's already a plant in the target plot point, render warning
+        if(plotPoint.plant) return alert('There is already a plant in that location, please select another space.');
+
+        // set initial value for queued plant
+        let queuedPlant = {
+            plant: this.state.plantQueuedToMove.plant,
+        };
+
+        // check for spaces available
+        const spaceAvailable = await this.validateAvailableSpaceOnMove(queuedPlant, plotPoint.id);
+
+        // if no space available, render warning
+        if (!spaceAvailable) return alert(`Insufficient space available for "1 ${queuedPlant.plant.id.name} ${queuedPlant.plant.id.common_type.name}". Please try again and make sure there are at least ${queuedPlant.plant.id.quadrant_size} spaces available to the right of the selected square.`);
 
         // if no plant is located in selected plot point {...}
         if (!plotPoint.plant) {
@@ -440,7 +581,8 @@ class GardenMap extends Component {
             // update UI
             this.setState({
                 plotPoints,
-                plantQueuedToMove: null
+                plantQueuedToMove: null,
+                selectedPlotPoint: null
             });
 
             // remove queued plants
@@ -606,7 +748,7 @@ class GardenMap extends Component {
                             Section {selectedQuadrant}
                         </Header>
                         <Paragraph style={{ marginBottom: units.unit5, marginTop: units.unit3 }}>
-                            Tap on any plot point to add a new plant. Long press to move a plant to another location.
+                            Tap on any square to add a new plant. Long press to move a plant to another location.
                         </Paragraph>
 
                         {/* garden map */}
@@ -626,10 +768,14 @@ class GardenMap extends Component {
                                     />
                                 }
                                 onPress={() => {
-                                    if(selectedPlotPoint.plant) {
-                                        alert('Your selected plot point already has a plant. If you want to start a different plant, delete the current plant and try again.');
+                                    if (selectedPlotPoint) {
+                                        if (selectedPlotPoint.plant) {
+                                            alert('The selected space already has a plant. If you want to replace with a different plant, delete the current plant and try again.');
+                                        } else {
+                                            this.setState({ plantMenuIsOpen: true });
+                                        }
                                     } else {
-                                        this.setState({ plantMenuIsOpen: true });
+                                        alert('Please select a space to add a plant.');
                                     }
                                 }}
                             />
@@ -643,7 +789,22 @@ class GardenMap extends Component {
                                         size={fonts.h3}
                                     />
                                 }
-                                onPress={() => this.removePlant()}
+                                onPress={() => {
+                                    if (selectedPlotPoint) {
+                                        if (selectedPlotPoint.plant) {
+                                            if (selectedPlotPoint.moveQueue) {
+                                                this.addPlantToMoveQueue(selectedPlotPoint);
+                                                alert('You are trying to delete a plant that has been selected to move. To delete a plant, tap on the plant and then press the delete button.');
+                                            } else {
+                                                this.removePlant();
+                                            }
+                                        } else {
+                                            alert('No plant was found in your current selection, please try selecting a space with a plant to remove.');
+                                        }
+                                    } else {
+                                        alert('Please select a space to remove a plant.');
+                                    }
+                                }}
                             />
                             <CircularButton
                                 style={{ marginLeft: units.unit3 }}
