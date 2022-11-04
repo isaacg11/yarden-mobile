@@ -16,9 +16,14 @@ class Collapse extends Component {
   }
 
   render() {
-    const {title = 'View Details', content} = this.props;
+    const {
+      title = 'View Details', 
+      content,
+      icon,
+      icon2,
+    } = this.props;
 
-    const {isOpen} = this.state;
+    const { isOpen } = this.state;
 
     return (
       <View
@@ -51,6 +56,12 @@ class Collapse extends Component {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
+            {(icon) && (
+              <View>{icon}</View>
+            )}
+            {(icon2) && (
+              <View>{icon2}</View>
+            )}
             <Paragraph style={{color: colors.greenD75, fontSize: fonts.h3}}>
               {title}
             </Paragraph>

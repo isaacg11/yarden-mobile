@@ -74,7 +74,7 @@ class PlantInfo extends Component {
                                 <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
                                     Category
                                 </Paragraph>
-                                <Paragraph style={{ flex: 2 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     {capitalize(selectedPlant.id.category.name)}
                                 </Paragraph>
                             </View>
@@ -82,15 +82,23 @@ class PlantInfo extends Component {
                                 <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
                                     Season
                                 </Paragraph>
-                                <Paragraph style={{ flex: 2 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     {capitalize(selectedPlant.id.season)}
+                                </Paragraph>
+                            </View>
+                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                    Days to Mature
+                                </Paragraph>
+                                <Paragraph style={{ flex: 1 }}>
+                                    {selectedPlant.id.days_to_mature}
                                 </Paragraph>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                 <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
                                     Growth Style
                                 </Paragraph>
-                                <Paragraph style={{ flex: 2 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     {capitalize(selectedPlant.id.growth_style.name)}
                                 </Paragraph>
                             </View>
@@ -98,7 +106,7 @@ class PlantInfo extends Component {
                                 <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
                                     Partial Sun
                                 </Paragraph>
-                                <Paragraph style={{ flex: 2 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     {selectedPlant.id.partial_sun ? "Yes" : "No"}
                                 </Paragraph>
                             </View>

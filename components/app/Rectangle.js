@@ -1,49 +1,34 @@
 
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+import GardenMap from '../../screens/GardenMap';
 
 class Rectangle extends Component {
 
+    state = {}
+
     render() {
 
-        const { onPress } = this.props;
+        const { 
+            bed, 
+            order 
+        } = this.props;
+
+        const measurements = 2;
+        const rows = (bed.length / 12) * measurements;
+        const columns = (bed.width / 12) * measurements;
 
         return (
             <View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignSelf: 'center' }}>
-                    <TouchableOpacity 
-                        onPress={() => onPress(1)}
-                        style={{ width: '50%', height: 250, borderColor: 'black', borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <View>
-                            <Text>Section 1</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onPress={() => onPress(2)}
-                        style={{ width: '50%', height: 250, borderColor: 'black', borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <View>
-                            <Text>Section 2</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View 
-                    style={{ display: 'flex', flexDirection: 'row', alignSelf: 'center' }}>
-                    <TouchableOpacity 
-                        onPress={() => onPress(3)}
-                        style={{ width: '50%', height: 250, borderColor: 'black', borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <View>
-                            <Text>Section 3</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onPress={() => onPress(4)}
-                        style={{ width: '50%', height: 250, borderColor: 'black', borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <View>
-                            <Text>Section 4</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+
+                {/* garden map */}
+                <GardenMap
+                    rows={rows}
+                    columns={columns}
+                    order={order}
+                    onSelectPlotPoint={(selectedPlotPoint) => this.setState({ selectedPlotPoint })}
+                />
             </View>
         )
     }

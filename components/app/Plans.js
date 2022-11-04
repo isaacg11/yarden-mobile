@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import Divider from '../UI/Divider';
 import Paragraph from '../UI/Paragraph';
 import Label from '../UI/Label';
 import Card from '../UI/Card';
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
-import fonts from '../styles/fonts';
 
 class Plans extends Component {
   state = {
@@ -64,9 +62,6 @@ class Plans extends Component {
             <Card style={{marginBottom: units.unit4}} key={index}>
               <View
                 style={{
-                  //   padding: units.unit3,
-                  //   flex: 1,
-                  //   alignSelf: 'stretch',
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginBottom: units.unit4,
