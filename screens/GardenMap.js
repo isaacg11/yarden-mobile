@@ -393,7 +393,7 @@ class GardenMap extends Component {
             plotPoints,
             selectedPlotPoint: null
         }, () => {
-            this.updatePlantedList(p.plant, p.additionalQty);
+            this.updatePlantedList(p);
         });
     }
 
@@ -620,55 +620,60 @@ class GardenMap extends Component {
         return validRenderPath;
     }
 
-    async updatePlantedList(p, qty) {
+    async updatePlantedList(p) {
+
+        const plant = p.plant;
 
         // set initial plant category
         let plantCategory = null;
 
         // determine category
-        if (p.id.category.name === 'vegetable') {
+        if (plant.id.category.name === 'vegetable') {
             plantCategory = 'vegetables';
-        } else if (p.id.category.name === 'herb') {
+        } else if (plant.id.category.name === 'herb') {
             plantCategory = 'herbs';
-        } else if (p.id.category.name === 'fruit') {
+        } else if (plant.id.category.name === 'fruit') {
             plantCategory = 'fruit';
         }
 
-        // get current plant selections
         let selections = this.props.plantSelections;
 
         // get plants by category
-        let plants = this.props.plantSelections[`${plantCategory}`];
+        let currentPlanted = this.props.plantSelections[`${plantCategory}`];
 
-        // check if plant is already planted
-        const alreadyPlanted = plants.find((plant) => plant.id._id === p.id._id);
+        p.selections.forEach((selection) => currentPlanted.push(selection));
 
-        // if plant already planted {...}
-        if(alreadyPlanted) {
-
-            // iterate through plants
-            plants.forEach((plant) => {
-
-                // if matching plant is found {...}
-                if (plant.id._id === p.id._id) {
-
-                    // calculate new planted value
-                    let currentPlanted = plant.planted ? plant.planted : 0;
-
-                    // set new planted value
-                    plant.planted = currentPlanted + qty;
-                }
-            })
-        } else {
-            // add new plant to list of selections
-            plants.push({ planted: qty, ...p });
-        }
-
-        // update selection category
-        selections[`${plantCategory}`] = plants;
+        selections[`${plantCategory}`] = currentPlanted;
 
         // get new plant selections
         getPlantSelections(selections);
+
+        // // check if plant is already planted
+        // const alreadyPlanted = plants.find((plant) => plant.id._id === p.id._id);
+
+        // // if plant already planted {...}
+        // if(alreadyPlanted) {
+
+        //     // iterate through plants
+        //     plants.forEach((plant) => {
+
+        //         // if matching plant is found {...}
+        //         if (plant.id._id === p.id._id) {
+
+        //             // calculate new planted value
+        //             let currentPlanted = plant.planted ? plant.planted : 0;
+
+        //             // set new planted value
+        //             plant.planted = currentPlanted + qty;
+        //         }
+        //     })
+        // } else {
+        //     // add new plant to list of selections
+        //     plants.push({ planted: qty, ...p });
+        // }
+
+        // // update selection category
+        // selections[`${plantCategory}`] = plants;
     }
 
     removePlant() {
@@ -687,7 +692,7 @@ class GardenMap extends Component {
                 // if column is selected {...}
                 if (column.selected) {
 
-                    selectedPlant = column.plant;
+                    selectedPlant = column;
 
                     // reset column (removes plant)
                     column.selected = false;

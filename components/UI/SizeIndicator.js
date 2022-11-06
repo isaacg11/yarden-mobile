@@ -23,8 +23,8 @@ class SizeIndicator extends Component {
         const sqrt = Math.sqrt(size);
         const rows = this.getInfo(sqrt);
         const indicatorStyles = {
-            height: 10,
-            width: 10,
+            height: 3,
+            width: 3,
             backgroundColor: colors.greenD25,
             marginRight: 2,
             marginTop: 2,
