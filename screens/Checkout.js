@@ -271,116 +271,113 @@ class Checkout extends Component {
     // format from dollars to cents
     const total = parseFloat(amount).toFixed(2) * 100;
 
-    // format payment description for materials
-    const description = `Materials - ${this.props.route.params.description}`;
+    if (total > 0) {
+      // format payment description for materials
+      const description = `Materials - ${this.props.route.params.description}`;
 
-    // format payment
-    const payment = {
-      amount: total,
-      currency: 'usd',
-      description: description,
-      statement_descriptor_suffix: `Materials`,
-    };
-
-    // charge card
-    const charge = await this.props.chargeCard(payment);
-
-    // if charge failed, show error message
-    if (charge.status !== 200) {
-      alert('Payment failed, please try again');
-    } else {
-      // get user IP (proof of location at time of approval)
-      const ip = await this.props.getIP();
-
-      // take screenshot (proof of approval agreement)
-      const screenshot = await getScreenShot();
-
-      // save screenshot of approval image
-      const approvalImage = await uploadImage(screenshot, 'approval.jpg');
-
-      // format new approval
-      const newApproval = {
-        image: approvalImage,
-        location: ip.data,
+      // format payment
+      const payment = {
+        amount: total,
+        currency: 'usd',
+        description: description,
+        statement_descriptor_suffix: `Materials`,
       };
 
-      // create approval
-      const approval = await this.props.createApproval(newApproval);
+      // charge card
+      await this.props.chargeCard(payment);
+    }
 
-      // set empty order
-      let order = {};
+    // get user IP (proof of location at time of approval)
+    const ip = await this.props.getIP();
 
-      if (this.props.route.params.isChangeOrder) {
-        // if approval is for a change order {...}
+    // take screenshot (proof of approval agreement)
+    const screenshot = await getScreenShot();
 
-        // update change order as "approved"
-        await this.props.updateChangeOrder(this.props.route.params._id, {
-          status: 'approved',
-          approval: approval._id,
-        });
+    // save screenshot of approval image
+    const approvalImage = await uploadImage(screenshot, 'approval.jpg');
 
-        // assign order value
-        order = this.props.route.params.order;
-      } else if (this.props.route.params.isPurchase) {
-        // if approval is for a purchase {...}
+    // format new approval
+    const newApproval = {
+      image: approvalImage,
+      location: ip.data,
+    };
 
-        // if plant selections {...}
-        if (this.props.route.params.plantSelections) {
-          // update garden info
-          await this.updateGardenInfo(
-            this.state.vegetables,
-            this.state.fruit,
-            this.state.herbs,
-          );
-        }
+    // create approval
+    const approval = await this.props.createApproval(newApproval);
 
-        // process purchase
-        return this.processPurchase(approval.data);
-      } else {
-        // set initial quote update
-        let updatedQuote = { status: 'approved' };
+    // set empty order
+    let order = {};
 
-        // check to see if the quote is for a garden
-        const isGarden = 
-          this.props.route.params.type === 'installation' ||
-          this.props.route.params.type === 'revive'
+    if (this.props.route.params.isChangeOrder) {
+      // if approval is for a change order {...}
 
-        // if garden quote {...}
-        if (isGarden) {
-          // get plant selection
-          const plantList = this.getPlantsList(this.props.route.params);
+      // update change order as "approved"
+      await this.props.updateChangeOrder(this.props.route.params._id, {
+        status: 'approved',
+        approval: approval._id,
+      });
 
-          // get plant selection
-          let lineItems = this.props.route.params.line_items;
+      // assign order value
+      order = this.props.route.params.order;
+    } else if (this.props.route.params.isPurchase) {
+      // if approval is for a purchase {...}
 
-          // add plants to line items
-          lineItems.vegetables = minifyDataToID(plantList.vegetables);
-          lineItems.herbs = minifyDataToID(plantList.herbs);
-          lineItems.fruit = minifyDataToID(plantList.fruit);
-
-          updatedQuote.line_items = lineItems;
-
-          // update garden info
-          await this.updateGardenInfo(
-            lineItems.vegetables,
-            lineItems.fruit,
-            lineItems.herbs,
-          );
-        }
-
-        // update quote as "approved"
-        await this.props.updateQuote(this.props.route.params._id, updatedQuote);
-
-        // schedule a new order
-        order = await this.scheduleNewOrder(
-          approval.data,
-          this.props.route.params,
-          isGarden,
+      // if plant selections {...}
+      if (this.props.route.params.plantSelections) {
+        // update garden info
+        await this.updateGardenInfo(
+          this.state.vegetables,
+          this.state.fruit,
+          this.state.herbs,
         );
       }
 
-      this.finish(order);
+      // process purchase
+      return this.processPurchase(approval.data);
+    } else {
+      // set initial quote update
+      let updatedQuote = { status: 'approved' };
+
+      // check to see if the quote is for a garden
+      const isGarden =
+        this.props.route.params.type === 'installation' ||
+        this.props.route.params.type === 'revive'
+
+      // if garden quote {...}
+      if (isGarden) {
+        // get plant selection
+        const plantList = this.getPlantsList(this.props.route.params);
+
+        // get plant selection
+        let lineItems = this.props.route.params.line_items;
+
+        // add plants to line items
+        lineItems.vegetables = minifyDataToID(plantList.vegetables);
+        lineItems.herbs = minifyDataToID(plantList.herbs);
+        lineItems.fruit = minifyDataToID(plantList.fruit);
+
+        updatedQuote.line_items = lineItems;
+
+        // update garden info
+        await this.updateGardenInfo(
+          lineItems.vegetables,
+          lineItems.fruit,
+          lineItems.herbs,
+        );
+      }
+
+      // update quote as "approved"
+      await this.props.updateQuote(this.props.route.params._id, updatedQuote);
+
+      // schedule a new order
+      order = await this.scheduleNewOrder(
+        approval.data,
+        this.props.route.params,
+        isGarden,
+      );
     }
+
+    this.finish(order);
   }
 
   async updateGardenInfo(vegetables, fruit, herbs) {
@@ -748,165 +745,165 @@ class Checkout extends Component {
     const { user } = this.props;
 
     return (
-        <SafeAreaView
-          style={{
-            flex: 1,
-            width: '100%',
-          }}>
-          <KeyboardAwareScrollView>
-            <View style={{ padding: units.unit3 + units.unit4 }}>
-              {/* loading indicator */}
-              <LoadingIndicator loading={isLoading} />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+        }}>
+        <KeyboardAwareScrollView>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+            {/* loading indicator */}
+            <LoadingIndicator loading={isLoading} />
 
-              <Header type="h4" style={{ marginBottom: units.unit5 }}>
-                Checkout
-              </Header>
-              <Label>Scope of Work (1a)</Label>
-              <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
-                {quote.title} - {quote.description}
-              </Text>
+            <Header type="h4" style={{ marginBottom: units.unit5 }}>
+              Checkout
+            </Header>
+            <Label>Scope of Work (1a)</Label>
+            <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
+              {quote.title} - {quote.description}
+            </Text>
+            <View>
+              <Label>Payment Method</Label>
+              <Card style={{ marginBottom: units.unit5 }}>
+                <PaymentMethod />
+              </Card>
+
+              {/* approval start */}
               <View>
-                <Label>Payment Method</Label>
-                <Card style={{ marginBottom: units.unit5 }}>
-                  <PaymentMethod />
-                </Card>
-
-                {/* approval start */}
+                {/* agreement modal */}
+                <ElectronicSignatureAgreement
+                  isOpen={isOpen}
+                  close={() => this.setState({ isOpen: false })}
+                />
                 <View>
-                  {/* agreement modal */}
-                  <ElectronicSignatureAgreement
-                    isOpen={isOpen}
-                    close={() => this.setState({ isOpen: false })}
-                  />
                   <View>
-                    <View>
-                      <Input
-                        label="First/last name"
-                        onChange={value => this.setState({ userSignature: value })}
-                        value={userSignature}
-                        placeholder="ex. Jane Doe"
-                      />
-                      <Text
-                        style={{
-                          marginVertical: units.unit4,
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                          color: colors.greenD75,
-                        }}>
-                        Add your e-signature to approve the quote
-                      </Text>
-                      <Text
-                        style={{
-                          lineHeight: fonts.h2,
-                          color: colors.greenE75,
-                        }}>
-                        By signing, I agree to pay the full amount of{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          ${delimit(
-                            (
-                              materialsTotal +
-                              materialsTotal * vars.tax.ca +
-                              (laborTotal +
-                                deliveryTotal +
-                                rentalTotal +
-                                disposalTotal) +
-                              (materialsTotal +
-                                laborTotal +
-                                deliveryTotal +
-                                rentalTotal +
-                                disposalTotal +
-                                materialsTotal * vars.tax.ca) *
-                              vars.fees.payment_processing
-                            ).toFixed(2),
-                          )}
-                        </Text>{' '}
-                        to {getCompanyName()} for all work listed in section (1a)
-                        "Scope of Work" of this contract. I agree to pay the first
-                        payment of{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          $
-                          {delimit(
-                            (
-                              materialsTotal +
+                    <Input
+                      label="First/last name"
+                      onChange={value => this.setState({ userSignature: value })}
+                      value={userSignature}
+                      placeholder="ex. Jane Doe"
+                    />
+                    <Text
+                      style={{
+                        marginVertical: units.unit4,
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        color: colors.greenD75,
+                      }}>
+                      Add your e-signature to approve the quote
+                    </Text>
+                    <Text
+                      style={{
+                        lineHeight: fonts.h2,
+                        color: colors.greenE75,
+                      }}>
+                      By signing, I agree to pay the full amount of{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        ${delimit(
+                          (
+                            materialsTotal +
+                            materialsTotal * vars.tax.ca +
+                            (laborTotal +
+                              deliveryTotal +
+                              rentalTotal +
+                              disposalTotal) +
+                            (materialsTotal +
+                              laborTotal +
                               deliveryTotal +
                               rentalTotal +
                               disposalTotal +
-                              materialsTotal * vars.tax.ca +
-                              (materialsTotal +
-                                deliveryTotal +
-                                rentalTotal +
-                                disposalTotal +
-                                materialsTotal * vars.tax.ca) *
-                              vars.fees.payment_processing
-                            ).toFixed(2),
-                          )}
-                        </Text>{' '}
-                        today{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          {moment().format('MM/DD/YYYY')}
-                        </Text>
-                        , and a second payment of{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          ${delimit(
-                            (
-                              laborTotal +
-                              laborTotal * vars.fees.payment_processing
-                            ).toFixed(2),
-                          )}
-                        </Text>{' '}
-                        once all work has been completed.
+                              materialsTotal * vars.tax.ca) *
+                            vars.fees.payment_processing
+                          ).toFixed(2),
+                        )}
+                      </Text>{' '}
+                      to {getCompanyName()} for all work listed in section (1a)
+                      "Scope of Work" of this contract. I agree to pay the first
+                      payment of{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        $
+                        {delimit(
+                          (
+                            materialsTotal +
+                            deliveryTotal +
+                            rentalTotal +
+                            disposalTotal +
+                            materialsTotal * vars.tax.ca +
+                            (materialsTotal +
+                              deliveryTotal +
+                              rentalTotal +
+                              disposalTotal +
+                              materialsTotal * vars.tax.ca) *
+                            vars.fees.payment_processing
+                          ).toFixed(2),
+                        )}
+                      </Text>{' '}
+                      today{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        {moment().format('MM/DD/YYYY')}
                       </Text>
-                    </View>
+                      , and a second payment of{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        ${delimit(
+                          (
+                            laborTotal +
+                            laborTotal * vars.fees.payment_processing
+                          ).toFixed(2),
+                        )}
+                      </Text>{' '}
+                      once all work has been completed.
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      paddingTop: units.unit5,
+                      paddingBottom: units.unit4,
+                      paddingLeft: units.unit4,
+                    }}>
+                    <CheckBox
+                      value={eSignatureAgreement}
+                      onValueChange={() =>
+                        this.setState({
+                          eSignatureAgreement: !eSignatureAgreement,
+                        })
+                      }
+                      boxType="square"
+                    />
                     <View
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingTop: units.unit5,
-                        paddingBottom: units.unit4,
-                        paddingLeft: units.unit4,
+                        paddingLeft: units.unit5,
+                        paddingRight: units.unit5,
                       }}>
-                      <CheckBox
-                        value={eSignatureAgreement}
-                        onValueChange={() =>
-                          this.setState({
-                            eSignatureAgreement: !eSignatureAgreement,
-                          })
-                        }
-                        boxType="square"
-                      />
-                      <View
-                        style={{
-                          paddingLeft: units.unit5,
-                          paddingRight: units.unit5,
-                        }}>
-                        <View>
-                          <Text>By checking this box, you agree to the </Text>
-                          <Link
-                            onPress={() => this.setState({ isOpen: true })}
-                            text="Electronic Record and Signature Disclosure"></Link>
-                        </View>
+                      <View>
+                        <Text>By checking this box, you agree to the </Text>
+                        <Link
+                          onPress={() => this.setState({ isOpen: true })}
+                          text="Electronic Record and Signature Disclosure"></Link>
                       </View>
                     </View>
-                    <View style={{ marginTop: units.unit4 }}>
-                      <Button
-                        text="Approve"
-                        onPress={() => this.approve()}
-                        disabled={
-                          !userSignature ||
-                          !eSignatureAgreement ||
-                          !user.payment_info
-                        }
-                        variant="primary"
-                      />
-                    </View>
                   </View>
-                  {/* approval end */}
+                  <View style={{ marginTop: units.unit4 }}>
+                    <Button
+                      text="Approve"
+                      onPress={() => this.approve()}
+                      disabled={
+                        !userSignature ||
+                        !eSignatureAgreement ||
+                        !user.payment_info
+                      }
+                      variant="primary"
+                    />
+                  </View>
                 </View>
+                {/* approval end */}
               </View>
             </View>
-          </KeyboardAwareScrollView>
-        </SafeAreaView>
+          </View>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     );
   }
 }
