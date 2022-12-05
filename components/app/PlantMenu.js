@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
-import { View, Modal, Text, TouchableOpacity, Image, ImageBackground } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import { View, Modal, Text, TouchableOpacity, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Slider } from '@miblanchard/react-native-slider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Collapse from '../UI/Collapse';
-import Dropdown from '../UI/Dropdown';
 import Input from '../UI/Input';
-import Header from '../UI/Header';
+import Button from '../UI/Button';
 import Link from '../UI/Link';
 import Label from '../UI/Label';
 import Card from '../UI/Card';
 import SizeIndicator from '../UI/SizeIndicator';
-import Paragraph from '../UI/Paragraph';
 import {
     createToken,
     createCustomer,
@@ -26,7 +23,6 @@ import separatePlantsByCommonType from '../../helpers/separatePlantsByCommonType
 import units from '../styles/units';
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
-import { add } from 'react-native-reanimated';
 
 class PlantMenu extends Component {
 
@@ -57,19 +53,10 @@ class PlantMenu extends Component {
     }
 
     setBackground(plantType) {
-        switch (plantType) {
-            case 'vegetable':
-                return 'orange'
-            case 'herb':
-                return colors.green0;
-            case 'fruit':
-                return 'orange';
-            default:
-                return colors.purple3;
-        }
+        return colors.white75;
     }
 
-    selectPlant(plant) {
+    selectPlant(plant, index) {
 
         // get selected plants
         let selectedPlants = this.state.selectedPlants;
@@ -78,7 +65,7 @@ class PlantMenu extends Component {
         const selectedPlant = plant;
 
         // check to see if plant is already selected
-        const plantIndex = selectedPlants.findIndex((p) => p.key === plant.key);
+        const plantIndex = selectedPlants.findIndex((p) => p.key === (index + 1));
 
         // if plant has already been selected {...}
         if (plantIndex >= 0) {
@@ -174,61 +161,63 @@ class PlantMenu extends Component {
         // if menu type is "grid" {...}
         if (menuType === 'grid') {
 
+            return gridData;
+
             // set items per row 
-            const columnWidth = 4
+            // const columnWidth = 4
 
-            // set rows
-            data = gridData.reduce((resultArray, item, index) => {
-                const rowIndex = Math.floor(index / columnWidth)
+            // // set rows
+            // data = gridData.reduce((resultArray, item, index) => {
+            //     const rowIndex = Math.floor(index / columnWidth)
 
-                if (!resultArray[rowIndex]) {
-                    resultArray[rowIndex] = [] // start a new row
-                }
+            //     if (!resultArray[rowIndex]) {
+            //         resultArray[rowIndex] = [] // start a new row
+            //     }
 
-                // get plants for category
-                const categorySelection = this.props.plantSelections[`${item.id.category.name}${item.id.category.name !== 'fruit' ? 's' : ''}`];
+            //     // get plants for category
+            //     const categorySelection = this.props.plantSelections[`${item.id.category.name}${item.id.category.name !== 'fruit' ? 's' : ''}`];
 
-                // check to see if item has been planted
-                const planted = categorySelection.find((selection) => selection.key === (index + 1));
+            //     // check to see if item has been planted
+            //     const planted = categorySelection.find((selection) => selection.key === (index + 1));
 
-                let renderItem = true;
+            //     let renderItem = true;
 
-                if (planted) {
-                    if (status === 'pending') {
-                        renderItem = false;
-                    } else if (status === 'complete') {
-                        renderItem = true;
-                    }
-                } else {
-                    if (status === 'pending') {
-                        renderItem = true;
-                    } else if (status === 'complete') {
-                        renderItem = false;
-                    }
-                }
+            //     if (planted) {
+            //         if (status === 'pending') {
+            //             renderItem = false;
+            //         } else if (status === 'complete') {
+            //             renderItem = true;
+            //         }
+            //     } else {
+            //         if (status === 'pending') {
+            //             renderItem = true;
+            //         } else if (status === 'complete') {
+            //             renderItem = false;
+            //         }
+            //     }
 
 
-                const plant = (renderItem) ? item : {
-                    isEmpty: true,
-                    isPlanted: planted
-                };
+            //     const plant = (renderItem) ? item : {
+            //         isEmpty: true,
+            //         isPlanted: planted
+            //     };
 
-                resultArray[rowIndex].push({
-                    ...plant,
-                    ...{ key: index + 1 }
-                });
+            //     resultArray[rowIndex].push({
+            //         ...plant,
+            //         ...{ key: index + 1 }
+            //     });
 
-                if (resultArray[rowIndex].length < columnWidth) {
-                    if (index === gridData.length - 1) {
-                        let diff = (columnWidth - resultArray[rowIndex].length);
-                        for (let i = 0; i < diff; i++) {
-                            resultArray[rowIndex].push({ isEmpty: true });
-                        }
-                    }
-                }
+            //     if (resultArray[rowIndex].length < columnWidth) {
+            //         if (index === gridData.length - 1) {
+            //             let diff = (columnWidth - resultArray[rowIndex].length);
+            //             for (let i = 0; i < diff; i++) {
+            //                 resultArray[rowIndex].push({ isEmpty: true });
+            //             }
+            //         }
+            //     }
 
-                return resultArray
-            }, []);
+            //     return resultArray
+            // }, []);
         } else if (menuType === 'list') { // if menu type is "list" {...}
 
             // set initial list data
@@ -236,35 +225,10 @@ class PlantMenu extends Component {
 
             // iterate through grid data
             gridData.forEach((item, index) => {
-
-                // get plants for category
-                const categorySelection = this.props.plantSelections[`${item.id.category.name}${item.id.category.name !== 'fruit' ? 's' : ''}`];
-
-                // check to see if item has been planted
-                const planted = categorySelection.find((selection) => selection.key === (index + 1));
-
-                let renderItem = true;
-
-                if (planted) {
-                    if (status === 'pending') {
-                        renderItem = false;
-                    } else if (status === 'complete') {
-                        renderItem = true;
-                    }
-                } else {
-                    if (status === 'pending') {
-                        renderItem = true;
-                    } else if (status === 'complete') {
-                        renderItem = false;
-                    }
-                }
-
-                if (renderItem) {
-                    listData.push({
-                        ...item,
-                        ...{ key: index + 1 }
-                    });
-                }
+                listData.push({
+                    ...item,
+                    ...{ key: index + 1 }
+                });
             })
 
             data = listData;
@@ -505,7 +469,7 @@ class PlantMenu extends Component {
                             padding: units.unit3
                         }}>
                         <Ionicons
-                            name="list"
+                            name="search"
                             size={fonts.h2}
                             color={colors.purpleB}
                         />
@@ -530,7 +494,7 @@ class PlantMenu extends Component {
 
         // get complete plants value
         let completePlants = this.props.plantSelections['vegetables'].length + this.props.plantSelections['herbs'].length + this.props.plantSelections['fruit'].length;
-        
+
         // get pending plants
         const pendingPlants = totalPlants - completePlants;
 
@@ -586,92 +550,101 @@ class PlantMenu extends Component {
         const rows = this.getMenuData();
 
         return (
-            <View>
+            <View style={{ backgroundColor: colors.greenE10 }}>
+                <View style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    width: '100%',
+                }}>
 
-                {/* rows */}
-                {rows.map((row, i) => {
-                    return (
-                        <View key={i} style={{ display: 'flex', flexDirection: 'row' }}>
-
-                            {/* columns */}
-                            {row.map((column, index) => {
-
-                                let backgroundColor = (column.isEmpty) ? 'orange' : this.setBackground(column.id.category.name);
-                                if (column.isEmpty && status === 'complete') {
-                                    backgroundColor = '#DDDDDD';
-                                }
-
-                                return (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={{ flex: 1 }}
-                                        onPress={() => this.selectPlant(column)}>
-                                        <View
-                                            style={{
-                                                borderWidth: 1,
-                                                borderColor: colors.white,
-                                                backgroundColor: backgroundColor,
-                                                height: units.unit6 + units.unit4,
+                    {/* columns */}
+                    {rows.map((column, index) => {
+                        if (status === 'pending' && !column.isEmpty) {
+                            return (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={{
+                                        background: 'red',
+                                        flexBasis: '25%',
+                                        padding: units.unit2
+                                    }}
+                                    onPress={() => this.selectPlant(column, index)}>
+                                    <View
+                                        style={{
+                                            backgroundColor: colors.white75,
+                                            borderRadius: units.unit3,
+                                            height: units.unit6 + units.unit4,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            position: 'relative'
+                                        }}>
+                                        {(!column.isEmpty) && (
+                                            <View style={{
+                                                display: 'flex',
                                                 justifyContent: 'center',
-                                                alignItems: 'center'
-                                            }}
-                                        >
-                                            {(!column.isEmpty) && (
-                                                <ImageBackground
+                                                alignItems: 'center',
+                                                width: '100%',
+                                                height: '100%',
+                                                position: 'relative'
+                                            }}>
+                                                <Image
                                                     source={{ uri: column.id.common_type.image }}
                                                     style={{
                                                         height: '100%',
-                                                        width: '100%'
+                                                        width: '100%',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+
                                                     }}
-                                                >
+                                                />
+                                                <View
+                                                    style={{
+                                                        position: 'absolute',
+                                                        bottom: 0,
+                                                        right: 0,
+                                                        backgroundColor: colors.white,
+                                                        paddingLeft: units.unit2,
+                                                        paddingTop: units.unit2,
+                                                        paddingBottom: units.unit2,
+                                                    }}>
+                                                    <SizeIndicator size={column.id.quadrant_size} />
+                                                </View>
+                                                {(this.state.selectedPlants.find((p, i) => i === index)) && (
                                                     <View
                                                         style={{
                                                             position: 'absolute',
-                                                            bottom: 0,
-                                                            right: 0,
-                                                            backgroundColor: colors.white,
-                                                            paddingLeft: units.unit2,
+                                                            top: 0,
+                                                            left: units.unit2,
+                                                            paddingRight: units.unit2,
                                                             paddingTop: units.unit2,
-                                                            paddingBottom: units.unit2,
                                                         }}>
-                                                        <SizeIndicator size={column.id.quadrant_size} />
-                                                    </View>
-                                                    {(this.state.selectedPlants.find((p) => p.key === column.key)) && (
-                                                        <View
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: 0,
-                                                                right: 0,
-                                                                paddingRight: units.unit2,
-                                                                paddingTop: units.unit2,
-                                                            }}>
-                                                            <View style={{ backgroundColor: colors.indigo0, borderRadius: 25 }}>
-                                                                <Ionicons
-                                                                    name="checkmark"
-                                                                    size={fonts.h3}
-                                                                    color={colors.white}
-                                                                />
-                                                            </View>
+                                                        <View style={{ backgroundColor: colors.purple1, borderRadius: 25 }}>
+                                                            <Ionicons
+                                                                name="checkmark"
+                                                                size={fonts.h3}
+                                                                color={colors.white}
+                                                            />
                                                         </View>
-                                                    )}
-                                                </ImageBackground>
-                                            )}
+                                                    </View>
+                                                )}
+                                            </View>
+                                        )}
+                                        {(column.isPlanted && status === 'pending') && (
+                                            <Ionicons
+                                                name="checkmark"
+                                                size={fonts.h1}
+                                                color={colors.white}
+                                            />
+                                        )}
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        }
 
-                                            {(column.isPlanted && status === 'pending') && (
-                                                <Ionicons
-                                                    name="checkmark"
-                                                    size={fonts.h1}
-                                                    color={colors.white}
-                                                />
-                                            )}
-
-                                        </View>
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </View>
-                    )
-                })}
+                    })}
+                </View>
             </View>
         )
     }
@@ -682,49 +655,65 @@ class PlantMenu extends Component {
         const listItems = this.getMenuData();
 
         return (
-            <View style={{ marginTop: units.unit2 }}>
-                {(listItems.map((li, index) => (
-                    <View key={index} style={{ paddingHorizontal: units.unit3, paddingVertical: units.unit2 }}>
-                        <TouchableOpacity onPress={() => this.selectPlant(li)}>
-                            <Card style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-between'
-                            }}>
-                                {(this.state.selectedPlants.find((p) => p.key === li.key)) ? (
-                                    <View style={{ backgroundColor: colors.indigo0, borderRadius: 25 }}>
-                                        <Ionicons
-                                            name="checkmark"
-                                            size={fonts.h3}
-                                            color={colors.white}
-                                        />
-                                    </View>
-                                ) :
-                                    (
-                                        <Ionicons
-                                            name={(this.state.status === 'pending') ? "ellipse-outline" : "checkmark"}
-                                            size={fonts.h3}
-                                            color={colors.purpleB}
-                                        />
-                                    )}
+            <View style={{ marginTop: units.unit2, backgroundColor: colors.greenE10 }}>
+                {(listItems.map((li, index) => {
 
-                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image
-                                        source={{ uri: li.id.common_type.image }}
-                                        style={{
-                                            height: units.unit5,
-                                            width: units.unit5,
-                                            marginRight: units.unit3
-                                        }}
-                                    />
-                                    <Text>{li.id.name} {li.id.common_type.name}</Text>
-                                </View>
-                                <SizeIndicator size={li.id.quadrant_size} />
-                            </Card>
-                        </TouchableOpacity>
-                    </View>
-                )))}
+                    // get plants for category
+                    const categorySelection = this.props.plantSelections[`${li.id.category.name}${li.id.category.name !== 'fruit' ? 's' : ''}`];
+
+                    // check to see if item has been planted
+                    const planted = categorySelection.find((selection) => selection.key === (index + 1));
+
+                    return (
+                        <View key={index} style={{ paddingHorizontal: units.unit3, paddingVertical: units.unit2 }}>
+                            <TouchableOpacity onPress={() => {
+                                if (!planted) {
+                                    this.selectPlant(li)
+                                }
+                            }}>
+                                <Card style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                        {(this.state.selectedPlants.find((p) => p.key === li.key)) ? (
+                                            <View style={{ backgroundColor: colors.purple1, borderRadius: 25 }}>
+                                                <Ionicons
+                                                    name="checkmark"
+                                                    size={fonts.h3}
+                                                    color={colors.white}
+                                                />
+                                            </View>
+                                        ) :
+                                            (
+                                                <Ionicons
+                                                    name={(this.state.status === 'pending' && !planted) ? "ellipse-outline" : "checkmark-done"}
+                                                    size={fonts.h3}
+                                                    color={(planted) ? colors.greenB : colors.purpleB}
+                                                />
+                                            )}
+                                        <Image
+                                            source={{ uri: li.id.common_type.image }}
+                                            style={{
+                                                height: units.unit5,
+                                                width: units.unit5,
+                                                marginRight: units.unit3,
+                                                marginLeft: units.unit4
+                                            }}
+                                        />
+                                        <View>
+                                            <Text>{li.id.name} {li.id.common_type.name}</Text>
+                                            <Text style={{ ...fonts.label, color: (planted) ? colors.greenE25 : colors.greenB }}>{planted ? 'Planted' : 'Pending'}</Text>
+                                        </View>
+                                    </View>
+                                    <SizeIndicator size={li.id.quadrant_size} />
+                                </Card>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }))}
             </View>
         )
     }
@@ -743,56 +732,39 @@ class PlantMenu extends Component {
     renderMenuOptions() {
         return (
             <View style={{
+                borderTopWidth: 1,
+                borderTopColor: colors.purpleB,
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: units.unit4
             }}>
-                <View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            const selections = this.state.selectedPlants;
-                            const plant = this.state.selectedPlant;
-                            const additionalQty = this.state.selectedPlants.length;
-                            if (additionalQty > 0) {
+                <Button
+                    text="Add Plants"
+                    style={{ width: '100%' }}
+                    onPress={() => {
+                        const selections = this.state.selectedPlants;
+                        const plant = this.state.selectedPlant;
+                        const additionalQty = this.state.selectedPlants.length;
+                        if (additionalQty > 0) {
 
-                                // add plant
-                                this.props.addPlant({
-                                    plant,
-                                    additionalQty,
-                                    selections
-                                });
+                            // add plant
+                            this.props.addPlant({
+                                plant,
+                                additionalQty,
+                                selections
+                            });
 
-                                this.setState({
-                                    selectedPlants: []
-                                })
+                            this.setState({
+                                selectedPlants: []
+                            })
 
-                                // close modal
-                                this.props.close();
-                            }
-                        }}>
-                        <Ionicons
-                            name="add-outline"
-                            size={fonts.h2}
-                            color={colors.purpleB}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <Paragraph style={{ fontWeight: 'bold' }}>
-                        {this.state.selectedPlants.length} Plants Selected
-                    </Paragraph>
-                </View>
-                <View>
-                    <TouchableOpacity onPress={() => this.setState({ selectedPlants: [] })}>
-                        <Ionicons
-                            name="refresh"
-                            size={fonts.h2}
-                            color={colors.purpleB}
-                        />
-                    </TouchableOpacity>
-                </View>
+                            // close modal
+                            this.props.close();
+                        }
+                    }}
+                />
             </View>
         )
     }
@@ -822,12 +794,18 @@ class PlantMenu extends Component {
                         {/* header */}
                         {this.renderHeader()}
 
+                        {/* search */}
+                        {(this.state.menuType === 'list') && (
+                            <View style={{ paddingHorizontal: units.unit3 }}>
+                                <Input value={""} placeholder="Search..." />
+                            </View>
+                        )}
+
                         {/* tabs */}
-                        {this.renderTabs()}
+                        {(this.state.menuType === 'grid') && this.renderTabs()}
 
                         {/* plant menu */}
-                        <KeyboardAwareScrollView
-                            style={{ backgroundColor: colors.greenE10 }}>
+                        <KeyboardAwareScrollView>
                             {this.renderPlantMenu()}
                         </KeyboardAwareScrollView>
 

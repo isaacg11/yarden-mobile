@@ -25,7 +25,7 @@ class SizeIndicator extends Component {
         const indicatorStyles = {
             height: 3,
             width: 3,
-            backgroundColor: colors.greenD25,
+            backgroundColor: colors.greenD50,
             marginRight: 2,
             marginTop: 2,
         }

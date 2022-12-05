@@ -12,7 +12,7 @@ class Bed extends Component {
         bedNumber: 1
     }
 
-    renderBed(bed, order) {
+    renderMap(bed, order) {
         switch (bed.shape.name) {
             case 'rectangle':
                 return (
@@ -22,7 +22,7 @@ class Bed extends Component {
                     />
                 )
             default:
-                return <div></div>
+                return <View></View>
         }
     }
 
@@ -38,15 +38,15 @@ class Bed extends Component {
                 <ScrollView 
                     maximumZoomScale={10} 
                     minimumZoomScale={1}>
-                    <View style={{ padding: units.unit3 + units.unit4 }}>
+                    <View style={{ paddingHorizontal: units.unit3 + units.unit4, paddingTop: units.unit3 }}>
 
                         {/* loading indicator */}
                         <LoadingIndicator
                             loading={isLoading}
                         />
 
-                        {/* garden bed */}
-                        {this.renderBed(bed, order)}
+                        {/* garden bed map */}
+                        {this.renderMap(bed, order)}
                     </View>
                 </ScrollView>
             </SafeAreaView>

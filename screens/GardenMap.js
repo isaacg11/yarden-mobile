@@ -25,6 +25,7 @@ import {
 import PlantMenu from '../components/app/PlantMenu';
 import PlantInfo from '../components/app/PlantInfo';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Paragraph from '../components/UI/Paragraph';
 import { alert } from '../components/UI/SystemAlert';
 
 // styles
@@ -1245,6 +1246,11 @@ class GardenMap extends Component {
                                                                     backgroundColor: (column.selected) ? colors.purple4 : colors.greenD10,
                                                                     ...sqftBorder
                                                                 }}>
+                                                                {(index === 0 && i === 0) && (<Ionicons
+                                                                    name={'add-circle'}
+                                                                    color={colors.purpleB}
+                                                                    size={fonts.h3}
+                                                                />)}
                                                                 {column.image && (
                                                                     <>
                                                                         <View style={{
@@ -1421,6 +1427,7 @@ class GardenMap extends Component {
                                 fruit={fruit}
                                 close={() => this.setState({ plantMenuIsOpen: false })}
                                 addPlant={async (p) => {
+                                    
                                     // get render info
                                     const renderInfo = await this.getRenderInfo(
                                         p,
@@ -1458,9 +1465,28 @@ class GardenMap extends Component {
                             />
                         )}
 
+                        <Text style={{paddingHorizontal: units.unit4, paddingBottom: units.unit3, textAlign: 'center'}}>Tap on any square to get started</Text>
+
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: units.unit4, marginBottom: units.unit3}}>
+                            <Paragraph style={{ ...fonts.label }}>Bed Id: 1</Paragraph>
+                            <Paragraph style={{ ...fonts.label }}>50%</Paragraph>
+                        </View>
+
                         {/* garden map */}
                         <View style={{ display: 'flex', alignSelf: 'center' }}>
                             {this.renderPlotPoints()}
+                        </View>
+
+                        <View>
+                            {/* <Text style={{textAlign: 'center', marginTop: units.unit3, color: colors.greenE50}}>Saving...</Text> */}
+                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                <Text style={{textAlign: 'center', marginTop: units.unit3}}>Saved</Text>
+                                <Ionicons
+                                    name={'checkmark'}
+                                    color={colors.greenB}
+                                    size={fonts.h2}
+                                />
+                            </View>
                         </View>
 
                     </View>
