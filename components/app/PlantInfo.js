@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import { View, Modal, Text, TouchableOpacity } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, Modal, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Slider } from '@miblanchard/react-native-slider';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Collapse from '../UI/Collapse';
 import Header from '../UI/Header';
 import Paragraph from '../UI/Paragraph';
-import Link from '../UI/Link';
-import Label from '../UI/Label';
 import {
     createToken,
     createCustomer,

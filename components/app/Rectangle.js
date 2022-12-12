@@ -10,9 +10,10 @@ class Rectangle extends Component {
 
     render() {
 
-        const { 
+        const {
             bed, 
-            order 
+            bedId,
+            order
         } = this.props;
 
         const measurements = 2;
@@ -24,6 +25,8 @@ class Rectangle extends Component {
 
                 {/* garden map */}
                 <GardenMap
+                    bed={bed}
+                    bedId={bedId}
                     rows={rows}
                     columns={columns}
                     order={order}

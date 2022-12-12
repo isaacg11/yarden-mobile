@@ -1,10 +1,13 @@
 
+// libraries
 import React, { Component } from 'react';
 import { SafeAreaView, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// UI components
 import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
@@ -15,8 +18,13 @@ import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
 import Plants from '../components/app/Plants';
+
+// actions
 import { getOrders, updateOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
+import { getBeds } from '../actions/beds/index';
+
+// styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 
@@ -27,11 +35,17 @@ class OrderDetails extends Component {
     }
 
     async componentDidMount() {
+
         // show loading indicator
         this.setState({ isLoading: true });
 
         // get change orders
         const changeOrders = await this.props.getChangeOrders(`order=${this.props.route.params._id}`, true);
+
+        const order = this.props.route.params;
+
+        // if order type is initial planting, get beds
+        if (order.type == 'initial planting') await this.props.getBeds(`customer=${order.customer._id}`);
 
         // hide loading indicator
         this.setState({
@@ -73,7 +87,7 @@ class OrderDetails extends Component {
     render() {
 
         const order = this.props.route.params;
-        const { user } =  this.props;
+        const { user, beds } = this.props;
         const { isLoading, changeOrders } = this.state;
 
         return (
@@ -142,33 +156,50 @@ class OrderDetails extends Component {
                                 </View>
                             )}
 
-                            {/* upload results button */}
+                            {/* plant lists */}
                             {(order.status === 'pending' && user.type === 'gardener' && order.type === 'initial planting') && (
                                 <View style={{ marginTop: units.unit4 }}>
-                                    <View>
-                                        <Collapse
-                                            title="Vegetables"
-                                            content={<Plants plants={order.bid.line_items.vegetables} />}
-                                        />
-                                    </View>
-                                    <View>
-                                        <Collapse
-                                            title="Herbs"
-                                            content={<Plants plants={order.bid.line_items.herbs} />}
-                                        />
-                                    </View>
-                                    <View>
-                                        <Collapse
-                                            title="Fruit"
-                                            content={<Plants plants={order.bid.line_items.fruit} />}
-                                        />
-                                    </View>
+                                    {(beds.length > 0) && (
+                                        <View>
+                                            <View>
+                                                <Collapse
+                                                    title="Vegetables"
+                                                    content={<Plants plants={order.bid.line_items.vegetables} />}
+                                                />
+                                            </View>
+                                            <View>
+                                                <Collapse
+                                                    title="Herbs"
+                                                    content={<Plants plants={order.bid.line_items.herbs} />}
+                                                />
+                                            </View>
+                                            <View>
+                                                <Collapse
+                                                    title="Fruit"
+                                                    content={<Plants plants={order.bid.line_items.fruit} />}
+                                                />
+                                            </View>
+                                        </View>
+                                    )}
                                     <Button
-                                        text="Build Garden Map"
+                                        variant={(beds.length < 1) ? 'button' : 'btn2'}
+                                        text={`${(beds.length < 1) ? 'Build' : 'View'} Garden Map`}
                                         onPress={() => this.props.navigation.navigate('Beds', { order })}
                                         icon={(
                                             <Ionicons
                                                 name="grid-outline"
+                                                size={units.unit4}
+                                                color={colors.purpleB}
+                                            />
+                                        )}
+                                    />
+                                    <Button
+                                        style={{ display: (beds.length < 1) ? 'none' : 'flex', marginTop: units.unit4 }}
+                                        text="Finish Order"
+                                        onPress={() => console.log('do stuff...')}
+                                        icon={(
+                                            <Ionicons
+                                                name="checkmark"
                                                 size={units.unit4}
                                                 color={colors.purpleB}
                                             />
@@ -186,7 +217,8 @@ class OrderDetails extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        user: state.user,
+        beds: state.beds
     };
 }
 
@@ -194,7 +226,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getOrders,
         updateOrder,
-        getChangeOrders
+        getChangeOrders,
+        getBeds
     }, dispatch)
 }
 

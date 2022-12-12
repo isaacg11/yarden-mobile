@@ -4,13 +4,13 @@ import getAuthToken from '../../helpers/getAuthToken';
 import { GET_PLANTS } from '../../actions/plants/types';
 import { alert } from '../../components/UI/SystemAlert';
 
-export function getPlants(query) {
+export function getPlants(query, override) {
     return async function(dispatch) {        
         try {
             const q = (query) ? `?${query}` : '';
-            const authToken = await getAuthToken();
+            const authToken = await getAuthToken();            
             const response = await axios.get(`${API_URL}/plants${q}`, {headers: {authorization: authToken}});    
-            dispatch({type: GET_PLANTS, payload: response.data});
+            if(!override) dispatch({type: GET_PLANTS, payload: response.data});
             return response.data;
         }
 

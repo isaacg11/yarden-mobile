@@ -34,7 +34,10 @@ import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
 // actions
-import { getPlantSelections } from '../actions/plantSelections/index';
+import { createDraft, updateDraft, getDrafts } from '../actions/drafts/index';
+
+// helpers
+import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
 
 class GardenMap extends Component {
 
@@ -102,6 +105,20 @@ class GardenMap extends Component {
 
             // set plot points
             plotPoints.push(row);
+        }
+
+        // if drafts are found {...}
+        if (this.props.drafts.length > 0) {
+
+            // check for match
+            const match = this.props.drafts.find((draft) => draft.key === this.props.bedId);
+
+            // if draft key matches selected bed id {...}
+            if (match) {
+
+                // set plot points using draft
+                plotPoints = match.plot_points;
+            }
         }
 
         // set plants
@@ -255,7 +272,7 @@ class GardenMap extends Component {
                 await this.renderPlant(p, adjustedRenderInfo);
             } else {
                 // show error
-                return alert(`There is not enough space available to plant (${p.additionalQty}) "${p.plant.id.common_type.name}"`);
+                return alert(`There is not enough space available to plant (${p.selectedPlants.length}) "${p.plant.id.common_type.name}"`);
             }
         }
     }
@@ -276,6 +293,9 @@ class GardenMap extends Component {
 
         // set initial group number
         let groupNumber = 0;
+
+        // set initial new plant index
+        let selectionIndex = 0;
 
         // iterate through rows
         for (let i = 0; i < plotPoints.length; i++) {
@@ -319,7 +339,7 @@ class GardenMap extends Component {
                             plotPoints[i][j].group = groupNumber;
 
                             // set plant
-                            plotPoints[i][j].plant = p.plant;
+                            plotPoints[i][j].plant = p.selectedPlants[0];
 
                             // check to see if quadrant size is 1 {...}
                             if ((planted === 0) && (renderInfo.quadrantSize === 1)) {
@@ -347,16 +367,25 @@ class GardenMap extends Component {
                         if (allowedIndex) {
 
                             // if number of planted plot points is less than the plant's quadrant size {...}
-                            if (planted < (renderInfo.quadrantSize * p.additionalQty)) {
+                            if (planted < (renderInfo.quadrantSize * p.selectedPlants.length)) {
 
-                                // set plant
-                                plotPoints[i][j].plant = p.plant;
+                                // check to see if rendering last plant of group
+                                const isLastPlantOfGroup = ((planted + 1) % renderInfo.quadrantSize) === 0;
 
                                 // check to see if there is only 1 plant quadrant to render
                                 const isOnlyOneQuadrant = (renderInfo.quadrantSize === 1);
 
-                                // check to see if rendering last plant of group
-                                const isLastPlantOfGroup = ((planted + 1) % renderInfo.quadrantSize) === 0;
+                                // set the index of the plants being added
+                                let plantIndex = p.selectedPlants.length > 1 ? (selectionIndex) : 0;
+
+                                // if there is only 1 quadrant
+                                if (isOnlyOneQuadrant) plantIndex += 1;
+
+                                // if end of plant, update selection index
+                                if (isLastPlantOfGroup) selectionIndex += 1;
+
+                                // set plant
+                                plotPoints[i][j].plant = p.selectedPlants[plantIndex];
 
                                 // if there is only 1 quadrant to render OR if the last plant of a group is being rendered {...}
                                 if (
@@ -394,7 +423,7 @@ class GardenMap extends Component {
             plotPoints,
             selectedPlotPoint: null
         }, () => {
-            this.updatePlantedList(p);
+            this.updatePlantedList();
         });
     }
 
@@ -464,7 +493,7 @@ class GardenMap extends Component {
                     const shape = sqrt % 1 === 0 ? "square" : "rectangle";
 
                     // get dimensions
-                    const height = shape === "square" ? sqrt * plotPoint.additionalQty : Math.floor(sqrt) * plotPoint.additionalQty;
+                    const height = shape === "square" ? sqrt * plotPoint.selectedPlants.length : Math.floor(sqrt) * plotPoint.selectedPlants.length;
                     const width = shape === "square" ? sqrt : plant.quadrant_size / 2;
 
                     // set initial x-index
@@ -598,7 +627,7 @@ class GardenMap extends Component {
                         if (allowedIndex) {
 
                             // if planted is less than total quadrant size {...}
-                            if (planted < (renderInfo.quadrantSize * plotPoint.additionalQty)) {
+                            if (planted < (renderInfo.quadrantSize * plotPoint.selectedPlants.length)) {
 
                                 // if plant already occupies designated space {...}
                                 if (
@@ -621,68 +650,48 @@ class GardenMap extends Component {
         return validRenderPath;
     }
 
-    async updatePlantedList(p) {
+    async updatePlantedList() {
 
-        const plant = p.plant;
+        // show saving indicator
+        this.setState({ isSaving: true });
 
-        // set initial plant category
-        let plantCategory = null;
+        // check for match
+        const match = this.props.drafts.find((draft) => draft.key === this.props.bedId);
 
-        // determine category
-        if (plant.id.category.name === 'vegetable') {
-            plantCategory = 'vegetables';
-        } else if (plant.id.category.name === 'herb') {
-            plantCategory = 'herbs';
-        } else if (plant.id.category.name === 'fruit') {
-            plantCategory = 'fruit';
+        // if draft key matches selected bed id {...}
+        if (match) {
+
+            // update draft
+            await this.props.updateDraft(match._id, {
+                plot_points: this.state.plotPoints
+            })
+
+            // get updated drafts
+            await this.props.getDrafts(`order=${this.props.order._id}`);
+        } else {
+            // create a new draft
+            await this.props.createDraft({
+                key: this.props.bedId,
+                order: this.props.order._id,
+                plot_points: this.state.plotPoints,
+                width: this.props.bed.width,
+                length: this.props.bed.length,
+                height: this.props.bed.height,
+                shape: this.props.bed.shape._id
+            })
+
+            // get new drafts
+            await this.props.getDrafts(`order=${this.props.order._id}`);
         }
 
-        let selections = this.props.plantSelections;
-
-        // get plants by category
-        let currentPlanted = this.props.plantSelections[`${plantCategory}`];
-
-        p.selections.forEach((selection) => currentPlanted.push(selection));
-
-        selections[`${plantCategory}`] = currentPlanted;
-
-        // get new plant selections
-        getPlantSelections(selections);
-
-        // // check if plant is already planted
-        // const alreadyPlanted = plants.find((plant) => plant.id._id === p.id._id);
-
-        // // if plant already planted {...}
-        // if(alreadyPlanted) {
-
-        //     // iterate through plants
-        //     plants.forEach((plant) => {
-
-        //         // if matching plant is found {...}
-        //         if (plant.id._id === p.id._id) {
-
-        //             // calculate new planted value
-        //             let currentPlanted = plant.planted ? plant.planted : 0;
-
-        //             // set new planted value
-        //             plant.planted = currentPlanted + qty;
-        //         }
-        //     })
-        // } else {
-        //     // add new plant to list of selections
-        //     plants.push({ planted: qty, ...p });
-        // }
-
-        // // update selection category
-        // selections[`${plantCategory}`] = plants;
+        // hide saving indicator
+        this.setState({ isSaving: false });
     }
 
     removePlant() {
 
         // get plot points
         let plotPoints = this.state.plotPoints;
-
-        let selectedPlant = null;
 
         // iterate through plot points
         plotPoints.forEach((row) => {
@@ -692,8 +701,6 @@ class GardenMap extends Component {
 
                 // if column is selected {...}
                 if (column.selected) {
-
-                    selectedPlant = column;
 
                     // reset column (removes plant)
                     column.selected = false;
@@ -711,7 +718,7 @@ class GardenMap extends Component {
             plotPoints,
             selectedPlotPoint: null
         }, () => {
-            this.updatePlantedList(selectedPlant, -1);
+            this.updatePlantedList();
         });
     }
 
@@ -785,7 +792,7 @@ class GardenMap extends Component {
                 await this.removeQueuedPlants();
 
                 // add new plants
-                await this.addPlant({ additionalQty: 1, plant: plantToMove });
+                await this.addPlant({ selectedPlants: [plantToMove], plant: plantToMove });
 
                 // update UI
                 this.setState({
@@ -1246,11 +1253,18 @@ class GardenMap extends Component {
                                                                     backgroundColor: (column.selected) ? colors.purple4 : colors.greenD10,
                                                                     ...sqftBorder
                                                                 }}>
-                                                                {(index === 0 && i === 0) && (<Ionicons
-                                                                    name={'add-circle'}
-                                                                    color={colors.purpleB}
-                                                                    size={fonts.h3}
-                                                                />)}
+                                                                {(index === 0 && i === 0 && !(this.props.drafts.find((draft) => draft.key === this.props.bedId))) && (
+                                                                    <View style={{
+                                                                        backgroundColor: colors.green0,
+                                                                        borderRadius: 10
+                                                                    }}>
+                                                                        <Ionicons
+                                                                            name={'add'}
+                                                                            color={colors.purple0}
+                                                                            size={fonts.h3}
+                                                                        />
+                                                                    </View>
+                                                                )}
                                                                 {column.image && (
                                                                     <>
                                                                         <View style={{
@@ -1280,7 +1294,6 @@ class GardenMap extends Component {
                                                                                 <Text
                                                                                     style={plantTextStyles}>
                                                                                     {column.plant.id.quadrant_size > 1 && column.plant.id.common_type.name}
-                                                                                    {/* {truncate(column.plant.id.common_type.name, 3, '...')} */}
                                                                                 </Text>
                                                                             </View>
                                                                         </View>
@@ -1294,7 +1307,6 @@ class GardenMap extends Component {
                                                             display: (this.state.selectedPlotPoint && this.state.selectedPlotPoint.plant) ? 'none' : 'flex'
                                                         }}
                                                         onPress={async () => {
-
                                                             // if plant already in selected plot point {...}
                                                             if (this.state.selectedPlotPoint.plant) {
 
@@ -1394,6 +1406,28 @@ class GardenMap extends Component {
         )
     }
 
+    renderSavingIndicator() {
+        switch (this.state.isSaving) {
+            case true:
+                return (
+                    <Text style={{ textAlign: 'center', marginTop: units.unit3, color: colors.greenE50 }}>Saving...</Text>
+                )
+            case false:
+                return (
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                        <Text style={{ textAlign: 'center', marginTop: units.unit3 }}>Saved Draft</Text>
+                        <Ionicons
+                            name={'checkmark'}
+                            color={colors.greenB}
+                            size={fonts.h2}
+                        />
+                    </View>
+                )
+            default:
+                return <View></View>
+        }
+    }
+
     render() {
         const {
             isLoading,
@@ -1427,7 +1461,7 @@ class GardenMap extends Component {
                                 fruit={fruit}
                                 close={() => this.setState({ plantMenuIsOpen: false })}
                                 addPlant={async (p) => {
-                                    
+
                                     // get render info
                                     const renderInfo = await this.getRenderInfo(
                                         p,
@@ -1445,10 +1479,11 @@ class GardenMap extends Component {
                                     availablePlotPoints.forEach((row) => availablePlotPointCount += row.length);
 
                                     // if total quadrant size area is greater than spaces available {...}
-                                    if ((renderInfo.quadrantSize * p.additionalQty) > availablePlotPointCount) {
+                                    if ((renderInfo.quadrantSize * p.selectedPlants.length) > availablePlotPointCount) {
                                         // show error
-                                        return alert(`There is not enough space available to plant (${p.additionalQty}) "${p.plant.id.common_type.name}"`);
+                                        return alert(`There is not enough space available to plant (${p.selectedPlants.length}) "${p.plant.id.common_type.name}"`);
                                     } else {
+
                                         // add plant
                                         this.addPlant(p);
                                     }
@@ -1465,11 +1500,20 @@ class GardenMap extends Component {
                             />
                         )}
 
-                        <Text style={{paddingHorizontal: units.unit4, paddingBottom: units.unit3, textAlign: 'center'}}>Tap on any square to get started</Text>
+                        {/* helper text */}
+                        <Text style={{
+                            paddingHorizontal: units.unit4,
+                            paddingBottom: units.unit3,
+                            textAlign: 'center',
+                            color: !(this.props.drafts.find((draft) => draft.key === this.props.bedId)) ? '#000' : '#fff'
+                        }}>
+                            Tap on any square to get started
+                        </Text>
 
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: units.unit4, marginBottom: units.unit3}}>
-                            <Paragraph style={{ ...fonts.label }}>Bed Id: 1</Paragraph>
-                            <Paragraph style={{ ...fonts.label }}>50%</Paragraph>
+                        {/* id / stats */}
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: units.unit4, marginBottom: units.unit3 }}>
+                            <Paragraph style={{ ...fonts.label }}>Bed Id: {this.props.bedId}</Paragraph>
+                            <Paragraph style={{ ...fonts.label }}>{calculatePlantingProgress(this.props.drafts.find((draft) => draft.key === this.props.bedId))}</Paragraph>
                         </View>
 
                         {/* garden map */}
@@ -1477,18 +1521,10 @@ class GardenMap extends Component {
                             {this.renderPlotPoints()}
                         </View>
 
+                        {/* saving indicator */}
                         <View>
-                            {/* <Text style={{textAlign: 'center', marginTop: units.unit3, color: colors.greenE50}}>Saving...</Text> */}
-                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                <Text style={{textAlign: 'center', marginTop: units.unit3}}>Saved</Text>
-                                <Ionicons
-                                    name={'checkmark'}
-                                    color={colors.greenB}
-                                    size={fonts.h2}
-                                />
-                            </View>
+                            {this.renderSavingIndicator()}
                         </View>
-
                     </View>
                 </ScrollView>
             </SafeAreaView>
@@ -1499,14 +1535,17 @@ class GardenMap extends Component {
 function mapStateToProps(state) {
     return {
         user: state.user,
-        plantSelections: state.plantSelections
+        drafts: state.drafts,
+        beds: state.beds
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         {
-            getPlantSelections
+            createDraft,
+            updateDraft,
+            getDrafts
         },
         dispatch,
     );

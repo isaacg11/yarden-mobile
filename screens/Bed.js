@@ -12,13 +12,14 @@ class Bed extends Component {
         bedNumber: 1
     }
 
-    renderMap(bed, order) {
+    renderMap(bed, order, bedId) {
         switch (bed.shape.name) {
             case 'rectangle':
                 return (
                     <Rectangle 
                         bed={bed} 
-                        order={order} 
+                        order={order}
+                        bedId={bedId}
                     />
                 )
             default:
@@ -28,7 +29,11 @@ class Bed extends Component {
 
     render() {
         const { isLoading } = this.state;
-        const { bed, order } = this.props.route.params;
+        const {
+            bed, 
+            order, 
+            bedId 
+        } = this.props.route.params;
 
         return (
             <SafeAreaView style={{
@@ -46,7 +51,7 @@ class Bed extends Component {
                         />
 
                         {/* garden bed map */}
-                        {this.renderMap(bed, order)}
+                        {this.renderMap(bed, order, bedId)}
                     </View>
                 </ScrollView>
             </SafeAreaView>

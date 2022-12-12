@@ -17,7 +17,8 @@ import irrigation from './irrigation';
 import filters from './filters';
 import referrals from './referrals';
 import reminders from './reminders';
-import plantSelections from './plantSelections';
+import drafts from './drafts';
+import beds from './beds';
 
 const rootReducer = combineReducers({
     user,
@@ -38,7 +39,8 @@ const rootReducer = combineReducers({
     filters,
     referrals,
     reminders,
-    plantSelections
+    drafts,
+    beds
 })
 
 export default rootReducer;

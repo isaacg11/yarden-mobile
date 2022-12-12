@@ -47,6 +47,7 @@ import AccountActivation from './screens/AccountActivation';
 import Beds from './screens/Beds';
 import Bed from './screens/Bed';
 import GardenMap from './screens/GardenMap';
+import Planted from './screens/Planted';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
 
@@ -493,6 +494,16 @@ function App() {
             <Stack.Screen
               name="Garden Map"
               component={GardenMap}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Planted"
+              component={Planted}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
