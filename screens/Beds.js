@@ -220,7 +220,7 @@ class Beds extends Component {
                       height: 100,
                     }}
                   />
-                  <View>
+                  <View style={{display: 'flex', alignItems: 'center'}}>
                     <Paragraph
                       style={{
                         maxWidth: '100%',
@@ -229,7 +229,7 @@ class Beds extends Component {
                         fontSize: fonts.h4,
                       }}>
                       {/* TODO: if user hasn't changed the name of the garden show this, otherwise show the name of the garden */}
-                      {'Garden #:'}
+                      {'Garden #'}
                       {`${bedId}`}
                     </Paragraph>
                     <Paragraph

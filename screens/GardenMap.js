@@ -26,6 +26,7 @@ import PlantInfo from '../components/app/PlantInfo';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import {alert} from '../components/UI/SystemAlert';
+import Header from '../components/UI/Header';
 
 // styles
 import units from '../components/styles/units';
@@ -37,6 +38,7 @@ import {createDraft, updateDraft, getDrafts} from '../actions/drafts/index';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
+import {readDir} from 'react-native-fs';
 
 class GardenMap extends Component {
   constructor() {
@@ -800,17 +802,16 @@ class GardenMap extends Component {
       plotPoints,
     });
   }
-
   getPlantContainerTransform(quadrantSize) {
     switch (quadrantSize) {
       case 1:
-        return [{scale: 1}, {translateX: 0}, {translateY: 0}];
+        return [{scale: 0.9}, {translateX: 0}, {translateY: -0.5}];
       case 4:
-        return [{scale: 2}, {translateX: -10.5}, {translateY: -10.25}];
+        return [{scale: 1.9}, {translateX: -10.66}, {translateY: -10.66}];
       case 9:
-        return [{scale: 3}, {translateX: -14}, {translateY: -14}];
+        return [{scale: 2.9}, {translateX: -13.84}, {translateY: -13.84}];
       case 16:
-        return [{scale: 4}, {translateX: -16}, {translateY: -15.5}];
+        return [{scale: 3.9}, {translateX: -15.4}, {translateY: -15.4}];
       default:
         return [];
     }
@@ -828,7 +829,7 @@ class GardenMap extends Component {
         return {
           width: 20,
           height: 20,
-          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
+          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 8}],
           padding: 0,
         };
       case 9:
@@ -837,12 +838,11 @@ class GardenMap extends Component {
           height: 20,
           transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
         };
-      // TODO: make sure this image is scaling properly 👇
       case 16:
         return {
           width: 20,
           height: 20,
-          transform: [{scale: 0.25}, {translateX: 0}, {translateY: 35}],
+          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
         };
       default:
         return {};
@@ -866,19 +866,13 @@ class GardenMap extends Component {
         };
       case 9:
         return {
-          transform: [
-            {scale: this.getTextScale(0.28)},
-            {translateY: this.getTextTranslateY(-10)},
-          ],
+          transform: [{scale: this.getTextScale(0.28)}],
           width: '300%',
           textAlign: 'center',
         };
       case 16:
         return {
-          transform: [
-            {scale: this.getTextScale(0.22)},
-            {translateY: this.getTextTranslateY(-20)},
-          ],
+          transform: [{scale: this.getTextScale(0.22)}],
           width: '400%',
           textAlign: 'center',
         };
@@ -959,50 +953,25 @@ class GardenMap extends Component {
     if (topSqY) {
       if (leftSqX) {
         border = {
-          borderTopColor: 'white',
-          borderTopWidth: 3,
-          borderBottomColor: 'white',
-          borderBottomWidth: 1,
-          borderRightColor: 'white',
-          borderRightWidth: 1,
-          borderRightStyle: 'dotted',
-          borderLeftColor: 'white',
-          borderLeftWidth: 1.5,
+          borderColor: 'white',
+          borderWidth: 0.5,
         };
       } else if (rightSqX) {
         border = {
-          borderTopColor: 'white',
-          borderTopWidth: 3,
-          borderBottomColor: 'white',
-          borderBottomWidth: 1,
-          borderRightColor: 'white',
-          borderRightWidth: 1.5,
-          borderLeftColor: 'none',
-          borderLeftWidth: 0,
+          borderColor: 'white',
+          borderWidth: 0.5,
         };
       }
     } else {
       if (leftSqX) {
         border = {
-          borderTopColor: 'none',
-          borderTopWidth: 0,
-          borderBottomColor: lastPlotPointY ? 'white' : 'none',
-          borderBottomWidth: lastPlotPointY ? 3 : 0,
-          borderRightColor: 'white',
-          borderRightWidth: 1,
-          borderLeftColor: 'white',
-          borderLeftWidth: 1.5,
+          borderColor: 'white',
+          borderWidth: 0.5,
         };
       } else if (rightSqX) {
         border = {
-          borderTopColor: 'none',
-          borderTopWidth: 0,
-          borderBottomColor: lastPlotPointY ? 'white' : 'none',
-          borderBottomWidth: lastPlotPointY ? 3 : 0,
-          borderRightColor: 'white',
-          borderRightWidth: 1.5,
-          borderLeftColor: 'none',
-          borderLeftWidth: 0,
+          borderColor: 'white',
+          borderWidth: 0.5,
         };
       }
     }
@@ -1125,11 +1094,23 @@ class GardenMap extends Component {
                 {translateX: this.translateX},
                 {translateY: this.translateY},
               ],
+              backgroundColor: colors.greenD05,
+              overflow: 'hidden',
+              shadowColor: colors.greenD10,
+              shadowRadius: units.unit2,
+              shadowOpacity: 1,
+              shadowOffset: {width: 0, height: 4},
+              borderRadius: units.unit4,
             }}>
             {/* rows */}
             {this.state.plotPoints.map((row, i) => {
               return (
-                <View key={i} style={{display: 'flex', flexDirection: 'row'}}>
+                <View
+                  key={i}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}>
                   {/* columns */}
                   {row.map((column, index) => {
                     // set border style
@@ -1145,24 +1126,160 @@ class GardenMap extends Component {
                     let borderTopRightRadius = 0;
                     let borderBottomLeftRadius = 0;
                     let borderBottomRightRadius = 0;
+                    // if (i === 0 && index === 0) {
+                    //   // top left
+                    //   borderTopLeftRadius = units.unit4;
+                    // } else if (i === 0 && index === row.length - 1) {
+                    //   // top right
+                    //   borderTopRightRadius = units.unit4;
+                    // } else if (
+                    //   i === this.state.plotPoints.length - 1 &&
+                    //   index === 0
+                    // ) {
+                    //   // bottom left
+                    //   borderBottomLeftRadius = units.unit4;
+                    // } else if (
+                    //   i === this.state.plotPoints.length - 1 &&
+                    //   index === row.length - 1
+                    // ) {
+                    //   // bottom right
+                    //   borderBottomRightRadius = units.unit4;
+                    // }
+
+                    // i = rows
+                    // index = columns
+
                     if (i === 0 && index === 0) {
                       // top left
                       borderTopLeftRadius = units.unit4;
-                    } else if (i === 0 && index === row.length - 1) {
-                      // top right
+                    }
+                    // top left
+                    else if (i % 2 === 0 && index % 2 === 0) {
+                      borderTopLeftRadius = units.unit3;
+                    }
+
+                    // top right
+                    else if (i === 0 && index === row.length - 1) {
                       borderTopRightRadius = units.unit4;
-                    } else if (
+                    } else if (i % 2 === 0 && index === 1) {
+                      borderTopRightRadius = units.unit3;
+                    } else if (i % 2 === 0 && index === 3) {
+                      borderTopRightRadius = units.unit3;
+                    } else if (i % 2 === 0 && index === 5) {
+                      borderTopRightRadius = units.unit3;
+                    } else if (i % 2 === 0 && index === 7) {
+                      borderTopRightRadius = units.unit3;
+                    }
+
+                    // bottom left
+                    else if (
                       i === this.state.plotPoints.length - 1 &&
                       index === 0
                     ) {
-                      // bottom left
                       borderBottomLeftRadius = units.unit4;
+                    } else if (i === 1 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 3 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 5 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 7 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 9 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 11 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 13 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    } else if (i === 15 && index % 2 === 0) {
+                      borderBottomLeftRadius = units.unit3;
+                    }
+
+                    // bottom right
+                    else if (
+                      i === this.state.plotPoints.length - 1 &&
+                      index === row.length - 1
+                    ) {
+                      borderBottomRightRadius = units.unit4;
+                    } else if (i === 1 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 3 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 5 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 7 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 9 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 11 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 13 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 15 && index === 1) {
+                      borderBottomRightRadius = units.unit3;
                     } else if (
                       i === this.state.plotPoints.length - 1 &&
                       index === row.length - 1
                     ) {
-                      // bottom right
-                      borderBottomRightRadius = units.unit4;
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 1 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 3 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 5 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 7 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 9 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 11 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 13 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 15 && index === 3) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (
+                      i === this.state.plotPoints.length - 1 &&
+                      index === row.length - 1
+                    ) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 1 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 3 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 5 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 7 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 9 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 11 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 13 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 15 && index === 5) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (
+                      i === this.state.plotPoints.length - 1 &&
+                      index === row.length - 1
+                    ) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 1 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 3 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 5 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 7 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 9 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 11 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 13 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
+                    } else if (i === 15 && index === 7) {
+                      borderBottomRightRadius = units.unit3;
                     }
 
                     // set initial plant styles
@@ -1262,8 +1379,11 @@ class GardenMap extends Component {
                                         left: 0,
                                         width: '100%',
                                         height: '100%',
-                                        backgroundColor: colors.white75,
-
+                                        backgroundColor: colors.white90,
+                                        shadowColor: colors.greenD10,
+                                        shadowOffset: {width: 0, height: 1},
+                                        shadowOpacity: 1,
+                                        shadowRadius: 2,
                                         borderRadius:
                                           this.determineBorderRadius(
                                             column.plant.id.quadrant_size,
@@ -1289,10 +1409,16 @@ class GardenMap extends Component {
                                             style={plantImageStyles}
                                           />
                                         </Animated.View>
-                                        <Text style={plantTextStyles}>
+                                        {/* // rumplestilskin */}
+                                        <Paragraph
+                                          style={{
+                                            ...plantTextStyles,
+                                            color: colors.purpleB,
+                                            textTransform: 'capitalize',
+                                          }}>
                                           {column.plant.id.quadrant_size > 1 &&
                                             column.plant.id.common_type.name}
-                                        </Text>
+                                        </Paragraph>
                                       </View>
                                     </View>
                                   </>
@@ -1472,13 +1598,13 @@ class GardenMap extends Component {
   determineBorderRadius(quadrantSize) {
     switch (quadrantSize) {
       case 1:
-        return units.unit3;
+        return units.unit3 + units.unit2;
       case 4:
         return units.unit3;
       case 9:
         return units.unit2;
       case 16:
-        return units.unit1;
+        return units.unit2;
       default:
         return 0;
     }
@@ -1596,40 +1722,45 @@ class GardenMap extends Component {
               />
             )}
 
-            {/* helper text */}
-            <Text
-              style={{
-                paddingHorizontal: units.unit4,
-                paddingBottom: units.unit3,
-                textAlign: 'center',
-                color: !this.props.drafts.find(
-                  draft => draft.key === this.props.bedId,
-                )
-                  ? '#000'
-                  : '#fff',
-              }}>
-              Tap on any square to get started
-            </Text>
-
             {/* id / stats */}
             <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
                 paddingHorizontal: units.unit4,
-                marginBottom: units.unit3,
+                marginBottom: units.unit2,
               }}>
-              <Paragraph style={{...fonts.label}}>
-                Bed Id: {this.props.bedId}
-              </Paragraph>
-              <Paragraph style={{...fonts.label}}>
-                {calculatePlantingProgress(
-                  this.props.drafts.find(
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Paragraph style={{...fonts.label}}>
+                  Garden Bed #{this.props.bedId}
+                </Paragraph>
+                <Paragraph style={{...fonts.label}}>
+                  {calculatePlantingProgress(
+                    this.props.drafts.find(
+                      draft => draft.key === this.props.bedId,
+                    ),
+                  )}
+                </Paragraph>
+              </View>
+
+              <Header>Garden Bed Name</Header>
+              {/* helper text */}
+              <Text
+                style={{
+                  paddingHorizontal: units.unit4,
+                  textAlign: 'center',
+                  display: !this.props.drafts.find(
                     draft => draft.key === this.props.bedId,
-                  ),
-                )}
-              </Paragraph>
+                  )
+                    ? 'flex'
+                    : 'none',
+                  color: colors.greenD50,
+                }}>
+                Tap on any square to get started
+              </Text>
             </View>
 
             {/* garden map */}

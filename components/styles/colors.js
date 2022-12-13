@@ -55,12 +55,20 @@ let greenC95 = `hsla(${green}, ${saturation}, ${lightness - 30}%, 0.95)`;
 
 // greenB
 let greenB = `hsla(${green}, ${saturation}, ${lightness - 20}%, ${alpha})`;
+let greenB5 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.05)`;
 let greenB10 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.1)`;
 let greenB25 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.25)`;
 let greenB50 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.5)`;
 
 //greenA
 let greenA = `hsla(${green}, ${saturation}, ${lightness - 10}%, ${alpha})`;
+let greenA95 = `hsla(${green}, ${saturation}, ${lightness}%, 0.95)`;
+let greenA90 = `hsla(${green}, ${saturation}, ${lightness}%, 0.90)`;
+let greenA75 = `hsla(${green}, ${saturation}, ${lightness}%, 0.75)`;
+let greenA50 = `hsla(${green}, ${saturation}, ${lightness}%, 0.5)`;
+let greenA25 = `hsla(${green}, ${saturation}, ${lightness}%, 0.25)`;
+let greenA10 = `hsla(${green}, ${saturation}, ${lightness}%, 0.1)`;
+let greenA5 = `hsla(${green}, ${saturation}, ${lightness}%, 0.05)`;
 
 //green0
 let green0 = `hsla(${green}, ${saturation}, ${lightness}%, ${alpha})`;
@@ -109,8 +117,16 @@ let purpleC25 = `hsla(${purple}, ${saturation}, ${lightness - 30}%, 0.25)`;
 let purpleC10 = `hsla(${purple}, ${saturation}, ${lightness - 30}%, 0.1)`;
 let purpleC5 = `hsla(${purple}, ${saturation}, ${lightness - 30}%, 0.05)`;
 
-// purpleB-5
+// purpleB
 let purpleB = `hsla(${purple}, ${saturation}, ${lightness - 20}%, ${alpha})`;
+let purpleB95 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.95)`;
+let purpleB90 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.90)`;
+let purpleB75 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.75)`;
+let purpleB50 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.5)`;
+let purpleB25 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.25)`;
+let purpleB10 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.1)`;
+let purpleB5 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.05)`;
+
 let purpleA = `hsla(${purple}, ${saturation}, ${lightness - 10}%, ${alpha})`;
 let purple1 = `hsla(${purple}, ${saturation}, ${lightness + 10}%, ${alpha})`;
 let purple2 = `hsla(${purple}, ${saturation}, ${lightness + 20}%, ${alpha})`;
@@ -233,12 +249,20 @@ const colors = {
 
   //greenB
   greenB,
+  greenB5,
   greenB10,
   greenB25,
   greenB50,
 
   //greenA
   greenA,
+  greenA95,
+  greenA90,
+  greenA75,
+  greenA50,
+  greenA25,
+  greenA10,
+  greenA5,
 
   // green0
   green0,
@@ -266,6 +290,15 @@ const colors = {
   purpleE25,
   purpleE10,
   purpleE5,
+
+  // purpleB
+  purpleB95,
+  purpleB90,
+  purpleB75,
+  purpleB50,
+  purpleB25,
+  purpleB10,
+  purpleB5,
 
   // purpleD
   purpleD,
@@ -368,7 +401,7 @@ const colors = {
   purple050,
   purple025,
   purple010,
-  purple05
+  purple05,
 };
 
 export default colors;
