@@ -50,8 +50,8 @@ export function updateBed(id, bed) {
     return async function () {
         try {
             const authToken = await getAuthToken();
-            const updatedOrder = await axios.put(`${API_URL}/beds/${id}`, bed, { headers: { authorization: authToken } });
-            return updatedOrder;
+            const updatedBed = await axios.put(`${API_URL}/beds/${id}`, bed, { headers: { authorization: authToken } });
+            return updatedBed;
         }
 
         catch (error) {

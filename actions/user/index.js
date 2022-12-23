@@ -32,13 +32,13 @@ export function createUser(user) {
     }
 }
 
-export function updateUser(query, user) {
+export function updateUser(query, user, override) {
     return async function(dispatch) {
         const q = (query) ? `?${query}` : '';
         try {
             const authToken = await getAuthToken();
             const response = await axios.put(`${API_URL}/users${q}`, user, {headers: {authorization: authToken}});
-            dispatch(getUser(response.data._id));
+            if(!override) dispatch(getUser(response.data._id));
             return response.data;
         }
 

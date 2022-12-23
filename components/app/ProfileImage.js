@@ -41,7 +41,7 @@ class ProfileImage extends Component {
         // upload image to S3
         const selectedImage = await uploadImage(
             res.assets[0].uri,
-            'attachment.jpg',
+            'profile.jpg',
             'jpg',
         );
 

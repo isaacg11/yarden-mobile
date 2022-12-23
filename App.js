@@ -48,6 +48,9 @@ import Beds from './screens/Beds';
 import Bed from './screens/Bed';
 import GardenMap from './screens/GardenMap';
 import Planted from './screens/Planted';
+import Substitution from './screens/Substitution';
+import ImageUpload from './screens/ImageUpload';
+import OrderComplete from './screens/OrderComplete';
 import units from './components/styles/units';
 import colors from './components/styles/colors';
 
@@ -505,6 +508,38 @@ function App() {
               name="Planted"
               component={Planted}
               options={{
+                headerLeft: displayNone,
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Substitution"
+              component={Substitution}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Image Upload"
+              component={ImageUpload}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Order Complete"
+              component={OrderComplete}
+              options={{
+                headerLeft: displayNone,
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,

@@ -476,41 +476,45 @@ class PlantMenu extends Component {
     }
 
     renderMenuOptions() {
-        return (
-            <View style={{
-                borderTopWidth: 1,
-                borderTopColor: colors.purpleB,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: units.unit4
-            }}>
-                <Button
-                    disabled={!this.state.selectedPlant}
-                    text="Add Plants"
-                    style={{ width: '100%' }}
-                    onPress={() => {
-                        if (this.state.selectedPlants.length > 0) {
+        if(this.state.status === 'pending') {
+            return (
+                <View style={{
+                    borderTopWidth: 1,
+                    borderTopColor: colors.purpleB,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: units.unit4
+                }}>
+                    <Button
+                        disabled={!this.state.selectedPlant}
+                        text="Add Plants"
+                        style={{ width: '100%' }}
+                        onPress={() => {
+                            if (this.state.selectedPlants.length > 0) {
+    
+                                // add plant
+                                this.props.addPlant({
+                                    plant: this.state.selectedPlant,
+                                    selectedPlants: this.state.selectedPlants
+                                });
+    
+                                // clear selections
+                                this.setState({
+                                    selectedPlants: []
+                                })
+    
+                                // close modal
+                                this.props.close();
+                            }
+                        }}
+                    />
+                </View>
+            )
+        }
 
-                            // add plant
-                            this.props.addPlant({
-                                plant: this.state.selectedPlant,
-                                selectedPlants: this.state.selectedPlants
-                            });
-
-                            // clear selections
-                            this.setState({
-                                selectedPlants: []
-                            })
-
-                            // close modal
-                            this.props.close();
-                        }
-                    }}
-                />
-            </View>
-        )
+        
     }
 
     renderSearchBar() {

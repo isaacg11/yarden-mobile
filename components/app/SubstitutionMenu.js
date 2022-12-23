@@ -121,11 +121,11 @@ class SubstitutionMenu extends Component {
                                 width: '100%',
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                alignItems: 'center',
+                                alignItems: 'stretch',
                                 flexDirection: 'row',
                                 marginBottom: units.unit5,
                             }}>
-                            <View>
+                            <View style={{width: '45%'}}>
                                 <Text style={{ ...fonts.label }}>Selected Plant</Text>
                                 <View
                                     style={{
@@ -133,6 +133,7 @@ class SubstitutionMenu extends Component {
                                         alignItems: 'center',
                                         ...card,
                                         paddingHorizontal: units.unit4,
+                                        flexGrow: 1
                                     }}>
                                     <Image
                                         style={{
@@ -149,7 +150,7 @@ class SubstitutionMenu extends Component {
                                         ...fonts.header,
                                         fontSize: fonts.h4,
                                         color: colors.purpleB,
-                                        maxWidth: '80%',
+                                        width: '100%',
                                         lineHeight: fonts.h4,
                                         textAlign: 'center'
                                     }}>
@@ -162,7 +163,7 @@ class SubstitutionMenu extends Component {
                             </View>
 
                             {/* arrow */}
-                            <View style={{ marginTop: fonts.h4 }}>
+                            <View style={{ marginTop: fonts.h4, display: 'flex', justifyContent: 'center' }}>
                                 <Ionicons
                                     name="arrow-forward"
                                     size={fonts.h1}
@@ -171,14 +172,15 @@ class SubstitutionMenu extends Component {
                             </View>
 
                             {/* new plant */}
-                            <View>
+                            <View style={{width: '45%'}}>
                                 <Text style={{ ...fonts.label }}>New Plant</Text>
                                 <View
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         ...card,
-                                        paddingHorizontal: units.unit5,
+                                        paddingHorizontal: units.unit4,
+                                        flexGrow: 1
                                     }}>
                                     <Image
                                         style={{
@@ -193,17 +195,18 @@ class SubstitutionMenu extends Component {
                                     />
                                     <Text
                                         style={{
-                                            ...fonts.label,
-                                            color: colors.greenE75,
-                                            fontWeight: 'bold',
+                                            ...fonts.header,
+                                            fontSize: fonts.h4,
+                                            color: colors.purpleB,
+                                            width: '100%',
+                                            lineHeight: fonts.h4,
+                                            textAlign: 'center'
                                         }}>
                                         {substitutePlant ? `${substitutePlant.name} ${substitutePlant.common_type.name}` : 'Plant Name'}
                                     </Text>
                                     <Text
                                         style={{
-                                            ...fonts.small,
-                                            color: colors.greenE75,
-                                            fontWeight: 'bold',
+                                            ...fonts.small, color: colors.greenD50 
                                         }}>
                                         {substitutePlant ? `${substitutePlant.botanical_type.name}` : 'Botanical Type'}
                                     </Text>
@@ -219,8 +222,10 @@ class SubstitutionMenu extends Component {
                             placeholder="Choose a new varietal"
                         />
 
+                        {/* confirm button */}
                         <Button
-                            style={{marginTop: units.unit4}}
+                            disabled={!substitutePlant}
+                            style={{ marginTop: units.unit4 }}
                             text="Confirm Change"
                             onPress={() => this.confirm()}
                             icon={(

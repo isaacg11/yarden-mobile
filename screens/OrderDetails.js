@@ -1,13 +1,13 @@
 // libraries
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
-import {alert} from '../components/UI/SystemAlert';
+import { alert } from '../components/UI/SystemAlert';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Collapse from '../components/UI/Collapse';
 import Button from '../components/UI/Button';
@@ -19,9 +19,10 @@ import ChangeOrders from '../components/app/ChangeOrders';
 import Plants from '../components/app/Plants';
 
 // actions
-import {getOrders, updateOrder} from '../actions/orders/index';
-import {getChangeOrders} from '../actions/changeOrders/index';
-import {getBeds} from '../actions/beds/index';
+import { getOrders, updateOrder } from '../actions/orders/index';
+import { getChangeOrders } from '../actions/changeOrders/index';
+import { getBeds } from '../actions/beds/index';
+import { getDrafts } from '../actions/drafts/index';
 
 // styles
 import units from '../components/styles/units';
@@ -33,25 +34,32 @@ class OrderDetails extends Component {
   };
 
   async componentDidMount() {
-    // show loading indicator
-    this.setState({isLoading: true});
 
-    // get change orders
-    const changeOrders = await this.props.getChangeOrders(
-      `order=${this.props.route.params._id}`,
-      true,
-    );
+    // show loading indicator
+    this.setState({ isLoading: true });
 
     const order = this.props.route.params;
 
-    // if order type is initial planting, get beds
-    if (order.type == 'initial planting')
+    // get change orders
+    const changeOrders = await this.props.getChangeOrders(
+      `order=${order._id}`,
+      true,
+    );
+
+    // if order type is initial planting {...}
+    if (order.type == 'initial planting') {
+
+      // get beds
       await this.props.getBeds(`customer=${order.customer._id}`);
+
+      // get drafts
+      await this.props.getDrafts(`order=${order._id}`);
+    }
 
     // hide loading indicator
     this.setState({
       isLoading: false,
-      changeOrders: changeOrders,
+      changeOrders: changeOrders
     });
   }
 
@@ -62,7 +70,7 @@ class OrderDetails extends Component {
       'Are you sure?',
       async () => {
         // render loading indicator
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
         // update order to cancelled status
         await this.props.updateOrder(this.props.route.params._id, {
@@ -75,7 +83,7 @@ class OrderDetails extends Component {
         );
 
         // hide loading indicator
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
 
         // navigate to orders
         this.props.navigation.navigate('Orders');
@@ -94,8 +102,9 @@ class OrderDetails extends Component {
 
   render() {
     const order = this.props.route.params;
-    const {user, beds} = this.props;
-    const {isLoading, changeOrders} = this.state;
+    const { user, beds } = this.props;
+    const { isLoading, changeOrders } = this.state;
+    const gardenInfo = order.customer.garden_info;
 
     return (
       <SafeAreaView
@@ -103,12 +112,12 @@ class OrderDetails extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView>
-          <View style={{padding: units.unit3 + units.unit4}}>
+        <ScrollView> 
+          <View style={{ padding: units.unit3 + units.unit4 }}>
             {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
-            <Header type="h4" style={{marginBottom: units.unit5}}>
+            <Header type="h4" style={{ marginBottom: units.unit5 }}>
               Order Details
             </Header>
             <View>
@@ -117,7 +126,7 @@ class OrderDetails extends Component {
                 <OrderInfo
                   order={order}
                   onChangeDate={() =>
-                    this.props.navigation.navigate('Change Date', {order})
+                    this.props.navigation.navigate('Change Date', { order })
                   }
                   onCancel={() => this.cancel()}
                 />
@@ -125,7 +134,7 @@ class OrderDetails extends Component {
 
               {/* change orders */}
               {changeOrders.length > 0 && (
-                <View style={{marginTop: units.unit4}}>
+                <View style={{ marginTop: units.unit4 }}>
                   <Collapse
                     title={`Change Orders (${changeOrders.length})`}
                     open={changeOrders.find(
@@ -159,7 +168,7 @@ class OrderDetails extends Component {
                 (order.type === 'installation' ||
                   order.type === 'revive' ||
                   order.type === 'misc') && (
-                  <View style={{marginTop: units.unit4}}>
+                  <View style={{ marginTop: units.unit4 }}>
                     <Button
                       text="Request Changes"
                       onPress={() => this.requestChanges()}
@@ -177,8 +186,9 @@ class OrderDetails extends Component {
               {/* plant lists */}
               {order.status === 'pending' &&
                 user.type === 'gardener' &&
-                order.type === 'initial planting' && (
-                  <View style={{marginTop: units.unit4}}>
+                order.type === 'initial planting' &&
+                gardenInfo && (
+                  <View style={{ marginTop: units.unit4 }}>
                     {beds.length > 0 && (
                       <View>
                         <View>
@@ -186,7 +196,9 @@ class OrderDetails extends Component {
                             title="Vegetables"
                             content={
                               <Plants
-                                plants={order.bid.line_items.vegetables}
+                                plants={gardenInfo.vegetables}
+                                order={order}
+                                onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
                               />
                             }
                           />
@@ -195,7 +207,11 @@ class OrderDetails extends Component {
                           <Collapse
                             title="Herbs"
                             content={
-                              <Plants plants={order.bid.line_items.herbs} />
+                              <Plants
+                                plants={gardenInfo.herbs}
+                                order={order}
+                                onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                              />
                             }
                           />
                         </View>
@@ -203,7 +219,11 @@ class OrderDetails extends Component {
                           <Collapse
                             title="Fruit"
                             content={
-                              <Plants plants={order.bid.line_items.fruit} />
+                              <Plants
+                                plants={gardenInfo.fruit}
+                                order={order}
+                                onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                              />
                             }
                           />
                         </View>
@@ -211,13 +231,12 @@ class OrderDetails extends Component {
                     )}
                     <Button
                       variant={beds.length < 1 ? 'button' : 'btn2'}
-                      text={`${
-                        beds.length < 1
+                      text={`${beds.length < 1
                           ? 'Build Garden Map'
                           : 'View Garden Beds'
-                      } `}
+                        } `}
                       onPress={() =>
-                        this.props.navigation.navigate('Beds', {order})
+                        this.props.navigation.navigate('Beds', { order })
                       }
                       icon={
                         <Ionicons
@@ -233,7 +252,7 @@ class OrderDetails extends Component {
                         marginTop: units.unit4,
                       }}
                       text="Finish Order"
-                      onPress={() => console.log('do stuff...')}
+                      onPress={() => this.props.navigation.navigate('Image Upload', { order })}
                       icon={
                         <Ionicons
                           name="checkmark"
@@ -266,6 +285,7 @@ function mapDispatchToProps(dispatch) {
       updateOrder,
       getChangeOrders,
       getBeds,
+      getDrafts
     },
     dispatch,
   );

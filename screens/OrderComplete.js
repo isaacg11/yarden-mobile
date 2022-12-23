@@ -8,7 +8,7 @@ import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
-class Planted extends Component {
+class OrderComplete extends Component {
   render() {
     return (
       <SafeAreaView
@@ -46,7 +46,7 @@ class Planted extends Component {
                 fontSize: fonts.h2,
                 color: colors.purpleB,
               }}>
-              Your garden has been published, great job!
+              Your order has been completed, great job!
             </Paragraph>
           </View>
 
@@ -61,13 +61,13 @@ class Planted extends Component {
                 What happens next?
               </Text>
               <Text style={{color: colors.greenD75}}>
-                1. On the date of service, go to the customers property listed on the order.
+                1. If a maintenance plan was selected, then a new maintenance order will be scheduled.
               </Text>
               <Text style={{color: colors.greenD75, marginTop: units.unit5}}>
-                2. Use the garden map to place the plants in the correct bed and space.
+                2. Use the garden map to keep track of your plants during maintenance services.
               </Text>
               <Text style={{color: colors.greenD75, marginTop: units.unit5}}>
-                3. Once finished, tap on the "Finish Order" button within the order details.
+                3. Be sure to let the customer know about any issues you ran into while planting the garden.
               </Text>
             </View>
             <View style={{marginTop: units.unit5}}>
@@ -91,4 +91,4 @@ class Planted extends Component {
   }
 }
 
-module.exports = Planted;
+module.exports = OrderComplete;

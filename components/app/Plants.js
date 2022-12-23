@@ -1,12 +1,16 @@
 // libraries
 import React, { Component } from 'react';
 import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
 import CheckBox from '@react-native-community/checkbox';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
 import Paragraph from '../UI/Paragraph';
-import SubstitutionMenu from '../app/SubstitutionMenu';
+
+// helpers
+import truncate from '../../helpers/truncate';
+import separatePlantsByCommonType from '../../helpers/separatePlantsByCommonType';
 
 // styles
 import units from '../styles/units';
@@ -19,10 +23,26 @@ class Plants extends Component {
     }
 
     componentDidMount() {
+        this.formatPlants();
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.plants !== this.props.plants) {
+            this.formatPlants();
+        }
+    }
+
+    formatPlants() {
         let plants = [];
         let key = 0;
-        this.props.plants.forEach((plant) => {
-            for(let i = 0; i < plant.qty; i++) {
+        let sortedPlants = separatePlantsByCommonType(this.props.plants);
+        let plantList = [];
+        for(let item in sortedPlants) {
+            sortedPlants[item].forEach((plant) => plantList.push(plant));
+        }
+
+        plantList.forEach((plant) => {
+            for (let i = 0; i < plant.qty; i++) {
                 key += 1;
                 plants.push({
                     ...plant,
@@ -35,6 +55,7 @@ class Plants extends Component {
     }
 
     onSelect(plant) {
+
         // determine selection state
         let select = !this.state[`${plant.key}`] ? true : false;
 
@@ -42,35 +63,13 @@ class Plants extends Component {
         this.setState({ [`${plant.key}`]: select });
     }
 
-    substitutePlant(substitute) {
-        let plants = this.state.plants;
-
-        let plantIndex = plants.findIndex((plant) => plant.key === substitute.key);
-
-        plants.splice(plantIndex, 1, substitute);
-
-        this.setState({ plants });
-    }
-
     render() {
 
-        const { 
-            substitutionMenuIsOpen, 
-            selectedPlant, 
-            plants 
-        } = this.state;
+        const { plants } = this.state;
+        const { onNavigateToSubstitution } = this.props;
 
         return (
             <View>
-
-                {/* substitution menu (dynamically visible) */}
-                <SubstitutionMenu 
-                    selectedPlant={selectedPlant}
-                    isOpen={substitutionMenuIsOpen}
-                    close={() => this.setState({ substitutionMenuIsOpen: false})}
-                    onConfirm={(plant) => this.substitutePlant(plant)}
-                />
-
                 {/* helper text */}
                 <Text style={{ marginVertical: units.unit3 }}>Mark off each plant as you pick it up from the nursery. If you can't find a certain varietal, substitute it by tapping the arrow button next to the plant.</Text>
 
@@ -111,20 +110,11 @@ class Plants extends Component {
                                         uri: plant.id.common_type.image,
                                     }}
                                 />
-                                <Paragraph>{plant.id.name} {plant.id.common_type.name}</Paragraph>
+                                <Paragraph>{truncate(`${plant.id.name} ${plant.id.common_type.name}`, 15)}</Paragraph>
                             </View>
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 disabled={this.state[`${plant.key}`]}
-                                onPress={() => {
-                                        this.setState({
-                                            selectedPlant: plant
-                                        }, () => {
-                                            this.setState({
-                                                substitutionMenuIsOpen: true
-                                            })
-                                        })
-                                    }
-                                }>
+                                onPress={() => onNavigateToSubstitution(plant)}>
                                 <Ionicons
                                     name="swap-horizontal-outline"
                                     size={units.unit4}
@@ -138,5 +128,16 @@ class Plants extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        beds: state.beds,
+        drafts: state.drafts
+    };
+}
+
+Plants = connect(mapStateToProps, null)(Plants);
+
+export default Plants;
 
 module.exports = Plants;

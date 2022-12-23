@@ -1,5 +1,5 @@
 // libraries
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   View,
@@ -10,8 +10,8 @@ import {
   Text,
   Animated,
 } from 'react-native';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Popover from 'react-native-popover-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
@@ -25,8 +25,9 @@ import PlantMenu from '../components/app/PlantMenu';
 import PlantInfo from '../components/app/PlantInfo';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
-import {alert} from '../components/UI/SystemAlert';
+import { alert } from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
+import Input from '../components/UI/Input';
 
 // styles
 import units from '../components/styles/units';
@@ -34,11 +35,11 @@ import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
 // actions
-import {createDraft, updateDraft, getDrafts} from '../actions/drafts/index';
+import { createDraft, updateDraft, getDrafts } from '../actions/drafts/index';
+import { updateBed, getBeds } from '../actions/beds/index';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
-import {readDir} from 'react-native-fs';
 
 class GardenMap extends Component {
   constructor() {
@@ -46,7 +47,7 @@ class GardenMap extends Component {
     this.shakeAnimation = new Animated.Value(0);
     this.translateX = new Animated.Value(0);
     this.translateY = new Animated.Value(0);
-    this.lastOffset = {x: 0, y: 0};
+    this.lastOffset = { x: 0, y: 0 };
     this.onGestureEvent = Animated.event(
       [
         {
@@ -56,7 +57,7 @@ class GardenMap extends Component {
           },
         },
       ],
-      {useNativeDriver: false},
+      { useNativeDriver: false },
     );
   }
 
@@ -69,14 +70,14 @@ class GardenMap extends Component {
 
   translateX = Animated.Value;
   translateY = Animated.Value;
-  lastOffset = {x: 0, y: 0};
+  lastOffset = { x: 0, y: 0 };
   onGestureEvent = event => {
     return;
   };
 
   componentDidMount() {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set initial plot points list
     let plotPoints = [];
@@ -106,11 +107,24 @@ class GardenMap extends Component {
       plotPoints.push(row);
     }
 
-    // if drafts are found {...}
-    if (this.props.drafts.length > 0) {
+    if (this.props.user.type === 'gardener') {
+      // if drafts are found {...}
+      if (this.props.drafts.length > 0) {
+        // check for match
+        const match = this.props.drafts.find(
+          draft => draft.key === this.props.bedId,
+        );
+
+        // if draft key matches selected bed id {...}
+        if (match) {
+          // set plot points using draft
+          plotPoints = match.plot_points;
+        }
+      }
+    } else if (this.props.user.type === 'customer') {
       // check for match
-      const match = this.props.drafts.find(
-        draft => draft.key === this.props.bedId,
+      const match = this.props.beds.find(
+        bed => bed.key === this.props.bedId,
       );
 
       // if draft key matches selected bed id {...}
@@ -121,9 +135,9 @@ class GardenMap extends Component {
     }
 
     // set plants
-    const vegetables = this.props.order.customer.garden_info.vegetables;
-    const herbs = this.props.order.customer.garden_info.herbs;
-    const fruit = this.props.order.customer.garden_info.fruit;
+    const vegetables = (this.props.user.type === 'gardener') ? this.props.order.customer.garden_info.vegetables : false;
+    const herbs = (this.props.user.type === 'gardener') ? this.props.order.customer.garden_info.herbs : false;
+    const fruit = (this.props.user.type === 'gardener') ? this.props.order.customer.garden_info.fruit : false;
 
     // update UI
     this.setState({
@@ -133,6 +147,33 @@ class GardenMap extends Component {
       herbs,
       fruit,
     });
+  }
+
+  async changeBedName(newName) {
+
+    // validate name field
+    if (!newName) {
+
+      // show error
+      return alert('The garden bed name cannot be empty.', 'Invalid Name')
+    }
+
+    // show loading indicator
+    this.setState({ isLoading: true });
+
+    // update bed
+    await this.props.updateBed(this.props.bed._id, { name: newName });
+
+    // get updated beds
+    await this.props.getBeds(`customer=${this.props.user._id}`);
+
+    // hide loading indicator
+    this.setState({
+      isLoading: false,
+      isEditingName: false
+    });
+
+    alert('Your changes to the garden beds have been saved.', 'Success!');
   }
 
   selectPlotPoint(plotPoint, selectedRowIndex, selectedColumnIndex) {
@@ -615,7 +656,7 @@ class GardenMap extends Component {
 
   async updatePlantedList() {
     // show saving indicator
-    this.setState({isSaving: true});
+    this.setState({ isSaving: true });
 
     // check for match
     const match = this.props.drafts.find(
@@ -648,7 +689,7 @@ class GardenMap extends Component {
     }
 
     // hide saving indicator
-    this.setState({isSaving: false});
+    this.setState({ isSaving: false });
   }
 
   removePlant() {
@@ -805,13 +846,13 @@ class GardenMap extends Component {
   getPlantContainerTransform(quadrantSize) {
     switch (quadrantSize) {
       case 1:
-        return [{scale: 0.9}, {translateX: 0}, {translateY: -0.5}];
+        return [{ scale: 0.9 }, { translateX: 0 }, { translateY: -0.5 }];
       case 4:
-        return [{scale: 1.9}, {translateX: -10.66}, {translateY: -10.66}];
+        return [{ scale: 1.9 }, { translateX: -10.66 }, { translateY: -10.66 }];
       case 9:
-        return [{scale: 2.9}, {translateX: -13.84}, {translateY: -13.84}];
+        return [{ scale: 2.9 }, { translateX: -13.84 }, { translateY: -13.84 }];
       case 16:
-        return [{scale: 3.9}, {translateX: -15.4}, {translateY: -15.4}];
+        return [{ scale: 3.9 }, { translateX: -15.4 }, { translateY: -15.4 }];
       default:
         return [];
     }
@@ -823,26 +864,26 @@ class GardenMap extends Component {
         return {
           width: 20,
           height: 20,
-          transform: [{scale: 1.2}, {translateX: 0}, {translateY: 5}],
+          transform: [{ scale: 1.2 }, { translateX: 0 }, { translateY: 5 }],
         };
       case 4:
         return {
           width: 20,
           height: 20,
-          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 8}],
+          transform: [{ scale: 0.75 }, { translateX: 0 }, { translateY: 8 }],
           padding: 0,
         };
       case 9:
         return {
           width: 20,
           height: 20,
-          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
+          transform: [{ scale: 0.75 }, { translateX: 0 }, { translateY: 10 }],
         };
       case 16:
         return {
           width: 20,
           height: 20,
-          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
+          transform: [{ scale: 0.75 }, { translateX: 0 }, { translateY: 10 }],
         };
       default:
         return {};
@@ -853,26 +894,26 @@ class GardenMap extends Component {
     switch (quadrantSize) {
       case 1:
         return {
-          transform: [{scale: this.state.scale}],
+          transform: [{ scale: this.state.scale }],
         };
       case 4:
         return {
           transform: [
-            {scale: this.getTextScale(this.state.scale > 1.2 ? 0.4 : 0.45)},
-            {translateY: this.getTextTranslateY(0)},
+            { scale: this.getTextScale(this.state.scale > 1.2 ? 0.4 : 0.45) },
+            { translateY: this.getTextTranslateY(0) },
           ],
           width: '200%',
           textAlign: 'center',
         };
       case 9:
         return {
-          transform: [{scale: this.getTextScale(0.28)}],
+          transform: [{ scale: this.getTextScale(0.28) }],
           width: '300%',
           textAlign: 'center',
         };
       case 16:
         return {
-          transform: [{scale: this.getTextScale(0.22)}],
+          transform: [{ scale: this.getTextScale(0.22) }],
           width: '400%',
           textAlign: 'center',
         };
@@ -982,7 +1023,7 @@ class GardenMap extends Component {
   handlePinch(e) {
     const scale = e.nativeEvent.scale;
     if (scale > 1 && scale < 1.5) {
-      this.setState({scale: e.nativeEvent.scale});
+      this.setState({ scale: e.nativeEvent.scale });
     }
   }
 
@@ -1072,6 +1113,209 @@ class GardenMap extends Component {
     }
   };
 
+  renderAddButton(column, i, index) {
+    if (this.props.user.type === 'gardener') {
+      return (
+        <TouchableOpacity
+          style={{
+            display:
+              this.state.selectedPlotPoint &&
+                this.state.selectedPlotPoint.plant
+                ? 'none'
+                : 'flex',
+          }}
+          onPress={async () => {
+            // if plant already in selected plot point {...}
+            if (this.state.selectedPlotPoint.plant) {
+              // render warning
+              alert(
+                'The selected space already has a plant. If you want to replace with a different plant, delete the current plant and try again.',
+              );
+            } else {
+              // de-select plot point
+              await this.selectPlotPoint(column, i, index);
+
+              // NOTE: Must set timeout to allow the popover animiation to finish
+              setTimeout(() => {
+                // update UI
+                this.setState({ plantMenuIsOpen: true });
+              }, 500);
+            }
+          }}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: units.unit3,
+            }}>
+            <Ionicons
+              name={'add'}
+              color={colors.purpleB}
+              size={fonts.h3}
+            />
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: colors.purpleB,
+                marginLeft: units.unit2,
+              }}>
+              Add
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      // NOTE: This is a work-around. If an element with no dimensions is returned, a warning will occur
+      return (
+        <View>
+          <Text style={{ color: colors.white, height: 1 }}>|</Text>
+        </View>
+      )
+    }
+  }
+
+  renderMoveButton(column) {
+    if (this.props.user.type === 'gardener') {
+      return (
+        <TouchableOpacity
+          style={{
+            display:
+              this.state.selectedPlotPoint &&
+                this.state.selectedPlotPoint.plant
+                ? 'flex'
+                : 'none',
+          }}
+          onPress={() => this.addPlantToMoveQueue(column)}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: units.unit3,
+            }}>
+            <Ionicons
+              name={'move-outline'}
+              color={colors.purpleB}
+              size={fonts.h3}
+            />
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: colors.purpleB,
+                marginLeft: units.unit2,
+              }}>
+              Move
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      // NOTE: This is a work-around. If an element with no dimensions is returned, a warning will occur
+      return (
+        <View>
+          <Text style={{ color: colors.white, height: 1 }}>|</Text>
+        </View>
+      )
+    }
+  }
+
+  renderInfoButton(column, i, index) {
+    return (
+      <TouchableOpacity
+        style={{
+          display:
+            this.state.selectedPlotPoint &&
+              this.state.selectedPlotPoint.plant
+              ? 'flex'
+              : 'none',
+        }}
+        onPress={async () => {
+          const selectedPlant =
+            this.state.selectedPlotPoint.plant;
+
+          // de-select plot point
+          await this.selectPlotPoint(column, i, index);
+
+          // NOTE: Must set timeout to allow the popover animiation to finish
+          setTimeout(() => {
+            // update UI
+            this.setState({
+              plantInfoIsOpen: true,
+              selectedPlant: selectedPlant,
+            });
+          }, 500);
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: units.unit3,
+          }}>
+          <Ionicons
+            name={'information-circle-outline'}
+            color={colors.purpleB}
+            size={fonts.h3}
+          />
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: colors.purpleB,
+              marginLeft: units.unit2,
+            }}>
+            Info
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  renderRemoveButton() {
+    if (this.props.user.type === 'gardener') {
+      return (
+        <TouchableOpacity
+          style={{
+            display:
+              this.state.selectedPlotPoint &&
+                this.state.selectedPlotPoint.plant
+                ? 'flex'
+                : 'none',
+          }}
+          onPress={() => this.removePlant()}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: units.unit3,
+            }}>
+            <Ionicons
+              name={'trash-outline'}
+              color={colors.purpleB}
+              size={fonts.h3}
+            />
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: colors.purpleB,
+                marginLeft: units.unit2,
+              }}>
+              Remove
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      // NOTE: This is a work-around. If an element with no dimensions is returned, a warning will occur
+      return (
+        <View>
+          <Text style={{ color: colors.white, height: 1 }}>|</Text>
+        </View>
+      )
+    }
+  }
+
   renderPlotPoints() {
     // get interpolated value for queued plant animation
     const interpolated = this.shakeAnimation.interpolate({
@@ -1080,7 +1324,7 @@ class GardenMap extends Component {
     });
 
     // set animated style
-    const animatedStyle = [{rotate: interpolated}];
+    const animatedStyle = [{ rotate: interpolated }];
 
     return (
       <PinchGestureHandler onGestureEvent={e => this.handlePinch(e)}>
@@ -1090,16 +1334,16 @@ class GardenMap extends Component {
           <Animated.View
             style={{
               transform: [
-                {scale: this.state.scale},
-                {translateX: this.translateX},
-                {translateY: this.translateY},
+                { scale: this.state.scale },
+                { translateX: this.translateX },
+                { translateY: this.translateY },
               ],
               backgroundColor: colors.greenD05,
               overflow: 'hidden',
               shadowColor: colors.greenD10,
               shadowRadius: units.unit2,
               shadowOpacity: 1,
-              shadowOffset: {width: 0, height: 4},
+              shadowOffset: { width: 0, height: 4 },
               borderRadius: units.unit4,
             }}>
             {/* rows */}
@@ -1126,33 +1370,12 @@ class GardenMap extends Component {
                     let borderTopRightRadius = 0;
                     let borderBottomLeftRadius = 0;
                     let borderBottomRightRadius = 0;
-                    // if (i === 0 && index === 0) {
-                    //   // top left
-                    //   borderTopLeftRadius = units.unit4;
-                    // } else if (i === 0 && index === row.length - 1) {
-                    //   // top right
-                    //   borderTopRightRadius = units.unit4;
-                    // } else if (
-                    //   i === this.state.plotPoints.length - 1 &&
-                    //   index === 0
-                    // ) {
-                    //   // bottom left
-                    //   borderBottomLeftRadius = units.unit4;
-                    // } else if (
-                    //   i === this.state.plotPoints.length - 1 &&
-                    //   index === row.length - 1
-                    // ) {
-                    //   // bottom right
-                    //   borderBottomRightRadius = units.unit4;
-                    // }
-
-                    // i = rows
-                    // index = columns
 
                     if (i === 0 && index === 0) {
                       // top left
                       borderTopLeftRadius = units.unit4;
                     }
+
                     // top left
                     else if (i % 2 === 0 && index % 2 === 0) {
                       borderTopLeftRadius = units.unit3;
@@ -1381,7 +1604,7 @@ class GardenMap extends Component {
                                         height: '100%',
                                         backgroundColor: colors.white90,
                                         shadowColor: colors.greenD10,
-                                        shadowOffset: {width: 0, height: 1},
+                                        shadowOffset: { width: 0, height: 1 },
                                         shadowOpacity: 1,
                                         shadowRadius: 2,
                                         borderRadius:
@@ -1405,7 +1628,7 @@ class GardenMap extends Component {
                                               : [],
                                           }}>
                                           <Image
-                                            source={{uri: column.image}}
+                                            source={{ uri: column.image }}
                                             style={plantImageStyles}
                                           />
                                         </Animated.View>
@@ -1426,162 +1649,18 @@ class GardenMap extends Component {
                               </View>
                             </TouchableWithoutFeedback>
                           }>
-                          <TouchableOpacity
-                            style={{
-                              display:
-                                this.state.selectedPlotPoint &&
-                                this.state.selectedPlotPoint.plant
-                                  ? 'none'
-                                  : 'flex',
-                            }}
-                            onPress={async () => {
-                              // if plant already in selected plot point {...}
-                              if (this.state.selectedPlotPoint.plant) {
-                                // render warning
-                                alert(
-                                  'The selected space already has a plant. If you want to replace with a different plant, delete the current plant and try again.',
-                                );
-                              } else {
-                                // de-select plot point
-                                await this.selectPlotPoint(column, i, index);
 
-                                // NOTE: Must set timeout to allow the popover animiation to finish
-                                setTimeout(() => {
-                                  // update UI
-                                  this.setState({plantMenuIsOpen: true});
-                                }, 500);
-                              }
-                            }}>
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                padding: units.unit3,
-                              }}>
-                              <Ionicons
-                                name={'add'}
-                                color={colors.purpleB}
-                                size={fonts.h3}
-                              />
-                              <Text
-                                style={{
-                                  fontWeight: 'bold',
-                                  color: colors.purpleB,
-                                  marginLeft: units.unit2,
-                                }}>
-                                Add
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              display:
-                                this.state.selectedPlotPoint &&
-                                this.state.selectedPlotPoint.plant
-                                  ? 'flex'
-                                  : 'none',
-                            }}
-                            onPress={() => this.addPlantToMoveQueue(column)}>
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                padding: units.unit3,
-                              }}>
-                              <Ionicons
-                                name={'move-outline'}
-                                color={colors.purpleB}
-                                size={fonts.h3}
-                              />
-                              <Text
-                                style={{
-                                  fontWeight: 'bold',
-                                  color: colors.purpleB,
-                                  marginLeft: units.unit2,
-                                }}>
-                                Move
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              display:
-                                this.state.selectedPlotPoint &&
-                                this.state.selectedPlotPoint.plant
-                                  ? 'flex'
-                                  : 'none',
-                            }}
-                            onPress={async () => {
-                              const selectedPlant =
-                                this.state.selectedPlotPoint.plant;
+                          {/* add button */}
+                          {this.renderAddButton(column, i, index)}
 
-                              // de-select plot point
-                              await this.selectPlotPoint(column, i, index);
+                          {/* move button */}
+                          {this.renderMoveButton(column)}
 
-                              // NOTE: Must set timeout to allow the popover animiation to finish
-                              setTimeout(() => {
-                                // update UI
-                                this.setState({
-                                  plantInfoIsOpen: true,
-                                  selectedPlant: selectedPlant,
-                                });
-                              }, 500);
-                            }}>
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                padding: units.unit3,
-                              }}>
-                              <Ionicons
-                                name={'information-circle-outline'}
-                                color={colors.purpleB}
-                                size={fonts.h3}
-                              />
-                              <Text
-                                style={{
-                                  fontWeight: 'bold',
-                                  color: colors.purpleB,
-                                  marginLeft: units.unit2,
-                                }}>
-                                Info
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              display:
-                                this.state.selectedPlotPoint &&
-                                this.state.selectedPlotPoint.plant
-                                  ? 'flex'
-                                  : 'none',
-                            }}
-                            onPress={() => this.removePlant()}>
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                padding: units.unit3,
-                              }}>
-                              <Ionicons
-                                name={'trash-outline'}
-                                color={colors.purpleB}
-                                size={fonts.h3}
-                              />
-                              <Text
-                                style={{
-                                  fontWeight: 'bold',
-                                  color: colors.purpleB,
-                                  marginLeft: units.unit2,
-                                }}>
-                                Remove
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
+                          {/* info button */}
+                          {this.renderInfoButton(column, i, index)}
+
+                          {/* remove button */}
+                          {this.renderRemoveButton()}
                         </Popover>
                       </View>
                     );
@@ -1631,7 +1710,7 @@ class GardenMap extends Component {
               flexDirection: 'row',
               justifyContent: 'center',
             }}>
-            <Text style={{textAlign: 'center', marginTop: units.unit3}}>
+            <Text style={{ textAlign: 'center', marginTop: units.unit3 }}>
               Saved Draft
             </Text>
             <Ionicons
@@ -1655,7 +1734,11 @@ class GardenMap extends Component {
       vegetables,
       herbs,
       fruit,
+      isEditingName,
+      bedName
     } = this.state;
+
+    const { user } = this.props;
 
     return (
       <SafeAreaView
@@ -1675,7 +1758,7 @@ class GardenMap extends Component {
                 vegetables={vegetables}
                 herbs={herbs}
                 fruit={fruit}
-                close={() => this.setState({plantMenuIsOpen: false})}
+                close={() => this.setState({ plantMenuIsOpen: false })}
                 addPlant={async p => {
                   // get render info
                   const renderInfo = await this.getRenderInfo(
@@ -1718,42 +1801,87 @@ class GardenMap extends Component {
               <PlantInfo
                 isOpen={plantInfoIsOpen}
                 selectedPlant={selectedPlant}
-                close={() => this.setState({plantInfoIsOpen: false})}
+                close={() => this.setState({ plantInfoIsOpen: false })}
               />
             )}
 
-            {/* id / stats */}
             <View
               style={{
                 paddingHorizontal: units.unit4,
                 marginBottom: units.unit2,
               }}>
+
+              {/* id / stats */}
               <View
                 style={{
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Paragraph style={{...fonts.label}}>
+                <Paragraph style={{ ...fonts.label }}>
                   Garden Bed #{this.props.bedId}
                 </Paragraph>
-                <Paragraph style={{...fonts.label}}>
-                  {calculatePlantingProgress(
-                    this.props.drafts.find(
-                      draft => draft.key === this.props.bedId,
-                    ),
-                  )}
-                </Paragraph>
+                {(user.type === 'gardener') && (
+                  <Paragraph style={{ ...fonts.label }}>
+                    {calculatePlantingProgress(
+                      this.props.drafts.find(
+                        draft => draft.key === this.props.bedId,
+                      ),
+                    )}
+                  </Paragraph>
+                )}
+                {(user.type === 'customer' && !isEditingName) && (
+                  <TouchableOpacity onPress={() => this.setState({ isEditingName: true })}>
+                    <Ionicons
+                      name={'pencil'}
+                      color={colors.purple0}
+                      size={fonts.h3}
+                    />
+                  </TouchableOpacity>
+                )}
+                {(user.type === 'customer' && isEditingName) && (
+                  <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={() => this.changeBedName(this.state.bedName)}>
+                      <Ionicons
+                        name={'checkmark'}
+                        color={colors.purple0}
+                        size={fonts.h2}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.setState({ isEditingName: false })}>
+                      <Ionicons
+                        name={'close'}
+                        color={colors.purple0}
+                        size={fonts.h2}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
 
-              <Header>Garden Bed Name</Header>
-              {/* helper text */}
+              {/* header (dynamically visible) */}
+              {(user.type === 'customer' && !isEditingName) && (
+                <Header>{this.props.beds.find((bed) => bed._id === this.props.bed._id).name}</Header>
+              )}
+
+              {/* name input (dynamically visible) */}
+              {(user.type === 'customer' && isEditingName) && (
+                <Input
+                  onChange={(value) => this.setState({ bedName: value })}
+                  value={bedName}
+                  placeholder="Garden Name"
+                />
+              )}
+
+              {/* helper text (dynamically visible) */}
               <Text
                 style={{
-                  paddingHorizontal: units.unit4,
+                  paddingVertical: units.unit4,
                   textAlign: 'center',
                   display: !this.props.drafts.find(
                     draft => draft.key === this.props.bedId,
+                  ) && !this.props.beds.find(
+                    bed => bed.key === this.props.bedId,
                   )
                     ? 'flex'
                     : 'none',
@@ -1764,11 +1892,11 @@ class GardenMap extends Component {
             </View>
 
             {/* garden map */}
-            <View style={{display: 'flex', alignSelf: 'center'}}>
+            <View style={{ display: 'flex', alignSelf: 'center' }}>
               {this.renderPlotPoints()}
             </View>
 
-            {/* saving indicator */}
+            {/* saving indicator (dynamically visible) */}
             <View>{this.renderSavingIndicator()}</View>
           </View>
         </ScrollView>
@@ -1791,6 +1919,8 @@ function mapDispatchToProps(dispatch) {
       createDraft,
       updateDraft,
       getDrafts,
+      updateBed,
+      getBeds
     },
     dispatch,
   );

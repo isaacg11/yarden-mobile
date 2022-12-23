@@ -8,7 +8,7 @@ class Card extends Component {
         const { children, style } = this.props;
 
         return (
-            <View style={{...style, ...card}}>
+            <View style={{...card, ...style}}>
                 {children}
             </View>
         );

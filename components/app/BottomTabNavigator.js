@@ -9,6 +9,7 @@ import Quotes from '../../screens/Quotes';
 import Shop from '../../screens/Shop';
 import Messages from '../../screens/Messages';
 import Reminders from '../../screens/Reminders';
+import Reports from '../../screens/Reports';
 import { getQuotes } from '../../actions/quotes/index';
 import { getConversations } from '../../actions/conversations/index';
 import { getMessages } from '../../actions/messages/index';
@@ -69,6 +70,10 @@ class BottomTabNavigator extends Component {
 
   renderIcon(route, focused) {
     switch (route) {
+      case 'Dashboard':
+        return (
+          <Ionicons name={focused ? 'home' : 'home-outline'} color={'white'} size={fonts.h2} />
+        );
       case 'Orders':
         return (
           <Ionicons name={focused ? 'reader' : 'reader-outline'} color={'white'} size={fonts.h2} />
@@ -141,6 +146,17 @@ class BottomTabNavigator extends Component {
                 height: units.unit6 + units.unit5,
               },
             })}>
+
+            <Tab.Screen
+              name="Dashboard"
+              component={Reports}
+              listeners={({ navigation }) => ({
+                tabPress: async e => {
+                  // do stuff
+                },
+              })}
+            />
+
             <Tab.Screen
               name="Orders"
               component={Orders}

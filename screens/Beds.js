@@ -25,7 +25,6 @@ import fonts from '../components/styles/fonts';
 import {alert} from '../components/UI/SystemAlert';
 
 // actions
-import {getDrafts} from '../actions/drafts/index';
 import {createBed, updateBed} from '../actions/beds/index';
 
 // helpers
@@ -37,13 +36,6 @@ import capitalize from '../helpers/capitalize';
 
 class Beds extends Component {
   state = {};
-
-  componentDidMount() {
-    const order = this.props.route.params.order;
-
-    // get garden bed drafts associated with order
-    this.props.getDrafts(`order=${order._id}`);
-  }
 
   getBedStyles(bed) {
     switch (bed.shape.name) {
@@ -74,6 +66,7 @@ class Beds extends Component {
       // iterate through drafts
       drafts.forEach(draft => {
         const newBed = {
+          name: `Garden Bed ${draft.key}`,
           customer: this.props.route.params.order.customer._id,
           key: draft.key,
           plot_points: draft.plot_points,
@@ -134,7 +127,7 @@ class Beds extends Component {
   renderProgress(progress, label) {
     // render UI
     return (
-      <View style={{marginBottom: units.unit3}}>
+      <View style={{marginBottom: units.unit3, marginTop: units.unit4}}>
         <View
           style={{
             display: 'flex',
@@ -321,6 +314,7 @@ class Beds extends Component {
             {/* header */}
             <Header type="h4">Garden Beds</Header>
 
+            {/* customer info */}
             <Text style={{marginTop: units.unit2}}>
               {capitalize(
                 `${order.customer.first_name} ${order.customer.last_name}`,
@@ -335,8 +329,8 @@ class Beds extends Component {
               {order.customer.zip_code}
             </Text>
 
-            {/* helper text */}
-            {beds.length < 1 && (
+            {/* helper text (dynamically visible) */}
+            {drafts.length < 1 && (
               <View
                 style={{
                   marginTop: units.unit3,
@@ -352,7 +346,7 @@ class Beds extends Component {
             )}
 
             <View>
-              {/* progress indicator */}
+              {/* progress indicator (dynamically visible) */}
               {beds.length < 1 && this.renderProgress(progress, label)}
 
               {/* garden beds list */}
@@ -372,13 +366,15 @@ class Beds extends Component {
                   />
                 }
                 disabled={progress < 100 ? true : false}
-                text="Publish Garden"
+                text={(beds.length < 1) ? "Publish Garden" : "Re-publish Garden"}
                 variant="button"
                 onPress={() => this.save()}
               />
               <Text style={{color: colors.greenD75, marginTop: units.unit4}}>
-                Tapping the "Publish Garden" button will make your garden layout
-                visible to the customer.
+                {(beds.length < 1) ?
+                  `Tapping the "Publish Garden" button will make your garden layout visible to the customer.` : 
+                  `Tapping the "Re-publish Garden" button will update your garden layout and make the new changes visible to the customer.`
+                }
               </Text>
             </View>
           </View>
@@ -398,7 +394,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      getDrafts,
       createBed,
       updateBed,
     },
