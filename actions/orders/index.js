@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from '../../helpers/getUrl';
 import getAuthToken from '../../helpers/getAuthToken';
-import { GET_ORDERS } from '../../actions/orders/types';
+import { GET_ORDERS, SET_SELECTED_ORDER } from '../../actions/orders/types';
 import { alert } from '../../components/UI/SystemAlert';
 
 
@@ -96,5 +96,11 @@ export function updateOrders(query, order) {
 
             alert('Something went wrong. We are working on a fix now!');
         }
+    }
+}
+
+export function setSelectedOrder(order) {
+    return async function (dispatch) {
+        return dispatch({ type: SET_SELECTED_ORDER, payload: order });
     }
 }

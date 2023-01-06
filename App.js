@@ -1,11 +1,17 @@
+// libraries
 import 'react-native-gesture-handler';
 import React from 'react';
 import { Text } from 'react-native';
 import { Provider } from 'react-redux';
-import store from './config/store';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as Sentry from "@sentry/react-native";
+
+// global state
+import store from './config/store';
+
+// screens
 import ErrorBoundary from './components/app/ErrorBoundary';
 import Mark from './components/app/branding/Mark';
 import Register from './screens/Register';
@@ -51,8 +57,26 @@ import Planted from './screens/Planted';
 import Substitution from './screens/Substitution';
 import ImageUpload from './screens/ImageUpload';
 import OrderComplete from './screens/OrderComplete';
+import Step1 from './screens/service_reporting/Step1';
+import Step2 from './screens/service_reporting/Step2';
+import Step3 from './screens/service_reporting/Step3';
+import Step4 from './screens/service_reporting/Step4';
+import Step5 from './screens/service_reporting/Step5';
+import Step6 from './screens/service_reporting/Step6';
+import Notes from './screens/Notes';
+import NeemOil from './screens/NeemOil';
+import WateringSchedule from './screens/WateringSchedule';
+
+// UI components
+import Link from './components/UI/Link';
+
+// types
+import types from './vars/types';
+
+// styles
 import units from './components/styles/units';
 import colors from './components/styles/colors';
+import fonts from './components/styles/fonts';
 
 // error reporting
 Sentry.init({
@@ -62,11 +86,6 @@ Sentry.init({
 
 // app navigation config
 const Stack = createNativeStackNavigator();
-
-// display config
-const displayNone = () => {
-  return <Text></Text>;
-};
 
 // format deep linking config
 const config = {
@@ -103,6 +122,44 @@ const AppTheme = {
     card: 'white',
   }
 };
+
+const displayNone = () => {
+  return <Text></Text>;
+};
+
+function renderBackButton(nav) {
+  const state = store.getState();
+  let redirect = () => nav.navigation.goBack();
+
+  // if maintenance order {...}
+  if (state.selectedOrder.type === types.FULL_PLAN || state.selectedOrder.type === types.FULL_PLAN) {
+
+    // if service report is for dead plants {...}
+    if (nav.route.params.serviceReport === types.DEAD_PLANTS) {
+
+      // set redirect to step 1
+      redirect = () => nav.navigation.navigate('Step 1');
+    } else if (nav.route.params.serviceReport === types.HARVESTED_PLANTS) { // if service report is for dead plants {...}
+
+      // set redirect to step 2
+      redirect = () => nav.navigation.navigate('Step 2');
+    }
+  }
+
+  return (
+    <Link
+      icon={
+        <Ionicons
+          name="chevron-back"
+          size={fonts.h3}
+          color={colors.purpleB}
+        />
+      }
+      text={'Back'}
+      onPress={() => redirect()}
+    />
+  )
+}
 
 // main app render
 function App() {
@@ -477,12 +534,13 @@ function App() {
             <Stack.Screen
               name="Beds"
               component={Beds}
-              options={{
+              options={(navigation, route) => ({
+                headerLeft: () => renderBackButton(navigation),
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,
                 headerShadowVisible: false,
-              }}
+              })}
             />
             <Stack.Screen
               name="Bed"
@@ -540,6 +598,197 @@ function App() {
               component={OrderComplete}
               options={{
                 headerLeft: displayNone,
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Step 1"
+              component={Step1}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => {
+                      const state = store.getState();
+                      nav.navigation.navigate('Order Details', state.selectedOrder);
+                    }}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Step 2"
+              component={Step2}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => nav.navigation.navigate('Step 1')}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Step 3"
+              component={Step3}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => nav.navigation.navigate('Step 2')}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Step 4"
+              component={Step4}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => nav.navigation.navigate('Step 3')}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Step 5"
+              component={Step5}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => {
+                      const state = store.getState();
+                      if(state.selectedOrder.type === types.INITIAL_PLANTING) {
+                        nav.navigation.navigate('Order Details', state.selectedOrder);
+                      } else {
+                        nav.navigation.navigate('Step 4');
+                      }
+                    }}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Step 6"
+              component={Step6}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => nav.navigation.navigate('Step 5')}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Notes"
+              component={Notes}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Neem Oil"
+              component={NeemOil}
+              options={(nav) => ({
+                headerLeft: () => (
+                  <Link
+                    icon={
+                      <Ionicons
+                        name="chevron-back"
+                        size={fonts.h3}
+                        color={colors.purpleB}
+                      />
+                    }
+                    text={'Back'}
+                    onPress={() => nav.navigation.navigate('Step 4')}
+                  />
+                ),
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              })}
+            />
+            <Stack.Screen
+              name="Watering Schedule"
+              component={WateringSchedule}
+              options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,

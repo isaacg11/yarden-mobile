@@ -1,0 +1,1 @@
+export const GET_NOTES = 'Get_Notes';

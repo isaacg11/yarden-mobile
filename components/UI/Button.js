@@ -17,6 +17,8 @@ class Button extends Component {
         return this.btn3Style;
       case 'btn4':
         return this.btn4Style;
+      case 'btn5':
+        return this.btn5Style;
       default:
         return this.btnStyle;
     }
@@ -118,6 +120,18 @@ class Button extends Component {
     },
   };
 
+  btn5Style = {
+    button: {
+      paddingVertical: 16,
+      paddingHorizontal: 32,
+      display: 'flex',
+    },
+    text: {
+      ...this.btnStyle.text,
+      color: colors.purpleB,
+    },
+  };
+
   render() {
     const {
       onPress,
@@ -136,7 +150,7 @@ class Button extends Component {
 
     return (
       <TouchableOpacity
-        style={{ ...buttonStyles.button, ...buttonVariant, ...disabledStyles, ...style}}
+        style={{ ...buttonStyles.button, ...buttonVariant, ...disabledStyles, ...style }}
         onPress={value => onPress(value)}
         underlayColor="#fff"
         disabled={disabled}>

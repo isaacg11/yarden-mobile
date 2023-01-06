@@ -1,5 +1,5 @@
 // libraries
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,8 +8,8 @@ import {
   Text,
   Image,
 } from 'react-native';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
@@ -22,10 +22,10 @@ import ProgressIndicator from '../components/UI/ProgressIndicator';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
-import {alert} from '../components/UI/SystemAlert';
+import { alert } from '../components/UI/SystemAlert';
 
 // actions
-import {createBed, updateBed} from '../actions/beds/index';
+import { createBed, updateBed } from '../actions/beds/index';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
@@ -34,29 +34,16 @@ import formatMenuData from '../helpers/formatMenuData';
 import getPlantedList from '../helpers/getPlantedList';
 import capitalize from '../helpers/capitalize';
 
-class Beds extends Component {
-  state = {};
+// types
+import types from '../vars/types';
 
-  getBedStyles(bed) {
-    switch (bed.shape.name) {
-      case 'rectangle':
-        return {
-          margin: 20,
-          height: 150,
-          borderWidth: 1,
-          borderColor: colors.purpleB,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        };
-      default:
-        return <View></View>;
-    }
-  }
+class Beds extends Component {
+
+  state = {};
 
   save() {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // if no beds {...}
     if (this.props.beds.length < 1) {
@@ -91,7 +78,7 @@ class Beds extends Component {
         this.props.navigation.navigate('Planted');
 
         // hide loading indicator
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
       });
     } else {
       let updateBeds = [];
@@ -116,7 +103,7 @@ class Beds extends Component {
       // update beds
       Promise.all(updateBeds).then(() => {
         // hide loading indicator
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
 
         // show success message
         alert('Your changes to the garden beds have been saved.', 'Success!');
@@ -124,10 +111,95 @@ class Beds extends Component {
     }
   }
 
+  next() {
+    switch (this.props.route.params.serviceReport) {
+      case types.DEAD_PLANTS:
+        return this.props.navigation.navigate('Step 2', { order: this.props.route.params.order });
+      case types.HARVESTED_PLANTS:
+        return this.props.navigation.navigate('Step 3', { order: this.props.route.params.order });
+      case types.NEW_PLANTS:
+        return this.props.navigation.navigate('Step 4', { order: this.props.route.params.order });
+      default:
+        return this.props.navigation.navigate('Step 1', { order: this.props.route.params.order });
+    }
+  }
+
+  renderHelperText() {
+    switch (this.props.route.params.order.type) {
+      case types.INITIAL_PLANTING:
+        if (this.props.drafts.length < 1) {
+          return 'Tap on any garden bed to get started. Each bed is marked with a number that corresponds to the real-life garden bed.';
+        }
+      case types.FULL_PLAN || types.ASSISTED_PLAN:
+        switch (this.props.route.params.serviceReport) {
+          case types.DEAD_PLANTS:
+            return 'Tap on each garden bed where you found dead plants. Use the number on the garden bed to identify which bed to use for reporting.';
+          case types.HARVESTED_PLANTS:
+            return 'Tap on each garden bed where you harvested. Use the number on the garden bed to identify which bed to use for reporting.';
+          case types.NEW_PLANTS:
+            return 'Tap on each garden bed where added new plants. Use the number on the garden bed to identify which bed to use for reporting.';
+          default:
+            return '';
+        }
+      default:
+        return '';
+    }
+  }
+
+  renderButton(progress) {
+    switch (this.props.route.params.order.type) {
+      case types.INITIAL_PLANTING:
+        return (
+          <View>
+            <Button
+              icon={
+                <Ionicons
+                  name="share"
+                  size={fonts.h3}
+                  color={colors.purpleB}
+                />
+              }
+              disabled={progress < 100 ? true : false}
+              text={(this.props.beds.length < 1) ? "Publish Garden" : "Re-publish Garden"}
+              variant="button"
+              onPress={() => this.save()}
+            />
+            <Text style={{ color: colors.greenD75, marginTop: units.unit4 }}>
+              {(this.props.beds.length < 1) ?
+                `Tapping the "Publish Garden" button will make your garden layout visible to the customer.` :
+                `Tapping the "Re-publish Garden" button will update your garden layout and make the new changes visible to the customer.`
+              }
+            </Text>
+          </View>
+        )
+      case (types.FULL_PLAN || types.ASSISTED_PLAN):
+        if (this.props.route.params.serviceReport) {
+          return (
+            <View>
+              <Button
+                alignIconRight
+                icon={
+                  <Ionicons
+                    name="arrow-forward-outline"
+                    size={fonts.h3}
+                    color={colors.purpleB}
+                  />
+                }
+                text="Next"
+                variant="button"
+                onPress={() => this.next()}
+              />
+            </View>
+          )
+        }
+      default:
+        return (<View></View>)
+    }
+  }
+
   renderProgress(progress, label) {
-    // render UI
     return (
-      <View style={{marginBottom: units.unit3, marginTop: units.unit4}}>
+      <View style={{ marginBottom: units.unit3, marginTop: units.unit4 }}>
         <View
           style={{
             display: 'flex',
@@ -136,10 +208,10 @@ class Beds extends Component {
             alignItems: 'center',
             marginBottom: units.unit3,
           }}>
-          <Text style={{...fonts.label, marginRight: units.unit3}}>
+          <Text style={{ ...fonts.label, marginRight: units.unit3 }}>
             Planted
           </Text>
-          <Text style={{...fonts.label, textAlign: 'center'}}>{label}</Text>
+          <Text style={{ ...fonts.label, textAlign: 'center' }}>{label}</Text>
         </View>
         <ProgressIndicator progress={progress} />
       </View>
@@ -148,6 +220,7 @@ class Beds extends Component {
 
   renderBeds(bed) {
     const order = this.props.route.params.order;
+    const serviceReport = this.props.route.params.serviceReport;
     let rows = [];
     let columns = [];
 
@@ -183,7 +256,7 @@ class Beds extends Component {
                 }}
                 key={index}
                 onPress={() =>
-                  this.props.navigation.navigate('Bed', {bed, order, bedId})
+                  this.props.navigation.navigate('Bed', { bed, order, bedId, serviceReport })
                 }>
                 <View
                   style={{
@@ -192,10 +265,10 @@ class Beds extends Component {
                     justifyContent: 'space-between',
                     marginBottom: units.unit2,
                   }}>
-                  <Paragraph style={{...fonts.label}}>#{bedId}</Paragraph>
-                  <Paragraph style={{...fonts.label}}>
+                  <Paragraph style={{ ...fonts.label }}>#{bedId}</Paragraph>
+                  <Paragraph style={{ ...fonts.label }}>
                     {calculatePlantingProgress(
-                      this.props.drafts.find(draft => draft.key === bedId),
+                      this.props[`${(this.props.beds.length > 0) ? 'beds' : 'drafts'}`].find(data => data.key === bedId),
                     )}
                   </Paragraph>
                 </View>
@@ -213,7 +286,7 @@ class Beds extends Component {
                       height: 100,
                     }}
                   />
-                  <View style={{display: 'flex', alignItems: 'center'}}>
+                  <View style={{ display: 'flex', alignItems: 'center' }}>
                     <Paragraph
                       style={{
                         maxWidth: '100%',
@@ -244,11 +317,10 @@ class Beds extends Component {
   }
 
   render() {
-    const {isLoading} = this.state;
-    const {drafts, beds} = this.props;
-    const {garden_info} = this.props.route.params.order.customer;
+    const { isLoading } = this.state;
+    const { drafts, beds } = this.props;
+    const { garden_info } = this.props.route.params.order.customer;
 
-    // set initial total plants value
     let totalPlants = 0;
 
     // calculate total plants
@@ -256,13 +328,8 @@ class Beds extends Component {
     garden_info.herbs.forEach(herb => (totalPlants += herb.qty));
     garden_info.fruit.forEach(fr => (totalPlants += fr.qty));
 
-    // set initial complete plants value
     let completePlants = 0;
-
-    // set initial pending plants
     let pendingPlants = 0;
-
-    // set initial progress value
     let progress = 0;
 
     const rows = formatMenuData(
@@ -270,6 +337,7 @@ class Beds extends Component {
       garden_info.herbs,
       garden_info.fruit,
     );
+
     const planted = getPlantedList(drafts);
 
     // if drafts exist {...}
@@ -295,7 +363,6 @@ class Beds extends Component {
         ? 100
         : (completePlants / (pendingPlants + completePlants)) * 100;
 
-    // set label
     const label = `${completePlants} / ${pendingPlants + completePlants}`;
     const order = this.props.route.params.order;
 
@@ -307,7 +374,8 @@ class Beds extends Component {
           backgroundColor: colors.greenE10,
         }}>
         <ScrollView>
-          <View style={{padding: units.unit3 + units.unit4}}>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+
             {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
@@ -315,7 +383,7 @@ class Beds extends Component {
             <Header type="h4">Garden Beds</Header>
 
             {/* customer info */}
-            <Text style={{marginTop: units.unit2}}>
+            <Text style={{ marginTop: units.unit2 }}>
               {capitalize(
                 `${order.customer.first_name} ${order.customer.last_name}`,
               )}
@@ -323,27 +391,24 @@ class Beds extends Component {
             <Text>{capitalize(`${order.customer.address}`)}</Text>
             <Text>
               {capitalize(`${order.customer.city}`)},{' '}
-              <Text style={{textTransform: 'uppercase'}}>
+              <Text style={{ textTransform: 'uppercase' }}>
                 {order.customer.state}
               </Text>{' '}
               {order.customer.zip_code}
             </Text>
 
             {/* helper text (dynamically visible) */}
-            {drafts.length < 1 && (
-              <View
-                style={{
-                  marginTop: units.unit3,
-                  paddingTop: units.unit3,
-                  borderTopWidth: 1,
-                  borderTopColor: colors.greenD10,
-                }}>
-                <Text style={{color: colors.greenE50}}>
-                  Tap on any garden bed to get started. Each bed is marked with
-                  a number that corresponds to the real-life garden bed.
-                </Text>
-              </View>
-            )}
+            <View
+              style={{
+                marginTop: units.unit3,
+                paddingTop: units.unit3,
+                borderTopWidth: 1,
+                borderTopColor: colors.greenD10,
+              }}>
+              <Text style={{ color: colors.greenE50 }}>
+                {this.renderHelperText()}
+              </Text>
+            </View>
 
             <View>
               {/* progress indicator (dynamically visible) */}
@@ -351,31 +416,14 @@ class Beds extends Component {
 
               {/* garden beds list */}
               {garden_info.beds.map((bed, index) => (
-                <View key={index} style={{marginTop: units.unit4}}>
+                <View key={index} style={{ marginTop: units.unit4 }}>
                   {this.renderBeds(bed)}
                 </View>
               ))}
 
               {/* save button */}
-              <Button
-                icon={
-                  <Ionicons
-                    name="share"
-                    size={fonts.h3}
-                    color={colors.purpleB}
-                  />
-                }
-                disabled={progress < 100 ? true : false}
-                text={(beds.length < 1) ? "Publish Garden" : "Re-publish Garden"}
-                variant="button"
-                onPress={() => this.save()}
-              />
-              <Text style={{color: colors.greenD75, marginTop: units.unit4}}>
-                {(beds.length < 1) ?
-                  `Tapping the "Publish Garden" button will make your garden layout visible to the customer.` : 
-                  `Tapping the "Re-publish Garden" button will update your garden layout and make the new changes visible to the customer.`
-                }
-              </Text>
+              {this.renderButton(progress)}
+
             </View>
           </View>
         </ScrollView>

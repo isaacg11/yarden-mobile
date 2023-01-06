@@ -1,8 +1,8 @@
-export default function calculatePlantingProgress(draft) {
-    if(draft) {
+export default function calculatePlantingProgress(data) {
+    if(data) {
         let plotPoints = 0;
         let complete = 0;
-        draft.plot_points.forEach((row) => {
+        data.plot_points.forEach((row) => {
             row.forEach((column) => {
                 plotPoints += 1;
                 if(column.plant) {

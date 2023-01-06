@@ -67,9 +67,9 @@ class Header extends Component {
         const lineHeight = this.getLineHeight(size);
 
         const styles = {
-            ...{ fontSize: size, lineHeight: lineHeight },
             ...componentStyles.header,
-            ...style
+            ...style,
+            ...{ fontSize: size, lineHeight: lineHeight },
         }
 
         return (

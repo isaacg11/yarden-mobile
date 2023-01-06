@@ -13,7 +13,10 @@ class Rectangle extends Component {
         const {
             bed, 
             bedId,
-            order
+            order,
+            serviceReport,
+            onNavigateBack,
+            navigateToNotes
         } = this.props;
 
         const measurements = 2;
@@ -30,7 +33,9 @@ class Rectangle extends Component {
                     rows={rows}
                     columns={columns}
                     order={order}
-                    onSelectPlotPoint={(selectedPlotPoint) => this.setState({ selectedPlotPoint })}
+                    serviceReport={serviceReport}
+                    onNavigateBack={onNavigateBack}
+                    navigateToNotes={navigateToNotes}
                 />
             </View>
         )

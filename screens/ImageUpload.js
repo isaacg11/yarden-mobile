@@ -19,33 +19,74 @@ import { createOrder, updateOrder, getOrders } from '../actions/orders';
 import { getPlans } from '../actions/plans';
 import { updateUser } from '../actions/user';
 import { createSubscription } from '../actions/subscriptions';
+import { updateBed } from '../actions/beds';
+import { createPlantActivity, getPlantActivities } from '../actions/plantActivities';
+import { getReportType } from '../actions/reportTypes/index';
+import { createReport } from '../actions/reports/index';
+import { createAnswer } from '../actions/answers/index';
+import { createReminder, getReminders } from '../actions/reminders/index';
 
 // helpers
 import uploadImage from '../helpers/uploadImage';
 import vars from '../vars/index';
 
+// types
+import types from '../vars/types';
+
 // styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
+import fonts from '../components/styles/fonts';
 
 class ImageUpload extends Component {
 
     state = {
-        selectedImages: []
+        selectedImages: [],
+        plantReplacements: []
     }
 
-    componentDidMount() {
-        if (this.props.route.params.order.type === 'initial planting') {
+    async componentDidMount() {
+        if (this.props.route.params.order.type === types.INITIAL_PLANTING) {
             this.props.getPlans();
+        } else if (this.props.route.params.order.type === types.FULL_PLAN || this.props.route.params.order.type === types.ASSISTED_PLAN) {
+
+            // get plant activities
+            await this.props.getPlantActivities(`order=${this.props.route.params.order._id}`);
+
+            const plantsToBeReplaced = this.props.plantActivities.filter((plantActivity) => plantActivity.type === types.DECEASED || (plantActivity.type === types.HARVESTED && plantActivity.harvest === 'full'));
+            let plantReplacements = [];
+
+            // group plant replacements by common type and plant type
+            plantsToBeReplaced.forEach((plantToBeReplaced) => {
+                const matchIndex = plantReplacements.findIndex((replacement) => (replacement.plant.common_type._id === plantToBeReplaced.plant.common_type._id) && (replacement.plant._id === plantToBeReplaced.plant._id));
+                if (matchIndex > 0) {
+                    plantReplacements[matchIndex] = {
+                        qty: plantReplacements[matchIndex].qty + 1,
+                        plant: plantReplacements[matchIndex].plant
+                    }
+                } else {
+                    plantReplacements.push({
+                        qty: 1,
+                        plant: plantToBeReplaced.plant
+                    })
+                }
+            })
+
+            // update UI
+            this.setState({
+                plantReplacements
+            })
         }
     }
 
     getHelperText(order) {
         switch (order.type) {
-            case 'initial planting':
-                return 'Upload a minimum of 2 pictures: 1 before the planting, and 1 after the planting. Submit additional images as needed.';
+            case types.INITIAL_PLANTING:
+                return 'Upload a minimum of 2 photos: 1 before the planting, and 1 after the planting. Submit additional photos as needed.';
+            case types.FULL_PLAN || types.ASSISTED_PLAN:
+                return 'Upload a minimum of 2 photos. If there was a harvest, make sure to upload photos of the harvested plants.';
             default:
-                return 'Upload a minimum of 2 pictures: 1 before the service, and 1 after the service';
+                return 'Upload a minimum of 2 photos. Submit additional photos as needed.';
         }
     }
 
@@ -103,11 +144,24 @@ class ImageUpload extends Component {
     }
 
     async submit() {
-        // show loading indicator
-        this.setState({ isLoading: true });
 
+        // close out order in system
+        await this.closeOrder();
+
+        // process order results and next steps
+        switch (this.props.route.params.order.type) {
+            case types.INITIAL_PLANTING:
+                return this.processInitialPlanting();
+            case types.FULL_PLAN || types.ASSISTED_PLAN:
+                return this.processMaintenance();
+            default:
+                return;
+        }
+
+    }
+
+    async closeOrder() {
         const order = this.props.route.params.order;
-
         const updatedOrder = {
             images: this.state.selectedImages,
             status: 'complete',
@@ -116,72 +170,243 @@ class ImageUpload extends Component {
 
         // update order with results
         await this.props.updateOrder(order._id, updatedOrder);
+    }
 
-        let maintenancePlan = order.customer.garden_info.maintenance_plan;
+    async processInitialPlanting() {
 
-        // if customer selected a maintenance plan {...}
-        if ((maintenancePlan !== 'none') && (!order.customer.payment_info.plan_id)) {
+        // show loading indicator
+        this.setState({ isLoading: true });
 
-            // NOTE: This check is necessary because for the new mobile schema we use plan id's instead of name strings - change when mobile app development is done
-            if (maintenancePlan !== 'full plan' && maintenancePlan !== 'assisted plan') {
+        let beds = this.props.beds;
+        const order = this.props.selectedOrder;
+        let updateBeds = [];
+        let createPlantActivities = [];
 
-                // set maintance plan
-                const plan = this.props.plans.find((plan) => plan._id === maintenancePlan);
+        beds.forEach((bed) => {
+            bed.plot_points.forEach((row) => {
+                row.forEach((column) => {
+                    if (column.plant) {
 
-                maintenancePlan = plan.type;
-            }
+                        // mark dt_planted for each plant was planted
+                        column.plant.dt_planted = new Date();
 
-            const orderDescription = (maintenancePlan === 'full plan') ? vars.orderDescriptions.customer.fullPlan : vars.orderDescriptions.customer.assistedPlan;
+                        // check if column has image, as to only create a single plant activity
+                        if (column.image) {
 
-            const maintenanceOrder = {
-                type: maintenancePlan,
-                date: moment().add(1, 'week').startOf('day'),
-                customer: order.customer._id,
-                description: orderDescription,
-                vendor: this.props.user._id
-            }
+                            // add new plant activity to list
+                            createPlantActivities.push(
+                                new Promise(async resolve => {
 
-            // create new order
-            await this.props.createOrder(maintenanceOrder);
+                                    // create plant activity
+                                    await this.props.createPlantActivity({
+                                        type: types.PLANTED,
+                                        owner: this.props.user._id,
+                                        customer: order.customer._id,
+                                        order: order._id,
+                                        plant: column.plant.id._id,
+                                        key: column.plant.key,
+                                        bed: bed._id
+                                    });
+                                    resolve();
+                                }))
+                        }
+                    }
+                })
+            })
 
-            const newSubscription = {
-                customerId: order.customer.payment_info.customer_id,
-                userId: order.customer._id,
-                selectedPlan: maintenancePlan
-            }
+            updateBeds.push(
+                new Promise(async resolve => {
 
-            // create new subscription
-            const subscription = await this.props.createSubscription(newSubscription);
-
-            const paymentInfo = {
-                name: order.customer.payment_info.name,
-                token: order.customer.payment_info.token,
-                card_id: order.customer.payment_info.card_id,
-                card_brand: order.customer.payment_info.card_brand,
-                card_last4: order.customer.payment_info.card_last4,
-                card_exp_month: order.customer.payment_info.card_exp_month,
-                card_exp_year: order.customer.payment_info.card_exp_year,
-                customer_id: order.customer.payment_info.customer_id,
-                plan_id: subscription.id
-            }
-
-            // update user payment info with new plan id
-            await this.props.updateUser(`userId=${order.customer._id}`, { paymentInfo: paymentInfo }, true);
-
-            // get pending orders
-            await this.props.getOrders(
-                `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                    // update bed
+                    await this.props.updateBed(bed._id, { plot_points: bed.plot_points });
+                    resolve();
+                }),
             );
+        })
+
+        // get report type
+        const reportType = await this.props.getReportType(`name=${order.type}`);
+
+        // create report
+        const report = await this.props.createReport({
+            type: reportType._id,
+            order: order._id,
+            customer: order.customer._id,
+        })
+
+        let createAnswers = [];
+        this.props.answers.forEach((data) => {
+            createAnswers.push(new Promise(async (resolve) => {
+
+                // create answer
+                await this.props.createAnswer({
+                    report: report._id,
+                    question: data.question,
+                    result: data.result
+                })
+                resolve();
+            }))
+        })
+
+        // create answers
+        await Promise.all(createAnswers);
+
+        // update beds
+        Promise.all(updateBeds).then(async () => {
+
+            // create plant activities
+            Promise.all(createPlantActivities).then(async () => {
+
+                let maintenancePlan = order.customer.garden_info.maintenance_plan;
+
+                // if customer selected a maintenance plan {...}
+                if ((maintenancePlan !== 'none') && (!order.customer.payment_info.plan_id)) {
+
+                    // NOTE: This check is necessary because for the new mobile schema we use plan id's instead of name strings - change when mobile app development is done
+                    if (maintenancePlan !== 'full plan' && maintenancePlan !== 'assisted plan') {
+
+                        // set maintance plan
+                        const plan = this.props.plans.find((plan) => plan._id === maintenancePlan);
+
+                        maintenancePlan = plan.type;
+                    }
+
+                    const orderDescription = (maintenancePlan === 'full plan') ? vars.orderDescriptions.customer.fullPlan : vars.orderDescriptions.customer.assistedPlan;
+
+                    const maintenanceOrder = {
+                        type: maintenancePlan,
+                        date: moment().add(1, 'week').startOf('day'),
+                        customer: order.customer._id,
+                        description: orderDescription,
+                        vendor: this.props.user._id
+                    }
+
+                    // create new order
+                    await this.props.createOrder(maintenanceOrder);
+
+                    const newSubscription = {
+                        customerId: order.customer.payment_info.customer_id,
+                        userId: order.customer._id,
+                        selectedPlan: maintenancePlan
+                    }
+
+                    // create new subscription
+                    const subscription = await this.props.createSubscription(newSubscription);
+
+                    const paymentInfo = {
+                        name: order.customer.payment_info.name,
+                        token: order.customer.payment_info.token,
+                        card_id: order.customer.payment_info.card_id,
+                        card_brand: order.customer.payment_info.card_brand,
+                        card_last4: order.customer.payment_info.card_last4,
+                        card_exp_month: order.customer.payment_info.card_exp_month,
+                        card_exp_year: order.customer.payment_info.card_exp_year,
+                        customer_id: order.customer.payment_info.customer_id,
+                        plan_id: subscription.id
+                    }
+
+                    // update user payment info with new plan id
+                    await this.props.updateUser(`userId=${order.customer._id}`, { paymentInfo: paymentInfo }, true);
+
+                    // get pending orders
+                    await this.props.getOrders(
+                        `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                    );
+
+                    // redirect user to success page
+                    this.props.navigation.navigate('Order Complete', { orderType: order.type });
+
+                    // hide loading indicator
+                    this.setState({ isLoading: false });
+                } else {
+                    // hide loading indicator
+                    this.setState({ isLoading: false });
+                }
+            });
+        });
+    }
+
+    async processMaintenance() {
+
+        // show loading indicator
+        this.setState({ isLoading: true });
+
+        const order = this.props.selectedOrder;
+
+        // get report type
+        const reportType = await this.props.getReportType(`name=${order.type}`);
+
+        // create report
+        const report = await this.props.createReport({
+            type: reportType._id,
+            order: order._id,
+            customer: order.customer._id,
+        })
+
+        let createAnswers = [];
+        this.props.answers.forEach((data) => {
+            createAnswers.push(new Promise(async (resolve) => {
+
+                // create answer
+                await this.props.createAnswer({
+                    report: report._id,
+                    question: data.question,
+                    result: data.result
+                })
+                resolve();
+            }))
+        })
+
+        // create answers
+        Promise.all(createAnswers).then(async () => {
+            const orderDate = (order.type === types.FULL_PLAN) ? moment(order.date).add(1, 'week').startOf('day') : moment(order.date).add(2, 'weeks').startOf('day');
+            const orderDescription = (order.type === types.FULL_PLAN) ? vars.orderDescriptions.customer.fullPlan : vars.orderDescriptions.customer.assistedPlan;
+            const nextOrder = {
+                type: order.type,
+                date: orderDate,
+                customer: order.customer._id,
+                vendor: order.vendor._id,
+                description: orderDescription
+            }
+
+            // create next order
+            await this.props.createOrder(nextOrder);
+
+            const plantReplacements = this.state.plantReplacements;
+            if (plantReplacements.length > 0) {
+                let reminderDescription = '';
+                plantReplacements.forEach((replacement, index) => {
+                    reminderDescription += `(${replacement.qty}) ${replacement.plant.name} ${replacement.plant.common_type.name}`;
+                    if (index !== (plantReplacements.length - 1)) {
+                        reminderDescription += ', ';
+                    }
+                })
+
+                const reminder = {
+                    title: `Pick up plants - ${order.customer.address}`,
+                    description: reminderDescription,
+                    time: '07',
+                    date: orderDate,
+                    owner: this.props.user._id,
+                    customer: order.customer._id
+                };
+
+                // create new reminder
+                await this.props.createReminder(reminder);
+            }
+
+            // get updated orders
+            await this.props.getOrders(`status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`);
+
+            // get new reminders
+            await this.props.getReminders(`status=pending&page=1&limit=50`);
 
             // redirect user to success page
-            this.props.navigation.navigate('Order Complete');
+            this.props.navigation.navigate('Order Complete', { orderType: order.type });
 
             // hide loading indicator
             this.setState({ isLoading: false });
-        } else {
-            // hide loading indicator
-            this.setState({ isLoading: false });
-        }
+        })
     }
 
     render() {
@@ -227,7 +452,7 @@ class ImageUpload extends Component {
                                 <View style={{ padding: units.unit6, display: 'flex', alignItems: 'center' }}>
                                     <Ionicons
                                         name="cloud-upload-outline"
-                                        size={units.unit4}
+                                        size={fonts.h1}
                                         color={colors.purpleB}
                                     />
                                     <Paragraph>Tap here to upload</Paragraph>
@@ -277,7 +502,11 @@ class ImageUpload extends Component {
 function mapStateToProps(state) {
     return {
         user: state.user,
-        plans: state.plans
+        plans: state.plans,
+        beds: state.beds,
+        answers: state.answers,
+        plantActivities: state.plantActivities,
+        selectedOrder: state.selectedOrder
     };
 }
 
@@ -289,7 +518,15 @@ function mapDispatchToProps(dispatch) {
             getOrders,
             getPlans,
             updateUser,
-            createSubscription
+            createSubscription,
+            updateBed,
+            createPlantActivity,
+            getReportType,
+            createReport,
+            createAnswer,
+            createReminder,
+            getPlantActivities,
+            getReminders
         },
         dispatch,
     );

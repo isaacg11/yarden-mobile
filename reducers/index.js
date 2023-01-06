@@ -19,6 +19,12 @@ import referrals from './referrals';
 import reminders from './reminders';
 import drafts from './drafts';
 import beds from './beds';
+import selectedOrder from './selectedOrder';
+import notes from './notes';
+import questions from './questions';
+import answers from './answers';
+import plantActivities from './plantActivities';
+import reports from './reports';
 
 const rootReducer = combineReducers({
     user,
@@ -40,7 +46,13 @@ const rootReducer = combineReducers({
     referrals,
     reminders,
     drafts,
-    beds
+    beds,
+    selectedOrder,
+    notes,
+    questions,
+    answers,
+    plantActivities,
+    reports
 })
 
 export default rootReducer;

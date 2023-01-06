@@ -28,6 +28,9 @@ import Paragraph from '../components/UI/Paragraph';
 import { alert } from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
 import Input from '../components/UI/Input';
+import Button from '../components/UI/Button';
+import HarvestMenu from '../components/app/HarvestMenu';
+import NewPlantMenu from '../components/app/NewPlantMenu';
 
 // styles
 import units from '../components/styles/units';
@@ -37,9 +40,14 @@ import fonts from '../components/styles/fonts';
 // actions
 import { createDraft, updateDraft, getDrafts } from '../actions/drafts/index';
 import { updateBed, getBeds } from '../actions/beds/index';
+import { createPlantActivity } from '../actions/plantActivities/index';
+
+// types
+import types from '../vars/types';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
+import moment from 'moment';
 
 class GardenMap extends Component {
   constructor() {
@@ -66,6 +74,7 @@ class GardenMap extends Component {
     optionsMenuIsOpen: false,
     animatedStyle: [],
     scale: 1,
+    harvestInfo: []
   };
 
   translateX = Animated.Value;
@@ -76,6 +85,7 @@ class GardenMap extends Component {
   };
 
   componentDidMount() {
+
     // show loading indicator
     this.setState({ isLoading: true });
 
@@ -107,37 +117,56 @@ class GardenMap extends Component {
       plotPoints.push(row);
     }
 
-    if (this.props.user.type === 'gardener') {
-      // if drafts are found {...}
-      if (this.props.drafts.length > 0) {
-        // check for match
-        const match = this.props.drafts.find(
-          draft => draft.key === this.props.bedId,
+    // if current user is a gardener {...}
+    if (this.props.user.type === types.GARDENER) {
+
+      // if order type is initial planting
+      if ((this.props.order.type === types.INITIAL_PLANTING)) {
+
+        // if drafts are found {...}
+        if (this.props.drafts.length > 0) {
+
+          const match = this.props.drafts.find(
+            draft => draft.key === this.props.bedId
+          );
+
+          // if draft key matches selected bed id {...}
+          if (match) {
+
+            // set plot points using draft
+            plotPoints = match.plot_points;
+          }
+        }
+      } else {
+        const match = this.props.beds.find(
+          bed => bed.key === this.props.bedId
         );
 
-        // if draft key matches selected bed id {...}
+        // if bed key matches selected bed id {...}
         if (match) {
-          // set plot points using draft
+
+          // set plot points using bed
           plotPoints = match.plot_points;
         }
       }
-    } else if (this.props.user.type === 'customer') {
-      // check for match
+    } else if (this.props.user.type === types.CUSTOMER) { // if current user is a customer {...}
+
       const match = this.props.beds.find(
-        bed => bed.key === this.props.bedId,
+        bed => bed.key === this.props.bedId
       );
 
-      // if draft key matches selected bed id {...}
+      // if bed key matches selected bed id {...}
       if (match) {
-        // set plot points using draft
+
+        // set plot points using bed
         plotPoints = match.plot_points;
       }
     }
 
     // set plants
-    const vegetables = (this.props.user.type === 'gardener') ? this.props.order.customer.garden_info.vegetables : false;
-    const herbs = (this.props.user.type === 'gardener') ? this.props.order.customer.garden_info.herbs : false;
-    const fruit = (this.props.user.type === 'gardener') ? this.props.order.customer.garden_info.fruit : false;
+    const vegetables = (this.props.user.type === types.GARDENER) ? this.props.order.customer.garden_info.vegetables : false;
+    const herbs = (this.props.user.type === types.GARDENER) ? this.props.order.customer.garden_info.herbs : false;
+    const fruit = (this.props.user.type === types.GARDENER) ? this.props.order.customer.garden_info.fruit : false;
 
     // update UI
     this.setState({
@@ -177,10 +206,60 @@ class GardenMap extends Component {
   }
 
   selectPlotPoint(plotPoint, selectedRowIndex, selectedColumnIndex) {
+
     // if a plant is queued to move {...}
     if (this.state.plantQueuedToMove) {
-      // move plant
+
+      // move plant, do no select
       return this.movePlant(plotPoint, selectedRowIndex, selectedColumnIndex);
+    }
+
+    // if reporting service results {...}
+    if (this.props.serviceReport) {
+
+      // if service report is for dead plants {...}
+      if (this.props.serviceReport === types.DEAD_PLANTS) {
+
+        // if no plant exists on selected plot point, do no select
+        if (!plotPoint.plant) return;
+      } else if (this.props.serviceReport === types.HARVESTED_PLANTS) { // if service report is for harvested plants {...}
+
+        // if plant exists on selected plot point {...}
+        if (plotPoint.plant) {
+          const matchIndex = this.state.harvestInfo.findIndex((harvest) => harvest.key === plotPoint.plant.key && harvest.plant === plotPoint.plant.id._id);
+
+          // if user is de-selecting
+          if (matchIndex > -1) {
+
+            // remove plant from harvest info
+            this.removeHarvestInfo(matchIndex);
+          }
+        } else {
+
+          // do no select
+          return;
+        }
+      } else if (this.props.serviceReport === types.NEW_PLANTS) { // if service report is for new plants {...}
+        // if plant exists on selected plot point, do no select
+        if (plotPoint.plant) return;
+      }
+    } else {
+      // if no service report and order type is maintenance (READ ONLY MODE)
+      if (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN) {
+
+        // if the user selected a plot point with a plant {...}
+        if (plotPoint.plant) {
+
+          // determine if the plant menu should be open
+          const isOpen = this.state.selectedPlotPoint?.id !== plotPoint.id;
+
+          // open plant info menu
+          this.setState({
+            plantInfoIsOpen: isOpen,
+            selectedPlant: plotPoint.plant
+          });
+        }
+      }
     }
 
     // get plot points
@@ -218,6 +297,7 @@ class GardenMap extends Component {
       selectedRowIndex,
       selectedColumnIndex,
       selectedPlotPoint: plotPoint.selected ? plotPoint : null,
+      harvestMenuIsOpen: (this.props.serviceReport === types.HARVESTED_PLANTS) && plotPoint.selected
     });
   }
 
@@ -692,7 +772,7 @@ class GardenMap extends Component {
     this.setState({ isSaving: false });
   }
 
-  removePlant() {
+  async removePlant() {
     // get plot points
     let plotPoints = this.state.plotPoints;
 
@@ -1113,8 +1193,189 @@ class GardenMap extends Component {
     }
   };
 
+  save() {
+    switch (this.props.serviceReport) {
+      case types.DEAD_PLANTS:
+
+        // show loading indicator
+        this.setState({ isLoading: true });
+
+        const bedWithDeadPlants = this.props.beds.find((b) => b.key === this.props.bedId);
+        let createDeathActivities = [];
+        this.state.plotPoints.forEach((row) => {
+          row.forEach((column) => {
+            if (column.selected && column.image) {
+              createDeathActivities.push(new Promise(async resolve => {
+
+                // create plant activity
+                await this.props.createPlantActivity({
+                  type: types.DECEASED,
+                  owner: this.props.user._id,
+                  customer: this.props.order.customer._id,
+                  order: this.props.order._id,
+                  plant: column.plant.id._id,
+                  key: column.plant.key,
+                  bed: bedWithDeadPlants._id
+                });
+                resolve();
+              }))
+            }
+          })
+        })
+
+        // create plant activities
+        Promise.all(createDeathActivities).then(async () => {
+
+          // remove selected plants
+          await this.removePlant();
+
+          // update bed
+          await this.props.updateBed(bedWithDeadPlants._id, { plot_points: this.state.plotPoints });
+
+          // hide loading indicator
+          this.setState({ isLoading: false }, () => {
+
+            // show confirmation message to user
+            alert('All selected plants have been marked as dead and removed from garden bed.', 'Success!', () => this.props.onNavigateBack());
+          });
+        })
+
+        break;
+      case types.HARVESTED_PLANTS:
+
+        // show loading indicator
+        this.setState({ isLoading: true });
+
+        let plotPoints = this.state.plotPoints;
+        plotPoints.forEach((row) => {
+          row.forEach((column) => {
+            if (column.selected) {
+              const data = this.state.harvestInfo.find((h) => h.plant === column.plant.id._id && h.key === column.plant.key);
+
+              // if selected plant had a partial harvest, set selected status to false so the plant is not removed from the garden bed
+              // otherwise, keep column selected so it can be removed from the garden bed
+              if (data.harvest === types.PARTIAL_HARVEST) {
+                column.selected = false;
+              }
+            }
+          })
+        })
+
+        const bedWithHarvestedPlants = this.props.beds.find((b) => b.key === this.props.bedId);
+        let createHarvestActivities = [];
+        this.state.harvestInfo.forEach((harvest) => {
+          createHarvestActivities.push(new Promise(async resolve => {
+
+            // create plant activity
+            await this.props.createPlantActivity(harvest);
+            resolve();
+          }))
+        })
+
+        // create plant activities
+        Promise.all(createHarvestActivities).then(async () => {
+
+          // hide loading indicator
+          this.setState({
+            isLoading: false,
+            plotPoints
+          }, async () => {
+
+            // remove selected plants (full harvest only)
+            await this.removePlant();
+
+            // update bed
+            await this.props.updateBed(bedWithHarvestedPlants._id, { plot_points: this.state.plotPoints });
+
+            // show confirmation message to user
+            alert('All selected plants have been marked as harvested. Plants that were marked as a full harvest have been removed from the bed.', 'Success!', () => this.props.onNavigateBack());
+          });
+        })
+
+        break;
+      case types.NEW_PLANTS:
+        this.props.onNavigateBack();
+        break;
+      default:
+        return;
+    }
+  }
+
+  addHarvestInfo(info) {
+    let harvestInfo = this.state.harvestInfo;
+    const bed = this.props.beds.find((b) => b.key === this.props.bedId);
+
+    // add harvest info to list
+    harvestInfo.push({
+      type: types.HARVESTED,
+      owner: this.props.user._id,
+      customer: this.props.order.customer._id,
+      order: this.props.order._id,
+      plant: info.column.plant.id._id,
+      key: info.column.plant.key,
+      bed: bed._id,
+      harvest: info.harvest,
+      qty: info.qty
+    });
+
+    // update harvest info list
+    this.setState({
+      harvestInfo
+    })
+  }
+
+  removeHarvestInfo(index) {
+    let harvestInfo = this.state.harvestInfo;
+
+    // remove harvest info from list
+    harvestInfo.splice(index, 1);
+
+    // update harvest info list
+    this.setState({
+      harvestInfo
+    })
+  }
+
+  async setPlant(p) {
+    // get render info
+    const renderInfo = await this.getRenderInfo(
+      p,
+      this.state.selectedRowIndex,
+      this.state.selectedColumnIndex
+    );
+
+    // get available plot points
+    const availablePlotPoints =
+      await this.getAvailablePlotPoints();
+
+    // set initial available plot point count
+    let availablePlotPointCount = 0;
+
+    // increment count based on available plot points
+    availablePlotPoints.forEach(
+      row => (availablePlotPointCount += row.length),
+    );
+
+    // set total plants
+    const totalPlants = p.selectedPlants.length;
+
+    // if total quadrant size area is greater than spaces available {...}
+    if (
+      renderInfo.quadrantSize * totalPlants >
+      availablePlotPointCount
+    ) {
+      // show error
+      return alert(
+        `There is not enough space available to plant (${totalPlants}) "${p.plant.id.common_type.name}"`,
+      );
+    } else {
+      // add plant
+      this.addPlant(p);
+    }
+  }
+
   renderAddButton(column, i, index) {
-    if (this.props.user.type === 'gardener') {
+    if (this.props.user.type === types.GARDENER) {
       return (
         <TouchableOpacity
           style={{
@@ -1137,8 +1398,14 @@ class GardenMap extends Component {
 
               // NOTE: Must set timeout to allow the popover animiation to finish
               setTimeout(() => {
-                // update UI
-                this.setState({ plantMenuIsOpen: true });
+                // if reporting results for new plants {...}
+                if (this.props.serviceReport && (this.props.serviceReport === types.NEW_PLANTS)) {
+                  // update UI
+                  this.setState({ newPlantMenuIsOpen: true });
+                } else {
+                  // update UI
+                  this.setState({ plantMenuIsOpen: true });
+                }
               }, 500);
             }
           }}>
@@ -1176,7 +1443,7 @@ class GardenMap extends Component {
   }
 
   renderMoveButton(column) {
-    if (this.props.user.type === 'gardener') {
+    if (this.props.user.type === types.GARDENER) {
       return (
         <TouchableOpacity
           style={{
@@ -1272,7 +1539,7 @@ class GardenMap extends Component {
   }
 
   renderRemoveButton() {
-    if (this.props.user.type === 'gardener') {
+    if (this.props.user.type === types.GARDENER) {
       return (
         <TouchableOpacity
           style={{
@@ -1314,6 +1581,104 @@ class GardenMap extends Component {
         </View>
       )
     }
+  }
+
+  renderPartialHarvestButton() {
+    if (this.props.serviceReport === types.HARVESTED_PLANTS) {
+      return (
+        <TouchableOpacity>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: units.unit3,
+            }}>
+            <Ionicons
+              name={'arrow-forward-outline'}
+              color={colors.purpleB}
+              size={fonts.h3}
+            />
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: colors.purpleB,
+                marginLeft: units.unit2,
+              }}>
+              Harvest part of plant
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
+  }
+
+  renderHelperText(serviceReport) {
+    switch (serviceReport) {
+      case types.DEAD_PLANTS:
+        return 'Select all dead plants';
+      case types.HARVESTED_PLANTS:
+        return 'Select all harvested plants';
+      case types.NEW_PLANTS:
+        return 'Add new plants';
+      default:
+        return '';
+    }
+  }
+
+  renderHint() {
+    if (this.props.user.type === types.GARDENER) {
+      switch (this.props.order.type) {
+        case types.INITIAL_PLANTING:
+          if (!this.props.drafts.find(draft => draft.key === this.props.bedId)) {
+            return (
+              <View
+                style={{
+                  backgroundColor: colors.green0,
+                  borderRadius: 10,
+                }}>
+                <Ionicons
+                  name={'add'}
+                  color={colors.purple0}
+                  size={fonts.h3}
+                />
+              </View>
+            )
+          }
+      }
+    } else {
+      return <View></View>
+    }
+  }
+
+  renderPopover(row, column, rowIndex, columnIndex) {
+
+    let render = false;
+
+    // if column is selected {...}
+    if (column.selected) {
+
+      // if column id matches the column being rendered {...}
+      if (column.id === rowIndex * row.length + (columnIndex + 1)) {
+
+        // if order type is for initial planting {...}
+        if (this.props.order.type === types.INITIAL_PLANTING) {
+
+          // update render status
+          render = true;
+        } else if (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN) { // if order type is for maintenance {...}
+
+          // if service report is for new plants {...}
+          if (this.props.serviceReport && (this.props.serviceReport === types.NEW_PLANTS)) {
+
+            // update render status
+            render = true;
+          }
+        }
+      }
+    }
+
+    return render;
   }
 
   renderPlotPoints() {
@@ -1537,6 +1902,9 @@ class GardenMap extends Component {
                       }
                     }
 
+                    // determine if popover should render
+                    const renderPopover = this.renderPopover(row, column, i, index);
+
                     // render plot point
                     return (
                       <View key={index}>
@@ -1546,10 +1914,7 @@ class GardenMap extends Component {
                               ? 'floating'
                               : 'auto'
                           }
-                          isVisible={
-                            column.selected &&
-                            column.id === i * row.length + (index + 1)
-                          }
+                          isVisible={renderPopover}
                           onRequestClose={() =>
                             this.selectPlotPoint(column, i, index)
                           }
@@ -1576,23 +1941,11 @@ class GardenMap extends Component {
                                     : colors.greenD10,
                                   ...sqftBorder,
                                 }}>
-                                {index === 0 &&
-                                  i === 0 &&
-                                  !this.props.drafts.find(
-                                    draft => draft.key === this.props.bedId,
-                                  ) && (
-                                    <View
-                                      style={{
-                                        backgroundColor: colors.green0,
-                                        borderRadius: 10,
-                                      }}>
-                                      <Ionicons
-                                        name={'add'}
-                                        color={colors.purple0}
-                                        size={fonts.h3}
-                                      />
-                                    </View>
-                                  )}
+
+                                {/* hint */}
+                                {index === 0 && i === 0 && this.renderHint()}
+
+                                {/* plant container */}
                                 {column.image && (
                                   <>
                                     <View
@@ -1627,21 +1980,26 @@ class GardenMap extends Component {
                                               ? animatedStyle
                                               : [],
                                           }}>
+
+                                          {/* plant image */}
                                           <Image
                                             source={{ uri: column.image }}
                                             style={plantImageStyles}
                                           />
                                         </Animated.View>
-                                        {/* // rumplestilskin */}
-                                        <Paragraph
-                                          style={{
-                                            ...plantTextStyles,
-                                            color: colors.purpleB,
-                                            textTransform: 'capitalize',
-                                          }}>
-                                          {column.plant.id.quadrant_size > 1 &&
-                                            column.plant.id.common_type.name}
-                                        </Paragraph>
+
+                                        {/* plant text */}
+                                        {column.plant.id.quadrant_size > 1 && (
+                                          <Paragraph
+                                            style={{
+                                              ...plantTextStyles,
+                                              textTransform: 'capitalize',
+                                              color: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? colors.greenB : colors.purpleB,
+                                              fontWeight: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'bold' : 'normal'
+                                            }}>
+                                            {moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'Ready!' : column.plant.id.common_type.name}
+                                          </Paragraph>
+                                        )}
                                       </View>
                                     </View>
                                   </>
@@ -1689,15 +2047,14 @@ class GardenMap extends Component {
     }
   }
 
-  renderSavingIndicator() {
+  renderSavingIndicator(message) {
     switch (this.state.isSaving) {
       case true:
         return (
           <Text
             style={{
               textAlign: 'center',
-              marginTop: units.unit3,
-              color: colors.greenE50,
+              color: colors.greenE50
             }}>
             Saving...
           </Text>
@@ -1709,9 +2066,10 @@ class GardenMap extends Component {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
+              alignItems: 'center'
             }}>
-            <Text style={{ textAlign: 'center', marginTop: units.unit3 }}>
-              Saved Draft
+            <Text style={{ textAlign: 'center', textTransform: 'capitalize' }}>
+              {message}
             </Text>
             <Ionicons
               name={'checkmark'}
@@ -1721,7 +2079,49 @@ class GardenMap extends Component {
           </View>
         );
       default:
-        return <View></View>;
+        return (<></>);
+    }
+  }
+
+  renderBedInfo(serviceReport) {
+    // if maintenance order {...}
+    if (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN) {
+      return (
+        <View>
+          <Header style={{ marginBottom: units.unit3, textTransform: 'none' }}>{this.renderHelperText(serviceReport)}</Header>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: units.unit3 }}>
+            <Paragraph style={{ ...fonts.label }}>
+              Garden Bed #{this.props.bedId}
+            </Paragraph>
+            {this.props.serviceReport === types.NEW_PLANTS && this.renderSavingIndicator('Saved Changes')}
+            {(this.props.serviceReport === types.DEAD_PLANTS || this.props.serviceReport === types.HARVESTED_PLANTS) && (
+              <Button
+                small
+                text="Save"
+                onPress={() => this.save()}
+              />
+            )}
+          </View>
+        </View>
+      )
+    } else { // for all other order types {...}
+      const data = (this.props.order.type === types.INITIAL_PLANTING) ? this.props.drafts : this.props.beds;
+      return (
+        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Paragraph style={{ ...fonts.label }}>
+            Garden Bed #{this.props.bedId}
+          </Paragraph>
+          {(this.props.user.type === types.GARDENER) && (
+            <Paragraph style={{ ...fonts.label }}>
+              {calculatePlantingProgress(
+                data.find(
+                  d => d.key === this.props.bedId,
+                ),
+              )}
+            </Paragraph>
+          )}
+        </View>
+      )
     }
   }
 
@@ -1731,14 +2131,26 @@ class GardenMap extends Component {
       plantMenuIsOpen,
       plantInfoIsOpen,
       selectedPlant,
+      selectedPlotPoint,
+      selectedRowIndex,
+      selectedColumnIndex,
       vegetables,
       herbs,
       fruit,
       isEditingName,
-      bedName
+      bedName,
+      harvestMenuIsOpen,
+      newPlantMenuIsOpen
     } = this.state;
 
-    const { user } = this.props;
+    const {
+      user,
+      order,
+      bedId,
+      beds,
+      serviceReport,
+      navigateToNotes
+    } = this.props;
 
     return (
       <SafeAreaView
@@ -1751,7 +2163,7 @@ class GardenMap extends Component {
             {/* loading indicator (dynamically visible) */}
             <LoadingIndicator loading={isLoading} />
 
-            {/* plant menu (dynamically visible) */}
+            {/* plant menu (modal) */}
             {vegetables && herbs && fruit && (
               <PlantMenu
                 isOpen={plantMenuIsOpen}
@@ -1759,49 +2171,74 @@ class GardenMap extends Component {
                 herbs={herbs}
                 fruit={fruit}
                 close={() => this.setState({ plantMenuIsOpen: false })}
-                addPlant={async p => {
-                  // get render info
-                  const renderInfo = await this.getRenderInfo(
-                    p,
-                    this.state.selectedRowIndex,
-                    this.state.selectedColumnIndex,
-                  );
+                addPlant={(p) => this.setPlant(p)}
+              />
+            )}
 
-                  // get available plot points
-                  const availablePlotPoints =
-                    await this.getAvailablePlotPoints();
+            {/* new plant menu (modal) */}
+            <NewPlantMenu
+              isOpen={newPlantMenuIsOpen}
+              close={() => this.setState({ newPlantMenuIsOpen: false })}
+              addPlant={async (p) => {
 
-                  // set initial available plot point count
-                  let availablePlotPointCount = 0;
+                // show saving indicator
+                this.setState({ isSaving: true });
 
-                  // increment count based on available plot points
-                  availablePlotPoints.forEach(
-                    row => (availablePlotPointCount += row.length),
-                  );
+                // set plant in bed
+                await this.setPlant({
+                  plant: {
+                    id: p
+                  },
+                  selectedPlants: [{
+                    id: p
+                  }]
+                })
 
-                  // if total quadrant size area is greater than spaces available {...}
-                  if (
-                    renderInfo.quadrantSize * p.selectedPlants.length >
-                    availablePlotPointCount
-                  ) {
-                    // show error
-                    return alert(
-                      `There is not enough space available to plant (${p.selectedPlants.length}) "${p.plant.id.common_type.name}"`,
-                    );
-                  } else {
-                    // add plant
-                    this.addPlant(p);
+                const bed = beds.find((b) => b.key === bedId);
+
+                // update bed
+                await this.props.updateBed(bed._id, { plot_points: this.state.plotPoints });
+
+                // get updated beds
+                await this.props.getBeds(`customer=${order.customer._id}`);
+
+                // hide saving indicator
+                this.setState({ isSaving: false });
+              }}
+            />
+
+            {/* harvest menu (bottom drawer) */}
+            {(selectedPlotPoint && (serviceReport === types.HARVESTED_PLANTS)) && (
+              <HarvestMenu
+                isOpen={harvestMenuIsOpen}
+                close={(exitWithoutConfirming) => {
+                  this.setState({ harvestMenuIsOpen: false });
+                  if (exitWithoutConfirming) {
+                    this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
                   }
+                }}
+                selectedPlotPoint={selectedPlotPoint}
+                bedId={bedId}
+                onConfirm={(harvestInfo) => {
+                  this.addHarvestInfo(harvestInfo);
                 }}
               />
             )}
 
-            {/* plant info (dynamically visible) */}
+            {/* plant info (bottom drawer) */}
             {selectedPlant && (
               <PlantInfo
                 isOpen={plantInfoIsOpen}
+                close={() => {
+                  this.setState({ plantInfoIsOpen: false }, () => {
+                    if(order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
+                      this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
+                    }
+                  });
+                }}
+                order={order}
                 selectedPlant={selectedPlant}
-                close={() => this.setState({ plantInfoIsOpen: false })}
+                navigateToNotes={navigateToNotes}
               />
             )}
 
@@ -1810,27 +2247,12 @@ class GardenMap extends Component {
                 paddingHorizontal: units.unit4,
                 marginBottom: units.unit2,
               }}>
+              <View>
+                {/* id / stats */}
+                {this.renderBedInfo(serviceReport)}
 
-              {/* id / stats */}
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Paragraph style={{ ...fonts.label }}>
-                  Garden Bed #{this.props.bedId}
-                </Paragraph>
-                {(user.type === 'gardener') && (
-                  <Paragraph style={{ ...fonts.label }}>
-                    {calculatePlantingProgress(
-                      this.props.drafts.find(
-                        draft => draft.key === this.props.bedId,
-                      ),
-                    )}
-                  </Paragraph>
-                )}
-                {(user.type === 'customer' && !isEditingName) && (
+                {/* name edit (dynamically visible) */}
+                {(user.type === types.CUSTOMER && !isEditingName) && (
                   <TouchableOpacity onPress={() => this.setState({ isEditingName: true })}>
                     <Ionicons
                       name={'pencil'}
@@ -1839,7 +2261,7 @@ class GardenMap extends Component {
                     />
                   </TouchableOpacity>
                 )}
-                {(user.type === 'customer' && isEditingName) && (
+                {(user.type === types.CUSTOMER && isEditingName) && (
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <TouchableOpacity onPress={() => this.changeBedName(this.state.bedName)}>
                       <Ionicons
@@ -1860,12 +2282,12 @@ class GardenMap extends Component {
               </View>
 
               {/* header (dynamically visible) */}
-              {(user.type === 'customer' && !isEditingName) && (
+              {(user.type === types.CUSTOMER && !isEditingName) && (
                 <Header>{this.props.beds.find((bed) => bed._id === this.props.bed._id).name}</Header>
               )}
 
               {/* name input (dynamically visible) */}
-              {(user.type === 'customer' && isEditingName) && (
+              {(user.type === types.CUSTOMER && isEditingName) && (
                 <Input
                   onChange={(value) => this.setState({ bedName: value })}
                   value={bedName}
@@ -1884,8 +2306,7 @@ class GardenMap extends Component {
                     bed => bed.key === this.props.bedId,
                   )
                     ? 'flex'
-                    : 'none',
-                  color: colors.greenD50,
+                    : 'none'
                 }}>
                 Tap on any square to get started
               </Text>
@@ -1897,7 +2318,9 @@ class GardenMap extends Component {
             </View>
 
             {/* saving indicator (dynamically visible) */}
-            <View>{this.renderSavingIndicator()}</View>
+            {order.type === types.INITIAL_PLANTING && (
+              <View style={{ marginTop: units.unit3 }}>{this.renderSavingIndicator('Saved Draft')}</View>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -1909,7 +2332,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     drafts: state.drafts,
-    beds: state.beds,
+    beds: state.beds
   };
 }
 
@@ -1920,7 +2343,8 @@ function mapDispatchToProps(dispatch) {
       updateDraft,
       getDrafts,
       updateBed,
-      getBeds
+      getBeds,
+      createPlantActivity
     },
     dispatch,
   );

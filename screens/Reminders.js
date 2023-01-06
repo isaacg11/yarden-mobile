@@ -35,7 +35,7 @@ class Reminders extends Component {
     this.props.setFilters({ reminders: status });
 
     // set quote query
-    const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}`;
+    const query = `status=${status}`;
 
     // get pending reminders
     await this.props.getReminders(query);
@@ -69,7 +69,6 @@ class Reminders extends Component {
 
   render() {
     const { isLoading, page, limit } = this.state;
-
     const { reminders, filters } = this.props;
 
     return (

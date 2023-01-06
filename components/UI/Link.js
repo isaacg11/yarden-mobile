@@ -20,14 +20,15 @@ class Link extends Component {
       color,
       url,
       icon,
-      alignIconRight
+      alignIconRight,
+      style = {}
     } = this.props;
 
     const linkStyles = this.getlinkStyles(color);
 
     return (
       <TouchableOpacity
-        style={{ display: 'flex', flexDirection: 'row', alignContent: 'center' }}
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
         onPress={() => {
           // if a callback prop is passed in, run the function
           if (this.props.onPress) return this.props.onPress();
@@ -38,7 +39,7 @@ class Link extends Component {
         {icon && !alignIconRight && (
           <View style={{ marginRight: units.unit3 }}>{icon}</View>
         )}
-        <Text style={{ ...linkStyles }}>{text}</Text>
+        <Text style={{ ...linkStyles, ...style }}>{text}</Text>
         {icon && alignIconRight && (
           <View style={{ marginLeft: units.unit3 }}>{icon}</View>
         )}

@@ -12,7 +12,7 @@ class Bed extends Component {
         bedNumber: 1
     }
 
-    renderMap(bed, order, bedId) {
+    renderMap(bed, order, bedId, serviceReport) {
         switch (bed.shape.name) {
             case 'rectangle':
                 return (
@@ -20,10 +20,13 @@ class Bed extends Component {
                         bed={bed} 
                         order={order}
                         bedId={bedId}
+                        serviceReport={serviceReport}
+                        onNavigateBack={() => this.props.navigation.goBack()}
+                        navigateToNotes={(selectedPlant) => this.props.navigation.navigate('Notes', { selectedPlant, bedId })}
                     />
                 )
             default:
-                return <View></View>
+                return <View></View>;
         }
     }
 
@@ -32,7 +35,8 @@ class Bed extends Component {
         const {
             bed, 
             order, 
-            bedId 
+            bedId,
+            serviceReport
         } = this.props.route.params;
 
         return (
@@ -51,7 +55,7 @@ class Bed extends Component {
                         />
 
                         {/* garden bed map */}
-                        {this.renderMap(bed, order, bedId)}
+                        {this.renderMap(bed, order, bedId, serviceReport)}
                     </View>
                 </ScrollView>
             </SafeAreaView>

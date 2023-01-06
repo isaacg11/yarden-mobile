@@ -23,6 +23,13 @@ import { getOrders, updateOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 import { getBeds } from '../actions/beds/index';
 import { getDrafts } from '../actions/drafts/index';
+import { getReports } from '../actions/reports/index';
+import { getReportType } from '../actions/reportTypes/index';
+import { getQuestions } from '../actions/questions/index';
+import { getAnswers } from '../actions/answers/index';
+
+// types
+import types from '../vars/types';
 
 // styles
 import units from '../components/styles/units';
@@ -39,27 +46,74 @@ class OrderDetails extends Component {
     this.setState({ isLoading: true });
 
     const order = this.props.route.params;
+    let changeOrders = [];
 
-    // get change orders
-    const changeOrders = await this.props.getChangeOrders(
-      `order=${order._id}`,
-      true,
-    );
+    // if order type is installation, revive, or misc {...}
+    if (order.type == types.INSTALLATION || order.type == types.REVIVE || order.type == types.MISC) {
+      // get change orders
+      changeOrders = await this.props.getChangeOrders(
+        `order=${order._id}`,
+        true,
+      );
+    }
 
-    // if order type is initial planting {...}
-    if (order.type == 'initial planting') {
+    let wateringSchedule = [];
+
+    // if current user is a gardener {...}
+    if (this.props.user.type === types.GARDENER) {
 
       // get beds
       await this.props.getBeds(`customer=${order.customer._id}`);
 
-      // get drafts
-      await this.props.getDrafts(`order=${order._id}`);
+      // get report type
+      const reportType = await this.props.getReportType(`name=${order.type}`);
+
+      // get questions
+      await this.props.getQuestions(`report_type=${reportType._id}`);
+
+      // get previous maintenance reports for customer
+      await this.props.getReports(`customer=${order.customer._id}&type=${reportType._id}`);
+
+      // if order type is initial planting {...}
+      if (order.type == types.INITIAL_PLANTING) {
+
+        // get drafts
+        await this.props.getDrafts(`order=${order._id}`);
+      }
+
+      // if order for maintenance service {...}
+      if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
+        if(this.props.reports.length > 0) {
+          const latestReport = this.props.reports[this.props.reports.length - 1];
+
+          // get answers
+          const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+          
+          // set watering schedule
+          wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+        } else {
+          // get report type
+          const initialPlantingReportType = await this.props.getReportType(`name=${types.INITIAL_PLANTING}`);
+
+          // get previous maintenance reports for customer
+          await this.props.getReports(`customer=${order.customer._id}&type=${initialPlantingReportType._id}`);
+
+          const latestReport = this.props.reports[this.props.reports.length - 1];
+
+          // get answers
+          const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+          
+          // set watering schedule
+          wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+        }
+      }
     }
 
     // hide loading indicator
     this.setState({
       isLoading: false,
-      changeOrders: changeOrders
+      changeOrders,
+      wateringSchedule
     });
   }
 
@@ -103,7 +157,7 @@ class OrderDetails extends Component {
   render() {
     const order = this.props.route.params;
     const { user, beds } = this.props;
-    const { isLoading, changeOrders } = this.state;
+    const { isLoading, changeOrders, wateringSchedule } = this.state;
     const gardenInfo = order.customer.garden_info;
 
     return (
@@ -112,19 +166,23 @@ class OrderDetails extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView> 
+        <ScrollView>
           <View style={{ padding: units.unit3 + units.unit4 }}>
-            {/* loading indicator */}
+
+            {/* loading indicator (dynamically visible) */}
             <LoadingIndicator loading={isLoading} />
 
+            {/* header */}
             <Header type="h4" style={{ marginBottom: units.unit5 }}>
               Order Details
             </Header>
+
             <View>
               {/* order info */}
               <Card>
                 <OrderInfo
                   order={order}
+                  wateringSchedule={wateringSchedule}
                   onChangeDate={() =>
                     this.props.navigation.navigate('Change Date', { order })
                   }
@@ -132,7 +190,7 @@ class OrderDetails extends Component {
                 />
               </Card>
 
-              {/* change orders */}
+              {/* change orders (dynamically visible) */}
               {changeOrders.length > 0 && (
                 <View style={{ marginTop: units.unit4 }}>
                   <Collapse
@@ -155,14 +213,14 @@ class OrderDetails extends Component {
                 </View>
               )}
 
-              {/* order images */}
+              {/* order images (dynamically visible) */}
               {order.images.length > 0 && (
                 <View>
                   <ImageGrid images={order.images} />
                 </View>
               )}
 
-              {/* request changes button */}
+              {/* request changes button (dynamically visible) */}
               {order.status === 'pending' &&
                 user.type === 'customer' &&
                 (order.type === 'installation' ||
@@ -183,12 +241,14 @@ class OrderDetails extends Component {
                   </View>
                 )}
 
-              {/* plant lists */}
+              {/* initial planting UI (dynamically visible) */}
               {order.status === 'pending' &&
                 user.type === 'gardener' &&
                 order.type === 'initial planting' &&
                 gardenInfo && (
                   <View style={{ marginTop: units.unit4 }}>
+
+                    {/* plant lists */}
                     {beds.length > 0 && (
                       <View>
                         <View>
@@ -229,11 +289,13 @@ class OrderDetails extends Component {
                         </View>
                       </View>
                     )}
+
+                    {/* buttons */}
                     <Button
                       variant={beds.length < 1 ? 'button' : 'btn2'}
                       text={`${beds.length < 1
-                          ? 'Build Garden Map'
-                          : 'View Garden Beds'
+                        ? 'Build Garden Map'
+                        : 'View Garden Beds'
                         } `}
                       onPress={() =>
                         this.props.navigation.navigate('Beds', { order })
@@ -251,15 +313,40 @@ class OrderDetails extends Component {
                         display: beds.length < 1 ? 'none' : 'flex',
                         marginTop: units.unit4,
                       }}
-                      text="Finish Order"
-                      onPress={() => this.props.navigation.navigate('Image Upload', { order })}
+                      text="Process Order"
+                      onPress={() => this.props.navigation.navigate('Step 5', { isInitialPlanting: true })}
+                    />
+                  </View>
+                )}
+
+              {/* maintenance UI (dynamically visible) */}
+              {order.status === 'pending' &&
+                user.type === 'gardener' &&
+                (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
+                  <View>
+                    <Button
+                      style={{
+                        marginTop: units.unit4
+                      }}
+                      variant="btn2"
+                      text="View Garden Beds"
+                      onPress={() =>
+                        this.props.navigation.navigate('Beds', { order })
+                      }
                       icon={
                         <Ionicons
-                          name="checkmark"
+                          name="grid-outline"
                           size={units.unit4}
                           color={colors.purpleB}
                         />
                       }
+                    />
+                    <Button
+                      style={{
+                        marginTop: units.unit4
+                      }}
+                      text="Process Order"
+                      onPress={() => this.props.navigation.navigate('Step 1')}
                     />
                   </View>
                 )}
@@ -275,6 +362,8 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     beds: state.beds,
+    questions: state.questions,
+    reports: state.reports
   };
 }
 
@@ -285,7 +374,11 @@ function mapDispatchToProps(dispatch) {
       updateOrder,
       getChangeOrders,
       getBeds,
-      getDrafts
+      getDrafts,
+      getReportType,
+      getQuestions,
+      getReports,
+      getAnswers
     },
     dispatch,
   );

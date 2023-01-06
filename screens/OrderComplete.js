@@ -1,15 +1,44 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, Text} from 'react-native';
+// libraries
+import React, { Component } from 'react';
+import { SafeAreaView, View, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// UI components
 import Header from '../components/UI/Header';
 import Paragraph from '../components/UI/Paragraph';
 import Button from '../components/UI/Button';
+
+// types
+import types from '../vars/types';
+
+// styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
 class OrderComplete extends Component {
+
+  renderHelperText() {
+    switch (this.props.route.params.orderType) {
+      case types.INITIAL_PLANTING:
+        return {
+          step1: 'If a maintenance plan was selected, then a new maintenance order will be scheduled.',
+          step2: 'Use the garden map to keep track of your plants during maintenance services.',
+          step3: 'Be sure to let the customer know about any issues you ran into while planting the garden.'
+        }
+      case types.FULL_PLAN || types.ASSISTED_PLAN:
+        return {
+          step1: 'A new maintenance order will be scheduled for continued service.',
+          step2: 'Your service report will be sent to the customer for review.',
+          step3: 'Be sure to let the customer know about any issues you ran into while performing maintenance.'
+        }
+      default:
+        return {}
+    }
+  }
+
   render() {
+    const helperText = this.renderHelperText();
     return (
       <SafeAreaView
         style={{
@@ -49,7 +78,6 @@ class OrderComplete extends Component {
               Your order has been completed, great job!
             </Paragraph>
           </View>
-
           <View>
             <View>
               <Text
@@ -60,17 +88,17 @@ class OrderComplete extends Component {
                 }}>
                 What happens next?
               </Text>
-              <Text style={{color: colors.greenD75}}>
-                1. If a maintenance plan was selected, then a new maintenance order will be scheduled.
+              <Text style={{ color: colors.greenD75 }}>
+                1. {helperText.step1}
               </Text>
-              <Text style={{color: colors.greenD75, marginTop: units.unit5}}>
-                2. Use the garden map to keep track of your plants during maintenance services.
+              <Text style={{ color: colors.greenD75, marginTop: units.unit5 }}>
+                2. {helperText.step2}
               </Text>
-              <Text style={{color: colors.greenD75, marginTop: units.unit5}}>
-                3. Be sure to let the customer know about any issues you ran into while planting the garden.
+              <Text style={{ color: colors.greenD75, marginTop: units.unit5 }}>
+                3. {helperText.step3}
               </Text>
             </View>
-            <View style={{marginTop: units.unit5}}>
+            <View style={{ marginTop: units.unit5 }}>
               <Button
                 alignIconRight
                 text="Continue to dashboard"

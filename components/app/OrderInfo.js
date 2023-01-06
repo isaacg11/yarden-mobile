@@ -1,29 +1,40 @@
+// libraries
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
+
+// UI components
 import Paragraph from '../UI/Paragraph';
 import Link from '../UI/Link';
 import Status from '../UI/Status';
+
+// styles
 import units from '../../components/styles/units';
 import colors from '../../components/styles/colors';
 import fonts from '../../components/styles/fonts';
+
+// helpers
+import formatWateringSchedule from '../../helpers/formatWateringSchedule';
+
+// vars
 import vars from '../../vars/index';
 
 class OrderInfo extends Component {
 
     formatOrderDescription(order) {
+        const userType = (this.props.user.type !== 'customer') ? 'vendor' : 'customer';
         if (order.type === 'yard assessment') {
-            return vars.orderDescriptions.customer.yardAssessment;
+            return vars.orderDescriptions[userType].yardAssessment;
         } else if (order.type === 'crop rotation') {
-            return vars.orderDescriptions.customer.cropRotation;
+            return vars.orderDescriptions[userType].cropRotation;
         } else if (order.type === 'full plan') {
-            return vars.orderDescriptions.customer.fullPlan;
+            return vars.orderDescriptions[userType].fullPlan;
         } else if (order.type === 'assisted plan') {
-            return vars.orderDescriptions.customer.assistedPlan;
+            return vars.orderDescriptions[userType].assistedPlan;
         } else if (order.type === 'initial planting') {
-            return vars.orderDescriptions.customer.initialPlanting;
+            return vars.orderDescriptions[userType].initialPlanting;
         } else {
             return order.description;
         }
@@ -33,8 +44,8 @@ class OrderInfo extends Component {
 
         const {
             order,
-            onChangeDate,
-            onCancel,
+            wateringSchedule,
+            onChangeDate
         } = this.props;
 
         const orderDescription = this.formatOrderDescription(order);
@@ -107,6 +118,17 @@ class OrderInfo extends Component {
                             {/* zip */}
                             <Text>{order.customer.zip_code}</Text>
                         </View>
+
+                        {/* watering schedule */}
+                        {wateringSchedule?.length > 0 && (
+                            <View>
+                                <Paragraph style={{ ...fonts.label, marginTop: units.unit5 }}>
+                                    Watering Schedule
+                                </Paragraph>
+                                <Text>{formatWateringSchedule(wateringSchedule[wateringSchedule.length - 1].result)}</Text>
+                            </View>
+                        )}
+
                     </View>
                 </View>
             </View>

@@ -15,14 +15,13 @@ const componentStyles = StyleSheet.create({
     fontSize: fonts.h3,
   },
   textarea: {
-    height: units.unit6,
-    marginTop: units.unit3,
+    height: units.unit7,
     marginBottom: units.unit3,
     borderBottomWidth: 1,
-    padding: units.unit4,
     borderColor: colors.purpleB,
-    padding: units.unit4,
     backgroundColor: colors.greenC10,
+    fontSize: fonts.h3,
+    padding: units.unit4
   },
 });
 

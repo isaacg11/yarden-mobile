@@ -1,15 +1,20 @@
+// libraries
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../UI/LoadingIndicator';
+
+// UI components
 import Orders from '../../screens/Orders';
 import Quotes from '../../screens/Quotes';
 import Shop from '../../screens/Shop';
 import Messages from '../../screens/Messages';
 import Reminders from '../../screens/Reminders';
 import Reports from '../../screens/Reports';
+
+// actions
 import { getQuotes } from '../../actions/quotes/index';
 import { getConversations } from '../../actions/conversations/index';
 import { getMessages } from '../../actions/messages/index';
@@ -17,12 +22,16 @@ import { getOrders } from '../../actions/orders/index';
 import { getChangeOrders } from '../../actions/changeOrders/index';
 import { getUser } from '../../actions/user/index';
 import { getReminders } from '../../actions/reminders/index';
+
+// types
+import types from '../../vars/types';
+
+// style
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
 import units from '../styles/units';
 
 const Tab = createBottomTabNavigator();
-
 Ionicons.loadFont().then();
 
 class BottomTabNavigator extends Component {
@@ -37,9 +46,17 @@ class BottomTabNavigator extends Component {
   }
 
   async componentDidMount() {
-    // get pending quotes
-    const status = 'pending approval';
-    await this.props.getQuotes(`status=${status}&page=1&limit=50`);
+
+    if(this.props.user.type === types.CUSTOMER) {
+      const status = 'pending approval';
+
+      // get pending quotes
+      await this.props.getQuotes(`status=${status}&page=1&limit=50`);
+    } else if(this.props.user.type === types.GARDENER) {
+
+      // get pending reminders
+      await this.props.getReminders(`status=pending&page=1&limit=50`);
+    }
 
     // get conversations
     await this.props.getConversations(`users=${this.props.user._id}`);
@@ -112,7 +129,13 @@ class BottomTabNavigator extends Component {
   render() {
     const { inbox, renderTabNavigator } = this.state;
 
-    const { quotes, filters, orders, user } = this.props;
+    const { 
+      quotes, 
+      filters, 
+      orders, 
+      user,
+      reminders
+    } = this.props;
 
     const isPendingApproval =
       quotes.list &&
@@ -333,17 +356,17 @@ class BottomTabNavigator extends Component {
             <Tab.Screen
               name="Reminders"
               component={Reminders}
-              // options={{
-              //   tabBarBadge:
-              //     quotes.list && quotes.list.length > 0 && isPendingApproval
-              //       ? quotes.list.length
-              //       : null,
-              //   tabBarBadgeStyle: {
-              //     backgroundColor: '#ff6060',
-              //     color: 'white',
-              //     fontWeight: 'bold',
-              //   },
-              // }}
+              options={{
+                tabBarBadge:
+                  reminders.list && reminders.list.length > 0
+                    ? reminders.list.length
+                    : null,
+                tabBarBadgeStyle: {
+                  backgroundColor: '#ff6060',
+                  color: 'white',
+                  fontWeight: 'bold',
+                },
+              }}
               listeners={({ navigation }) => ({
                 tabPress: async e => {
                   // Prevent default action
@@ -403,6 +426,7 @@ function mapStateToProps(state) {
     quotes: state.quotes,
     conversations: state.conversations,
     filters: state.filters,
+    reminders: state.reminders
   };
 }
 
