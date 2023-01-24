@@ -5,7 +5,7 @@ import { Text } from 'react-native';
 import { Provider } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import * as Sentry from "@sentry/react-native";
 
 // global state
@@ -26,6 +26,7 @@ import OrderDetails from './screens/OrderDetails';
 import ChangeDate from './screens/ChangeDate';
 import Logout from './screens/Logout';
 import ChangeSettings from './screens/ChangeSettings';
+import Settings from './screens/Settings';
 import QuoteDetails from './screens/QuoteDetails';
 import Checkout from './screens/Checkout';
 import Garden from './screens/Garden';
@@ -66,6 +67,9 @@ import Step6 from './screens/service_reporting/Step6';
 import Notes from './screens/Notes';
 import NeemOil from './screens/NeemOil';
 import WateringSchedule from './screens/WateringSchedule';
+import HarvestInstructions from './screens/HarvestInstructions';
+import Referrals from './screens/Referrals';
+import Subscription from './screens/Subscription';
 
 // UI components
 import Link from './components/UI/Link';
@@ -85,7 +89,7 @@ Sentry.init({
 });
 
 // app navigation config
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 // format deep linking config
 const config = {
@@ -273,7 +277,18 @@ function App() {
               name="Log Out"
               component={Logout}
               options={{
+                headerTitle: displayNone,
                 headerLeft: displayNone,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+              options={{
+                headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,
                 headerShadowVisible: false,
@@ -287,6 +302,24 @@ function App() {
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,
                 headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Referrals"
+              component={Referrals}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
+              }}
+            />
+            <Stack.Screen
+              name="Subscription"
+              component={Subscription}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint
               }}
             />
             <Stack.Screen
@@ -715,7 +748,7 @@ function App() {
                     text={'Back'}
                     onPress={() => {
                       const state = store.getState();
-                      if(state.selectedOrder.type === types.INITIAL_PLANTING) {
+                      if (state.selectedOrder.type === types.INITIAL_PLANTING) {
                         nav.navigation.navigate('Order Details', state.selectedOrder);
                       } else {
                         nav.navigation.navigate('Step 4');
@@ -788,6 +821,16 @@ function App() {
             <Stack.Screen
               name="Watering Schedule"
               component={WateringSchedule}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Harvest Instructions"
+              component={HarvestInstructions}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,

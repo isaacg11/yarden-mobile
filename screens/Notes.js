@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { View, Image, Text } from 'react-native';
+import { SafeAreaView, View, Image, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -88,7 +88,7 @@ class Notes extends Component {
         const daysToMature = calculateDaysToMature(selectedPlant);
 
         return (
-            <View>
+            <SafeAreaView>
 
                 {/* loading indicator (dynamically visible) */}
                 <LoadingIndicator loading={isLoading} />
@@ -145,6 +145,7 @@ class Notes extends Component {
 
                 {/* note container */}
                 <KeyboardAwareScrollView style={{ backgroundColor: colors.greenE10, height: '100%', paddingHorizontal: units.unit4, paddingVertical: units.unit4 }}>
+                    <Text style={{color: colors.greenD50}}>Help yourself keep track of this plant by creating a note. Notes are not visible to the customer.</Text>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Header style={{ color: colors.purpleB }}>Notes</Header>
                         <View style={{ opacity: (isCreatingNote) ? 0 : null }}>
@@ -215,7 +216,7 @@ class Notes extends Component {
                         </View>
                     ))}
                 </KeyboardAwareScrollView>
-            </View>
+            </SafeAreaView>
         );
     }
 }

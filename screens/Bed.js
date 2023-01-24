@@ -23,6 +23,7 @@ class Bed extends Component {
                         serviceReport={serviceReport}
                         onNavigateBack={() => this.props.navigation.goBack()}
                         navigateToNotes={(selectedPlant) => this.props.navigation.navigate('Notes', { selectedPlant, bedId })}
+                        navigateToHarvestInstructions={(selectedPlant) => this.props.navigation.navigate('Harvest Instructions', { selectedPlant })}
                     />
                 )
             default:

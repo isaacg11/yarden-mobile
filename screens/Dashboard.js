@@ -1,23 +1,32 @@
+// libraries
 import React, { Component } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import RNQRGenerator from 'rn-qr-generator';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// UI components
 import Mark from '../components/app/branding/Mark';
 import BottomTabNavigator from '../components/app/BottomTabNavigator';
-import Referrals from '../screens/Referrals';
-import Settings from '../screens/Settings';
-import Logout from '../screens/Logout';
-import Subscription from '../screens/Subscription';
-import LoadingIndicator from '../components/UI/LoadingIndicator';
-import Paragraph from '../components/UI/Paragraph';
+import NavMenu from '../components/app/NavMenu';
+
+// helpers
 import { APP_URL } from '../helpers/getUrl';
+
+// styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
+import fonts from '../components/styles/fonts';
+import types from '../vars/types';
 
 const Drawer = createDrawerNavigator();
 
 class Dashboard extends Component {
-  state = {};
+
+  state = {
+    qrCode: null
+  };
 
   async componentDidMount() {
     // generate QR code
@@ -38,13 +47,24 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { qrCode } = this.state;
+    const { qrCode, navMenuIsOpen } = this.state;
     const { user } = this.props;
 
-    // display config
-    const displayNone = () => {
-      return <Paragraph></Paragraph>;
-    };
+    if (navMenuIsOpen) {
+      return (
+        <NavMenu
+          isOpen={navMenuIsOpen}
+          close={(route) => {
+            const params = (route === 'Referrals') ? { qrCode } : {};
+            this.props.navigation.navigate(route, params);
+            this.setState({ navMenuIsOpen: false });
+          }}
+        />
+      )
+    }
+
+    // validate user QR
+    if (user.type === types.CUSTOMER && !qrCode) return null;
 
     // set header logo
     const logo = <Mark size={units.unit5} />;
@@ -59,111 +79,32 @@ class Dashboard extends Component {
     // set header tint
     const appHeaderTint = colors.purpleB;
 
-    // if customer {...}
-    if(user.type === 'customer') {
-
-      // if QR code {...}
-      if (qrCode) {
-
-        // render customer UI
-        return (
-          <Drawer.Navigator>
-            <Drawer.Screen
-              name="Home"
-              component={BottomTabNavigator}
-              options={{
-                headerTitle: () => logo,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint
-              }}
-            />
-            <Drawer.Screen
-              name="Referrals"
-              component={Referrals}
-              options={{
-                headerTitle: () => logo,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint
-              }}
-              initialParams={{
-                qrCode: qrCode,
-              }}
-            />
-            <Drawer.Screen
-              name="Subscription"
-              component={Subscription}
-              options={{
-                headerTitle: () => logo,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint
-              }}
-            />
-            <Drawer.Screen
-              name="Settings"
-              component={Settings}
-              options={{
-                headerTitle: () => logo,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint
-              }}
-            />
-            <Drawer.Screen
-              name="Log Out"
-              component={Logout}
-              options={{
-                headerLeft: displayNone,
-                header: displayNone,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint
-              }}
-            />
-          </Drawer.Navigator>
-        );
-      } else {
-        return <LoadingIndicator isLoading={true} />;
-      }
-    }
-
-    // if gardener {...}
-    if(user.type === 'gardener') {
-
-      // render gardener UI
-      return (
-        <Drawer.Navigator>
-          <Drawer.Screen
-            name="Home"
-            component={BottomTabNavigator}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
-            }}
-          />
-          <Drawer.Screen
-            name="Settings"
-            component={Settings}
-            options={{
-              headerTitle: () => logo,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
-            }}
-          />
-          <Drawer.Screen
-            name="Log Out"
-            component={Logout}
-            options={{
-              headerLeft: displayNone,
-              header: displayNone,
-              headerStyle: appHeaderStyle,
-              headerTintColor: appHeaderTint
-            }}
-          />
-        </Drawer.Navigator>
-      );
-    }
-
-    return null;
-
+    // render dashboard UI
+    return (
+      <Drawer.Navigator>
+        <Drawer.Screen
+          name="Home"
+          component={BottomTabNavigator}
+          options={() => ({
+            headerTitle: () => logo,
+            headerLeft: () => (
+              <TouchableOpacity
+                style={{ marginLeft: units.unit4 }}
+                onPress={() => this.setState({ navMenuIsOpen: true })}>
+                <Ionicons
+                  name="menu-outline"
+                  size={fonts.h2}
+                  color={colors.purpleB}
+                />
+              </TouchableOpacity>
+            ),
+            headerStyle: appHeaderStyle,
+            headerTintColor: appHeaderTint
+          })}
+          initialParams={{ qrCode }}
+        />
+      </Drawer.Navigator>
+    );
   }
 }
 

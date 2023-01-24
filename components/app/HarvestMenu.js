@@ -7,12 +7,12 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 // UI components
-import Paragraph from '../UI/Paragraph';
 import Radio from '../UI/Radio';
 import CircularButton from '../UI/CircularButton';
 import Header from '../UI/Header';
 import Button from '../UI/Button';
 import Label from '../UI/Label';
+import Dropdown from '../UI/Dropdown';
 import { alert } from '../UI/SystemAlert';
 
 // actions
@@ -20,6 +20,9 @@ import { getPlantActivities } from '../../actions/plantActivities/index';
 
 // types
 import types from '../../vars/types';
+
+// helpers
+import capitalize from '../../helpers/capitalize';
 
 // styles
 import colors from '../styles/colors';
@@ -29,14 +32,59 @@ class HarvestMenu extends Component {
 
     state = {
         plantQty: 0,
-        harvestType: types.PARTIAL_HARVEST
+        harvestType: types.PARTIAL_HARVEST,
+        produceTypes: [],
+        selectedProduceType: null
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.initHarvestMenu();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+
+        if (prevProps.isOpen !== this.props.isOpen) {
+            if (this.props.isOpen) {
+                this.initHarvestMenu();
+            }
+        }
+
+        if (prevState.selectedProduceType !== this.state.selectedProduceType) {
+            this.setState({
+                plantQty: (this.state.selectedProduceType === types.HEAD) ? 1 : 0
+            })
+        }
+    }
+
+    async initHarvestMenu() {
         const bed = this.props.beds.find((b) => b.key === this.props.bedId);
 
         // get plant activities
         await this.props.getPlantActivities(`type=${types.HARVESTED}&owner=${this.props.user._id}&customer=${this.props.selectedOrder.customer._id}&order=${this.props.selectedOrder._id}&plant=${this.props.selectedPlotPoint.plant.id._id}&bed=${bed._id}&key=${this.props.selectedPlotPoint.plant.key}`);
+
+        let produceTypes = [];
+
+        if (this.props.selectedPlotPoint.plant.id.average_produce_weight > 0) {
+            produceTypes.push({
+                label: capitalize(this.props.selectedPlotPoint.plant.id.produce_type.name),
+                value: this.props.selectedPlotPoint.plant.id.produce_type.name,
+            });
+        }
+
+        if (this.props.selectedPlotPoint.plant.id.average_head_weight > 0) {
+            produceTypes.push({
+                label: 'Head',
+                value: types.HEAD
+            })
+        }
+
+        let selectedProduceType = produceTypes[0].value;
+        const plantQty = (selectedProduceType === types.HEAD) ? 1 : this.state.plantQty;
+        this.setState({
+            produceTypes,
+            selectedProduceType,
+            plantQty
+        });
     }
 
     add() {
@@ -72,14 +120,18 @@ class HarvestMenu extends Component {
         await this.props.onConfirm({
             column: this.props.selectedPlotPoint,
             qty: this.state.plantQty,
-            harvest: this.state.harvestType
+            harvest: this.state.harvestType,
+            produceType: this.state.selectedProduceType
         })
 
         // close modal
         this.props.close();
 
         // reset plant qty
-        this.setState({ plantQty: 0 });
+        this.setState({
+            plantQty: 0,
+            harvestType: types.PARTIAL_HARVEST
+        });
     }
 
     render() {
@@ -91,7 +143,13 @@ class HarvestMenu extends Component {
             plantActivities
         } = this.props;
 
-        const { plantQty } = this.state;
+        const {
+            plantQty,
+            produceTypes,
+            selectedProduceType,
+            harvestType
+        } = this.state;
+
         const lastHarvestDate = (plantActivities.length > 0) ? `Last harvested: ${moment(plantActivities[0].dt_created).format('MM/DD/YY')}` : 'No harvests found';
 
         return (
@@ -102,7 +160,7 @@ class HarvestMenu extends Component {
             >
                 <View
                     style={{
-                        height: '60%',
+                        height: '70%',
                         marginTop: 'auto',
                         backgroundColor: colors.white,
                         borderTopColor: colors.purpleB,
@@ -127,23 +185,19 @@ class HarvestMenu extends Component {
                         </View>
 
                         {/* last harvest date */}
-                        <View style={{ paddingBottom: units.unit4, alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center' }}>
                             <Label style={{ marginTop: units.unit3 }}>{lastHarvestDate}</Label>
                             <Label style={{ marginTop: units.unit3 }}>ID: {selectedPlotPoint.plant.key}</Label>
                         </View>
-
-                        {/* question */}
-                        <View style={{ paddingHorizontal: units.unit4 }}>
-                            <Paragraph style={{ textAlign: 'center' }}>How much did you harvest from the selected plant?</Paragraph>
-                        </View>
                     </View>
 
-                    <View style={{ padding: units.unit4, display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginTop: units.unit3 }}>
+                    <View style={{ padding: units.unit4, display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
 
                         {/* subtract button */}
                         <View style={{ alignSelf: 'center' }}>
                             <CircularButton
                                 small
+                                disabled={(selectedProduceType === types.HEAD)}
                                 variant="btn2"
                                 icon={(<Ionicons
                                     name={'remove-outline'}
@@ -156,13 +210,14 @@ class HarvestMenu extends Component {
 
                         {/* qty output */}
                         <View>
-                            <Header >{plantQty}</Header>
+                            <Header >{(selectedProduceType === types.HEAD) ? 1 : plantQty}</Header>
                         </View>
 
                         {/* add button */}
                         <View style={{ alignSelf: 'center' }}>
                             <CircularButton
                                 small
+                                disabled={(selectedProduceType === types.HEAD)}
                                 variant="btn2"
                                 icon={(<Ionicons
                                     name={'add'}
@@ -174,19 +229,38 @@ class HarvestMenu extends Component {
                         </View>
                     </View>
 
-                    {/* radio buttons */}
-                    <View style={{ padding: units.unit4, paddingTop: 0 }}>
-                        <Radio
-                            defaultValue="partial"
-                            options={
-                                [
-                                    { name: 'Part of plant', value: types.PARTIAL_HARVEST, helperText: 'Plant was not ready to pull, kept in garden for additional harvests' },
-                                    { name: 'Full plant', value: types.FULL_HARVEST, helperText: 'Plant reached end of life, final harvest was performed & plant removed' }
-                                ]
-                            }
-                            onChange={(value) => this.setState({ harvestType: value })}
+                    {/* produce type */}
+                    <View style={{ paddingHorizontal: units.unit4, width: '100%', marginBottom: units.unit5 }}>
+                        <Dropdown
+                            label="Produce Type"
+                            value={selectedProduceType}
+                            onChange={value => {
+                                this.setState({ 
+                                    selectedProduceType: value,
+                                    harvestType: (value === types.HEAD) ? types.FULL_HARVEST : harvestType
+                                });
+                            }}
+                            options={produceTypes}
                         />
                     </View>
+
+                    {/* radio buttons */}
+                    {(selectedProduceType !== types.HEAD) && (
+                        <View style={{ padding: units.unit4, paddingTop: 0 }}>
+                            <Radio
+                                defaultValue="partial"
+                                options={
+                                    [
+                                        { name: 'Part of plant', value: types.PARTIAL_HARVEST, helperText: 'Plant was not ready to pull, kept in garden for additional harvests' },
+                                        { name: 'Full plant', value: types.FULL_HARVEST, helperText: 'Plant reached end of life, final harvest was performed & plant removed' }
+                                    ]
+                                }
+                                onChange={(value) => this.setState({
+                                    harvestType: value
+                                })}
+                            />
+                        </View>
+                    )}
 
                     {/* continue button */}
                     <View style={{ paddingHorizontal: units.unit4, paddingBottom: units.unit5 }}>

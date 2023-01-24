@@ -7,19 +7,40 @@ import { bindActionCreators } from 'redux';
 // UI components
 import HarvestReport from '../components/app/HarvestReport';
 import BedList from '../components/app/BedList';
-import units from '../components/styles/units';
-import colors from '../components/styles/colors';
+import LoadingIndicator from '../components/UI/LoadingIndicator';
 
 // actions
 import { getBeds } from '../actions/beds/index';
+import { getPlantActivities } from '../actions/plantActivities/index';
+
+// styles
+import units from '../components/styles/units';
+import colors from '../components/styles/colors';
 
 class Reports extends Component {
 
-    componentDidMount() {
-        this.props.getBeds(`customer=${this.props.user._id}`);
+    state = {}
+
+    async componentDidMount() {
+
+        // show loading indicator
+        this.setState({
+            isLoading: true
+        });
+
+        // get beds
+        await this.props.getBeds(`customer=${this.props.user._id}`);
+
+        // hide loading indicator
+        this.setState({
+            isLoading: false
+        });
     }
 
     render() {
+
+        const { isLoading } = this.state;
+
         return (
             <SafeAreaView
                 style={{
@@ -29,9 +50,12 @@ class Reports extends Component {
                 }}>
                 <ScrollView>
 
+                    {/* loading indicator (dynamically visible) */}
+                    <LoadingIndicator loading={isLoading} />
+
                     {/* harvest report */}
-                    <HarvestReport 
-                        onCheckStatus={() => this.props.navigation.navigate('Orders')} 
+                    <HarvestReport
+                        onCheckStatus={() => this.props.navigation.navigate('Orders')}
                     />
 
                     {/* bed list */}
@@ -54,7 +78,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         {
-            getBeds
+            getBeds,
+            getPlantActivities
         },
         dispatch,
     );

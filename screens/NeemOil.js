@@ -31,7 +31,8 @@ class NeemOil extends Component {
     state = {
         question: null,
         pests: false,
-        powderyMildew: false
+        powderyMildew: false,
+        preventativeMaintenance: false
     }
 
     async next(result) {
@@ -71,7 +72,11 @@ class NeemOil extends Component {
 
     render() {
 
-        const { pests, powderyMildew } = this.state;
+        const { 
+            pests, 
+            powderyMildew,
+            preventativeMaintenance
+        } = this.state;
 
         return (
             <SafeAreaView style={{
@@ -114,8 +119,8 @@ class NeemOil extends Component {
                     </View>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingTop: units.unit4 }}>
                         <CheckBox
-                            value={pests}
-                            onValueChange={() => this.setState({ pests: !pests })}
+                            value={preventativeMaintenance}
+                            onValueChange={() => this.setState({ preventativeMaintenance: !preventativeMaintenance })}
                             boxType="square"
                             tintColor={colors.purpleB}
                             onTintColor={colors.green0}
@@ -135,7 +140,7 @@ class NeemOil extends Component {
                             small
                             alignIconRight
                             text="Next"
-                            disabled={!pests && !powderyMildew}
+                            disabled={!pests && !powderyMildew && !preventativeMaintenance}
                             icon={
                                 <Ionicons
                                     name={'arrow-forward'}

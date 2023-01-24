@@ -9,6 +9,7 @@ import moment from 'moment';
 // UI components
 import Header from '../UI/Header';
 import Paragraph from '../UI/Paragraph';
+import Button from '../UI/Button';
 
 // actions
 import {
@@ -36,11 +37,13 @@ class PlantInfo extends Component {
 
     render() {
         const {
+            user,
             selectedPlant,
             order,
             isOpen = false,
             close,
-            navigateToNotes
+            navigateToNotes,
+            navigateToHarvestInstructions
         } = this.props;
 
         return (
@@ -50,7 +53,7 @@ class PlantInfo extends Component {
                 transparent={true}>
                 <View
                     style={{
-                        height: '40%',
+                        height: '50%',
                         marginTop: 'auto',
                         backgroundColor: colors.white,
                         borderTopColor: colors.purpleB,
@@ -67,6 +70,8 @@ class PlantInfo extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{ padding: units.unit4 }}>
+
+                        {/* header section */}
                         <View style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between' }}>
                             <Header
                                 style={{
@@ -74,7 +79,7 @@ class PlantInfo extends Component {
                                 }}>
                                 {selectedPlant.id.name} {selectedPlant.id.common_type.name}
                             </Header>
-                            {(order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
+                            {(user.type === types.GARDENER) && (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
                                 <TouchableOpacity
                                     onPress={() => {
                                         navigateToNotes(selectedPlant);
@@ -88,6 +93,8 @@ class PlantInfo extends Component {
                                 </TouchableOpacity>
                             )}
                         </View>
+
+                        {/* plant info */}
                         <View style={{ marginTop: units.unit3 }}>
                             <View style={{ marginBottom: units.unit3 }}>
                                 <Paragraph style={{ fontStyle: 'italic', color: colors.purpleC }}>{selectedPlant.id.family_type.name} {selectedPlant.id.botanical_type.name}</Paragraph>
@@ -140,6 +147,19 @@ class PlantInfo extends Component {
                                     {selectedPlant.id.partial_sun ? "Yes" : "No"}
                                 </Paragraph>
                             </View>
+                        </View>
+
+                        {/* harvest instructions button */}
+                        <View style={{ marginTop: units.unit4 }}>
+                            <Button
+                                small
+                                text="View Harvest Instructions"
+                                variant="btn2"
+                                onPress={() => {
+                                    navigateToHarvestInstructions(selectedPlant);
+                                    close();
+                                }}
+                            />
                         </View>
 
                     </View>

@@ -16,7 +16,8 @@ class Rectangle extends Component {
             order,
             serviceReport,
             onNavigateBack,
-            navigateToNotes
+            navigateToNotes,
+            navigateToHarvestInstructions
         } = this.props;
 
         const measurements = 2;
@@ -36,6 +37,7 @@ class Rectangle extends Component {
                     serviceReport={serviceReport}
                     onNavigateBack={onNavigateBack}
                     navigateToNotes={navigateToNotes}
+                    navigateToHarvestInstructions={navigateToHarvestInstructions}
                 />
             </View>
         )

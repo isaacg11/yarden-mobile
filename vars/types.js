@@ -23,6 +23,17 @@ const types = {
     FULL_HARVEST: 'full',
     PARTIAL_HARVEST: 'partial',
 
+    // produce types
+    FRUIT: 'fruit',
+    POD: 'pod',
+    ROOT: 'root',
+    BUD: 'bud',
+    LEAF: 'leaf',
+    STEM: 'stem',
+    FLOWER: 'flower',
+    SEED: 'seed',
+    HEAD: 'head',
+
     // users
     CUSTOMER: 'customer',
     GARDENER: 'gardener',

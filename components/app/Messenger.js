@@ -215,6 +215,7 @@ class Messenger extends Component {
     // open image gallery
     launchImageLibrary(
       {
+        mediaType: 'photo',
         selectionLimit: 0,
         maxWidth: 500,
         maxHeight: 500,
@@ -223,10 +224,21 @@ class Messenger extends Component {
       res => {
         // if user selected an image {...}
         if (!res.didCancel) {
-          // update UI
-          this.setState({
-            attachments: res.assets,
-          });
+
+          const imgWithNoDimensions = res.assets?.find((img) => img.width === 0 || img.height === 0);
+
+          // if image has no dimensions {...}
+          if (imgWithNoDimensions) {
+
+            // show warning to user
+            return alert(`Your file "${imgWithNoDimensions.fileName}" has no dimensions, please select another image and try again.`);
+          } else {
+
+            // update UI
+            this.setState({
+              attachments: res.assets,
+            });
+          }
         }
       },
     );
@@ -247,9 +259,9 @@ class Messenger extends Component {
     const { user } = this.props;
 
     return (
-      <KeyboardAwareScrollView 
-        onKeyboardWillShow={() => this.setState({threadHeight: 240})}
-        onKeyboardWillHide={() => this.setState({threadHeight: 560})}
+      <KeyboardAwareScrollView
+        onKeyboardWillShow={() => this.setState({ threadHeight: 240 })}
+        onKeyboardWillHide={() => this.setState({ threadHeight: 560 })}
         extraHeight={500}>
         <View
           style={{

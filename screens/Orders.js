@@ -40,7 +40,7 @@ class Orders extends Component {
   async setStatus(status) {
     // show loading indicator and set status
     this.setState({
-      isLoading: true,
+      // isLoading: true,
       status: status,
     });
 
@@ -68,7 +68,7 @@ class Orders extends Component {
     }
 
     // show loading indicator
-    this.setState({ isLoading: false });
+    // this.setState({ isLoading: false });
   }
 
   paginate(direction) {

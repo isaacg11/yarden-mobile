@@ -91,9 +91,11 @@ class ImageUpload extends Component {
     }
 
     async selectImages() {
+
         // open image gallery
         launchImageLibrary(
             {
+                mediaType: 'photo',
                 selectionLimit: 10,
                 maxWidth: 500,
                 maxHeight: 500,
@@ -102,7 +104,18 @@ class ImageUpload extends Component {
             res => {
                 // if user selected an image {...}
                 if (!res.didCancel) {
-                    this.finish(res);
+                    const imgWithNoDimensions = res.assets?.find((img) => img.width === 0 || img.height === 0);
+
+                    // if image has no dimensions {...}
+                    if (imgWithNoDimensions) {
+
+                        // show warning to user
+                        return alert(`Your file "${imgWithNoDimensions.fileName}" has no dimensions, please select another image and try again.`);
+                    } else {
+
+                        // upload images
+                        this.finish(res);
+                    }
                 }
             },
         );

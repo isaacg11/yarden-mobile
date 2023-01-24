@@ -35,7 +35,7 @@ class BedList extends Component {
             return (
                 <View>
                     <View style={{ ...styles }}>
-                        <Text style={{ color: colors.greenD25 }}>Your garden beds will appear here when they're ready</Text>
+                        <Text style={{ color: colors.greenD25 }}>Your garden beds will appear here after they have been planted</Text>
                     </View>
                     <View style={{ ...styles }}></View>
                     <View style={{ ...styles }}></View>

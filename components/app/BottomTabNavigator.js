@@ -47,12 +47,12 @@ class BottomTabNavigator extends Component {
 
   async componentDidMount() {
 
-    if(this.props.user.type === types.CUSTOMER) {
+    if (this.props.user.type === types.CUSTOMER) {
       const status = 'pending approval';
 
       // get pending quotes
       await this.props.getQuotes(`status=${status}&page=1&limit=50`);
-    } else if(this.props.user.type === types.GARDENER) {
+    } else if (this.props.user.type === types.GARDENER) {
 
       // get pending reminders
       await this.props.getReminders(`status=pending&page=1&limit=50`);
@@ -129,10 +129,10 @@ class BottomTabNavigator extends Component {
   render() {
     const { inbox, renderTabNavigator } = this.state;
 
-    const { 
-      quotes, 
-      filters, 
-      orders, 
+    const {
+      quotes,
+      filters,
+      orders,
       user,
       reminders
     } = this.props;
@@ -416,6 +416,8 @@ class BottomTabNavigator extends Component {
     } else {
       return <LoadingIndicator loading={true} />;
     }
+
+    return null;
   }
 }
 
