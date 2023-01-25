@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_URL } from '../../helpers/getUrl';
 import { alert } from '../../components/UI/SystemAlert';
+import config from '../../config/index';
 
 export function getGeolocation(query) {
     return async function () {
@@ -44,7 +45,7 @@ export function getServiceArea(query) {
 export function getIP() {
     return async function() {
         try {
-            const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=0e3c87bb6fed4e7badcc243db93c85eb`);
+            const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${config.abstractApiKey}`);
             return response;
         }
 

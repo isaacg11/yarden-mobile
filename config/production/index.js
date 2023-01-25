@@ -16,5 +16,6 @@ module.exports = {
             fullPlan: 'price_1HgYqpLdJ7w9IsK7nbiEBcwE',
             assistedPlan: 'price_1HgYreLdJ7w9IsK7TM58pM43'
         },
-    }
+    },
+    abstractApiKey: '66541dd7c5ee44a5ad0f094c56376e2b'
 }
