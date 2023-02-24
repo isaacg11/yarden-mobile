@@ -1,6 +1,6 @@
 // libraries
-import React, { Component } from 'react';
-import { View, Image, Text, ScrollView } from 'react-native';
+import React, {Component} from 'react';
+import {View, Image, Text, ScrollView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
@@ -12,7 +12,7 @@ import ProgressIndicator from '../../components/UI/ProgressIndicator';
 import Divider from '../../components/UI/Divider';
 import CircularButton from '../../components/UI/CircularButton';
 import Header from '../../components/UI/Header';
-import { alert } from '../../components/UI/SystemAlert';
+import {alert} from '../../components/UI/SystemAlert';
 
 // helpers
 import capitalize from '../../helpers/capitalize';
@@ -34,97 +34,112 @@ class PlantList extends Component {
       plantList.push(plants[item]);
     }
 
-    const list = plantList.map(plant => {
+    const list = plantList.map((plant, i) => {
       return plant.map((p, index) => (
         <View key={index}>
-          <View style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            display: index < 1 ? null : 'none'
-          }}>
-            <Paragraph
-              style={{
-                fontWeight: 'bold',
-                marginTop: units.unit5,
-                marginBottom: units.unit4,
-                color: colors.greenE75,
-              }}>
-              {capitalize(p.common_type.name)}
-            </Paragraph>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              display: index < 1 ? null : 'none',
+              width: '100%',
+              marginVertical: units.unit5,
+            }}>
             <Image
               style={{
-                height: units.unit5,
-                width: units.unit5,
-                marginRight: units.unit4,
-                borderRadius: units.unit3,
-                marginLeft: units.unit4
+                height: units.unit6 + units.unit4,
+                width: units.unit6 + units.unit4,
+                marginTop: units.unit3,
               }}
               source={{
                 uri: p.common_type.image,
               }}
             />
+            <Paragraph
+              style={{
+                color: colors.greenD75,
+                fontSize: fonts.h3,
+              }}>
+              {capitalize(p.common_type.name)}
+            </Paragraph>
           </View>
           <View
             style={{
-              paddingVertical: units.unit4,
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
             }}>
             <View
               style={{
-                paddingRight: units.unit4,
-                marginRight: units.unit4,
-                paddingVertical: units.unit4,
                 display: 'flex',
                 flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
               }}>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}>
+                <Paragraph
+                  style={{marginBottom: units.unit3, color: colors.purpleB}}>
+                  {capitalize(p.name)}
+                </Paragraph>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    minWidth: units.unit7,
+                  }}>
+                  <CircularButton
+                    small
+                    variant="btn2"
+                    icon={
+                      <Ionicons
+                        name={'remove-outline'}
+                        color={colors.purpleB}
+                        size={fonts.h3}
+                      />
+                    }
+                    onPress={() => this.onSelect('remove', p, index)}
+                  />
+                  <Header>
+                    {this.state[`${p.name}-${p.common_type.name}-${index}`] ||
+                      0}
+                  </Header>
+                  <CircularButton
+                    small
+                    variant="btn2"
+                    icon={
+                      <Ionicons
+                        name={'add'}
+                        color={colors.purpleB}
+                        size={fonts.h3}
+                      />
+                    }
+                    onPress={() => this.onSelect('add', p, index)}
+                  />
+                </View>
+              </View>
               <Image
                 style={{
                   height: units.unit6,
                   width: units.unit6,
                   borderRadius: units.unit3,
-                  marginRight: units.unit4
+                  marginLeft: 'auto',
                 }}
                 source={{
                   uri: p.image,
                 }}
               />
-              <View>
-                <Paragraph style={{ marginBottom: units.unit3, marginTop: units.unit2 }}>{capitalize(p.name)}</Paragraph>
-                <View style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }}>
-                  <CircularButton
-                    small
-                    variant="btn2"
-                    style={{ marginRight: units.unit4 }}
-                    icon={(<Ionicons
-                      name={'add'}
-                      color={colors.purpleB}
-                      size={fonts.h3}
-                    />)}
-                    onPress={() => this.onSelect('add', p, index)}
-                  />
-                  <CircularButton
-                    small
-                    variant="btn2"
-                    icon={(<Ionicons
-                      name={'remove-outline'}
-                      color={colors.purpleB}
-                      size={fonts.h3}
-                    />)}
-                    onPress={() => this.onSelect('remove', p, index)}
-                  />
-                </View>
-              </View>
             </View>
-            <Header>{this.state[`${p.name}-${p.common_type.name}-${index}`] || 0}</Header>
           </View>
+          <Divider style={{marginVertical: units.unit4}} />
         </View>
       ));
     });
@@ -133,18 +148,34 @@ class PlantList extends Component {
   }
 
   onSelect(action, plant, index) {
-    const currentValue = this.state[`${plant.name}-${plant.common_type.name}-${index}`] === undefined ? 0 : this.state[`${plant.name}-${plant.common_type.name}-${index}`];
-    const newValue = (action === 'add') ? currentValue + 1 : currentValue - 1;
+    const currentValue =
+      this.state[`${plant.name}-${plant.common_type.name}-${index}`] ===
+      undefined
+        ? 0
+        : this.state[`${plant.name}-${plant.common_type.name}-${index}`];
+    const newValue = action === 'add' ? currentValue + 1 : currentValue - 1;
 
     // do not allow negative values
     if (newValue < 0) return;
 
-    const progress = parseFloat((((this.props.usedPlotPoints + plant.quadrant_size) / this.props.allowablePlotPoints).toFixed(2) * 100).toFixed(2));
+    const progress = parseFloat(
+      (
+        (
+          (this.props.usedPlotPoints + plant.quadrant_size) /
+          this.props.allowablePlotPoints
+        ).toFixed(2) * 100
+      ).toFixed(2),
+    );
 
-    if (progress > 100) return alert('You do not have enough space in your garden beds to fit this additional plant. Please try a smaller plant or removing others to make space for the desired one.');
+    if (progress > 100)
+      return alert(
+        'You do not have enough space in your garden beds to fit this additional plant. Please try a smaller plant or removing others to make space for the desired one.',
+      );
 
     // set new value
-    this.setState({ [`${plant.name}-${plant.common_type.name}-${index}`]: newValue });
+    this.setState({
+      [`${plant.name}-${plant.common_type.name}-${index}`]: newValue,
+    });
 
     // get selected plants
     let selectedPlants = this.state.selectedPlants;
@@ -163,16 +194,18 @@ class PlantList extends Component {
   }
 
   render() {
-    const { selectedPlants } = this.state;
+    const {selectedPlants} = this.state;
     const {
       plants,
       title = 'Plant Selection',
       allowablePlotPoints,
       usedPlotPoints,
-      beds
+      beds,
     } = this.props;
 
-    const progress = parseFloat(((usedPlotPoints / allowablePlotPoints).toFixed(2) * 100).toFixed(2));
+    const progress = parseFloat(
+      ((usedPlotPoints / allowablePlotPoints).toFixed(2) * 100).toFixed(2),
+    );
 
     const measurements = calculateTotalFeet(beds);
 
@@ -194,11 +227,10 @@ class PlantList extends Component {
       );
 
       return (
-        <View>
-
+        <View style={{overflow: 'visible'}}>
           <View>
             {/* progress indicator */}
-            <View style={{ marginVertical: units.unit4 }}>
+            <View style={{marginVertical: units.unit4}}>
               <ProgressIndicator progress={progress} />
             </View>
 
@@ -209,7 +241,7 @@ class PlantList extends Component {
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'row',
-                alignItems: 'center'
+                alignItems: 'center',
               }}>
               <Label>{title}</Label>
               <Paragraph
@@ -220,7 +252,6 @@ class PlantList extends Component {
               </Paragraph>
             </View>
           </View>
-          <Divider />
 
           <ScrollView>
             {/* vegetables */}
@@ -234,7 +265,7 @@ class PlantList extends Component {
                       justifyContent: 'center',
                     }}>
                     <Paragraph
-                      style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                      style={{fontSize: fonts.h3, color: colors.greenD75}}>
                       Vegetables
                     </Paragraph>
                     <Text
@@ -263,7 +294,7 @@ class PlantList extends Component {
                       justifyContent: 'center',
                     }}>
                     <Paragraph
-                      style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                      style={{fontSize: fonts.h3, color: colors.greenD75}}>
                       Herbs
                     </Paragraph>
                     <Text
@@ -292,7 +323,7 @@ class PlantList extends Component {
                       justifyContent: 'center',
                     }}>
                     <Paragraph
-                      style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                      style={{fontSize: fonts.h3, color: colors.greenD75}}>
                       Fruit
                     </Paragraph>
                     <Text
@@ -310,7 +341,6 @@ class PlantList extends Component {
               />
             )}
           </ScrollView>
-
         </View>
       );
     }

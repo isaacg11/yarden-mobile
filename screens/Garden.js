@@ -1,8 +1,8 @@
 // libraries
-import React, { Component } from 'react';
-import { SafeAreaView, View } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {SafeAreaView, View, ScrollView} from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 // UI components
 import Button from '../components/UI/Button';
@@ -18,8 +18,8 @@ import calculatePlotPoints from '../helpers/calculatePlotPoints';
 import combinePlants from '../helpers/combinePlants';
 
 // actions
-import { getPlants } from '../actions/plants/index';
-import { updateUser } from '../actions/user/index';
+import {getPlants} from '../actions/plants/index';
+import {updateUser} from '../actions/user/index';
 
 // styles
 import units from '../components/styles/units';
@@ -27,12 +27,12 @@ import units from '../components/styles/units';
 class Garden extends Component {
   state = {
     selectedPlants: [],
-    progress: 0
+    progress: 0,
   };
 
   async componentDidMount() {
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     // set current season
     // const season = getSeason();
@@ -54,7 +54,6 @@ class Garden extends Component {
   }
 
   async next() {
-
     // set garden plants
     const plants = setPlants(this.state.selectedPlants);
 
@@ -65,35 +64,36 @@ class Garden extends Component {
 
     // if crop rotation {...}
     if (this.props.route.params.isCropRotation) {
-
       // show loading indicator
-      this.setState({ isLoading: true });
+      this.setState({isLoading: true});
 
       // combine plants from selection
-      const combinedPlants = combinePlants(
-        [{ vegetables, herbs, fruit }]
-      );
+      const combinedPlants = combinePlants([{vegetables, herbs, fruit}]);
 
       // update garden info
-      await this.updateGardenInfo(combinedPlants.vegetables, combinedPlants.herbs, combinedPlants.fruit);
+      await this.updateGardenInfo(
+        combinedPlants.vegetables,
+        combinedPlants.herbs,
+        combinedPlants.fruit,
+      );
 
       // hide loading indicator
-      this.setState({ isLoading: false });
+      this.setState({isLoading: false});
 
       // navigate to plants selected confirmation
       this.props.navigation.navigate('Plants Selected');
     } else {
       // combine quote and plants
       let quoteAndPlants = {
-        ...{ vegetables, herbs, fruit },
-        ...{ quoteTitle: this.props.route.params.title }
+        ...{vegetables, herbs, fruit},
+        ...{quoteTitle: this.props.route.params.title},
       };
 
       // combine quote and plants
       const params = {
         ...this.props.route.params,
-        ...{ plantSelections: [quoteAndPlants] },
-        ...{ isCheckout: true },
+        ...{plantSelections: [quoteAndPlants]},
+        ...{isCheckout: true},
       };
 
       // navigate to plan enrollment
@@ -105,7 +105,7 @@ class Garden extends Component {
     let gardenInfo = {
       vegetables,
       herbs,
-      fruit
+      fruit,
     };
 
     // if user has garden info {...}
@@ -129,51 +129,48 @@ class Garden extends Component {
     }
 
     // update user with garden info
-    await this.props.updateUser(null, { gardenInfo });
+    await this.props.updateUser(null, {gardenInfo});
   }
 
   setPlotPoints() {
     const selectedPlants = this.state.selectedPlants;
-    const beds = (this.props.route.params.isCropRotation) ? this.props.user.garden_info.beds : this.props.route.params.line_items.beds;
+    const beds = this.props.route.params.isCropRotation
+      ? this.props.user.garden_info.beds
+      : this.props.route.params.line_items.beds;
     let allowablePlotPoints = 0;
     let usedPlotPoints = 0;
 
     if (selectedPlants.length > 0) {
-      selectedPlants.forEach((plant) => {
-        usedPlotPoints += (plant.quadrant_size * ((plant.qty) ? plant.qty : 1));
+      selectedPlants.forEach(plant => {
+        usedPlotPoints += plant.quadrant_size * (plant.qty ? plant.qty : 1);
       });
     }
 
-    beds.forEach((bed) => {
-      allowablePlotPoints += (calculatePlotPoints(bed) * bed.qty);
+    beds.forEach(bed => {
+      allowablePlotPoints += calculatePlotPoints(bed) * bed.qty;
     });
 
     // NOTE: Added buffer (10%) to allow room for different sizes. Do not remove!
     // Author - Isaac G. 2/28/23
-    const buffer = parseInt((allowablePlotPoints * .10).toFixed(0));
+    const buffer = parseInt((allowablePlotPoints * 0.1).toFixed(0));
 
-    allowablePlotPoints = (allowablePlotPoints - buffer);
+    allowablePlotPoints = allowablePlotPoints - buffer;
 
     return {
       usedPlotPoints,
-      allowablePlotPoints
-    }
+      allowablePlotPoints,
+    };
   }
 
   render() {
-    const {
-      selectedPlants,
-      progress,
-      isLoading
-    } = this.state;
+    const {selectedPlants, progress, isLoading} = this.state;
     const plotPoints = this.setPlotPoints();
-    const {
-      allowablePlotPoints,
-      usedPlotPoints
-    } = plotPoints;
-    const { user } = this.props;
+    const {allowablePlotPoints, usedPlotPoints} = plotPoints;
+    const {user} = this.props;
     const isCropRotation = this.props.route.params.isCropRotation;
-    const beds = (isCropRotation) ? user.garden_info.beds : this.props.route.params.line_items.beds;
+    const beds = isCropRotation
+      ? user.garden_info.beds
+      : this.props.route.params.line_items.beds;
 
     return (
       <SafeAreaView
@@ -181,16 +178,17 @@ class Garden extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <View>
-          <View style={{ padding: units.unit3 + units.unit4 }}>
+        <ScrollView>
+          <View style={{padding: units.unit3 + units.unit4}}>
             {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
-            <Header type="h4">{(isCropRotation) ? 'Crop Rotation' : 'Garden Setup'}</Header>
-            <View style={{ padding: 0 }}>
-
+            <Header type="h4">
+              {isCropRotation ? 'Crop Rotation' : 'Garden Setup'}
+            </Header>
+            <View style={{padding: 0}}>
               {/* plant list */}
-              <View style={{ marginBottom: units.unit3 }}>
+              <View style={{marginBottom: units.unit3}}>
                 <PlantList
                   allowablePlotPoints={allowablePlotPoints}
                   usedPlotPoints={usedPlotPoints}
@@ -200,7 +198,7 @@ class Garden extends Component {
                   onSelect={(selectedPlants, progress) =>
                     this.setState({
                       selectedPlants,
-                      progress
+                      progress,
                     })
                   }
                 />
@@ -210,7 +208,7 @@ class Garden extends Component {
               <PlantAvailability />
 
               {/* navigation button */}
-              <View style={{ marginTop: units.unit4 }}>
+              <View style={{marginTop: units.unit4}}>
                 <Button
                   text="Continue"
                   variant="primary"
@@ -220,7 +218,7 @@ class Garden extends Component {
               </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -229,7 +227,7 @@ class Garden extends Component {
 function mapStateToProps(state) {
   return {
     user: state.user,
-    plants: state.plants
+    plants: state.plants,
   };
 }
 
@@ -237,7 +235,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       getPlants,
-      updateUser
+      updateUser,
     },
     dispatch,
   );
