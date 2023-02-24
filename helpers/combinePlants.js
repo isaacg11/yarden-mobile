@@ -1,56 +1,39 @@
-import minifyDataToID from "./minifyDataToID";
-
 export default function combinePlants(plants) {
 
     let combinedVegetables = [];
-    let combinedFruit = [];
     let combinedHerbs = [];
+    let combinedFruit = [];
 
     plants.forEach((plant) => {
-        const vegetables = minifyDataToArray(plant.vegetables);
-        const fruit = minifyDataToArray(plant.fruit);
+        const vegetables = plant.vegetables;
         const herbs = plant.herbs;
+        const fruit = plant.fruit;
+        
+        for(let vegetable in vegetables) {
+            combinedVegetables.push({
+                id: vegetables[vegetable][0]._id,
+                qty: vegetables[vegetable].length,
+            })
+        }
 
-        vegetables.forEach((v) => {
-            const vegetableExists = combinedVegetables.find((cv) => cv._id === v._id);
-            if(!vegetableExists) combinedVegetables.push(v);
-        })
+        for(let herb in herbs) {
+            combinedHerbs.push({
+                id: herbs[herb][0]._id,
+                qty: herbs[herb].length,
+            })
+        }
 
-        fruit.forEach((f) => {
-            const fruitExists = combinedFruit.find((cf) => cf._id === f._id);
-            if(!fruitExists) combinedFruit.push(f);
-        })
-
-        herbs.forEach((h) => {
-            const herbsExists = combinedHerbs.find((ch) => ch._id === h._id);
-            if(!herbsExists) combinedHerbs.push(h);
-        })
+        for(let fr in fruit) {
+            combinedFruit.push({
+                id: fruit[fr][0]._id,
+                qty: fruit[fr].length,
+            })
+        }
     })
 
-    const vegetableIds = minifyDataToID(combinedVegetables);
-    const fruitIds = minifyDataToID(combinedFruit);
-    const herbIds = minifyDataToID(combinedHerbs);
-
     return {
-        vegetables: vegetableIds,
-        herbs: herbIds,
-        fruit: fruitIds
+        vegetables: combinedVegetables,
+        herbs: combinedHerbs,
+        fruit: combinedFruit
     }
-}
-
-function minifyDataToArray(data) {
-    let plants = [];
-
-    // iterate through plants
-    for (let v in data) {
-
-        // iterate through plant classes
-        data[v].forEach((d) => {
-
-            // add to plant list
-            plants.push(d);
-        })
-    }
-
-    return plants;
 }

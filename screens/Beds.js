@@ -130,6 +130,8 @@ class Beds extends Component {
         if (this.props.drafts.length < 1) {
           return 'Tap on any garden bed to get started. Each bed is marked with a number that corresponds to the real-life garden bed.';
         }
+      case types.CROP_ROTATION:
+        return 'Build the garden map before starting the crop rotation so you can use it as a guide while working. After you have planted the physical garden, tap the Next button below to complete the order.';
       case types.FULL_PLAN || types.ASSISTED_PLAN:
         switch (this.props.route.params.serviceReport) {
           case types.DEAD_PLANTS:
@@ -170,6 +172,25 @@ class Beds extends Component {
                 `Tapping the "Re-publish Garden" button will update your garden layout and make the new changes visible to the customer.`
               }
             </Text>
+          </View>
+        )
+      case types.CROP_ROTATION:
+        return (
+          <View>
+            <Button
+              alignIconRight
+              icon={
+                <Ionicons
+                  name="arrow-forward-outline"
+                  size={fonts.h3}
+                  color={colors.purpleB}
+                />
+              }
+              text="Next"
+              variant="button"
+              onPress={() => this.props.navigation.navigate('Image Upload', { order: this.props.route.params.order })}
+              disabled={progress < 100 ? true : false}
+            />
           </View>
         )
       case (types.FULL_PLAN || types.ASSISTED_PLAN):
@@ -229,8 +250,12 @@ class Beds extends Component {
     }
 
     const size = 2;
-
     while (columns.length > 0) rows.push(columns.splice(0, size));
+
+    const progressDenominator = (
+      (order.type === types.INITIAL_PLANTING && this.props.beds.length < 1) ||
+      order.type === types.CROP_ROTATION
+    ) ? 'drafts' : 'beds';
 
     return rows.map((row, i) => {
       return (
@@ -268,7 +293,7 @@ class Beds extends Component {
                   <Paragraph style={{ ...fonts.label }}>#{bedId}</Paragraph>
                   <Paragraph style={{ ...fonts.label }}>
                     {calculatePlantingProgress(
-                      this.props[`${(this.props.beds.length > 0) ? 'beds' : 'drafts'}`].find(data => data.key === bedId),
+                      this.props[progressDenominator].find(data => data.key === bedId),
                     )}
                   </Paragraph>
                 </View>
@@ -318,7 +343,7 @@ class Beds extends Component {
 
   render() {
     const { isLoading } = this.state;
-    const { drafts, beds } = this.props;
+    const { drafts } = this.props;
     const { garden_info } = this.props.route.params.order.customer;
 
     let totalPlants = 0;
@@ -412,7 +437,7 @@ class Beds extends Component {
 
             <View>
               {/* progress indicator (dynamically visible) */}
-              {beds.length < 1 && this.renderProgress(progress, label)}
+              {(order.type === types.INITIAL_PLANTING || order.type === types.CROP_ROTATION) && this.renderProgress(progress, label)}
 
               {/* garden beds list */}
               {garden_info.beds.map((bed, index) => (

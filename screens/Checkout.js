@@ -1,3 +1,4 @@
+// libraries
 import React, { Component } from 'react';
 import { SafeAreaView, View, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -5,19 +6,36 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import CheckBox from '@react-native-community/checkbox';
+
+// vars
 import vars from '../vars/index';
+import types from '../vars/types';
+
+// UI components
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import Link from '../components/UI/Link';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
 import ElectronicSignatureAgreement from '../components/app/ElectronicSignatureAgreement';
+import PaymentMethod from '../components/app/PaymentMethod';
+import Header from '../components/UI/Header';
+import Label from '../components/UI/Label';
+import Card from '../components/UI/Card';
+
+// helpers
 import calculateQuoteCost from '../helpers/calculateQuote';
 import delimit from '../helpers/delimit';
 import getCompanyName from '../helpers/getCompanyName';
 import getScreenShot from '../helpers/getScreenShot';
 import uploadImage from '../helpers/uploadImage';
 import formatAddress from '../helpers/formatAddress';
+import formatMaterials from '../helpers/formatMaterials';
+import minifyDataToID from '../helpers/minifyDataToID';
+import combinePlants from '../helpers/combinePlants';
+import clearCart from '../helpers/clearCart';
+
+// actions
 import { chargeCard } from '../actions/cards/index';
 import { getIP } from '../actions/location/index';
 import { createApproval } from '../actions/approvals/index';
@@ -33,18 +51,12 @@ import {
   resetChangeOrders,
 } from '../actions/changeOrders/index';
 import { createPurchase } from '../actions/purchases/index';
-import formatMaterials from '../helpers/formatMaterials';
-import minifyDataToID from '../helpers/minifyDataToID';
-import combinePlants from '../helpers/combinePlants';
-import PaymentMethod from '../components/app/PaymentMethod';
-import Header from '../components/UI/Header';
 import { getItems } from '../actions/items/index';
-import clearCart from '../helpers/clearCart';
+
+// styles
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
-import Label from '../components/UI/Label';
-import Card from '../components/UI/Card';
 
 class Checkout extends Component {
   state = {};
@@ -56,6 +68,7 @@ class Checkout extends Component {
 
     // if plant selections {...}
     if (this.props.route.params.plantSelections) {
+
       // combine plants from selection
       const combinedPlants = combinePlants(
         this.props.route.params.plantSelections,
@@ -251,6 +264,9 @@ class Checkout extends Component {
     if (!this.props.user.payment_info)
       return alert('Please add a payment method');
 
+    // take screenshot (proof of approval agreement)
+    const screenshot = await getScreenShot();
+
     // show loading indicator
     this.setState({ isLoading: true });
 
@@ -291,9 +307,6 @@ class Checkout extends Component {
     } else {
       // get user IP (proof of location at time of approval)
       const ip = await this.props.getIP();
-
-      // take screenshot (proof of approval agreement)
-      const screenshot = await getScreenShot();
 
       // save screenshot of approval image
       const approvalImage = await uploadImage(screenshot, 'approval.jpg');
@@ -342,22 +355,19 @@ class Checkout extends Component {
 
         // check to see if the quote is for a garden
         const isGarden = 
-          this.props.route.params.type === 'installation' ||
-          this.props.route.params.type === 'revive'
+          this.props.route.params.type === types.INSTALLATION ||
+          this.props.route.params.type === types.REVIVE
 
         // if garden quote {...}
         if (isGarden) {
-          // get plant selection
-          const plantList = this.getPlantsList(this.props.route.params);
 
           // get plant selection
           let lineItems = this.props.route.params.line_items;
 
           // add plants to line items
-          lineItems.vegetables = minifyDataToID(plantList.vegetables);
-          lineItems.herbs = minifyDataToID(plantList.herbs);
-          lineItems.fruit = minifyDataToID(plantList.fruit);
-
+          lineItems.vegetables = this.state.vegetables;
+          lineItems.herbs = this.state.herbs;
+          lineItems.fruit = this.state.fruit;
           updatedQuote.line_items = lineItems;
 
           // update garden info

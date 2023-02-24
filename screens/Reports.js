@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux';
 // UI components
 import HarvestReport from '../components/app/HarvestReport';
 import BedList from '../components/app/BedList';
-import LoadingIndicator from '../components/UI/LoadingIndicator';
 
 // actions
 import { getBeds } from '../actions/beds/index';
@@ -21,25 +20,13 @@ class Reports extends Component {
 
     state = {}
 
-    async componentDidMount() {
-
-        // show loading indicator
-        this.setState({
-            isLoading: true
-        });
+    componentDidMount() {
 
         // get beds
-        await this.props.getBeds(`customer=${this.props.user._id}`);
-
-        // hide loading indicator
-        this.setState({
-            isLoading: false
-        });
+        this.props.getBeds(`customer=${this.props.user._id}`);
     }
 
     render() {
-
-        const { isLoading } = this.state;
 
         return (
             <SafeAreaView
@@ -49,9 +36,6 @@ class Reports extends Component {
                     backgroundColor: colors.greenD5,
                 }}>
                 <ScrollView>
-
-                    {/* loading indicator (dynamically visible) */}
-                    <LoadingIndicator loading={isLoading} />
 
                     {/* harvest report */}
                     <HarvestReport

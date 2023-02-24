@@ -7,7 +7,6 @@ import capitalize from '../../helpers/capitalize';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 import units from '../styles/units';
-import ratio from '../styles/ratio';
 
 class AddToCart extends Component {
   state = {};

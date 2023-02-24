@@ -68,7 +68,6 @@ class QuoteDetails extends Component {
             <View>
               <Collapse
                 title="Quote Info"
-                open={true}
                 content={<QuoteInfo quote={quote} />}
               />
             </View>

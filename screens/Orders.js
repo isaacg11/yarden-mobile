@@ -16,15 +16,17 @@ import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
-import { getOrders } from '../actions/orders/index';
-import { getChangeOrders } from '../actions/changeOrders/index';
-import { setFilters } from '../actions/filters/index';
-import units from '../components/styles/units';
-import fonts from '../components/styles/fonts';
-import colors from '../components/styles/colors';
 
 // actions
 import { setSelectedOrder } from '../actions/orders/index';
+import { getOrders } from '../actions/orders/index';
+import { getChangeOrders } from '../actions/changeOrders/index';
+import { setFilters } from '../actions/filters/index';
+
+// styles
+import units from '../components/styles/units';
+import fonts from '../components/styles/fonts';
+import colors from '../components/styles/colors';
 
 class Orders extends Component {
   state = {
@@ -40,7 +42,7 @@ class Orders extends Component {
   async setStatus(status) {
     // show loading indicator and set status
     this.setState({
-      // isLoading: true,
+      isLoading: true,
       status: status,
     });
 
@@ -68,7 +70,7 @@ class Orders extends Component {
     }
 
     // show loading indicator
-    // this.setState({ isLoading: false });
+    this.setState({ isLoading: false });
   }
 
   paginate(direction) {

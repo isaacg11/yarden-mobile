@@ -1,14 +1,14 @@
-import { GET_FILTERS } from '../actions/filters/types';
+import { GET_PAGINATION } from '../actions/pagination/types';
 
 let initialState = {
-    orders: 'pending',
-    reminders: 'pending',
-    quotes: 'pending approval',
+    orders: 1,
+    reminders: 1,
+    quotes: 1
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case GET_FILTERS:
+        case GET_PAGINATION:
             return action.payload;
         default:
             return state;

@@ -8,7 +8,7 @@ export default function separatePlantsByCategory(plants) {
     // separate plants by category
     plants.forEach((plant) => {
         if (plant.category.name === 'vegetable') vegetables.push(plant);
-        if (plant.category.name === 'herb') herbs.push(plant);
+        if (plant.category.name === 'culinary herb') herbs.push(plant);
         if (plant.category.name === 'fruit') fruit.push(plant);
     })
 

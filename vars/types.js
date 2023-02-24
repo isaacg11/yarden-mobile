@@ -38,7 +38,12 @@ const types = {
     CUSTOMER: 'customer',
     GARDENER: 'gardener',
     PARTNER: 'partner',
-    ADMIN: 'admin'
+    ADMIN: 'admin',
+
+    // growth seasons
+    FALL: 'fall',
+    SPRING: 'spring',
+    ANNUAL: 'annual'
 }
 
 export default types;

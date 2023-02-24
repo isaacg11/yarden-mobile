@@ -67,7 +67,6 @@ class Step6 extends Component {
 
     render() {
         const { 
-            title, 
             note, 
             question 
         } = this.state;
@@ -113,7 +112,6 @@ class Step6 extends Component {
                                         />
                                     }
                                     onPress={() => this.next({
-                                        title,
                                         note
                                     })}
                                 />

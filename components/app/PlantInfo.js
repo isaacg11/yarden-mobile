@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { View, Modal, TouchableOpacity } from 'react-native';
+import { View, Modal, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -53,13 +53,15 @@ class PlantInfo extends Component {
                 transparent={true}>
                 <View
                     style={{
-                        height: '50%',
+                        height: '60%',
                         marginTop: 'auto',
                         backgroundColor: colors.white,
                         borderTopColor: colors.purpleB,
                         borderTopWidth: 1
                     }}>
                     <View style={{ display: 'flex', alignItems: 'center' }}>
+
+                        {/* close button */}
                         <TouchableOpacity
                             onPress={() => close()}>
                             <Ionicons
@@ -70,6 +72,18 @@ class PlantInfo extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{ padding: units.unit4 }}>
+
+                        {/* plant image */}
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit5}}>
+                            <Image
+                                source={{ uri: selectedPlant.id.image }}
+                                style={{
+                                    width: units.unit6 + units.unit5,
+                                    height: units.unit6 + units.unit5,
+                                    borderRadius: units.unit6,
+                                }}
+                            />
+                        </View>
 
                         {/* header section */}
                         <View style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between' }}>

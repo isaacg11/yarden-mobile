@@ -17,6 +17,7 @@ import ImageGrid from '../components/app/ImageGrid';
 import OrderInfo from '../components/app/OrderInfo';
 import ChangeOrders from '../components/app/ChangeOrders';
 import Plants from '../components/app/Plants';
+import PlantSelection from '../components/app/PlantSelection';
 
 // actions
 import { getOrders, updateOrder } from '../actions/orders/index';
@@ -28,6 +29,9 @@ import { getReportType } from '../actions/reportTypes/index';
 import { getQuestions } from '../actions/questions/index';
 import { getAnswers } from '../actions/answers/index';
 
+// helpers
+import getSeason from '../helpers/getSeason';
+
 // types
 import types from '../vars/types';
 
@@ -38,6 +42,7 @@ import colors from '../components/styles/colors';
 class OrderDetails extends Component {
   state = {
     changeOrders: [],
+    renderPlantSelection: false
   };
 
   async componentDidMount() {
@@ -74,8 +79,8 @@ class OrderDetails extends Component {
       // get previous maintenance reports for customer
       await this.props.getReports(`customer=${order.customer._id}&type=${reportType._id}`);
 
-      // if order type is initial planting {...}
-      if (order.type == types.INITIAL_PLANTING) {
+      // if order type is initial planting or crop rotation {...}
+      if (order.type == types.INITIAL_PLANTING || order.type == types.CROP_ROTATION) {
 
         // get drafts
         await this.props.getDrafts(`order=${order._id}`);
@@ -83,12 +88,12 @@ class OrderDetails extends Component {
 
       // if order for maintenance service {...}
       if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
-        if(this.props.reports.length > 0) {
+        if (this.props.reports.length > 0) {
           const latestReport = this.props.reports[this.props.reports.length - 1];
 
           // get answers
           const answers = await this.props.getAnswers(`report=${latestReport._id}`);
-          
+
           // set watering schedule
           wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
         } else {
@@ -102,9 +107,48 @@ class OrderDetails extends Component {
 
           // get answers
           const answers = await this.props.getAnswers(`report=${latestReport._id}`);
-          
+
           // set watering schedule
           wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+        }
+      }
+    }
+
+    // if order type is crop rotation {...}
+    let renderPlantSelection = false;
+    if (order.type == types.CROP_ROTATION) {
+
+      // if current user is a gardener {...}
+      if (this.props.user.type === types.CUSTOMER) {
+
+        // get current season
+        const currentSeason = getSeason();
+
+        if (this.props.user.garden_info.vegetables.length > 0) {
+          const previousSeasonVegetable = this.props.user.garden_info.vegetables.find((v) => {
+            const vegetable = v.id || v;
+            if((vegetable.season !== types.ANNUAL) && (vegetable.season !== currentSeason)) return true;
+          });
+
+          if (previousSeasonVegetable) renderPlantSelection = true;
+        }
+
+        if (this.props.user.garden_info.herbs.length > 0) {
+          const previousSeasonHerb = this.props.user.garden_info.herbs.find((h) => {
+            const herb = h.id || h;
+            if((herb.season !== types.ANNUAL) && (herb.season !== currentSeason)) return true;
+          });
+
+          if (previousSeasonHerb) renderPlantSelection = true;
+        }
+
+        if (this.props.user.garden_info.fruit.length > 0) {
+          const previousSeasonFruit = this.props.user.garden_info.fruit.find((f) => {
+            const fruit = f.id || f;
+            if((fruit.season !== types.ANNUAL) && (fruit.season !== currentSeason)) return true;
+          });
+
+          if (previousSeasonFruit) renderPlantSelection = true;
         }
       }
     }
@@ -113,7 +157,8 @@ class OrderDetails extends Component {
     this.setState({
       isLoading: false,
       changeOrders,
-      wateringSchedule
+      wateringSchedule,
+      renderPlantSelection
     });
   }
 
@@ -157,7 +202,12 @@ class OrderDetails extends Component {
   render() {
     const order = this.props.route.params;
     const { user, beds } = this.props;
-    const { isLoading, changeOrders, wateringSchedule } = this.state;
+    const {
+      isLoading,
+      changeOrders,
+      wateringSchedule,
+      renderPlantSelection
+    } = this.state;
     const gardenInfo = order.customer.garden_info;
 
     return (
@@ -347,6 +397,68 @@ class OrderDetails extends Component {
                       }}
                       text="Process Order"
                       onPress={() => this.props.navigation.navigate('Step 1')}
+                    />
+                  </View>
+                )}
+
+              {/* crop rotation UI (dynamically visible) */}
+              {(renderPlantSelection && (order.status === 'pending')) && (
+                <Button
+                  style={{
+                    marginTop: units.unit4
+                  }}
+                  text="Select Plants"
+                  onPress={() => this.props.navigation.navigate('Garden', { isCropRotation: true })}
+                />
+              )}
+
+              {/* plant selections (dynamically visible) */}
+              {!renderPlantSelection && order.type === types.CROP_ROTATION && (
+                <View style={{ marginTop: units.unit4 }}>
+                  <Collapse
+                    title="Vegetables"
+                    content={
+                      <PlantSelection
+                        plants={gardenInfo.vegetables}
+                      />
+                    }
+                  />
+                  <Collapse
+                    title="Herbs"
+                    content={
+                      <PlantSelection
+                        plants={gardenInfo.herbs}
+                      />
+                    }
+                  />
+                  <Collapse
+                    title="Fruit"
+                    content={
+                      <PlantSelection
+                        plants={gardenInfo.fruit}
+                      />
+                    }
+                  />
+                </View>
+              )}
+
+              {/* crop rotation UI - gardener (dynamically visible) */}
+              {order.status === 'pending' &&
+                user.type === types.GARDENER &&
+                (order.type === types.CROP_ROTATION) && (
+                  <View>
+                    <Button
+                      text="Build Garden Map"
+                      onPress={() =>
+                        this.props.navigation.navigate('Beds', { order })
+                      }
+                      icon={
+                        <Ionicons
+                          name="grid-outline"
+                          size={units.unit4}
+                          color={colors.purpleB}
+                        />
+                      }
                     />
                   </View>
                 )}

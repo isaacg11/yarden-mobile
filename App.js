@@ -53,7 +53,6 @@ import AccountPending from './screens/AccountPending';
 import AccountActivation from './screens/AccountActivation';
 import Beds from './screens/Beds';
 import Bed from './screens/Bed';
-import GardenMap from './screens/GardenMap';
 import Planted from './screens/Planted';
 import Substitution from './screens/Substitution';
 import ImageUpload from './screens/ImageUpload';
@@ -70,6 +69,8 @@ import WateringSchedule from './screens/WateringSchedule';
 import HarvestInstructions from './screens/HarvestInstructions';
 import Referrals from './screens/Referrals';
 import Subscription from './screens/Subscription';
+import ReminderDetails from './screens/ReminderDetails';
+import PlantsSelected from './screens/PlantsSelected';
 
 // UI components
 import Link from './components/UI/Link';
@@ -586,16 +587,6 @@ function App() {
               }}
             />
             <Stack.Screen
-              name="Garden Map"
-              component={GardenMap}
-              options={{
-                headerTitle: () => logo,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint,
-                headerShadowVisible: false,
-              }}
-            />
-            <Stack.Screen
               name="Planted"
               component={Planted}
               options={{
@@ -832,6 +823,27 @@ function App() {
               name="Harvest Instructions"
               component={HarvestInstructions}
               options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Reminder Details"
+              component={ReminderDetails}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Plants Selected"
+              component={PlantsSelected}
+              options={{
+                headerLeft: displayNone,
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,

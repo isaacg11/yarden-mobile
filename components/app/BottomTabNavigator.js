@@ -134,7 +134,8 @@ class BottomTabNavigator extends Component {
       filters,
       orders,
       user,
-      reminders
+      reminders,
+      pagination
     } = this.props;
 
     const isPendingApproval =
@@ -359,7 +360,7 @@ class BottomTabNavigator extends Component {
               options={{
                 tabBarBadge:
                   reminders.list && reminders.list.length > 0
-                    ? reminders.list.length
+                    ? reminders.total
                     : null,
                 tabBarBadgeStyle: {
                   backgroundColor: '#ff6060',
@@ -373,7 +374,7 @@ class BottomTabNavigator extends Component {
                   e.preventDefault();
 
                   // set order query
-                  const query = `status=${filters.reminders}&page=${1}&limit=${5}`;
+                  const query = `status=${filters.reminders}&page=${pagination.reminders}&limit=${5}`;
 
                   // get reminders
                   await this.props.getReminders(query);
@@ -414,7 +415,7 @@ class BottomTabNavigator extends Component {
       }
 
     } else {
-      return <LoadingIndicator loading={true} />;
+      // return <LoadingIndicator loading={!renderTabNavigator} />;
     }
 
     return null;
@@ -428,7 +429,8 @@ function mapStateToProps(state) {
     quotes: state.quotes,
     conversations: state.conversations,
     filters: state.filters,
-    reminders: state.reminders
+    reminders: state.reminders,
+    pagination: state.pagination
   };
 }
 

@@ -45,3 +45,22 @@ export function getReminders(query, override) {
         }
     }
 }
+
+export function updateReminder(id, task) {
+    return async function(dispatch) {
+        try {
+            const authToken = await getAuthToken();
+            const response = await axios.put(`${API_URL}/tasks/${id}`, task, {headers: {authorization: authToken}});
+            return response;
+        }
+
+        catch(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+            }
+
+            alert('Something went wrong. We are working on a fix now!');
+        }
+    }
+}

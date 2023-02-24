@@ -275,7 +275,7 @@ PODS:
   - React-jsinspector (0.66.0)
   - React-logger (0.66.0):
     - glog
-  - react-native-date-picker (4.2.6):
+  - react-native-date-picker (4.2.8):
     - React-Core
   - react-native-image-picker (4.10.3):
     - React-Core
@@ -375,7 +375,7 @@ PODS:
   - RNQrGenerator (1.2.1):
     - React
     - ZXingObjC
-  - RNReanimated (2.14.1):
+  - RNReanimated (2.14.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -402,13 +402,13 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.18.2):
+  - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
   - RNSentry (3.4.3):
     - React-Core
     - Sentry (= 7.11.0)
-  - RNSVG (12.5.0):
+  - RNSVG (12.5.1):
     - React-Core
   - RNVectorIcons (9.2.0):
     - React-Core
@@ -651,7 +651,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 6a05173dc0142abc582bd4edd2d23146b8cc218a
   React-jsinspector: be95ad424ba9f7b817aff22732eb9b1b810a000a
   React-logger: 9a9cd87d4ea681ae929b32ef580638ff1b50fb24
-  react-native-date-picker: 93e43b3084cea595b4d68b1405d6d99849663bd6
+  react-native-date-picker: f9cc1c37e8db8e393d87d7b7227c2cbf164e6f11
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
@@ -676,10 +676,10 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: 44e2807bc410741f35d4c45b6586aedfe3da39d2
   RNQrGenerator: 0aa6c40e3f2e15a9cbaec9480b7028c339f89b66
-  RNReanimated: 9e1b5e122fa1fc1c8a19e8f2982119859959f3a3
-  RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
+  RNReanimated: f066aa91ef8ef7b2a9baed4c15ec06f5e5fb5d11
+  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSentry: 85f6525b5fe8d2ada065858026b338605b3c09da
-  RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
+  RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38

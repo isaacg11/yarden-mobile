@@ -14,11 +14,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Popover from 'react-native-popover-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  PinchGestureHandler,
-  PanGestureHandler,
-  State,
-} from 'react-native-gesture-handler';
 
 // UI components
 import PlantMenu from '../components/app/PlantMenu';
@@ -122,7 +117,7 @@ class GardenMap extends Component {
     if (this.props.user.type === types.GARDENER) {
 
       // if order type is initial planting
-      if ((this.props.order.type === types.INITIAL_PLANTING)) {
+      if ((this.props.order.type === types.INITIAL_PLANTING) || (this.props.order.type === types.CROP_ROTATION)) {
 
         // if drafts are found {...}
         if (this.props.drafts.length > 0) {
@@ -1106,99 +1101,6 @@ class GardenMap extends Component {
     return border;
   }
 
-  handlePinch(e) {
-    const scale = e.nativeEvent.scale;
-    if (scale > 1 && scale < 1.5) {
-      this.setState({ scale: e.nativeEvent.scale });
-    }
-  }
-
-  handlePan(e) {
-    this.onGestureEvent(e);
-  }
-
-  onHandlerStateChange = event => {
-    // if change to panning state {...}
-    if (event.nativeEvent.oldState === State.ACTIVE) {
-      // get x, y coordinates
-      const x = event.nativeEvent.translationX;
-      const y = event.nativeEvent.translationY;
-
-      // get direction
-      const leftToRight = x > 0;
-      const rightToLeft = x < 0;
-      const upToDown = y > 0;
-      const downToUp = y < 0;
-
-      // get current scale
-      const scale = this.state.scale;
-
-      // set initial offset
-      let xOffset = 0;
-      let yOffset = 0;
-
-      // if user is pulling from left to right {...}
-      if (leftToRight) {
-        if (scale > 1.1 && scale < 1.2) {
-          xOffset = 10;
-        } else if (scale > 1.2 && scale < 1.3) {
-          xOffset = 20;
-        } else if (scale > 1.3 && scale < 1.4) {
-          xOffset = 30;
-        } else if (scale > 1.4 && scale < 1.5) {
-          xOffset = 40;
-        }
-      } else if (rightToLeft) {
-        // if user is pulling from right to left
-        if (scale > 1.1 && scale < 1.2) {
-          xOffset = -10;
-        } else if (scale > 1.2 && scale < 1.3) {
-          xOffset = -20;
-        } else if (scale > 1.3 && scale < 1.4) {
-          xOffset = -30;
-        } else if (scale > 1.4 && scale < 1.5) {
-          xOffset = -40;
-        }
-      }
-
-      // if user is pulling from top to bottom {...}
-      if (upToDown) {
-        if (scale > 1.1 && scale < 1.2) {
-          yOffset = 20;
-        } else if (scale > 1.2 && scale < 1.3) {
-          yOffset = 30;
-        } else if (scale > 1.3 && scale < 1.4) {
-          yOffset = 90;
-        } else if (scale > 1.4 && scale < 1.5) {
-          yOffset = 90;
-        }
-      } else if (downToUp) {
-        // if user is pulling from bottom to top {...}
-        if (scale > 1.1 && scale < 1.2) {
-          yOffset = -100;
-        } else if (scale > 1.2 && scale < 1.3) {
-          yOffset = -100;
-        } else if (scale > 1.3 && scale < 1.4) {
-          yOffset = -120;
-        } else if (scale > 1.4 && scale < 1.5) {
-          yOffset = -120;
-        }
-      }
-
-      // set last offset
-      this.lastOffset.x += event.nativeEvent.translationX;
-      this.lastOffset.y += event.nativeEvent.translationY;
-
-      // set x offset
-      this.translateX.setOffset(xOffset);
-      this.translateX.setValue(0);
-
-      // set y offset
-      this.translateY.setOffset(yOffset);
-      this.translateY.setValue(0);
-    }
-  };
-
   save() {
     switch (this.props.serviceReport) {
       case types.DEAD_PLANTS:
@@ -1635,27 +1537,26 @@ class GardenMap extends Component {
 
   renderHint() {
     if (this.props.user.type === types.GARDENER) {
-      switch (this.props.order.type) {
-        case types.INITIAL_PLANTING:
-          if (!this.props.drafts.find(draft => draft.key === this.props.bedId)) {
-            return (
-              <View
-                style={{
-                  backgroundColor: colors.green0,
-                  borderRadius: 10,
-                }}>
-                <Ionicons
-                  name={'add'}
-                  color={colors.purple0}
-                  size={fonts.h3}
-                />
-              </View>
-            )
-          }
+      if (this.props.order.type === types.INITIAL_PLANTING || this.props.order.type === types.CROP_ROTATION) {
+        if (!this.props.drafts.find(draft => draft.key === this.props.bedId)) {
+          return (
+            <View
+              style={{
+                backgroundColor: colors.green0,
+                borderRadius: 10,
+              }}>
+              <Ionicons
+                name={'add'}
+                color={colors.purple0}
+                size={fonts.h3}
+              />
+            </View>
+          )
+        }
       }
-    } else {
-      return <View></View>
     }
+
+    return <></>
   }
 
   renderPopover(row, column, rowIndex, columnIndex) {
@@ -1672,7 +1573,7 @@ class GardenMap extends Component {
         if (this.props.user.type === types.GARDENER) {
 
           // if order type is for initial planting {...}
-          if (this.props.order.type === types.INITIAL_PLANTING) {
+          if (this.props.order.type === types.INITIAL_PLANTING || this.props.order.type === types.CROP_ROTATION) {
 
             // update render status
             render = true;
@@ -1703,343 +1604,332 @@ class GardenMap extends Component {
     const animatedStyle = [{ rotate: interpolated }];
 
     return (
-      <PinchGestureHandler onGestureEvent={e => this.handlePinch(e)}>
-        <PanGestureHandler
-          onGestureEvent={e => this.handlePan(e)}
-          onHandlerStateChange={this.onHandlerStateChange}>
-          <Animated.View
-            style={{
-              transform: [
-                { scale: this.state.scale },
-                { translateX: this.translateX },
-                { translateY: this.translateY },
-              ],
-              backgroundColor: colors.greenD05,
-              overflow: 'hidden',
-              shadowColor: colors.greenD10,
-              shadowRadius: units.unit2,
-              shadowOpacity: 1,
-              shadowOffset: { width: 0, height: 4 },
-              borderRadius: units.unit4,
-            }}>
-            {/* rows */}
-            {this.state.plotPoints.map((row, i) => {
-              return (
-                <View
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                  }}>
-                  {/* columns */}
-                  {row.map((column, index) => {
-                    // set border style
-                    const sqftBorder = this.getSqFtBorder(
-                      i,
-                      index,
-                      this.state.plotPoints.length,
-                      row.length,
-                    );
+      <View
+        style={{
+          backgroundColor: colors.greenD05,
+          overflow: 'hidden',
+          shadowColor: colors.greenD10,
+          shadowRadius: units.unit2,
+          shadowOpacity: 1,
+          shadowOffset: { width: 0, height: 4 },
+          borderRadius: units.unit4,
+        }}>
+        {/* rows */}
+        {this.state.plotPoints.map((row, i) => {
+          return (
+            <View
+              key={i}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}>
+              {/* columns */}
+              {row.map((column, index) => {
+                // set border style
+                const sqftBorder = this.getSqFtBorder(
+                  i,
+                  index,
+                  this.state.plotPoints.length,
+                  row.length,
+                );
 
-                    // set radius of the corners of the map
-                    let borderTopLeftRadius = 0;
-                    let borderTopRightRadius = 0;
-                    let borderBottomLeftRadius = 0;
-                    let borderBottomRightRadius = 0;
+                // set radius of the corners of the map
+                let borderTopLeftRadius = 0;
+                let borderTopRightRadius = 0;
+                let borderBottomLeftRadius = 0;
+                let borderBottomRightRadius = 0;
 
-                    if (i === 0 && index === 0) {
-                      // top left
-                      borderTopLeftRadius = units.unit4;
+                if (i === 0 && index === 0) {
+                  // top left
+                  borderTopLeftRadius = units.unit4;
+                }
+
+                // top left
+                else if (i % 2 === 0 && index % 2 === 0) {
+                  borderTopLeftRadius = units.unit3;
+                }
+
+                // top right
+                else if (i === 0 && index === row.length - 1) {
+                  borderTopRightRadius = units.unit4;
+                } else if (i % 2 === 0 && index === 1) {
+                  borderTopRightRadius = units.unit3;
+                } else if (i % 2 === 0 && index === 3) {
+                  borderTopRightRadius = units.unit3;
+                } else if (i % 2 === 0 && index === 5) {
+                  borderTopRightRadius = units.unit3;
+                } else if (i % 2 === 0 && index === 7) {
+                  borderTopRightRadius = units.unit3;
+                }
+
+                // bottom left
+                else if (
+                  i === this.state.plotPoints.length - 1 &&
+                  index === 0
+                ) {
+                  borderBottomLeftRadius = units.unit4;
+                } else if (i === 1 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 3 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 5 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 7 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 9 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 11 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 13 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                } else if (i === 15 && index % 2 === 0) {
+                  borderBottomLeftRadius = units.unit3;
+                }
+
+                // bottom right
+                else if (
+                  i === this.state.plotPoints.length - 1 &&
+                  index === row.length - 1
+                ) {
+                  borderBottomRightRadius = units.unit4;
+                } else if (i === 1 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 3 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 5 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 7 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 9 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 11 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 13 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 15 && index === 1) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (
+                  i === this.state.plotPoints.length - 1 &&
+                  index === row.length - 1
+                ) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 1 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 3 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 5 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 7 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 9 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 11 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 13 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 15 && index === 3) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (
+                  i === this.state.plotPoints.length - 1 &&
+                  index === row.length - 1
+                ) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 1 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 3 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 5 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 7 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 9 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 11 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 13 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 15 && index === 5) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (
+                  i === this.state.plotPoints.length - 1 &&
+                  index === row.length - 1
+                ) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 1 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 3 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 5 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 7 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 9 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 11 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 13 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                } else if (i === 15 && index === 7) {
+                  borderBottomRightRadius = units.unit3;
+                }
+
+                // set initial plant styles
+                let plantContainerTransform = null;
+                let plantImageStyles = null;
+                let plantTextStyles = null;
+                let plantQueuedToMove = false;
+
+                // if column has a plant {...}
+                if (column.plant) {
+                  // set the plant styles to scale based on quadrant size
+                  plantContainerTransform = this.getPlantContainerTransform(
+                    column.plant.id.quadrant_size,
+                  );
+                  plantImageStyles = this.getPlantImageStyles(
+                    column.plant.id.quadrant_size,
+                  );
+                  plantTextStyles = this.getPlantTextStyles(
+                    column.plant.id.quadrant_size,
+                  );
+
+                  // if selected plot point {...}
+                  if (
+                    this.state.selectedRowIndex === i &&
+                    this.state.selectedColumnIndex === index
+                  ) {
+                    // if column is in the move queue {...}
+                    if (column.moveQueue) {
+                      // update plant queue status
+                      plantQueuedToMove = true;
                     }
+                  }
+                }
 
-                    // top left
-                    else if (i % 2 === 0 && index % 2 === 0) {
-                      borderTopLeftRadius = units.unit3;
-                    }
+                // determine if popover should render
+                const renderPopover = this.renderPopover(row, column, i, index);
 
-                    // top right
-                    else if (i === 0 && index === row.length - 1) {
-                      borderTopRightRadius = units.unit4;
-                    } else if (i % 2 === 0 && index === 1) {
-                      borderTopRightRadius = units.unit3;
-                    } else if (i % 2 === 0 && index === 3) {
-                      borderTopRightRadius = units.unit3;
-                    } else if (i % 2 === 0 && index === 5) {
-                      borderTopRightRadius = units.unit3;
-                    } else if (i % 2 === 0 && index === 7) {
-                      borderTopRightRadius = units.unit3;
-                    }
-
-                    // bottom left
-                    else if (
-                      i === this.state.plotPoints.length - 1 &&
-                      index === 0
-                    ) {
-                      borderBottomLeftRadius = units.unit4;
-                    } else if (i === 1 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 3 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 5 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 7 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 9 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 11 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 13 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    } else if (i === 15 && index % 2 === 0) {
-                      borderBottomLeftRadius = units.unit3;
-                    }
-
-                    // bottom right
-                    else if (
-                      i === this.state.plotPoints.length - 1 &&
-                      index === row.length - 1
-                    ) {
-                      borderBottomRightRadius = units.unit4;
-                    } else if (i === 1 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 3 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 5 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 7 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 9 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 11 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 13 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 15 && index === 1) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (
-                      i === this.state.plotPoints.length - 1 &&
-                      index === row.length - 1
-                    ) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 1 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 3 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 5 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 7 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 9 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 11 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 13 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 15 && index === 3) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (
-                      i === this.state.plotPoints.length - 1 &&
-                      index === row.length - 1
-                    ) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 1 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 3 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 5 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 7 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 9 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 11 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 13 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 15 && index === 5) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (
-                      i === this.state.plotPoints.length - 1 &&
-                      index === row.length - 1
-                    ) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 1 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 3 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 5 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 7 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 9 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 11 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 13 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    } else if (i === 15 && index === 7) {
-                      borderBottomRightRadius = units.unit3;
-                    }
-
-                    // set initial plant styles
-                    let plantContainerTransform = null;
-                    let plantImageStyles = null;
-                    let plantTextStyles = null;
-                    let plantQueuedToMove = false;
-
-                    // if column has a plant {...}
-                    if (column.plant) {
-                      // set the plant styles to scale based on quadrant size
-                      plantContainerTransform = this.getPlantContainerTransform(
-                        column.plant.id.quadrant_size,
-                      );
-                      plantImageStyles = this.getPlantImageStyles(
-                        column.plant.id.quadrant_size,
-                      );
-                      plantTextStyles = this.getPlantTextStyles(
-                        column.plant.id.quadrant_size,
-                      );
-
-                      // if selected plot point {...}
-                      if (
-                        this.state.selectedRowIndex === i &&
-                        this.state.selectedColumnIndex === index
-                      ) {
-                        // if column is in the move queue {...}
-                        if (column.moveQueue) {
-                          // update plant queue status
-                          plantQueuedToMove = true;
-                        }
+                // render plot point
+                return (
+                  <View key={index}>
+                    <Popover
+                      placement={
+                        column.plant && column.plant.id.quadrant_size > 1
+                          ? 'floating'
+                          : 'auto'
                       }
-                    }
+                      isVisible={renderPopover}
+                      onRequestClose={() =>
+                        this.selectPlotPoint(column, i, index)
+                      }
+                      from={
+                        <TouchableWithoutFeedback
+                          onPress={() => {
+                            this.selectPlotPoint(column, i, index);
+                          }}>
+                          <View
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderTopLeftRadius: borderTopLeftRadius,
+                              borderTopRightRadius: borderTopRightRadius,
+                              borderBottomLeftRadius:
+                                borderBottomLeftRadius,
+                              borderBottomRightRadius:
+                                borderBottomRightRadius,
+                              width: 40,
+                              height: 40,
+                              backgroundColor: column.selected
+                                ? colors.purple4
+                                : colors.greenD10,
+                              ...sqftBorder,
+                            }}>
 
-                    // determine if popover should render
-                    const renderPopover = this.renderPopover(row, column, i, index);
+                            {/* hint */}
+                            {index === 0 && i === 0 && this.renderHint()}
 
-                    // render plot point
-                    return (
-                      <View key={index}>
-                        <Popover
-                          placement={
-                            column.plant && column.plant.id.quadrant_size > 1
-                              ? 'floating'
-                              : 'auto'
-                          }
-                          isVisible={renderPopover}
-                          onRequestClose={() =>
-                            this.selectPlotPoint(column, i, index)
-                          }
-                          from={
-                            <TouchableWithoutFeedback
-                              onPress={() => {
-                                this.selectPlotPoint(column, i, index);
-                              }}>
-                              <View
-                                style={{
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                  borderTopLeftRadius: borderTopLeftRadius,
-                                  borderTopRightRadius: borderTopRightRadius,
-                                  borderBottomLeftRadius:
-                                    borderBottomLeftRadius,
-                                  borderBottomRightRadius:
-                                    borderBottomRightRadius,
-                                  width: 40,
-                                  height: 40,
-                                  backgroundColor: column.selected
-                                    ? colors.purple4
-                                    : colors.greenD10,
-                                  ...sqftBorder,
-                                }}>
-
-                                {/* hint */}
-                                {index === 0 && i === 0 && this.renderHint()}
-
-                                {/* plant container */}
-                                {column.image && (
-                                  <>
-                                    <View
+                            {/* plant container */}
+                            {column.image && (
+                              <>
+                                <View
+                                  style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundColor: colors.white90,
+                                    shadowColor: colors.greenD10,
+                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowOpacity: 1,
+                                    shadowRadius: 2,
+                                    borderRadius:
+                                      this.determineBorderRadius(
+                                        column.plant.id.quadrant_size,
+                                      ),
+                                    transform: plantContainerTransform,
+                                  }}>
+                                  <View
+                                    style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                    }}>
+                                    <Animated.View
                                       style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        backgroundColor: colors.white90,
-                                        shadowColor: colors.greenD10,
-                                        shadowOffset: { width: 0, height: 1 },
-                                        shadowOpacity: 1,
-                                        shadowRadius: 2,
-                                        borderRadius:
-                                          this.determineBorderRadius(
-                                            column.plant.id.quadrant_size,
-                                          ),
-                                        transform: plantContainerTransform,
+                                        transform: plantQueuedToMove
+                                          ? animatedStyle
+                                          : [],
                                       }}>
-                                      <View
+
+                                      {/* plant image */}
+                                      <Image
+                                        source={{ uri: column.image }}
+                                        style={plantImageStyles}
+                                      />
+                                    </Animated.View>
+
+                                    {/* plant text */}
+                                    {column.plant.id.quadrant_size > 1 && (
+                                      <Paragraph
                                         style={{
-                                          width: '100%',
-                                          height: '100%',
-                                          display: 'flex',
-                                          justifyContent: 'center',
-                                          alignItems: 'center',
+                                          ...plantTextStyles,
+                                          textTransform: 'capitalize',
+                                          color: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? colors.greenB : colors.purpleB,
+                                          fontWeight: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'bold' : 'normal'
                                         }}>
-                                        <Animated.View
-                                          style={{
-                                            transform: plantQueuedToMove
-                                              ? animatedStyle
-                                              : [],
-                                          }}>
+                                        {moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'Ready!' : column.plant.id.common_type.name}
+                                      </Paragraph>
+                                    )}
+                                  </View>
+                                </View>
+                              </>
+                            )}
+                          </View>
+                        </TouchableWithoutFeedback>
+                      }>
 
-                                          {/* plant image */}
-                                          <Image
-                                            source={{ uri: column.image }}
-                                            style={plantImageStyles}
-                                          />
-                                        </Animated.View>
+                      {/* add button */}
+                      {this.renderAddButton(column, i, index)}
 
-                                        {/* plant text */}
-                                        {column.plant.id.quadrant_size > 1 && (
-                                          <Paragraph
-                                            style={{
-                                              ...plantTextStyles,
-                                              textTransform: 'capitalize',
-                                              color: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? colors.greenB : colors.purpleB,
-                                              fontWeight: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'bold' : 'normal'
-                                            }}>
-                                            {moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'Ready!' : column.plant.id.common_type.name}
-                                          </Paragraph>
-                                        )}
-                                      </View>
-                                    </View>
-                                  </>
-                                )}
-                              </View>
-                            </TouchableWithoutFeedback>
-                          }>
+                      {/* move button */}
+                      {this.renderMoveButton(column)}
 
-                          {/* add button */}
-                          {this.renderAddButton(column, i, index)}
+                      {/* info button */}
+                      {this.renderInfoButton(column, i, index)}
 
-                          {/* move button */}
-                          {this.renderMoveButton(column)}
-
-                          {/* info button */}
-                          {this.renderInfoButton(column, i, index)}
-
-                          {/* remove button */}
-                          {this.renderRemoveButton()}
-                        </Popover>
-                      </View>
-                    );
-                  })}
-                </View>
-              );
-            })}
-          </Animated.View>
-        </PanGestureHandler>
-      </PinchGestureHandler>
+                      {/* remove button */}
+                      {this.renderRemoveButton()}
+                    </Popover>
+                  </View>
+                );
+              })}
+            </View>
+          );
+        })}
+      </View>
     );
   }
 
@@ -2118,7 +2008,13 @@ class GardenMap extends Component {
         </View>
       )
     } else { // for all other order types {...}
-      const data = ((this.props.user.type === types.GARDENER) && (this.props.order.type === types.INITIAL_PLANTING)) ? this.props.drafts : this.props.beds;
+      const data = (
+        (this.props.user.type === types.GARDENER) &&
+        (this.props.order.type === types.INITIAL_PLANTING && this.props.beds.length < 1) ||
+        (this.props.user.type === types.GARDENER) &&
+        (this.props.order.type === types.CROP_ROTATION)
+      ) ? this.props.drafts : this.props.beds;
+
       return (
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <Paragraph style={{ ...fonts.label }}>
@@ -2157,7 +2053,7 @@ class GardenMap extends Component {
             <Input
               onChange={(value) => this.setState({ bedName: value })}
               value={bedName}
-              placeholder="Garden Name"
+              placeholder="Bed Name"
             />
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: units.unit3 }}>
               <TouchableOpacity onPress={() => this.changeBedName(this.state.bedName)}>
@@ -2333,6 +2229,7 @@ class GardenMap extends Component {
                       user.type === types.CUSTOMER
                     ) {
                       this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
+
                     }
                   });
                 }}
@@ -2361,7 +2258,7 @@ class GardenMap extends Component {
             </View>
 
             {/* saving indicator (dynamically visible) */}
-            {(user.type === types.GARDENER) && (order.type === types.INITIAL_PLANTING) && (
+            {(user.type === types.GARDENER) && ((order.type === types.INITIAL_PLANTING) || (order.type === types.CROP_ROTATION)) && (
               <View style={{ marginTop: units.unit3 }}>{this.renderSavingIndicator('Saved Draft')}</View>
             )}
           </View>

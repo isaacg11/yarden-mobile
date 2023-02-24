@@ -25,6 +25,8 @@ import { getReportType } from '../actions/reportTypes/index';
 import { createReport } from '../actions/reports/index';
 import { createAnswer } from '../actions/answers/index';
 import { createReminder, getReminders } from '../actions/reminders/index';
+import { createMessage } from '../actions/messages/index';
+import { createConversation, getConversations } from '../actions/conversations/index';
 
 // helpers
 import uploadImage from '../helpers/uploadImage';
@@ -165,6 +167,8 @@ class ImageUpload extends Component {
         switch (this.props.route.params.order.type) {
             case types.INITIAL_PLANTING:
                 return this.processInitialPlanting();
+            case types.CROP_ROTATION:
+                return this.processCropRotation();
             case types.FULL_PLAN || types.ASSISTED_PLAN:
                 return this.processMaintenance();
             default:
@@ -339,6 +343,85 @@ class ImageUpload extends Component {
         });
     }
 
+    async processCropRotation() {
+
+        // show loading indicator
+        this.setState({ isLoading: true });
+
+        let beds = this.props.beds;
+        const order = this.props.selectedOrder;
+        let updateBeds = [];
+        let createPlantActivities = [];
+
+        beds.forEach((bed) => {
+
+            // find matching draft
+            const draft = this.props.drafts.find((draft) => draft.key === bed.key);
+
+            // replace bed plot points with draft plot points
+            bed.plot_points = draft.plot_points;
+            
+            bed.plot_points.forEach((row) => {
+                row.forEach((column) => {
+                    if (column.plant) {
+
+                        // mark dt_planted for each plant was planted
+                        column.plant.dt_planted = new Date();
+
+                        // check if column has image, as to only create a single plant activity
+                        if (column.image) {
+
+                            // add new plant activity to list
+                            createPlantActivities.push(
+                                new Promise(async resolve => {
+
+                                    // create plant activity
+                                    await this.props.createPlantActivity({
+                                        type: types.PLANTED,
+                                        owner: this.props.user._id,
+                                        customer: order.customer._id,
+                                        order: order._id,
+                                        plant: column.plant.id._id,
+                                        key: column.plant.key,
+                                        bed: bed._id
+                                    });
+                                    resolve();
+                                }))
+                        }
+                    }
+                })
+            })
+
+            updateBeds.push(
+                new Promise(async resolve => {
+
+                    // update bed
+                    await this.props.updateBed(bed._id, { plot_points: bed.plot_points });
+                    resolve();
+                }),
+            );
+        })
+
+        // update beds
+        Promise.all(updateBeds).then(async () => {
+
+            // create plant activities
+            Promise.all(createPlantActivities).then(async () => {
+
+                // get pending orders
+                await this.props.getOrders(
+                    `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                );
+
+                // redirect user to success page
+                this.props.navigation.navigate('Order Complete', { orderType: types.CROP_ROTATION });
+
+                // hide loading indicator
+                this.setState({ isLoading: false });
+            });
+        });
+    }
+
     async processMaintenance() {
 
         // show loading indicator
@@ -406,6 +489,45 @@ class ImageUpload extends Component {
 
                 // create new reminder
                 await this.props.createReminder(reminder);
+            }
+
+            // find answer with note to customer
+            const questionIndex = this.props.questions.findIndex((question) => question.placement === 6);
+            const question = this.props.questions[questionIndex];
+            const answerIndex = this.props.answers.findIndex((answer) => answer.question === question._id);
+            const answer = this.props.answers[answerIndex];
+
+            // format message
+            let message = {
+                sender: this.props.user._id,
+                receiver: order.customer._id,
+                text: answer.result.note,
+                attachments: this.state.selectedImages
+            }
+
+            // look for current conversation between vendor and customer
+            const conversations = await this.props.getConversations(`users=${order.customer._id},${this.props.user._id}`, true);
+
+            // if a conversation already exists {...}
+            if (conversations.length > 0) {
+
+                // set conversation id
+                message.conversation_id = conversations[0]._id;
+
+                // create new message
+                await this.props.createMessage(message);
+            } else {
+                // format conversation
+                const conversation = { users: [order.customer._id, this.props.user._id] };
+
+                // create new conversation
+                const newConversation = await this.props.createConversation(conversation);
+
+                // set conversation id
+                message.conversation_id = newConversation._id;
+
+                // create new message
+                await this.props.createMessage(message);
             }
 
             // get updated orders
@@ -517,7 +639,9 @@ function mapStateToProps(state) {
         user: state.user,
         plans: state.plans,
         beds: state.beds,
+        drafts: state.drafts,
         answers: state.answers,
+        questions: state.questions,
         plantActivities: state.plantActivities,
         selectedOrder: state.selectedOrder
     };
@@ -539,7 +663,10 @@ function mapDispatchToProps(dispatch) {
             createAnswer,
             createReminder,
             getPlantActivities,
-            getReminders
+            getReminders,
+            createMessage,
+            getConversations,
+            createConversation
         },
         dispatch,
     );
