@@ -1,5 +1,5 @@
 // libraries
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   View,
@@ -10,8 +10,8 @@ import {
   Text,
   Animated,
 } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import Popover from 'react-native-popover-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -20,7 +20,7 @@ import PlantMenu from '../components/app/PlantMenu';
 import PlantInfo from '../components/app/PlantInfo';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
-import { alert } from '../components/UI/SystemAlert';
+import {alert} from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
@@ -33,9 +33,9 @@ import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
 // actions
-import { createDraft, updateDraft, getDrafts } from '../actions/drafts/index';
-import { updateBed, getBeds } from '../actions/beds/index';
-import { createPlantActivity } from '../actions/plantActivities/index';
+import {createDraft, updateDraft, getDrafts} from '../actions/drafts/index';
+import {updateBed, getBeds} from '../actions/beds/index';
+import {createPlantActivity} from '../actions/plantActivities/index';
 
 // types
 import types from '../vars/types';
@@ -50,7 +50,7 @@ class GardenMap extends Component {
     this.shakeAnimation = new Animated.Value(0);
     this.translateX = new Animated.Value(0);
     this.translateY = new Animated.Value(0);
-    this.lastOffset = { x: 0, y: 0 };
+    this.lastOffset = {x: 0, y: 0};
     this.onGestureEvent = Animated.event(
       [
         {
@@ -60,7 +60,7 @@ class GardenMap extends Component {
           },
         },
       ],
-      { useNativeDriver: false },
+      {useNativeDriver: false},
     );
   }
 
@@ -70,20 +70,19 @@ class GardenMap extends Component {
     animatedStyle: [],
     scale: 1,
     harvestInfo: [],
-    plantQueuedToMove: false
+    plantQueuedToMove: false,
   };
 
   translateX = Animated.Value;
   translateY = Animated.Value;
-  lastOffset = { x: 0, y: 0 };
+  lastOffset = {x: 0, y: 0};
   onGestureEvent = event => {
     return;
   };
 
   componentDidMount() {
-
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     // set initial plot points list
     let plotPoints = [];
@@ -115,65 +114,57 @@ class GardenMap extends Component {
 
     // if current user is a gardener {...}
     if (this.props.user.type === types.GARDENER) {
-
       // if order type is initial planting
-      if ((this.props.order.type === types.INITIAL_PLANTING) || (this.props.order.type === types.CROP_ROTATION)) {
-
+      if (
+        this.props.order.type === types.INITIAL_PLANTING ||
+        this.props.order.type === types.CROP_ROTATION
+      ) {
         // if drafts are found {...}
         if (this.props.drafts.length > 0) {
-
           const match = this.props.drafts.find(
-            draft => draft.key === this.props.bedId
+            draft => draft.key === this.props.bedId,
           );
 
           // if draft key matches selected bed id {...}
           if (match) {
-
             // set plot points using draft
             plotPoints = match.plot_points;
           }
         }
       } else {
-        const match = this.props.beds.find(
-          bed => bed.key === this.props.bedId
-        );
+        const match = this.props.beds.find(bed => bed.key === this.props.bedId);
 
         // if bed key matches selected bed id {...}
         if (match) {
-
           // set plot points using bed
           plotPoints = match.plot_points;
         }
       }
-    } else if (this.props.user.type === types.CUSTOMER) { // if current user is a customer {...}
+    } else if (this.props.user.type === types.CUSTOMER) {
+      // if current user is a customer {...}
 
-      const match = this.props.beds.find(
-        bed => bed.key === this.props.bedId
-      );
+      const match = this.props.beds.find(bed => bed.key === this.props.bedId);
 
       // if bed key matches selected bed id {...}
       if (match) {
-
         // set plot points using bed
         plotPoints = match.plot_points;
       }
     }
 
     // set plants
-    let vegetables = false;
-    let herbs = false;
-    let fruit = false;
-    if (this.props.user.type === types.GARDENER) {
-      if (this.props.order.type === types.INITIAL_PLANTING) {
-        vegetables = this.props.order.bid.line_items.vegetables;
-        herbs = this.props.order.bid.line_items.herbs;
-        fruit = this.props.order.bid.line_items.fruit;
-      } else {
-        vegetables = this.props.order.customer.garden_info.vegetables;
-        herbs = this.props.order.customer.garden_info.herbs;
-        fruit = this.props.order.customer.garden_info.fruit;
-      }
-    }
+    const vegetables =
+      this.props.user.type === types.GARDENER
+        ? this.props.order.customer.garden_info.vegetables
+        : false;
+    const herbs =
+      this.props.user.type === types.GARDENER
+        ? this.props.order.customer.garden_info.herbs
+        : false;
+    const fruit =
+      this.props.user.type === types.GARDENER
+        ? this.props.order.customer.garden_info.fruit
+        : false;
 
     // update UI
     this.setState({
@@ -186,19 +177,17 @@ class GardenMap extends Component {
   }
 
   async changeBedName(newName) {
-
     // validate name field
     if (!newName) {
-
       // show error
-      return alert('The garden bed name cannot be empty.', 'Invalid Name')
+      return alert('The garden bed name cannot be empty.', 'Invalid Name');
     }
 
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     // update bed
-    await this.props.updateBed(this.props.bed._id, { name: newName });
+    await this.props.updateBed(this.props.bed._id, {name: newName});
 
     // get updated beds
     await this.props.getBeds(`customer=${this.props.user._id}`);
@@ -206,67 +195,67 @@ class GardenMap extends Component {
     // hide loading indicator
     this.setState({
       isLoading: false,
-      isEditingName: false
+      isEditingName: false,
     });
 
     alert('Your changes to the garden beds have been saved.', 'Success!');
   }
 
   selectPlotPoint(plotPoint, selectedRowIndex, selectedColumnIndex) {
-
     // if a plant is queued to move {...}
     if (this.state.plantQueuedToMove) {
-
       // move plant, do no select
       return this.movePlant(plotPoint, selectedRowIndex, selectedColumnIndex);
     }
 
     // if reporting service results {...}
     if (this.props.serviceReport) {
-
       // if service report is for dead plants {...}
       if (this.props.serviceReport === types.DEAD_PLANTS) {
-
         // if no plant exists on selected plot point, do no select
         if (!plotPoint.plant) return;
-      } else if (this.props.serviceReport === types.HARVESTED_PLANTS) { // if service report is for harvested plants {...}
+      } else if (this.props.serviceReport === types.HARVESTED_PLANTS) {
+        // if service report is for harvested plants {...}
 
         // if plant exists on selected plot point {...}
         if (plotPoint.plant) {
-          const matchIndex = this.state.harvestInfo.findIndex((harvest) => harvest.key === plotPoint.plant.key && harvest.plant === plotPoint.plant.id._id);
+          const matchIndex = this.state.harvestInfo.findIndex(
+            harvest =>
+              harvest.key === plotPoint.plant.key &&
+              harvest.plant === plotPoint.plant.id._id,
+          );
 
           // if user is de-selecting
           if (matchIndex > -1) {
-
             // remove plant from harvest info
             this.removeHarvestInfo(matchIndex);
           }
         } else {
-
           // do no select
           return;
         }
-      } else if (this.props.serviceReport === types.NEW_PLANTS) { // if service report is for new plants {...}
+      } else if (this.props.serviceReport === types.NEW_PLANTS) {
+        // if service report is for new plants {...}
         // if plant exists on selected plot point, do no select
         if (plotPoint.plant) return;
       }
     } else {
       // if read only (READ ONLY MODE)
       if (
-        (this.props.user.type === types.GARDENER && (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN)) ||
+        (this.props.user.type === types.GARDENER &&
+          (this.props.order.type === types.FULL_PLAN ||
+            this.props.order.type === types.ASSISTED_PLAN)) ||
         this.props.user.type === types.CUSTOMER
       ) {
-
         // if the user selected a plot point with a plant {...}
         if (plotPoint.plant) {
-
           // determine if the plant menu should be open
           const isOpen = this.state.selectedPlotPoint?.id !== plotPoint.id;
 
           // open plant info menu
           this.setState({
             plantInfoIsOpen: isOpen,
-            selectedPlant: plotPoint.plant
+            selectedPlant: plotPoint.plant,
           });
         } else {
           return;
@@ -309,7 +298,9 @@ class GardenMap extends Component {
       selectedRowIndex,
       selectedColumnIndex,
       selectedPlotPoint: plotPoint.selected ? plotPoint : null,
-      harvestMenuIsOpen: (this.props.serviceReport === types.HARVESTED_PLANTS) && plotPoint.selected
+      harvestMenuIsOpen:
+        this.props.serviceReport === types.HARVESTED_PLANTS &&
+        plotPoint.selected,
     });
   }
 
@@ -748,7 +739,7 @@ class GardenMap extends Component {
 
   async updatePlantedList() {
     // show saving indicator
-    this.setState({ isSaving: true });
+    this.setState({isSaving: true});
 
     // check for match
     const match = this.props.drafts.find(
@@ -768,21 +759,20 @@ class GardenMap extends Component {
       // create a new draft
       await this.props.createDraft({
         key: this.props.bedId,
-        customer: this.props.order.customer._id,
         order: this.props.order._id,
         plot_points: this.state.plotPoints,
         width: this.props.bed.width,
         length: this.props.bed.length,
         height: this.props.bed.height,
-        shape: this.props.bed.shape._id
+        shape: this.props.bed.shape._id,
       });
 
-      // // get new drafts
+      // get new drafts
       await this.props.getDrafts(`order=${this.props.order._id}`);
     }
 
     // hide saving indicator
-    this.setState({ isSaving: false });
+    this.setState({isSaving: false});
   }
 
   async removePlant() {
@@ -939,13 +929,13 @@ class GardenMap extends Component {
   getPlantContainerTransform(quadrantSize) {
     switch (quadrantSize) {
       case 1:
-        return [{ scale: 0.9 }, { translateX: 0 }, { translateY: -0.5 }];
+        return [{scale: 0.9}, {translateX: 0}, {translateY: -0.5}];
       case 4:
-        return [{ scale: 1.9 }, { translateX: -10.66 }, { translateY: -10.66 }];
+        return [{scale: 1.9}, {translateX: -10.66}, {translateY: -10.66}];
       case 9:
-        return [{ scale: 2.9 }, { translateX: -13.84 }, { translateY: -13.84 }];
+        return [{scale: 2.9}, {translateX: -13.84}, {translateY: -13.84}];
       case 16:
-        return [{ scale: 3.9 }, { translateX: -15.4 }, { translateY: -15.4 }];
+        return [{scale: 3.9}, {translateX: -15.4}, {translateY: -15.4}];
       default:
         return [];
     }
@@ -957,26 +947,26 @@ class GardenMap extends Component {
         return {
           width: 20,
           height: 20,
-          transform: [{ scale: 1.2 }, { translateX: 0 }, { translateY: 0 }],
+          transform: [{scale: 1.2}, {translateX: 0}, {translateY: 0}],
         };
       case 4:
         return {
           width: 20,
           height: 20,
-          transform: [{ scale: 0.75 }, { translateX: 0 }, { translateY: 8 }],
+          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 8}],
           padding: 0,
         };
       case 9:
         return {
           width: 20,
           height: 20,
-          transform: [{ scale: 0.75 }, { translateX: 0 }, { translateY: 10 }],
+          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
         };
       case 16:
         return {
           width: 20,
           height: 20,
-          transform: [{ scale: 0.75 }, { translateX: 0 }, { translateY: 10 }],
+          transform: [{scale: 0.75}, {translateX: 0}, {translateY: 10}],
         };
       default:
         return {};
@@ -987,26 +977,26 @@ class GardenMap extends Component {
     switch (quadrantSize) {
       case 1:
         return {
-          transform: [{ scale: this.state.scale }],
+          transform: [{scale: this.state.scale}],
         };
       case 4:
         return {
           transform: [
-            { scale: this.getTextScale(this.state.scale > 1.2 ? 0.4 : 0.45) },
-            { translateY: this.getTextTranslateY(0) },
+            {scale: this.getTextScale(this.state.scale > 1.2 ? 0.4 : 0.45)},
+            {translateY: this.getTextTranslateY(0)},
           ],
           width: '200%',
           textAlign: 'center',
         };
       case 9:
         return {
-          transform: [{ scale: this.getTextScale(0.28) }],
+          transform: [{scale: this.getTextScale(0.28)}],
           width: '300%',
           textAlign: 'center',
         };
       case 16:
         return {
-          transform: [{ scale: this.getTextScale(0.22) }],
+          transform: [{scale: this.getTextScale(0.22)}],
           width: '400%',
           textAlign: 'center',
         };
@@ -1116,61 +1106,69 @@ class GardenMap extends Component {
   save() {
     switch (this.props.serviceReport) {
       case types.DEAD_PLANTS:
-
         // show loading indicator
-        this.setState({ isLoading: true });
+        this.setState({isLoading: true});
 
-        const bedWithDeadPlants = this.props.beds.find((b) => b.key === this.props.bedId);
+        const bedWithDeadPlants = this.props.beds.find(
+          b => b.key === this.props.bedId,
+        );
         let createDeathActivities = [];
-        this.state.plotPoints.forEach((row) => {
-          row.forEach((column) => {
+        this.state.plotPoints.forEach(row => {
+          row.forEach(column => {
             if (column.selected && column.image) {
-              createDeathActivities.push(new Promise(async resolve => {
-
-                // create plant activity
-                await this.props.createPlantActivity({
-                  type: types.DECEASED,
-                  owner: this.props.user._id,
-                  customer: this.props.order.customer._id,
-                  order: this.props.order._id,
-                  plant: column.plant.id._id,
-                  key: column.plant.key,
-                  bed: bedWithDeadPlants._id
-                });
-                resolve();
-              }))
+              createDeathActivities.push(
+                new Promise(async resolve => {
+                  // create plant activity
+                  await this.props.createPlantActivity({
+                    type: types.DECEASED,
+                    owner: this.props.user._id,
+                    customer: this.props.order.customer._id,
+                    order: this.props.order._id,
+                    plant: column.plant.id._id,
+                    key: column.plant.key,
+                    bed: bedWithDeadPlants._id,
+                  });
+                  resolve();
+                }),
+              );
             }
-          })
-        })
+          });
+        });
 
         // create plant activities
         Promise.all(createDeathActivities).then(async () => {
-
           // remove selected plants
           await this.removePlant();
 
           // update bed
-          await this.props.updateBed(bedWithDeadPlants._id, { plot_points: this.state.plotPoints });
+          await this.props.updateBed(bedWithDeadPlants._id, {
+            plot_points: this.state.plotPoints,
+          });
 
           // hide loading indicator
-          this.setState({ isLoading: false }, () => {
-
+          this.setState({isLoading: false}, () => {
             // show confirmation message to user
-            alert('All selected plants have been marked as dead and removed from garden bed.', 'Success!', () => this.props.onNavigateBack());
+            alert(
+              'All selected plants have been marked as dead and removed from garden bed.',
+              'Success!',
+              () => this.props.onNavigateBack(),
+            );
           });
-        })
+        });
 
         break;
       case types.HARVESTED_PLANTS:
-
         // show loading indicator
-        this.setState({ isLoading: true });
+        this.setState({isLoading: true});
 
         let plotPoints = this.state.plotPoints;
-        plotPoints.forEach((row) => {
-          row.forEach((column) => {
+        plotPoints.forEach(row => {
+          row.forEach(column => {
             if (column.selected) {
-              const data = this.state.harvestInfo.find((h) => h.plant === column.plant.id._id && h.key === column.plant.key);
+              const data = this.state.harvestInfo.find(
+                h =>
+                  h.plant === column.plant.id._id && h.key === column.plant.key,
+              );
 
               // if selected plant had a partial harvest, set selected status to false so the plant is not removed from the garden bed
               // otherwise, keep column selected so it can be removed from the garden bed
@@ -1178,39 +1176,49 @@ class GardenMap extends Component {
                 column.selected = false;
               }
             }
-          })
-        })
+          });
+        });
 
-        const bedWithHarvestedPlants = this.props.beds.find((b) => b.key === this.props.bedId);
+        const bedWithHarvestedPlants = this.props.beds.find(
+          b => b.key === this.props.bedId,
+        );
         let createHarvestActivities = [];
-        this.state.harvestInfo.forEach((harvest) => {
-          createHarvestActivities.push(new Promise(async resolve => {
-
-            // create plant activity
-            await this.props.createPlantActivity(harvest);
-            resolve();
-          }))
-        })
+        this.state.harvestInfo.forEach(harvest => {
+          createHarvestActivities.push(
+            new Promise(async resolve => {
+              // create plant activity
+              await this.props.createPlantActivity(harvest);
+              resolve();
+            }),
+          );
+        });
 
         // create plant activities
         Promise.all(createHarvestActivities).then(async () => {
-
           // hide loading indicator
-          this.setState({
-            isLoading: false,
-            plotPoints
-          }, async () => {
+          this.setState(
+            {
+              isLoading: false,
+              plotPoints,
+            },
+            async () => {
+              // remove selected plants (full harvest only)
+              await this.removePlant();
 
-            // remove selected plants (full harvest only)
-            await this.removePlant();
+              // update bed
+              await this.props.updateBed(bedWithHarvestedPlants._id, {
+                plot_points: this.state.plotPoints,
+              });
 
-            // update bed
-            await this.props.updateBed(bedWithHarvestedPlants._id, { plot_points: this.state.plotPoints });
-
-            // show confirmation message to user
-            alert('All selected plants have been marked as harvested. Plants that were marked as a full harvest have been removed from the bed.', 'Success!', () => this.props.onNavigateBack());
-          });
-        })
+              // show confirmation message to user
+              alert(
+                'All selected plants have been marked as harvested. Plants that were marked as a full harvest have been removed from the bed.',
+                'Success!',
+                () => this.props.onNavigateBack(),
+              );
+            },
+          );
+        });
 
         break;
       case types.NEW_PLANTS:
@@ -1223,7 +1231,7 @@ class GardenMap extends Component {
 
   addHarvestInfo(info) {
     let harvestInfo = this.state.harvestInfo;
-    const bed = this.props.beds.find((b) => b.key === this.props.bedId);
+    const bed = this.props.beds.find(b => b.key === this.props.bedId);
 
     // add harvest info to list
     harvestInfo.push({
@@ -1236,13 +1244,13 @@ class GardenMap extends Component {
       bed: bed._id,
       harvest: info.harvest,
       qty: info.qty,
-      head: (info.produceType === types.HEAD)
+      head: info.produceType === types.HEAD,
     });
 
     // update harvest info list
     this.setState({
-      harvestInfo
-    })
+      harvestInfo,
+    });
   }
 
   removeHarvestInfo(index) {
@@ -1253,8 +1261,8 @@ class GardenMap extends Component {
 
     // update harvest info list
     this.setState({
-      harvestInfo
-    })
+      harvestInfo,
+    });
   }
 
   async setPlant(p) {
@@ -1262,29 +1270,23 @@ class GardenMap extends Component {
     const renderInfo = await this.getRenderInfo(
       p,
       this.state.selectedRowIndex,
-      this.state.selectedColumnIndex
+      this.state.selectedColumnIndex,
     );
 
     // get available plot points
-    const availablePlotPoints =
-      await this.getAvailablePlotPoints();
+    const availablePlotPoints = await this.getAvailablePlotPoints();
 
     // set initial available plot point count
     let availablePlotPointCount = 0;
 
     // increment count based on available plot points
-    availablePlotPoints.forEach(
-      row => (availablePlotPointCount += row.length),
-    );
+    availablePlotPoints.forEach(row => (availablePlotPointCount += row.length));
 
     // set total plants
     const totalPlants = p.selectedPlants.length;
 
     // if total quadrant size area is greater than spaces available {...}
-    if (
-      renderInfo.quadrantSize * totalPlants >
-      availablePlotPointCount
-    ) {
+    if (renderInfo.quadrantSize * totalPlants > availablePlotPointCount) {
       // show error
       return alert(
         `There is not enough space available to plant (${totalPlants}) "${p.plant.id.common_type.name}"`,
@@ -1301,8 +1303,7 @@ class GardenMap extends Component {
         <TouchableOpacity
           style={{
             display:
-              this.state.selectedPlotPoint &&
-                this.state.selectedPlotPoint.plant
+              this.state.selectedPlotPoint && this.state.selectedPlotPoint.plant
                 ? 'none'
                 : 'flex',
           }}
@@ -1320,12 +1321,15 @@ class GardenMap extends Component {
               // NOTE: Must set timeout to allow the popover animiation to finish
               setTimeout(() => {
                 // if reporting results for new plants {...}
-                if (this.props.serviceReport && (this.props.serviceReport === types.NEW_PLANTS)) {
+                if (
+                  this.props.serviceReport &&
+                  this.props.serviceReport === types.NEW_PLANTS
+                ) {
                   // update UI
-                  this.setState({ newPlantMenuIsOpen: true });
+                  this.setState({newPlantMenuIsOpen: true});
                 } else {
                   // update UI
-                  this.setState({ plantMenuIsOpen: true });
+                  this.setState({plantMenuIsOpen: true});
                 }
               }, 500);
             }
@@ -1337,11 +1341,7 @@ class GardenMap extends Component {
               alignItems: 'center',
               padding: units.unit3,
             }}>
-            <Ionicons
-              name={'add'}
-              color={colors.purpleB}
-              size={fonts.h3}
-            />
+            <Ionicons name={'add'} color={colors.purpleB} size={fonts.h3} />
             <Text
               style={{
                 fontWeight: 'bold',
@@ -1352,14 +1352,14 @@ class GardenMap extends Component {
             </Text>
           </View>
         </TouchableOpacity>
-      )
+      );
     } else {
       // NOTE: This is a work-around. If an element with no dimensions is returned, a warning will occur
       return (
         <View>
-          <Text style={{ color: colors.white, height: 1 }}>|</Text>
+          <Text style={{color: colors.white, height: 1}}>|</Text>
         </View>
-      )
+      );
     }
   }
 
@@ -1369,8 +1369,7 @@ class GardenMap extends Component {
         <TouchableOpacity
           style={{
             display:
-              this.state.selectedPlotPoint &&
-                this.state.selectedPlotPoint.plant
+              this.state.selectedPlotPoint && this.state.selectedPlotPoint.plant
                 ? 'flex'
                 : 'none',
           }}
@@ -1397,14 +1396,14 @@ class GardenMap extends Component {
             </Text>
           </View>
         </TouchableOpacity>
-      )
+      );
     } else {
       // NOTE: This is a work-around. If an element with no dimensions is returned, a warning will occur
       return (
         <View>
-          <Text style={{ color: colors.white, height: 1 }}>|</Text>
+          <Text style={{color: colors.white, height: 1}}>|</Text>
         </View>
-      )
+      );
     }
   }
 
@@ -1413,14 +1412,12 @@ class GardenMap extends Component {
       <TouchableOpacity
         style={{
           display:
-            this.state.selectedPlotPoint &&
-              this.state.selectedPlotPoint.plant
+            this.state.selectedPlotPoint && this.state.selectedPlotPoint.plant
               ? 'flex'
               : 'none',
         }}
         onPress={async () => {
-          const selectedPlant =
-            this.state.selectedPlotPoint.plant;
+          const selectedPlant = this.state.selectedPlotPoint.plant;
 
           // de-select plot point
           await this.selectPlotPoint(column, i, index);
@@ -1456,7 +1453,7 @@ class GardenMap extends Component {
           </Text>
         </View>
       </TouchableOpacity>
-    )
+    );
   }
 
   renderRemoveButton() {
@@ -1465,8 +1462,7 @@ class GardenMap extends Component {
         <TouchableOpacity
           style={{
             display:
-              this.state.selectedPlotPoint &&
-                this.state.selectedPlotPoint.plant
+              this.state.selectedPlotPoint && this.state.selectedPlotPoint.plant
                 ? 'flex'
                 : 'none',
           }}
@@ -1493,14 +1489,14 @@ class GardenMap extends Component {
             </Text>
           </View>
         </TouchableOpacity>
-      )
+      );
     } else {
       // NOTE: This is a work-around. If an element with no dimensions is returned, a warning will occur
       return (
         <View>
-          <Text style={{ color: colors.white, height: 1 }}>|</Text>
+          <Text style={{color: colors.white, height: 1}}>|</Text>
         </View>
-      )
+      );
     }
   }
 
@@ -1530,7 +1526,7 @@ class GardenMap extends Component {
             </Text>
           </View>
         </TouchableOpacity>
-      )
+      );
     }
   }
 
@@ -1549,7 +1545,10 @@ class GardenMap extends Component {
 
   renderHint() {
     if (this.props.user.type === types.GARDENER) {
-      if (this.props.order.type === types.INITIAL_PLANTING || this.props.order.type === types.CROP_ROTATION) {
+      if (
+        this.props.order.type === types.INITIAL_PLANTING ||
+        this.props.order.type === types.CROP_ROTATION
+      ) {
         if (!this.props.drafts.find(draft => draft.key === this.props.bedId)) {
           return (
             <View
@@ -1557,43 +1556,43 @@ class GardenMap extends Component {
                 backgroundColor: colors.green0,
                 borderRadius: 10,
               }}>
-              <Ionicons
-                name={'add'}
-                color={colors.purple0}
-                size={fonts.h3}
-              />
+              <Ionicons name={'add'} color={colors.purple0} size={fonts.h3} />
             </View>
-          )
+          );
         }
       }
     }
 
-    return <></>
+    return <></>;
   }
 
   renderPopover(row, column, rowIndex, columnIndex) {
-
     let render = false;
 
     // if column is selected {...}
     if (column.selected) {
-
       // if column id matches the column being rendered {...}
       if (column.id === rowIndex * row.length + (columnIndex + 1)) {
-
         // if gardener {...}
         if (this.props.user.type === types.GARDENER) {
-
           // if order type is for initial planting {...}
-          if (this.props.order.type === types.INITIAL_PLANTING || this.props.order.type === types.CROP_ROTATION) {
-
+          if (
+            this.props.order.type === types.INITIAL_PLANTING ||
+            this.props.order.type === types.CROP_ROTATION
+          ) {
             // update render status
             render = true;
-          } else if (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN) { // if order type is for maintenance {...}
+          } else if (
+            this.props.order.type === types.FULL_PLAN ||
+            this.props.order.type === types.ASSISTED_PLAN
+          ) {
+            // if order type is for maintenance {...}
 
             // if service report is for new plants {...}
-            if (this.props.serviceReport && (this.props.serviceReport === types.NEW_PLANTS)) {
-
+            if (
+              this.props.serviceReport &&
+              this.props.serviceReport === types.NEW_PLANTS
+            ) {
               // update render status
               render = true;
             }
@@ -1613,7 +1612,7 @@ class GardenMap extends Component {
     });
 
     // set animated style
-    const animatedStyle = [{ rotate: interpolated }];
+    const animatedStyle = [{rotate: interpolated}];
 
     return (
       <View
@@ -1623,7 +1622,7 @@ class GardenMap extends Component {
           shadowColor: colors.greenD10,
           shadowRadius: units.unit2,
           shadowOpacity: 1,
-          shadowOffset: { width: 0, height: 4 },
+          shadowOffset: {width: 0, height: 4},
           borderRadius: units.unit4,
         }}>
         {/* rows */}
@@ -1845,10 +1844,8 @@ class GardenMap extends Component {
                               alignItems: 'center',
                               borderTopLeftRadius: borderTopLeftRadius,
                               borderTopRightRadius: borderTopRightRadius,
-                              borderBottomLeftRadius:
-                                borderBottomLeftRadius,
-                              borderBottomRightRadius:
-                                borderBottomRightRadius,
+                              borderBottomLeftRadius: borderBottomLeftRadius,
+                              borderBottomRightRadius: borderBottomRightRadius,
                               width: 40,
                               height: 40,
                               backgroundColor: column.selected
@@ -1856,7 +1853,6 @@ class GardenMap extends Component {
                                 : colors.greenD10,
                               ...sqftBorder,
                             }}>
-
                             {/* hint */}
                             {index === 0 && i === 0 && this.renderHint()}
 
@@ -1872,13 +1868,12 @@ class GardenMap extends Component {
                                     height: '100%',
                                     backgroundColor: colors.white90,
                                     shadowColor: colors.greenD10,
-                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowOffset: {width: 0, height: 1},
                                     shadowOpacity: 1,
                                     shadowRadius: 2,
-                                    borderRadius:
-                                      this.determineBorderRadius(
-                                        column.plant.id.quadrant_size,
-                                      ),
+                                    borderRadius: this.determineBorderRadius(
+                                      column.plant.id.quadrant_size,
+                                    ),
                                     transform: plantContainerTransform,
                                   }}>
                                   <View
@@ -1895,10 +1890,9 @@ class GardenMap extends Component {
                                           ? animatedStyle
                                           : [],
                                       }}>
-
                                       {/* plant image */}
                                       <Image
-                                        source={{ uri: column.image }}
+                                        source={{uri: column.image}}
                                         style={plantImageStyles}
                                       />
                                     </Animated.View>
@@ -1909,10 +1903,33 @@ class GardenMap extends Component {
                                         style={{
                                           ...plantTextStyles,
                                           textTransform: 'capitalize',
-                                          color: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? colors.greenB : colors.purpleB,
-                                          fontWeight: moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'bold' : 'normal'
+                                          color:
+                                            moment().diff(
+                                              column.plant.dt_planted,
+                                              'days',
+                                            ) -
+                                              column.plant.id.days_to_mature >=
+                                            0
+                                              ? colors.greenB
+                                              : colors.purpleB,
+                                          fontWeight:
+                                            moment().diff(
+                                              column.plant.dt_planted,
+                                              'days',
+                                            ) -
+                                              column.plant.id.days_to_mature >=
+                                            0
+                                              ? 'bold'
+                                              : 'normal',
                                         }}>
-                                        {moment().diff(column.plant.dt_planted, 'days') - column.plant.id.days_to_mature >= 0 ? 'Ready!' : column.plant.id.common_type.name}
+                                        {moment().diff(
+                                          column.plant.dt_planted,
+                                          'days',
+                                        ) -
+                                          column.plant.id.days_to_mature >=
+                                        0
+                                          ? 'Ready!'
+                                          : column.plant.id.common_type.name}
                                       </Paragraph>
                                     )}
                                   </View>
@@ -1922,7 +1939,6 @@ class GardenMap extends Component {
                           </View>
                         </TouchableWithoutFeedback>
                       }>
-
                       {/* add button */}
                       {this.renderAddButton(column, i, index)}
 
@@ -1967,7 +1983,7 @@ class GardenMap extends Component {
           <Text
             style={{
               textAlign: 'center',
-              color: colors.greenE50
+              color: colors.greenE50,
             }}>
             Saving...
           </Text>
@@ -1979,9 +1995,9 @@ class GardenMap extends Component {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
             }}>
-            <Text style={{ textAlign: 'center', textTransform: 'capitalize' }}>
+            <Text style={{textAlign: 'center', textTransform: 'capitalize'}}>
               {message}
             </Text>
             <Ionicons
@@ -1992,7 +2008,7 @@ class GardenMap extends Component {
           </View>
         );
       default:
-        return (<View></View>);
+        return <View></View>;
     }
   }
 
@@ -2000,84 +2016,100 @@ class GardenMap extends Component {
     // if maintenance order {...}
     if (
       this.props.user.type === types.GARDENER &&
-      (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN)) {
+      (this.props.order.type === types.FULL_PLAN ||
+        this.props.order.type === types.ASSISTED_PLAN)
+    ) {
       return (
         <View>
-          <Header style={{ marginBottom: units.unit3, textTransform: 'none' }}>{this.renderHelperText(serviceReport)}</Header>
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: units.unit3 }}>
-            <Paragraph style={{ ...fonts.label }}>
+          <Header style={{marginBottom: units.unit3, textTransform: 'none'}}>
+            {this.renderHelperText(serviceReport)}
+          </Header>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: units.unit3,
+            }}>
+            <Paragraph style={{...fonts.label}}>
               Garden Bed #{this.props.bedId}
             </Paragraph>
-            {this.props.serviceReport === types.NEW_PLANTS && this.renderSavingIndicator('Saved Changes')}
-            {(this.props.serviceReport === types.DEAD_PLANTS || this.props.serviceReport === types.HARVESTED_PLANTS) && (
-              <Button
-                small
-                text="Save"
-                onPress={() => this.save()}
-              />
+            {this.props.serviceReport === types.NEW_PLANTS &&
+              this.renderSavingIndicator('Saved Changes')}
+            {(this.props.serviceReport === types.DEAD_PLANTS ||
+              this.props.serviceReport === types.HARVESTED_PLANTS) && (
+              <Button small text="Save" onPress={() => this.save()} />
             )}
           </View>
         </View>
-      )
-    } else { // for all other order types {...}
-      let data = this.props.beds;
-      if (this.props.user.type === types.GARDENER) {
-        if (this.props.order.type === types.INITIAL_PLANTING) {
-          data = this.props.drafts;
-        } else if (this.props.order.type === types.CROP_ROTATION) {
-          data = this.props.drafts;
-        }
-      }
+      );
+    } else {
+      // for all other order types {...}
+      const data =
+        (this.props.user.type === types.GARDENER &&
+          this.props.order.type === types.INITIAL_PLANTING &&
+          this.props.beds.length < 1) ||
+        (this.props.user.type === types.GARDENER &&
+          this.props.order.type === types.CROP_ROTATION)
+          ? this.props.drafts
+          : this.props.beds;
 
       return (
-        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Paragraph style={{ ...fonts.label }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Paragraph style={{...fonts.label}}>
             Garden Bed #{this.props.bedId}
           </Paragraph>
-          {(this.props.user.type === types.GARDENER) && (
-            <Paragraph style={{ ...fonts.label }}>
+          {this.props.user.type === types.GARDENER && (
+            <Paragraph style={{...fonts.label}}>
               {calculatePlantingProgress(
-                data.find(
-                  d => d.key === this.props.bedId,
-                ),
+                data.find(d => d.key === this.props.bedId),
               )}
             </Paragraph>
           )}
         </View>
-      )
+      );
     }
   }
 
   renderHeader() {
-    const {
-      isEditingName,
-      bedName
-    } = this.state;
-    const { user } = this.props;
+    const {isEditingName, bedName} = this.state;
+    const {user} = this.props;
 
     // if customer {...}
     if (user.type === types.CUSTOMER) {
-
       // if editing name {...}
       if (isEditingName) {
-
         // render edit inputs
         return (
           <View>
             <Input
-              onChange={(value) => this.setState({ bedName: value })}
+              onChange={value => this.setState({bedName: value})}
               value={bedName}
               placeholder="Bed Name"
             />
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: units.unit3 }}>
-              <TouchableOpacity onPress={() => this.changeBedName(this.state.bedName)}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                marginBottom: units.unit3,
+              }}>
+              <TouchableOpacity
+                onPress={() => this.changeBedName(this.state.bedName)}>
                 <Ionicons
                   name={'checkmark'}
                   color={colors.purple0}
                   size={fonts.h2}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.setState({ isEditingName: false })}>
+              <TouchableOpacity
+                onPress={() => this.setState({isEditingName: false})}>
                 <Ionicons
                   name={'close'}
                   color={colors.purple0}
@@ -2086,13 +2118,22 @@ class GardenMap extends Component {
               </TouchableOpacity>
             </View>
           </View>
-        )
+        );
       } else {
         // render header
         return (
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Header>{this.props.beds.find((bed) => bed._id === this.props.bed._id).name}</Header>
-            <TouchableOpacity onPress={() => this.setState({ isEditingName: true })}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Header>
+              {this.props.beds.find(bed => bed._id === this.props.bed._id).name}
+            </Header>
+            <TouchableOpacity
+              onPress={() => this.setState({isEditingName: true})}>
               <Ionicons
                 name={'pencil'}
                 color={colors.purple0}
@@ -2100,36 +2141,40 @@ class GardenMap extends Component {
               />
             </TouchableOpacity>
           </View>
-        )
+        );
       }
-    } else if (user.type === types.GARDENER) { // if gardener {...}
+    } else if (user.type === types.GARDENER) {
+      // if gardener {...}
 
       // if not beds or drafts found {...}
-      if (!this.props.drafts.find(draft => draft.key === this.props.bedId) && !this.props.beds.find(bed => bed.key === this.props.bedId)) {
-
+      if (
+        !this.props.drafts.find(draft => draft.key === this.props.bedId) &&
+        !this.props.beds.find(bed => bed.key === this.props.bedId)
+      ) {
         // render getting started helper text
         return (
           <Text
             style={{
               paddingVertical: units.unit4,
               textAlign: 'center',
-              display: !this.props.drafts.find(
-                draft => draft.key === this.props.bedId,
-              ) && !this.props.beds.find(
-                bed => bed.key === this.props.bedId,
-              )
-                ? 'flex'
-                : 'none'
+              display:
+                !this.props.drafts.find(
+                  draft => draft.key === this.props.bedId,
+                ) && !this.props.beds.find(bed => bed.key === this.props.bedId)
+                  ? 'flex'
+                  : 'none',
             }}>
             Tap on any square to get started
           </Text>
-        )
+        );
       }
     } else {
       // render header
       return (
-        <Header>{this.props.beds.find((bed) => bed._id === this.props.bed._id).name}</Header>
-      )
+        <Header>
+          {this.props.beds.find(bed => bed._id === this.props.bed._id).name}
+        </Header>
+      );
     }
   }
 
@@ -2146,7 +2191,7 @@ class GardenMap extends Component {
       herbs,
       fruit,
       harvestMenuIsOpen,
-      newPlantMenuIsOpen
+      newPlantMenuIsOpen,
     } = this.state;
 
     const {
@@ -2156,7 +2201,7 @@ class GardenMap extends Component {
       beds,
       serviceReport,
       navigateToNotes,
-      navigateToHarvestInstructions
+      navigateToHarvestInstructions,
     } = this.props;
 
     return (
@@ -2165,7 +2210,9 @@ class GardenMap extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView horizontal={true}>
+        <View
+        // contentContainerStyle={{ display: 'flex', alignItems: 'center' }}
+        >
           <View>
             {/* loading indicator (dynamically visible) */}
             <LoadingIndicator loading={isLoading} />
@@ -2177,56 +2224,63 @@ class GardenMap extends Component {
                 vegetables={vegetables}
                 herbs={herbs}
                 fruit={fruit}
-                close={() => this.setState({ plantMenuIsOpen: false })}
-                addPlant={(p) => this.setPlant(p)}
+                close={() => this.setState({plantMenuIsOpen: false})}
+                addPlant={p => this.setPlant(p)}
               />
             )}
 
             {/* new plant menu (modal) */}
             <NewPlantMenu
               isOpen={newPlantMenuIsOpen}
-              close={() => this.setState({ newPlantMenuIsOpen: false })}
-              addPlant={async (p) => {
-
+              close={() => this.setState({newPlantMenuIsOpen: false})}
+              addPlant={async p => {
                 // show saving indicator
-                this.setState({ isSaving: true });
+                this.setState({isSaving: true});
 
                 // set plant in bed
                 await this.setPlant({
                   plant: {
-                    id: p
+                    id: p,
                   },
-                  selectedPlants: [{
-                    id: p
-                  }]
-                })
+                  selectedPlants: [
+                    {
+                      id: p,
+                    },
+                  ],
+                });
 
-                const bed = beds.find((b) => b.key === bedId);
+                const bed = beds.find(b => b.key === bedId);
 
                 // update bed
-                await this.props.updateBed(bed._id, { plot_points: this.state.plotPoints });
+                await this.props.updateBed(bed._id, {
+                  plot_points: this.state.plotPoints,
+                });
 
                 // get updated beds
                 await this.props.getBeds(`customer=${order.customer._id}`);
 
                 // hide saving indicator
-                this.setState({ isSaving: false });
+                this.setState({isSaving: false});
               }}
             />
 
             {/* harvest menu (bottom drawer) */}
-            {(selectedPlotPoint && (serviceReport === types.HARVESTED_PLANTS)) && (
+            {selectedPlotPoint && serviceReport === types.HARVESTED_PLANTS && (
               <HarvestMenu
                 isOpen={harvestMenuIsOpen}
-                close={(exitWithoutConfirming) => {
-                  this.setState({ harvestMenuIsOpen: false });
+                close={exitWithoutConfirming => {
+                  this.setState({harvestMenuIsOpen: false});
                   if (exitWithoutConfirming) {
-                    this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
+                    this.selectPlotPoint(
+                      selectedPlotPoint,
+                      selectedRowIndex,
+                      selectedColumnIndex,
+                    );
                   }
                 }}
                 selectedPlotPoint={selectedPlotPoint}
                 bedId={bedId}
-                onConfirm={(harvestInfo) => {
+                onConfirm={harvestInfo => {
                   this.addHarvestInfo(harvestInfo);
                 }}
               />
@@ -2237,13 +2291,18 @@ class GardenMap extends Component {
               <PlantInfo
                 isOpen={plantInfoIsOpen}
                 close={() => {
-                  this.setState({ plantInfoIsOpen: false }, () => {
+                  this.setState({plantInfoIsOpen: false}, () => {
                     if (
-                      ((user.type === types.GARDENER) && (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN)) ||
+                      (user.type === types.GARDENER &&
+                        (order.type === types.FULL_PLAN ||
+                          order.type === types.ASSISTED_PLAN)) ||
                       user.type === types.CUSTOMER
                     ) {
-                      this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
-
+                      this.selectPlotPoint(
+                        selectedPlotPoint,
+                        selectedRowIndex,
+                        selectedColumnIndex,
+                      );
                     }
                   });
                 }}
@@ -2256,7 +2315,6 @@ class GardenMap extends Component {
 
             <View
               style={{
-                paddingHorizontal: units.unit4,
                 marginBottom: units.unit2,
               }}>
               {/* id / stats */}
@@ -2267,16 +2325,37 @@ class GardenMap extends Component {
             </View>
 
             {/* garden map */}
-            <View style={{ display: 'flex', alignSelf: 'center' }}>
-              {this.renderPlotPoints()}
-            </View>
+            <ScrollView
+              horizontal={true}
+              contentContainerStyle={{
+                display: 'flex',
+                alignItems: 'center',
+                height: '100%',
+              }}>
+              <View
+                style={{
+                  transform: [
+                    {scale: 4 / 5},
+                    {translateY: -40 * 5},
+                    {translateX: -36},
+                  ],
+                  marginBottom: -300,
+                  // if 3x6 transform: [{scale: 17 / 13}, {translateY: 55}]
+                }}>
+                {this.renderPlotPoints()}
+              </View>
+            </ScrollView>
 
             {/* saving indicator (dynamically visible) */}
-            {(user.type === types.GARDENER) && ((order.type === types.INITIAL_PLANTING) || (order.type === types.CROP_ROTATION)) && (
-              <View style={{ marginTop: units.unit3 }}>{this.renderSavingIndicator('Saved Draft')}</View>
-            )}
+            {user.type === types.GARDENER &&
+              (order.type === types.INITIAL_PLANTING ||
+                order.type === types.CROP_ROTATION) && (
+                <View style={{marginTop: units.unit3}}>
+                  {this.renderSavingIndicator('Saved Draft')}
+                </View>
+              )}
           </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     );
   }
@@ -2286,7 +2365,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     drafts: state.drafts,
-    beds: state.beds
+    beds: state.beds,
   };
 }
 
@@ -2298,7 +2377,7 @@ function mapDispatchToProps(dispatch) {
       getDrafts,
       updateBed,
       getBeds,
-      createPlantActivity
+      createPlantActivity,
     },
     dispatch,
   );
