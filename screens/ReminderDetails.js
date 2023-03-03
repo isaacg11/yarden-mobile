@@ -97,7 +97,7 @@ class ReminderDetails extends Component {
 
                             {/* buttons */}
                             {(reminder.status === 'pending') && (
-                                <View>
+                                <View style={{marginTop: units.unit4}}>
                                     <Button
                                         text="Mark Complete"
                                         icon={

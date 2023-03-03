@@ -167,7 +167,7 @@ class PlantList extends Component {
       ).toFixed(2),
     );
 
-    if (progress > 100)
+    if ((action === 'add') && (progress > 100))
       return alert(
         'You do not have enough space in your garden beds to fit this additional plant. Please try a smaller plant or removing others to make space for the desired one.',
       );

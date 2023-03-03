@@ -25,7 +25,8 @@ import fonts from '../components/styles/fonts';
 import { alert } from '../components/UI/SystemAlert';
 
 // actions
-import { createBed, updateBed } from '../actions/beds/index';
+import { createBed, updateBed, getBeds } from '../actions/beds/index';
+import { updateDraft, getDrafts } from '../actions/drafts/index';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
@@ -45,8 +46,14 @@ class Beds extends Component {
     // show loading indicator
     this.setState({ isLoading: true });
 
+    console.log("this.props.beds")
+    console.log(this.props.beds)
+
     // if no beds {...}
     if (this.props.beds.length < 1) {
+
+      console.log("no beds found")
+
       let createBeds = [];
       const drafts = this.props.drafts;
 
@@ -55,6 +62,7 @@ class Beds extends Component {
         const newBed = {
           name: `Garden Bed ${draft.key}`,
           customer: this.props.route.params.order.customer._id,
+          draft: draft._id,
           key: draft.key,
           plot_points: draft.plot_points,
           width: draft.width,
@@ -65,15 +73,39 @@ class Beds extends Component {
 
         createBeds.push(
           new Promise(async resolve => {
+
+            console.log("creating bed 1")
+
+
             // create bed
             await this.props.createBed(newBed);
+
+            console.log("updating draft as published 1")
+
+
+            // update draft status as published
+            await this.props.updateDraft(draft._id, { published: true });
+
             resolve();
           }),
         );
       });
 
       // create beds
-      Promise.all(createBeds).then(() => {
+      Promise.all(createBeds).then(async () => {
+
+        console.log("getting drafts 1")
+
+
+        // get drafts
+        await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
+
+        console.log("getting beds 1")
+
+
+        // get beds
+        await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
+
         // redirect user to "planted" screen
         this.props.navigation.navigate('Planted');
 
@@ -83,25 +115,69 @@ class Beds extends Component {
     } else {
       let updateBeds = [];
       const drafts = this.props.drafts;
+      const highestBedKey = this.findHighestKey(this.props.beds);
+      let newBedIndex = 0;
 
       // iterate through drafts
       drafts.forEach(draft => {
-        const bed = this.props.beds.find(bed => bed.key === draft.key);
-        const updatedBed = {
-          plot_points: draft.plot_points,
-        };
-
+        newBedIndex += 1;
         updateBeds.push(
           new Promise(async resolve => {
-            // create bed
-            await this.props.updateBed(bed._id, updatedBed);
-            resolve();
-          }),
+
+            // if draft not published yet {...}
+            if (!draft.publish) {
+
+              console.log("draft not published yet")
+
+              const newBed = {
+                name: `Garden Bed ${highestBedKey + newBedIndex}`,
+                customer: this.props.route.params.order.customer._id,
+                draft: draft._id,
+                key: highestBedKey + newBedIndex,
+                plot_points: draft.plot_points,
+                width: draft.width,
+                length: draft.length,
+                height: draft.height,
+                shape: draft.shape,
+              };
+
+              console.log("creating bed 2")
+
+
+              // create bed
+              await this.props.createBed(newBed);
+
+              console.log("updating draft as published 2")
+
+
+              // update draft status as published
+              await this.props.updateDraft(draft._id, { published: true });
+              resolve();
+            } else {
+
+              console.log("updating bed")
+
+              // create bed
+              await this.props.updateBed(bed._id, { plot_points: draft.plot_points });
+              resolve();
+            }
+          })
         );
       });
 
       // update beds
-      Promise.all(updateBeds).then(() => {
+      Promise.all(updateBeds).then(async () => {
+
+        console.log("getting drafts 2")
+
+        // get drafts
+        await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
+
+        console.log("getting beds 2")
+
+        // get beds
+        await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
+
         // hide loading indicator
         this.setState({ isLoading: false });
 
@@ -109,6 +185,19 @@ class Beds extends Component {
         alert('Your changes to the garden beds have been saved.', 'Success!');
       });
     }
+  }
+
+  findHighestKey(objects) {
+    let maxObject = objects[0];
+
+    for (let i = 1; i < objects.length; i++) {
+      const currentObject = objects[i];
+      if (currentObject.key > maxObject.key) {
+        maxObject = currentObject;
+      }
+    }
+
+    return maxObject.key;
   }
 
   next() {
@@ -127,9 +216,7 @@ class Beds extends Component {
   renderHelperText() {
     switch (this.props.route.params.order.type) {
       case types.INITIAL_PLANTING:
-        if (this.props.drafts.length < 1) {
-          return 'Tap on any garden bed to get started. Each bed is marked with a number that corresponds to the real-life garden bed.';
-        }
+        return 'Build and publish the garden map before starting the initial planting so you can use it as a guide while working. After you have published the garden, it becomes visible to the customer on their app.';
       case types.CROP_ROTATION:
         return 'Build the garden map before starting the crop rotation so you can use it as a guide while working. After you have planted the physical garden, tap the Next button below to complete the order.';
       case types.FULL_PLAN || types.ASSISTED_PLAN:
@@ -162,7 +249,7 @@ class Beds extends Component {
                 />
               }
               disabled={progress < 100 ? true : false}
-              text={(this.props.beds.length < 1) ? "Publish Garden" : "Re-publish Garden"}
+              text={(this.props.drafts.find((draft) => !draft.published)) ? "Publish Garden" : "Re-publish Garden"}
               variant="button"
               onPress={() => this.save()}
             />
@@ -239,9 +326,10 @@ class Beds extends Component {
     );
   }
 
-  renderBeds(bed) {
+  renderUnsavedBed(bed) {
     const order = this.props.route.params.order;
     const serviceReport = this.props.route.params.serviceReport;
+
     let rows = [];
     let columns = [];
 
@@ -253,7 +341,7 @@ class Beds extends Component {
     while (columns.length > 0) rows.push(columns.splice(0, size));
 
     const progressDenominator = (
-      (order.type === types.INITIAL_PLANTING && this.props.beds.length < 1) ||
+      order.type === types.INITIAL_PLANTING ||
       order.type === types.CROP_ROTATION
     ) ? 'drafts' : 'beds';
 
@@ -341,26 +429,66 @@ class Beds extends Component {
     });
   }
 
+  renderSavedBed() {
+
+  }
+
+  renderGardenBedList() {
+
+    // if no drafts are found {...}
+    if (this.props.drafts.length < 1) {
+
+      const order = this.props.route.params.order;
+      const gardenInfo = (order.type === types.INITIAL_PLANTING) ? order.bid.line_items : garden_info;
+
+      // render unsaved bed
+      return gardenInfo.beds.map((bed, index) => (
+        <View key={index} style={{ marginTop: units.unit4 }}>
+          {this.renderUnsavedBed(bed)}
+        </View>
+      ))
+    } else {
+      const order = this.props.route.params.order;
+
+      console.log("this.props.drafts")
+      console.log(this.props.drafts)
+      console.log("this.props.beds")
+      console.log(this.props.beds)
+      console.log("order.customer")
+      console.log(order.customer)
+
+      // render saved bed
+      // return gardenInfo.beds.map((bed, index) => (
+      //   <View key={index} style={{ marginTop: units.unit4 }}>
+      //     {this.renderSavedBed(bed)}
+      //   </View>
+      // ))
+
+      // this.renderSavedBed();
+    }
+  }
+
   render() {
     const { isLoading } = this.state;
     const { drafts } = this.props;
     const { garden_info } = this.props.route.params.order.customer;
-
-    let totalPlants = 0;
+    const order = this.props.route.params.order;
+    const gardenInfo = (order.type === types.INITIAL_PLANTING) ? order.bid.line_items : garden_info;
 
     // calculate total plants
-    garden_info.vegetables.forEach(vegetable => (totalPlants += vegetable.qty));
-    garden_info.herbs.forEach(herb => (totalPlants += herb.qty));
-    garden_info.fruit.forEach(fr => (totalPlants += fr.qty));
+    let totalPlants = 0;
+    gardenInfo.vegetables.forEach(vegetable => (totalPlants += vegetable.qty));
+    gardenInfo.herbs.forEach(herb => (totalPlants += herb.qty));
+    gardenInfo.fruit.forEach(fr => (totalPlants += fr.qty));
 
     let completePlants = 0;
     let pendingPlants = 0;
     let progress = 0;
 
     const rows = formatMenuData(
-      garden_info.vegetables,
-      garden_info.herbs,
-      garden_info.fruit,
+      gardenInfo.vegetables,
+      gardenInfo.herbs,
+      gardenInfo.fruit,
     );
 
     const planted = getPlantedList(drafts);
@@ -389,7 +517,6 @@ class Beds extends Component {
         : (completePlants / (pendingPlants + completePlants)) * 100;
 
     const label = `${completePlants} / ${pendingPlants + completePlants}`;
-    const order = this.props.route.params.order;
 
     return (
       <SafeAreaView
@@ -440,11 +567,7 @@ class Beds extends Component {
               {(order.type === types.INITIAL_PLANTING || order.type === types.CROP_ROTATION) && this.renderProgress(progress, label)}
 
               {/* garden beds list */}
-              {garden_info.beds.map((bed, index) => (
-                <View key={index} style={{ marginTop: units.unit4 }}>
-                  {this.renderBeds(bed)}
-                </View>
-              ))}
+              {this.renderGardenBedList()}
 
               {/* save button */}
               {this.renderButton(progress)}
@@ -469,6 +592,9 @@ function mapDispatchToProps(dispatch) {
     {
       createBed,
       updateBed,
+      updateDraft,
+      getDrafts,
+      getBeds
     },
     dispatch,
   );

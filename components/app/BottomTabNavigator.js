@@ -273,7 +273,9 @@ class BottomTabNavigator extends Component {
               })}
             />
 
-            <Tab.Screen
+            {/* NOTE: temporarily removing shop until e-commerce is possible
+            Author: Isaac G. 2/28/23 */}
+            {/* <Tab.Screen
               name="Shop"
               component={Shop}
               listeners={({ navigation }) => ({
@@ -288,7 +290,7 @@ class BottomTabNavigator extends Component {
                   navigation.jumpTo('Shop');
                 },
               })}
-            />
+            /> */}
           </Tab.Navigator>
         );
       }

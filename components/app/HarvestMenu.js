@@ -1,6 +1,6 @@
 // libaries
 import React, { Component } from 'react';
-import { Modal, TouchableOpacity, View } from 'react-native';
+import { Modal, TouchableOpacity, View, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -160,7 +160,7 @@ class HarvestMenu extends Component {
             >
                 <View
                     style={{
-                        height: '70%',
+                        height: '85%',
                         marginTop: 'auto',
                         backgroundColor: colors.white,
                         borderTopColor: colors.purpleB,
@@ -178,6 +178,18 @@ class HarvestMenu extends Component {
                                 size={units.unit6}
                             />
                         </TouchableOpacity>
+
+                        {/* plant image */}
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit5}}>
+                            <Image
+                                source={{ uri: selectedPlotPoint.plant.id.image }}
+                                style={{
+                                    width: units.unit6 + units.unit5,
+                                    height: units.unit6 + units.unit5,
+                                    borderRadius: units.unit6,
+                                }}
+                            />
+                        </View>
 
                         {/* plant name */}
                         <View>

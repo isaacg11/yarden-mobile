@@ -15,7 +15,6 @@ import Card from '../components/UI/Card';
 import CircularButton from '../components/UI/CircularButton';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
-import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Divider from '../components/UI/Divider';
 
 // actions
@@ -31,23 +30,17 @@ import colors from '../components/styles/colors';
 
 class Notes extends Component {
 
+    state = {
+        isLoading: false,
+        newNote: ''
+    }
+
     async componentDidMount() {
-
-        // show loading indicator
-        this.setState({ isLoading: true });
-
         const selectedPlant = this.props.route.params.selectedPlant;
         const bed = this.props.beds.find((b) => b.key === this.props.route.params.bedId);
 
         // get notes
         await this.props.getNotes(`plant=${selectedPlant.id._id}&bed=${bed._id}&key=${selectedPlant.key}&dt_planted=${selectedPlant.dt_planted}`);
-
-        // hide loading indicator
-        this.setState({ isLoading: false });
-    }
-
-    state = {
-        newNote: ''
     }
 
     async saveNote() {
@@ -84,15 +77,11 @@ class Notes extends Component {
     render() {
         const { selectedPlant } = this.props.route.params;
         const { notes } = this.props;
-        const { isCreatingNote, newNote, isLoading } = this.state;
+        const { isCreatingNote, newNote } = this.state;
         const daysToMature = calculateDaysToMature(selectedPlant);
 
         return (
             <SafeAreaView>
-
-                {/* loading indicator (dynamically visible) */}
-                <LoadingIndicator loading={isLoading} />
-
                 <Card style={{
                     display: 'flex',
                     paddingTop: units.unit6
@@ -145,7 +134,7 @@ class Notes extends Component {
 
                 {/* note container */}
                 <KeyboardAwareScrollView style={{ backgroundColor: colors.greenE10, height: '100%', paddingHorizontal: units.unit4, paddingVertical: units.unit4 }}>
-                    <Text style={{color: colors.greenD50}}>Help yourself keep track of this plant by creating a note. Notes are not visible to the customer.</Text>
+                    <Text style={{ color: colors.greenD50 }}>Help yourself keep track of this plant by creating a note. Notes are not visible to the customer.</Text>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Header style={{ color: colors.purpleB }}>Notes</Header>
                         <View style={{ opacity: (isCreatingNote) ? 0 : null }}>

@@ -37,7 +37,7 @@ class HarvestReport extends Component {
   };
 
   componentDidMount() {
-    this.setTimeRange(12);
+    this.setTimeRange(14);
   }
 
   async setHarvestData() {
@@ -137,10 +137,18 @@ class HarvestReport extends Component {
   }
 
   renderHarvestReport() {
-    const {rangeFilter, weeklyYieldIsActive, harvestData, total, isLoading} =
-      this.state;
+    const {
+      rangeFilter, 
+      weeklyYieldIsActive, 
+      harvestData, 
+      total, 
+      isLoading
+    } = this.state;
 
-    const {onCheckStatus, plantActivities} = this.props;
+    const {
+      onCheckStatus, 
+      plantActivities
+    } = this.props;
 
     // render harvest report
     return (
@@ -246,7 +254,7 @@ class HarvestReport extends Component {
           <TouchableOpacity
             disabled={plantActivities.length < 1}
             style={{...this.getRangeFilterStyles(rangeFilter === 2)}}
-            onPress={() => this.setTimeRange(12)}>
+            onPress={() => this.setTimeRange(14)}>
             <Text
               style={{
                 color: this.getRangeFilterStyles(rangeFilter === 2).color,
@@ -257,7 +265,7 @@ class HarvestReport extends Component {
           <TouchableOpacity
             disabled={plantActivities.length < 1}
             style={{...this.getRangeFilterStyles(rangeFilter === 4)}}
-            onPress={() => this.setTimeRange(26)}>
+            onPress={() => this.setTimeRange(28)}>
             <Text
               style={{
                 color: this.getRangeFilterStyles(rangeFilter === 4).color,
@@ -268,7 +276,7 @@ class HarvestReport extends Component {
           <TouchableOpacity
             disabled={plantActivities.length < 1}
             style={{...this.getRangeFilterStyles(rangeFilter === 12)}}
-            onPress={() => this.setTimeRange(82)}>
+            onPress={() => this.setTimeRange(84)}>
             <Text
               style={{
                 color: this.getRangeFilterStyles(rangeFilter === 12).color,
@@ -278,26 +286,29 @@ class HarvestReport extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={plantActivities.length < 1}
-            style={{...this.getRangeFilterStyles(rangeFilter === 24)}}
-            onPress={() => this.setTimeRange(180)}>
+            style={{...this.getRangeFilterStyles(rangeFilter === 26)}}
+            onPress={() => this.setTimeRange(182)}>
             <Text
               style={{
-                color: this.getRangeFilterStyles(rangeFilter === 24).color,
+                color: this.getRangeFilterStyles(rangeFilter === 26).color,
               }}>
               24W
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            disabled={plantActivities.length < 363}
-            style={{...this.getRangeFilterStyles(rangeFilter === 53)}}
-            onPress={() => this.setTimeRange(53)}>
+
+          {/* NOTE: temporarily commenting this out until styling can be established to show all 52 weeks
+          Author: Isaac G. 2/28/23 */}
+          {/* <TouchableOpacity
+            disabled={plantActivities.length < 1}
+            style={{...this.getRangeFilterStyles(rangeFilter > 51 && rangeFilter < 54)}}
+            onPress={() => this.setTimeRange(365)}>
             <Text
               style={{
-                color: this.getRangeFilterStyles(rangeFilter === 53).color,
+                color: this.getRangeFilterStyles(rangeFilter > 51 && rangeFilter < 54).color,
               }}>
               1Y
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );

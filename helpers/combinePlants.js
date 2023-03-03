@@ -1,3 +1,5 @@
+import separatePlantsByType from "./separatePlantsByType";
+
 export default function combinePlants(plants) {
 
     let combinedVegetables = [];
@@ -8,25 +10,34 @@ export default function combinePlants(plants) {
         const vegetables = plant.vegetables;
         const herbs = plant.herbs;
         const fruit = plant.fruit;
-        
-        for(let vegetable in vegetables) {
-            combinedVegetables.push({
-                id: vegetables[vegetable][0]._id,
-                qty: vegetables[vegetable].length,
+
+        for (let vegetable in vegetables) {
+            const vegetablesSeparatedByType = separatePlantsByType(vegetables[vegetable]);
+            vegetablesSeparatedByType.forEach((p) => {
+                combinedVegetables.push({
+                    id: p[0]._id,
+                    qty: p.length
+                })
             })
         }
 
-        for(let herb in herbs) {
-            combinedHerbs.push({
-                id: herbs[herb][0]._id,
-                qty: herbs[herb].length,
+        for (let herb in herbs) {
+            const herbsSeparatedByType = separatePlantsByType(herbs[herb]);
+            herbsSeparatedByType.forEach((h) => {
+                combinedHerbs.push({
+                    id: h[0]._id,
+                    qty: h.length
+                })
             })
         }
 
-        for(let fr in fruit) {
-            combinedFruit.push({
-                id: fruit[fr][0]._id,
-                qty: fruit[fr].length,
+        for (let fr in fruit) {
+            const fruitSeparatedByType = separatePlantsByType(fruit[fr]);
+            fruitSeparatedByType.forEach((f) => {
+                combinedFruit.push({
+                    id: f[0]._id,
+                    qty: f.length
+                })
             })
         }
     })

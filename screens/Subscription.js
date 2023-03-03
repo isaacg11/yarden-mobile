@@ -1,19 +1,25 @@
-
+// libraries
 import React, { Component } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+// UI components
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
 import { alert } from '../components/UI/SystemAlert';
+
+// actions
 import { getSubscription, deleteSubscription } from '../actions/subscriptions/index';
 import { getPlans } from '../actions/plans/index';
 import { getOrders, updateOrder, updateOrders } from '../actions/orders/index';
 import { updateUser } from '../actions/user/index';
+
+// styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 
@@ -41,7 +47,6 @@ class Subscription extends Component {
 
         // if user has a maintenance plan {...}
         if (this.props.user.garden_info && this.props.user.garden_info.maintenance_plan) {
-
             // if no current maintenance plan
             if (this.props.user.garden_info.maintenance_plan === 'none') {
                 this.setState({
@@ -50,7 +55,7 @@ class Subscription extends Component {
                 })
             } else {
                 // get plan
-                const plan = this.props.plans.find((p) => p.type === this.props.user.garden_info.maintenance_plan);
+                const plan = this.props.plans.find((p) => p._id === this.props.user.garden_info.maintenance_plan);
 
                 // if user has a payment plan id {...}
                 if (this.props.user.payment_info && this.props.user.payment_info.plan_id) {
@@ -58,6 +63,7 @@ class Subscription extends Component {
                     // get subscription
                     const subscription = await this.props.getSubscription(this.props.user.payment_info.plan_id);
 
+                    // update UI
                     this.setState({
                         subscription: subscription,
                         plan: plan

@@ -25,6 +25,9 @@ import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
 import card from '../components/styles/card';
 
+// types
+import types from '../vars/types';
+
 class Substitution extends Component {
 
     state = {
@@ -77,8 +80,8 @@ class Substitution extends Component {
         this.setState({ isLoading: false });
 
         alert(
-            'Your plant has been successfully substituted.', 
-            'Success!', 
+            'Your plant has been successfully substituted.',
+            'Success!',
             () => {
                 // redirect user to order details
                 this.props.navigation.navigate('Order Details', order);
@@ -87,74 +90,108 @@ class Substitution extends Component {
     }
 
     async substitutePlant(substitute) {
-
-        let beds = this.props.beds;
-        let bedToUpdate = null;
+        let drafts = this.props.drafts;
         let plantGroupToSubstitute = null;
         let substituted = 0;
 
-        // replace plant in bed
-        beds.forEach((bed) => {
-            bed.plot_points.forEach((row) => {
-                row.forEach((column) => {
-                    if (column.plant) {
-
-                        const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
-                        const matchingPlantName = column.plant.id.name === substitute.id.name;
-
-                        if (
-                            matchingCommonType &&
-                            !matchingPlantName &&
-                            (substituted + 1) <= substitute.id.quadrant_size
-                        ) {
-
-                            if (plantGroupToSubstitute) {
-                                if (column.group === plantGroupToSubstitute) {
+        // if initial planting {...}
+        if (this.props.route.params.order.type === types.INITIAL_PLANTING) {
+            let beds = this.props.beds;
+            let bedToUpdate = null;
+            beds.forEach((bed) => {
+                bed.plot_points.forEach((row) => {
+                    row.forEach((column) => {
+                        if (column.plant) {
+                            const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
+                            const matchingPlantName = column.plant.id.name === substitute.id.name;
+                            if (
+                                matchingCommonType &&
+                                !matchingPlantName &&
+                                (substituted + 1) <= substitute.id.quadrant_size
+                            ) {
+                                if (plantGroupToSubstitute) {
+                                    if (column.group === plantGroupToSubstitute) {
+                                        column.plant = substitute;
+                                        substituted += 1;
+                                    }
+                                } else {
+                                    bedToUpdate = bed;
+                                    plantGroupToSubstitute = column.group;
                                     column.plant = substitute;
                                     substituted += 1;
                                 }
-                            } else {
-                                bedToUpdate = bed;
-                                plantGroupToSubstitute = column.group;
-                                column.plant = substitute;
-                                substituted += 1;
                             }
                         }
-                    }
+                    })
                 })
             })
-        })
 
-        // update bed
-        await this.props.updateBed(bedToUpdate._id, { plot_points: bedToUpdate.plot_points });
+            // update bed
+            await this.props.updateBed(bedToUpdate._id, { plot_points: bedToUpdate.plot_points });
 
-        // get updated beds
-        await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
+            // get updated beds
+            await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
 
-        const draftToUpdate = this.props.drafts.find((draft) => draft.key === bedToUpdate.key);
+            const draftToUpdate = drafts.find((draft) => draft.key === bedToUpdate.key);
 
-        // update draft
-        await this.props.updateDraft(draftToUpdate._id, { plot_points: bedToUpdate.plot_points });
+            // update draft
+            await this.props.updateDraft(draftToUpdate._id, { plot_points: bedToUpdate.plot_points });
 
-        // get updated drafts
-        await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
+            // get updated drafts
+            await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
+        } else if (this.props.route.params.order.type === types.CROP_ROTATION) { // if crop rotation {...}
+            let draftToUpdate = null;
+            drafts.forEach((draft) => {
+                draft.plot_points.forEach((row) => {
+                    row.forEach((column) => {
+                        if (column.plant) {
+                            const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
+                            const matchingPlantName = column.plant.id.name === substitute.id.name;
+                            if (
+                                matchingCommonType &&
+                                !matchingPlantName &&
+                                (substituted + 1) <= substitute.id.quadrant_size
+                            ) {
+                                if (plantGroupToSubstitute) {
+                                    if (column.group === plantGroupToSubstitute) {
+                                        column.plant = substitute;
+                                        substituted += 1;
+                                    }
+                                } else {
+                                    draftToUpdate = draft;
+                                    plantGroupToSubstitute = column.group;
+                                    column.plant = substitute;
+                                    substituted += 1;
+                                }
+                            }
+                        }
+                    })
+                })
+            })
+
+            if (draftToUpdate) {
+
+                // update draft
+                await this.props.updateDraft(draftToUpdate._id, { plot_points: draftToUpdate.plot_points });
+            }
+        }
 
         let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
         let herbs = this.props.route.params.order.customer.garden_info.herbs;
         let fruit = this.props.route.params.order.customer.garden_info.fruit;
         const gardenInfo = this.props.route.params.order.customer.garden_info;
 
-        if(substitute.id.category.name === 'vegetable') {
+        if (substitute.id.category.name === types.VEGETABLE) {
             const updatedVegetables = await this.updateQty(vegetables, substitute);
             gardenInfo.vegetables = updatedVegetables;
         }
 
-        if(substitute.id.category.name === 'culinary herb') {
+        if (substitute.id.category.name === types.CULINARY_HERB) {
             const updatedHerbs = await this.updateQty(herbs, substitute);
             gardenInfo.herbs = updatedHerbs;
         }
 
-        if(substitute.id.category.name === 'fruit') {
+        if (substitute.id.category.name === types.FRUIT) {
             const updatedFruit = await this.updateQty(fruit, substitute);
             gardenInfo.fruit = updatedFruit;
         }
@@ -167,40 +204,20 @@ class Substitution extends Component {
     }
 
     async updateQty(plants, substitute) {
-        let newPlantAdded = false;
-        let plantToRemove = null;
+        const existingMatchingPlantIndex = plants.findIndex((plant) => plant.id._id === substitute.id._id);
+        if (existingMatchingPlantIndex >= 0) {
+            plants[existingMatchingPlantIndex].qty += 1;
+        } else {
+            plants.unshift({ id: substitute.id, qty: 1 });
+        }
 
-        plants.forEach((plant, index) => {
-
-            // if plant is the same type as substitute {...}
-            if (plant.id._id === substitute.id._id) {
-
-                // increment qty by 1
-                plant.qty = plant.qty + 1;
-            } else if (plant.id._id === this.props.route.params.selectedPlant.id._id) { // if plant is the same type of plant to be replaced {...}
-
-                // decrement qty by 1
-                plant.qty = plant.qty - 1;
-                if(plant.qty === 0) {
-                    plantToRemove = index;
-                }
-            } else {
-
-                // if new plant has not been added to the list yet {...}
-                if (!newPlantAdded) {
-
-                    // add plant to list
-                    plants.unshift({ id: substitute.id, qty: 1 });
-                    newPlantAdded = true;
-                }
+        const plantToReplaceIndex = plants.findIndex((plant) => plant.id._id === this.props.route.params.selectedPlant.id._id);
+        if (plantToReplaceIndex >= 0) {
+            const newValue = plants[plantToReplaceIndex].qty - 1;
+            plants[plantToReplaceIndex].qty = newValue;
+            if (newValue === 0) {
+                plants.splice(plantToReplaceIndex, 1);
             }
-        })
-
-        // if a plant qty was reduced to zero {...}
-        if(plantToRemove) {
-
-            // remove plant from list
-            plants.splice(plantToRemove, 1);
         }
 
         return plants;

@@ -160,9 +160,20 @@ class GardenMap extends Component {
     }
 
     // set plants
-    const vegetables = (this.props.user.type === types.GARDENER) ? this.props.order.customer.garden_info.vegetables : false;
-    const herbs = (this.props.user.type === types.GARDENER) ? this.props.order.customer.garden_info.herbs : false;
-    const fruit = (this.props.user.type === types.GARDENER) ? this.props.order.customer.garden_info.fruit : false;
+    let vegetables = false;
+    let herbs = false;
+    let fruit = false;
+    if (this.props.user.type === types.GARDENER) {
+      if (this.props.order.type === types.INITIAL_PLANTING) {
+        vegetables = this.props.order.bid.line_items.vegetables;
+        herbs = this.props.order.bid.line_items.herbs;
+        fruit = this.props.order.bid.line_items.fruit;
+      } else {
+        vegetables = this.props.order.customer.garden_info.vegetables;
+        herbs = this.props.order.customer.garden_info.herbs;
+        fruit = this.props.order.customer.garden_info.fruit;
+      }
+    }
 
     // update UI
     this.setState({
@@ -757,15 +768,16 @@ class GardenMap extends Component {
       // create a new draft
       await this.props.createDraft({
         key: this.props.bedId,
+        customer: this.props.order.customer._id,
         order: this.props.order._id,
         plot_points: this.state.plotPoints,
         width: this.props.bed.width,
         length: this.props.bed.length,
         height: this.props.bed.height,
-        shape: this.props.bed.shape._id,
+        shape: this.props.bed.shape._id
       });
 
-      // get new drafts
+      // // get new drafts
       await this.props.getDrafts(`order=${this.props.order._id}`);
     }
 
@@ -2008,12 +2020,14 @@ class GardenMap extends Component {
         </View>
       )
     } else { // for all other order types {...}
-      const data = (
-        (this.props.user.type === types.GARDENER) &&
-        (this.props.order.type === types.INITIAL_PLANTING && this.props.beds.length < 1) ||
-        (this.props.user.type === types.GARDENER) &&
-        (this.props.order.type === types.CROP_ROTATION)
-      ) ? this.props.drafts : this.props.beds;
+      let data = this.props.beds;
+      if (this.props.user.type === types.GARDENER) {
+        if (this.props.order.type === types.INITIAL_PLANTING) {
+          data = this.props.drafts;
+        } else if (this.props.order.type === types.CROP_ROTATION) {
+          data = this.props.drafts;
+        }
+      }
 
       return (
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -2151,7 +2165,7 @@ class GardenMap extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView>
+        <ScrollView horizontal={true}>
           <View>
             {/* loading indicator (dynamically visible) */}
             <LoadingIndicator loading={isLoading} />

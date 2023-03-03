@@ -1,8 +1,8 @@
 // libraries
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // UI components
 import Button from '../components/UI/Button';
@@ -18,8 +18,8 @@ import calculatePlotPoints from '../helpers/calculatePlotPoints';
 import combinePlants from '../helpers/combinePlants';
 
 // actions
-import {getPlants} from '../actions/plants/index';
-import {updateUser} from '../actions/user/index';
+import { getPlants } from '../actions/plants/index';
+import { updateUser } from '../actions/user/index';
 
 // styles
 import units from '../components/styles/units';
@@ -31,12 +31,12 @@ class Garden extends Component {
   };
 
   async componentDidMount() {
+
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set current season
-    // const season = getSeason();
-    const season = 'fall';
+    const season = getSeason();
 
     // get all plants associated with the current season
     await this.props.getPlants(`season=${season}`);
@@ -54,6 +54,7 @@ class Garden extends Component {
   }
 
   async next() {
+
     // set garden plants
     const plants = setPlants(this.state.selectedPlants);
 
@@ -65,10 +66,10 @@ class Garden extends Component {
     // if crop rotation {...}
     if (this.props.route.params.isCropRotation) {
       // show loading indicator
-      this.setState({isLoading: true});
+      this.setState({ isLoading: true });
 
       // combine plants from selection
-      const combinedPlants = combinePlants([{vegetables, herbs, fruit}]);
+      const combinedPlants = combinePlants([{ vegetables, herbs, fruit }]);
 
       // update garden info
       await this.updateGardenInfo(
@@ -78,26 +79,34 @@ class Garden extends Component {
       );
 
       // hide loading indicator
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
 
       // navigate to plants selected confirmation
       this.props.navigation.navigate('Plants Selected');
     } else {
       // combine quote and plants
       let quoteAndPlants = {
-        ...{vegetables, herbs, fruit},
-        ...{quoteTitle: this.props.route.params.title},
+        ...{ vegetables, herbs, fruit },
+        ...{ quoteTitle: this.props.route.params.title },
       };
 
       // combine quote and plants
       const params = {
         ...this.props.route.params,
-        ...{plantSelections: [quoteAndPlants]},
-        ...{isCheckout: true},
+        ...{ plantSelections: [quoteAndPlants] },
+        ...{ isCheckout: true },
       };
 
-      // navigate to plan enrollment
-      this.props.navigation.navigate('Enrollment', params);
+      // if user already has maintenance plan selected {...}
+      if (
+        this.props.user.garden_info?.maintenance_plan && 
+        this.props.user.garden_info?.maintenance_plan !== 'none') {
+        // navigate to checkout
+        this.props.navigation.navigate('Checkout', params);
+      } else {
+        // navigate to plan enrollment
+        this.props.navigation.navigate('Enrollment', params);
+      }
     }
   }
 
@@ -129,7 +138,7 @@ class Garden extends Component {
     }
 
     // update user with garden info
-    await this.props.updateUser(null, {gardenInfo});
+    await this.props.updateUser(null, { gardenInfo });
   }
 
   setPlotPoints() {
@@ -163,10 +172,10 @@ class Garden extends Component {
   }
 
   render() {
-    const {selectedPlants, progress, isLoading} = this.state;
+    const { selectedPlants, progress, isLoading } = this.state;
     const plotPoints = this.setPlotPoints();
-    const {allowablePlotPoints, usedPlotPoints} = plotPoints;
-    const {user} = this.props;
+    const { allowablePlotPoints, usedPlotPoints } = plotPoints;
+    const { user } = this.props;
     const isCropRotation = this.props.route.params.isCropRotation;
     const beds = isCropRotation
       ? user.garden_info.beds
@@ -179,16 +188,19 @@ class Garden extends Component {
           width: '100%',
         }}>
         <ScrollView>
-          <View style={{padding: units.unit3 + units.unit4}}>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+
             {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
+            {/* header */}
             <Header type="h4">
               {isCropRotation ? 'Crop Rotation' : 'Garden Setup'}
             </Header>
-            <View style={{padding: 0}}>
+
+            <View style={{ padding: 0 }}>
               {/* plant list */}
-              <View style={{marginBottom: units.unit3}}>
+              <View style={{ marginBottom: units.unit3 }}>
                 <PlantList
                   allowablePlotPoints={allowablePlotPoints}
                   usedPlotPoints={usedPlotPoints}
@@ -208,7 +220,7 @@ class Garden extends Component {
               <PlantAvailability />
 
               {/* navigation button */}
-              <View style={{marginTop: units.unit4}}>
+              <View style={{ marginTop: units.unit4 }}>
                 <Button
                   text="Continue"
                   variant="primary"
@@ -227,7 +239,7 @@ class Garden extends Component {
 function mapStateToProps(state) {
   return {
     user: state.user,
-    plants: state.plants,
+    plants: state.plants
   };
 }
 

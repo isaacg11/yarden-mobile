@@ -127,7 +127,7 @@ class OrderDetails extends Component {
         if (this.props.user.garden_info.vegetables.length > 0) {
           const previousSeasonVegetable = this.props.user.garden_info.vegetables.find((v) => {
             const vegetable = v.id || v;
-            if((vegetable.season !== types.ANNUAL) && (vegetable.season !== currentSeason)) return true;
+            if ((vegetable.season !== types.ANNUAL) && (vegetable.season !== currentSeason)) return true;
           });
 
           if (previousSeasonVegetable) renderPlantSelection = true;
@@ -136,7 +136,7 @@ class OrderDetails extends Component {
         if (this.props.user.garden_info.herbs.length > 0) {
           const previousSeasonHerb = this.props.user.garden_info.herbs.find((h) => {
             const herb = h.id || h;
-            if((herb.season !== types.ANNUAL) && (herb.season !== currentSeason)) return true;
+            if ((herb.season !== types.ANNUAL) && (herb.season !== currentSeason)) return true;
           });
 
           if (previousSeasonHerb) renderPlantSelection = true;
@@ -145,7 +145,7 @@ class OrderDetails extends Component {
         if (this.props.user.garden_info.fruit.length > 0) {
           const previousSeasonFruit = this.props.user.garden_info.fruit.find((f) => {
             const fruit = f.id || f;
-            if((fruit.season !== types.ANNUAL) && (fruit.season !== currentSeason)) return true;
+            if ((fruit.season !== types.ANNUAL) && (fruit.season !== currentSeason)) return true;
           });
 
           if (previousSeasonFruit) renderPlantSelection = true;
@@ -199,16 +199,19 @@ class OrderDetails extends Component {
     );
   }
 
+  setPlants() {
+
+  }
+
   render() {
     const order = this.props.route.params;
-    const { user, beds } = this.props;
+    const { user, beds, drafts } = this.props;
     const {
       isLoading,
       changeOrders,
       wateringSchedule,
       renderPlantSelection
     } = this.state;
-    const gardenInfo = order.customer.garden_info;
 
     return (
       <SafeAreaView
@@ -270,12 +273,44 @@ class OrderDetails extends Component {
                 </View>
               )}
 
+              {/* plant selections (dynamically visible) */}
+              {order.status === 'pending' &&
+                user.type === types.CUSTOMER &&
+                (order.type === types.INSTALLATION || order.type === types.REVIVE) && (
+                  <View style={{ marginTop: units.unit4 }}>
+                    <Collapse
+                      title="Vegetables"
+                      content={
+                        <PlantSelection
+                          plants={order.bid.line_items.vegetables}
+                        />
+                      }
+                    />
+                    <Collapse
+                      title="Herbs"
+                      content={
+                        <PlantSelection
+                          plants={order.bid.line_items.herbs}
+                        />
+                      }
+                    />
+                    <Collapse
+                      title="Fruit"
+                      content={
+                        <PlantSelection
+                          plants={order.bid.line_items.fruit}
+                        />
+                      }
+                    />
+                  </View>
+                )}
+
               {/* request changes button (dynamically visible) */}
               {order.status === 'pending' &&
-                user.type === 'customer' &&
-                (order.type === 'installation' ||
-                  order.type === 'revive' ||
-                  order.type === 'misc') && (
+                user.type === types.CUSTOMER &&
+                (order.type === types.INSTALLATION ||
+                  order.type === types.REVIVE ||
+                  order.type === types.MISC) && (
                   <View style={{ marginTop: units.unit4 }}>
                     <Button
                       text="Request Changes"
@@ -293,20 +328,19 @@ class OrderDetails extends Component {
 
               {/* initial planting UI (dynamically visible) */}
               {order.status === 'pending' &&
-                user.type === 'gardener' &&
-                order.type === 'initial planting' &&
-                gardenInfo && (
+                user.type === types.GARDENER &&
+                order.type === types.INITIAL_PLANTING && (
                   <View style={{ marginTop: units.unit4 }}>
 
                     {/* plant lists */}
-                    {beds.length > 0 && (
+                    {drafts.length > 0 && (
                       <View>
                         <View>
                           <Collapse
                             title="Vegetables"
                             content={
                               <Plants
-                                plants={gardenInfo.vegetables}
+                                plants={order.bid.line_items.vegetables}
                                 order={order}
                                 onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
                               />
@@ -318,7 +352,7 @@ class OrderDetails extends Component {
                             title="Herbs"
                             content={
                               <Plants
-                                plants={gardenInfo.herbs}
+                                plants={order.bid.line_items.herbs}
                                 order={order}
                                 onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
                               />
@@ -330,7 +364,7 @@ class OrderDetails extends Component {
                             title="Fruit"
                             content={
                               <Plants
-                                plants={gardenInfo.fruit}
+                                plants={order.bid.line_items.fruit}
                                 order={order}
                                 onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
                               />
@@ -342,8 +376,8 @@ class OrderDetails extends Component {
 
                     {/* buttons */}
                     <Button
-                      variant={beds.length < 1 ? 'button' : 'btn2'}
-                      text={`${beds.length < 1
+                      variant={(drafts.length < 1) ? 'button' : 'btn2'}
+                      text={`${(drafts.length < 1)
                         ? 'Build Garden Map'
                         : 'View Garden Beds'
                         } `}
@@ -360,7 +394,7 @@ class OrderDetails extends Component {
                     />
                     <Button
                       style={{
-                        display: beds.length < 1 ? 'none' : 'flex',
+                        display: (drafts.length < 1) ? 'none' : 'flex',
                         marginTop: units.unit4,
                       }}
                       text="Process Order"
@@ -371,7 +405,7 @@ class OrderDetails extends Component {
 
               {/* maintenance UI (dynamically visible) */}
               {order.status === 'pending' &&
-                user.type === 'gardener' &&
+                user.type === types.GARDENER &&
                 (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
                   <View>
                     <Button
@@ -413,51 +447,92 @@ class OrderDetails extends Component {
               )}
 
               {/* plant selections (dynamically visible) */}
-              {!renderPlantSelection && order.type === types.CROP_ROTATION && (
-                <View style={{ marginTop: units.unit4 }}>
-                  <Collapse
-                    title="Vegetables"
-                    content={
-                      <PlantSelection
-                        plants={gardenInfo.vegetables}
+              {order.status === 'pending' &&
+                order.type === types.CROP_ROTATION &&
+                user.type === types.CUSTOMER && (
+                  <View style={{ marginTop: units.unit4 }}>
+                    <Collapse
+                      title="Vegetables"
+                      content={
+                        <PlantSelection
+                          plants={user.garden_info.vegetables}
+                        />
+                      }
+                    />
+                    <Collapse
+                      title="Herbs"
+                      content={
+                        <PlantSelection
+                          plants={user.garden_info.herbs}
+                        />
+                      }
+                    />
+                    <Collapse
+                      title="Fruit"
+                      content={
+                        <PlantSelection
+                          plants={user.garden_info.fruit}
+                        />
+                      }
+                    />
+                  </View>
+                )}
+
+              {/* plant selections (dynamically visible) */}
+              {order.status === 'pending' &&
+                order.type === types.CROP_ROTATION &&
+                user.type === types.GARDENER &&
+                drafts.length > 0 && (
+                  <View style={{ marginTop: units.unit4 }}>
+                    <View>
+                      <Collapse
+                        title="Vegetables"
+                        content={
+                          <Plants
+                            plants={order.customer.garden_info.vegetables}
+                            order={order}
+                            onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Collapse
-                    title="Herbs"
-                    content={
-                      <PlantSelection
-                        plants={gardenInfo.herbs}
+                    </View>
+                    <View>
+                      <Collapse
+                        title="Herbs"
+                        content={
+                          <Plants
+                            plants={order.customer.garden_info.herbs}
+                            order={order}
+                            onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Collapse
-                    title="Fruit"
-                    content={
-                      <PlantSelection
-                        plants={gardenInfo.fruit}
+                    </View>
+                    <View>
+                      <Collapse
+                        title="Fruit"
+                        content={
+                          <Plants
+                            plants={order.customer.garden_info.fruit}
+                            order={order}
+                            onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                          />
+                        }
                       />
-                    }
-                  />
-                </View>
-              )}
+                    </View>
+                  </View>
+                )}
 
               {/* crop rotation UI - gardener (dynamically visible) */}
               {order.status === 'pending' &&
                 user.type === types.GARDENER &&
-                (order.type === types.CROP_ROTATION) && (
-                  <View>
+                order.type === types.CROP_ROTATION &&
+                drafts.length > 0 && (
+                  <View style={{ marginTop: units.unit4 }}>
                     <Button
-                      text="Build Garden Map"
+                      text="Process Order"
                       onPress={() =>
                         this.props.navigation.navigate('Beds', { order })
-                      }
-                      icon={
-                        <Ionicons
-                          name="grid-outline"
-                          size={units.unit4}
-                          color={colors.purpleB}
-                        />
                       }
                     />
                   </View>
@@ -474,6 +549,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     beds: state.beds,
+    drafts: state.drafts,
     questions: state.questions,
     reports: state.reports
   };

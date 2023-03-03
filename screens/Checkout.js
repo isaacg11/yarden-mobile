@@ -64,6 +64,7 @@ class Checkout extends Component {
   async componentDidMount() {
     // get user info
     // NOTE: We need to do this to ensure that the user info is up-to-date before processing (example: if Yarden uploads new garden from web platform, system will add new gardens to garden_info - but the app won't be aware of these changes unless we fetch the users data)
+    // author: Isaac G. 2/25/23
     await this.props.getUser(this.props.user._id);
 
     // if plant selections {...}
@@ -361,21 +362,33 @@ class Checkout extends Component {
         // if garden quote {...}
         if (isGarden) {
 
+          // update garden info
+          await this.updateGardenInfo(
+            this.state.vegetables,
+            this.state.fruit,
+            this.state.herbs,
+          );
+
+          // combine plants from selection
+          const combinedPlants = combinePlants(
+            this.props.route.params.plantSelections,
+          );
+
           // get plant selection
           let lineItems = this.props.route.params.line_items;
 
-          // add plants to line items
-          lineItems.vegetables = this.state.vegetables;
-          lineItems.herbs = this.state.herbs;
-          lineItems.fruit = this.state.fruit;
-          updatedQuote.line_items = lineItems;
+          let beds = lineItems.beds;
+          beds.forEach((bed) => {
+              bed.shape = bed.shape._id;
+          })
 
-          // update garden info
-          await this.updateGardenInfo(
-            lineItems.vegetables,
-            lineItems.fruit,
-            lineItems.herbs,
-          );
+          lineItems.beds = beds;
+
+          // add plants to line items
+          lineItems.vegetables = combinedPlants.vegetables;
+          lineItems.herbs = combinedPlants.herbs;
+          lineItems.fruit = combinedPlants.fruit;
+          updatedQuote.line_items = lineItems;
         }
 
         // update quote as "approved"
@@ -408,9 +421,14 @@ class Checkout extends Component {
           this.props.user.garden_info.maintenance_plan;
 
       // if user already has beds, set beds
-      if (this.props.user.garden_info.beds)
-        gardenInfo.beds = this.props.user.garden_info.beds;
-
+      if (this.props.user.garden_info.beds) {
+        let beds = this.props.user.garden_info.beds;
+        beds.forEach((bed) => {
+            bed.shape = bed.shape._id;
+        })
+        gardenInfo.beds = beds;
+      }
+      
       // if user already has accessories, set accessories
       if (this.props.user.garden_info.accessories)
         gardenInfo.accessories = this.props.user.garden_info.accessories;

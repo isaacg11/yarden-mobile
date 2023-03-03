@@ -43,7 +43,12 @@ const types = {
     // growth seasons
     FALL: 'fall',
     SPRING: 'spring',
-    ANNUAL: 'annual'
+    ANNUAL: 'annual',
+
+    // plant categories
+    VEGETABLE: 'vegetable',
+    CULINARY_HERB: 'culinary_herb',
+    FRUIT: 'fruit'
 }
 
 export default types;
