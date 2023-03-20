@@ -16,9 +16,6 @@ import Card from '../UI/Card';
 // actions
 import { getPlants } from '../../actions/plants/index';
 
-// helpers
-import getSeason from '../../helpers/getSeason';
-
 // styles
 import colors from '../styles/colors';
 import units from '../styles/units';
@@ -30,10 +27,9 @@ class NewPlantMenu extends Component {
     }
 
     async componentDidMount() {
-        const currentSeason = getSeason();
 
         // get plants for current season
-        await this.props.getPlants(`season=${currentSeason}`);
+        await this.props.getPlants();
     }
 
     searchPlants(value) {

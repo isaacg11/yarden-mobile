@@ -67,7 +67,7 @@ class Checkout extends Component {
     // author: Isaac G. 2/25/23
     await this.props.getUser(this.props.user._id);
 
-    // if plant selections {...}
+    // if plant selections (i.e Installation or Revive) {...}
     if (this.props.route.params.plantSelections) {
 
       // combine plants from selection
@@ -75,78 +75,12 @@ class Checkout extends Component {
         this.props.route.params.plantSelections,
       );
 
-      // if user has garden info {...}
-      if (this.props.user.garden_info) {
-        // set current plants
-        const currentVegetables = minifyDataToID(
-          this.props.user.garden_info.vegetables,
-        );
-        const currentFruit = minifyDataToID(this.props.user.garden_info.fruit);
-        const currentHerbs = minifyDataToID(this.props.user.garden_info.herbs);
-
-        // set initial updated plants
-        let newVegetables = [];
-        let newFruit = [];
-        let newHerbs = [];
-
-        // set initial combined plants
-        let currentAndNewVegetables = [];
-        let currentAndNewFruit = [];
-        let currentAndNewHerbs = [];
-
-        // if current vegetables {...}
-        if (currentVegetables) {
-          // iterate through vegetables
-          combinedPlants.vegetables.forEach(vegetable => {
-            // only add new vegetables that don't already exist
-            const alreadyExists = currentVegetables.find(
-              veg => veg === vegetable,
-            );
-            if (!alreadyExists) newVegetables.push(vegetable);
-          });
-
-          // combine current and new vegetables
-          currentAndNewVegetables = currentVegetables.concat(newVegetables);
-        }
-
-        // if current fruit {...}
-        if (currentFruit) {
-          // iterate through fruit
-          combinedPlants.fruit.forEach(fr => {
-            // only add new fruit that don't already exist
-            const alreadyExists = currentFruit.find(frt => frt === fr);
-            if (!alreadyExists) newFruit.push(fr);
-          });
-
-          // combine current and new fruit
-          currentAndNewFruit = currentFruit.concat(newFruit);
-        }
-
-        // if current herbs {...}
-        if (currentHerbs) {
-          // iterate through herbs
-          combinedPlants.herbs.forEach(herb => {
-            // only add new herbs that don't already exist
-            const alreadyExists = currentHerbs.find(h => h === herb);
-            if (!alreadyExists) newHerbs.push(herb);
-          });
-
-          // combine current and new herbs
-          currentAndNewHerbs = currentHerbs.concat(newHerbs);
-        }
-
-        this.setState({
-          vegetables: currentAndNewVegetables,
-          herbs: currentAndNewHerbs,
-          fruit: currentAndNewFruit,
-        });
-      } else {
-        this.setState({
-          vegetables: combinedPlants.vegetables,
-          herbs: combinedPlants.herbs,
-          fruit: combinedPlants.fruit,
-        });
-      }
+      // update plant list
+      this.setState({
+        vegetables: combinedPlants.vegetables,
+        herbs: combinedPlants.herbs,
+        fruit: combinedPlants.fruit,
+      });
     }
 
     // if multiple quotes {...}
@@ -355,7 +289,7 @@ class Checkout extends Component {
         let updatedQuote = { status: 'approved' };
 
         // check to see if the quote is for a garden
-        const isGarden = 
+        const isGarden =
           this.props.route.params.type === types.INSTALLATION ||
           this.props.route.params.type === types.REVIVE
 
@@ -379,7 +313,7 @@ class Checkout extends Component {
 
           let beds = lineItems.beds;
           beds.forEach((bed) => {
-              bed.shape = bed.shape._id;
+            bed.shape = bed.shape._id;
           })
 
           lineItems.beds = beds;
@@ -424,11 +358,11 @@ class Checkout extends Component {
       if (this.props.user.garden_info.beds) {
         let beds = this.props.user.garden_info.beds;
         beds.forEach((bed) => {
-            bed.shape = bed.shape._id;
+          bed.shape = bed.shape._id;
         })
         gardenInfo.beds = beds;
       }
-      
+
       // if user already has accessories, set accessories
       if (this.props.user.garden_info.accessories)
         gardenInfo.accessories = this.props.user.garden_info.accessories;
@@ -776,165 +710,165 @@ class Checkout extends Component {
     const { user } = this.props;
 
     return (
-        <SafeAreaView
-          style={{
-            flex: 1,
-            width: '100%',
-          }}>
-          <KeyboardAwareScrollView>
-            <View style={{ padding: units.unit3 + units.unit4 }}>
-              {/* loading indicator */}
-              <LoadingIndicator loading={isLoading} />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          width: '100%',
+        }}>
+        <KeyboardAwareScrollView>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+            {/* loading indicator */}
+            <LoadingIndicator loading={isLoading} />
 
-              <Header type="h4" style={{ marginBottom: units.unit5 }}>
-                Checkout
-              </Header>
-              <Label>Scope of Work (1a)</Label>
-              <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
-                {quote.title} - {quote.description}
-              </Text>
+            <Header type="h4" style={{ marginBottom: units.unit5 }}>
+              Checkout
+            </Header>
+            <Label>Scope of Work (1a)</Label>
+            <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
+              {quote.title} - {quote.description}
+            </Text>
+            <View>
+              <Label>Payment Method</Label>
+              <Card style={{ marginBottom: units.unit5 }}>
+                <PaymentMethod />
+              </Card>
+
+              {/* approval start */}
               <View>
-                <Label>Payment Method</Label>
-                <Card style={{ marginBottom: units.unit5 }}>
-                  <PaymentMethod />
-                </Card>
-
-                {/* approval start */}
+                {/* agreement modal */}
+                <ElectronicSignatureAgreement
+                  isOpen={isOpen}
+                  close={() => this.setState({ isOpen: false })}
+                />
                 <View>
-                  {/* agreement modal */}
-                  <ElectronicSignatureAgreement
-                    isOpen={isOpen}
-                    close={() => this.setState({ isOpen: false })}
-                  />
                   <View>
-                    <View>
-                      <Input
-                        label="First/last name"
-                        onChange={value => this.setState({ userSignature: value })}
-                        value={userSignature}
-                        placeholder="ex. Jane Doe"
-                      />
-                      <Text
-                        style={{
-                          marginVertical: units.unit4,
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                          color: colors.greenD75,
-                        }}>
-                        Add your e-signature to approve the quote
-                      </Text>
-                      <Text
-                        style={{
-                          lineHeight: fonts.h2,
-                          color: colors.greenE75,
-                        }}>
-                        By signing, I agree to pay the full amount of{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          ${delimit(
-                            (
-                              materialsTotal +
-                              materialsTotal * vars.tax.ca +
-                              (laborTotal +
-                                deliveryTotal +
-                                rentalTotal +
-                                disposalTotal) +
-                              (materialsTotal +
-                                laborTotal +
-                                deliveryTotal +
-                                rentalTotal +
-                                disposalTotal +
-                                materialsTotal * vars.tax.ca) *
-                              vars.fees.payment_processing
-                            ).toFixed(2),
-                          )}
-                        </Text>{' '}
-                        to {getCompanyName()} for all work listed in section (1a)
-                        "Scope of Work" of this contract. I agree to pay the first
-                        payment of{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          $
-                          {delimit(
-                            (
-                              materialsTotal +
+                    <Input
+                      label="First/last name"
+                      onChange={value => this.setState({ userSignature: value })}
+                      value={userSignature}
+                      placeholder="ex. Jane Doe"
+                    />
+                    <Text
+                      style={{
+                        marginVertical: units.unit4,
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        color: colors.greenD75,
+                      }}>
+                      Add your e-signature to approve the quote
+                    </Text>
+                    <Text
+                      style={{
+                        lineHeight: fonts.h2,
+                        color: colors.greenE75,
+                      }}>
+                      By signing, I agree to pay the full amount of{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        ${delimit(
+                          (
+                            materialsTotal +
+                            materialsTotal * vars.tax.ca +
+                            (laborTotal +
+                              deliveryTotal +
+                              rentalTotal +
+                              disposalTotal) +
+                            (materialsTotal +
+                              laborTotal +
                               deliveryTotal +
                               rentalTotal +
                               disposalTotal +
-                              materialsTotal * vars.tax.ca +
-                              (materialsTotal +
-                                deliveryTotal +
-                                rentalTotal +
-                                disposalTotal +
-                                materialsTotal * vars.tax.ca) *
-                              vars.fees.payment_processing
-                            ).toFixed(2),
-                          )}
-                        </Text>{' '}
-                        today{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          {moment().format('MM/DD/YYYY')}
-                        </Text>
-                        , and a second payment of{' '}
-                        <Text style={{ fontWeight: 'bold' }}>
-                          ${delimit(
-                            (
-                              laborTotal +
-                              laborTotal * vars.fees.payment_processing
-                            ).toFixed(2),
-                          )}
-                        </Text>{' '}
-                        once all work has been completed.
+                              materialsTotal * vars.tax.ca) *
+                            vars.fees.payment_processing
+                          ).toFixed(2),
+                        )}
+                      </Text>{' '}
+                      to {getCompanyName()} for all work listed in section (1a)
+                      "Scope of Work" of this contract. I agree to pay the first
+                      payment of{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        $
+                        {delimit(
+                          (
+                            materialsTotal +
+                            deliveryTotal +
+                            rentalTotal +
+                            disposalTotal +
+                            materialsTotal * vars.tax.ca +
+                            (materialsTotal +
+                              deliveryTotal +
+                              rentalTotal +
+                              disposalTotal +
+                              materialsTotal * vars.tax.ca) *
+                            vars.fees.payment_processing
+                          ).toFixed(2),
+                        )}
+                      </Text>{' '}
+                      today{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        {moment().format('MM/DD/YYYY')}
                       </Text>
-                    </View>
+                      , and a second payment of{' '}
+                      <Text style={{ fontWeight: 'bold' }}>
+                        ${delimit(
+                          (
+                            laborTotal +
+                            laborTotal * vars.fees.payment_processing
+                          ).toFixed(2),
+                        )}
+                      </Text>{' '}
+                      once all work has been completed.
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      paddingTop: units.unit5,
+                      paddingBottom: units.unit4,
+                      paddingLeft: units.unit4,
+                    }}>
+                    <CheckBox
+                      value={eSignatureAgreement}
+                      onValueChange={() =>
+                        this.setState({
+                          eSignatureAgreement: !eSignatureAgreement,
+                        })
+                      }
+                      boxType="square"
+                    />
                     <View
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        paddingTop: units.unit5,
-                        paddingBottom: units.unit4,
-                        paddingLeft: units.unit4,
+                        paddingLeft: units.unit5,
+                        paddingRight: units.unit5,
                       }}>
-                      <CheckBox
-                        value={eSignatureAgreement}
-                        onValueChange={() =>
-                          this.setState({
-                            eSignatureAgreement: !eSignatureAgreement,
-                          })
-                        }
-                        boxType="square"
-                      />
-                      <View
-                        style={{
-                          paddingLeft: units.unit5,
-                          paddingRight: units.unit5,
-                        }}>
-                        <View>
-                          <Text>By checking this box, you agree to the </Text>
-                          <Link
-                            onPress={() => this.setState({ isOpen: true })}
-                            text="Electronic Record and Signature Disclosure"></Link>
-                        </View>
+                      <View>
+                        <Text>By checking this box, you agree to the </Text>
+                        <Link
+                          onPress={() => this.setState({ isOpen: true })}
+                          text="Electronic Record and Signature Disclosure"></Link>
                       </View>
                     </View>
-                    <View style={{ marginTop: units.unit4 }}>
-                      <Button
-                        text="Approve"
-                        onPress={() => this.approve()}
-                        disabled={
-                          !userSignature ||
-                          !eSignatureAgreement ||
-                          !user.payment_info
-                        }
-                        variant="primary"
-                      />
-                    </View>
                   </View>
-                  {/* approval end */}
+                  <View style={{ marginTop: units.unit4 }}>
+                    <Button
+                      text="Approve"
+                      onPress={() => this.approve()}
+                      disabled={
+                        !userSignature ||
+                        !eSignatureAgreement ||
+                        !user.payment_info
+                      }
+                      variant="primary"
+                    />
+                  </View>
                 </View>
+                {/* approval end */}
               </View>
             </View>
-          </KeyboardAwareScrollView>
-        </SafeAreaView>
+          </View>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -943,7 +877,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     orders: state.orders,
-    items: state.items,
+    items: state.items
   };
 }
 
@@ -967,7 +901,7 @@ function mapDispatchToProps(dispatch) {
       resetChangeOrders,
       sendSms,
       createPurchase,
-      getUser,
+      getUser
     },
     dispatch,
   );

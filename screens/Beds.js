@@ -22,7 +22,6 @@ import ProgressIndicator from '../components/UI/ProgressIndicator';
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
-import { alert } from '../components/UI/SystemAlert';
 
 // actions
 import { createBed, updateBed, getBeds } from '../actions/beds/index';
@@ -42,162 +41,56 @@ class Beds extends Component {
 
   state = {};
 
-  save() {
+  publish() {
     // show loading indicator
     this.setState({ isLoading: true });
 
-    console.log("this.props.beds")
-    console.log(this.props.beds)
+    let createBeds = [];
+    const drafts = this.props.drafts;
 
-    // if no beds {...}
-    if (this.props.beds.length < 1) {
+    // iterate through drafts
+    drafts.forEach(draft => {
+      const newBed = {
+        name: `Garden Bed ${draft.key}`,
+        customer: this.props.route.params.order.customer._id,
+        draft: draft._id,
+        key: draft.key,
+        plot_points: draft.plot_points,
+        width: draft.width,
+        length: draft.length,
+        height: draft.height,
+        shape: draft.shape,
+      };
 
-      console.log("no beds found")
+      createBeds.push(
+        new Promise(async resolve => {
 
-      let createBeds = [];
-      const drafts = this.props.drafts;
+          // create bed
+          await this.props.createBed(newBed);
 
-      // iterate through drafts
-      drafts.forEach(draft => {
-        const newBed = {
-          name: `Garden Bed ${draft.key}`,
-          customer: this.props.route.params.order.customer._id,
-          draft: draft._id,
-          key: draft.key,
-          plot_points: draft.plot_points,
-          width: draft.width,
-          length: draft.length,
-          height: draft.height,
-          shape: draft.shape,
-        };
+          // update draft status as published
+          await this.props.updateDraft(draft._id, { published: true });
 
-        createBeds.push(
-          new Promise(async resolve => {
+          resolve();
+        }),
+      );
+    });
 
-            console.log("creating bed 1")
+    // create beds
+    Promise.all(createBeds).then(async () => {
 
+      // get drafts
+      await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
 
-            // create bed
-            await this.props.createBed(newBed);
+      // get beds
+      await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
 
-            console.log("updating draft as published 1")
+      // redirect user to "planted" screen
+      this.props.navigation.navigate('Planted');
 
-
-            // update draft status as published
-            await this.props.updateDraft(draft._id, { published: true });
-
-            resolve();
-          }),
-        );
-      });
-
-      // create beds
-      Promise.all(createBeds).then(async () => {
-
-        console.log("getting drafts 1")
-
-
-        // get drafts
-        await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
-
-        console.log("getting beds 1")
-
-
-        // get beds
-        await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
-
-        // redirect user to "planted" screen
-        this.props.navigation.navigate('Planted');
-
-        // hide loading indicator
-        this.setState({ isLoading: false });
-      });
-    } else {
-      let updateBeds = [];
-      const drafts = this.props.drafts;
-      const highestBedKey = this.findHighestKey(this.props.beds);
-      let newBedIndex = 0;
-
-      // iterate through drafts
-      drafts.forEach(draft => {
-        newBedIndex += 1;
-        updateBeds.push(
-          new Promise(async resolve => {
-
-            // if draft not published yet {...}
-            if (!draft.publish) {
-
-              console.log("draft not published yet")
-
-              const newBed = {
-                name: `Garden Bed ${highestBedKey + newBedIndex}`,
-                customer: this.props.route.params.order.customer._id,
-                draft: draft._id,
-                key: highestBedKey + newBedIndex,
-                plot_points: draft.plot_points,
-                width: draft.width,
-                length: draft.length,
-                height: draft.height,
-                shape: draft.shape,
-              };
-
-              console.log("creating bed 2")
-
-
-              // create bed
-              await this.props.createBed(newBed);
-
-              console.log("updating draft as published 2")
-
-
-              // update draft status as published
-              await this.props.updateDraft(draft._id, { published: true });
-              resolve();
-            } else {
-
-              console.log("updating bed")
-
-              // create bed
-              await this.props.updateBed(bed._id, { plot_points: draft.plot_points });
-              resolve();
-            }
-          })
-        );
-      });
-
-      // update beds
-      Promise.all(updateBeds).then(async () => {
-
-        console.log("getting drafts 2")
-
-        // get drafts
-        await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
-
-        console.log("getting beds 2")
-
-        // get beds
-        await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
-
-        // hide loading indicator
-        this.setState({ isLoading: false });
-
-        // show success message
-        alert('Your changes to the garden beds have been saved.', 'Success!');
-      });
-    }
-  }
-
-  findHighestKey(objects) {
-    let maxObject = objects[0];
-
-    for (let i = 1; i < objects.length; i++) {
-      const currentObject = objects[i];
-      if (currentObject.key > maxObject.key) {
-        maxObject = currentObject;
-      }
-    }
-
-    return maxObject.key;
+      // hide loading indicator
+      this.setState({ isLoading: false });
+    });
   }
 
   next() {
@@ -216,9 +109,9 @@ class Beds extends Component {
   renderHelperText() {
     switch (this.props.route.params.order.type) {
       case types.INITIAL_PLANTING:
-        return 'Build and publish the garden map before starting the initial planting so you can use it as a guide while working. After you have published the garden, it becomes visible to the customer on their app.';
+        return (this.props.drafts.find((draft) => !draft.published)) ? 'Build and publish the garden map before starting the initial planting so you can use it as a guide while working.' : '';
       case types.CROP_ROTATION:
-        return 'Build the garden map before starting the crop rotation so you can use it as a guide while working. After you have planted the physical garden, tap the Next button below to complete the order.';
+        return 'Build the garden map before starting the crop rotation so you can use it as a guide while working.';
       case types.FULL_PLAN || types.ASSISTED_PLAN:
         switch (this.props.route.params.serviceReport) {
           case types.DEAD_PLANTS:
@@ -239,7 +132,7 @@ class Beds extends Component {
     switch (this.props.route.params.order.type) {
       case types.INITIAL_PLANTING:
         return (
-          <View>
+          <View style={{ display: (this.props.drafts.find((draft) => !draft.published)) ? "flex" : "none" }}>
             <Button
               icon={
                 <Ionicons
@@ -249,35 +142,13 @@ class Beds extends Component {
                 />
               }
               disabled={progress < 100 ? true : false}
-              text={(this.props.drafts.find((draft) => !draft.published)) ? "Publish Garden" : "Re-publish Garden"}
+              text="Publish Garden"
               variant="button"
-              onPress={() => this.save()}
+              onPress={() => this.publish()}
             />
             <Text style={{ color: colors.greenD75, marginTop: units.unit4 }}>
-              {(this.props.beds.length < 1) ?
-                `Tapping the "Publish Garden" button will make your garden layout visible to the customer.` :
-                `Tapping the "Re-publish Garden" button will update your garden layout and make the new changes visible to the customer.`
-              }
+              Tapping the "Publish Garden" button will make your garden layout visible to the customer. Once this action is taken, it cannot be undone.
             </Text>
-          </View>
-        )
-      case types.CROP_ROTATION:
-        return (
-          <View>
-            <Button
-              alignIconRight
-              icon={
-                <Ionicons
-                  name="arrow-forward-outline"
-                  size={fonts.h3}
-                  color={colors.purpleB}
-                />
-              }
-              text="Next"
-              variant="button"
-              onPress={() => this.props.navigation.navigate('Image Upload', { order: this.props.route.params.order })}
-              disabled={progress < 100 ? true : false}
-            />
           </View>
         )
       case (types.FULL_PLAN || types.ASSISTED_PLAN):
@@ -326,24 +197,23 @@ class Beds extends Component {
     );
   }
 
-  renderUnsavedBed(bed) {
+  renderBeds() {
     const order = this.props.route.params.order;
     const serviceReport = this.props.route.params.serviceReport;
+    const drafts = this.props.drafts;
+    const beds = this.props.beds;
 
     let rows = [];
     let columns = [];
 
-    for (let i = 0; i < bed.qty; i++) {
-      columns.push(bed);
+    if (order.type === types.INITIAL_PLANTING) {
+      drafts.forEach((draft) => columns.push(draft));
+    } else {
+      beds.forEach((bed) => columns.push(bed));
     }
 
     const size = 2;
     while (columns.length > 0) rows.push(columns.splice(0, size));
-
-    const progressDenominator = (
-      order.type === types.INITIAL_PLANTING ||
-      order.type === types.CROP_ROTATION
-    ) ? 'drafts' : 'beds';
 
     return rows.map((row, i) => {
       return (
@@ -355,9 +225,9 @@ class Beds extends Component {
             flexBasis: 0.5,
           }}>
           {row.map((column, index) => {
-            let width = 2;
-            let base = width * i;
-            let bedId = base + index + 1;
+            const bedId = column.key;
+            const bed = column;
+
             return (
               <TouchableOpacity
                 style={{
@@ -380,9 +250,7 @@ class Beds extends Component {
                   }}>
                   <Paragraph style={{ ...fonts.label }}>#{bedId}</Paragraph>
                   <Paragraph style={{ ...fonts.label }}>
-                    {calculatePlantingProgress(
-                      this.props[progressDenominator].find(data => data.key === bedId),
-                    )}
+                    {calculatePlantingProgress(bed)}
                   </Paragraph>
                 </View>
                 <Card
@@ -407,9 +275,7 @@ class Beds extends Component {
                         color: colors.purpleB,
                         fontSize: fonts.h4,
                       }}>
-                      {/* TODO: if user hasn't changed the name of the garden show this, otherwise show the name of the garden */}
-                      {'Garden #'}
-                      {`${bedId}`}
+                      {bed.name || `Garden #${bedId}`}
                     </Paragraph>
                     <Paragraph
                       style={{
@@ -429,94 +295,67 @@ class Beds extends Component {
     });
   }
 
-  renderSavedBed() {
-
-  }
-
-  renderGardenBedList() {
-
-    // if no drafts are found {...}
-    if (this.props.drafts.length < 1) {
-
-      const order = this.props.route.params.order;
-      const gardenInfo = (order.type === types.INITIAL_PLANTING) ? order.bid.line_items : garden_info;
-
-      // render unsaved bed
-      return gardenInfo.beds.map((bed, index) => (
-        <View key={index} style={{ marginTop: units.unit4 }}>
-          {this.renderUnsavedBed(bed)}
-        </View>
-      ))
-    } else {
-      const order = this.props.route.params.order;
-
-      console.log("this.props.drafts")
-      console.log(this.props.drafts)
-      console.log("this.props.beds")
-      console.log(this.props.beds)
-      console.log("order.customer")
-      console.log(order.customer)
-
-      // render saved bed
-      // return gardenInfo.beds.map((bed, index) => (
-      //   <View key={index} style={{ marginTop: units.unit4 }}>
-      //     {this.renderSavedBed(bed)}
-      //   </View>
-      // ))
-
-      // this.renderSavedBed();
-    }
-  }
-
   render() {
     const { isLoading } = this.state;
-    const { drafts } = this.props;
-    const { garden_info } = this.props.route.params.order.customer;
+    const { drafts, beds } = this.props;
     const order = this.props.route.params.order;
-    const gardenInfo = (order.type === types.INITIAL_PLANTING) ? order.bid.line_items : garden_info;
+    let gardenInfo = null;
 
-    // calculate total plants
-    let totalPlants = 0;
-    gardenInfo.vegetables.forEach(vegetable => (totalPlants += vegetable.qty));
-    gardenInfo.herbs.forEach(herb => (totalPlants += herb.qty));
-    gardenInfo.fruit.forEach(fr => (totalPlants += fr.qty));
-
-    let completePlants = 0;
-    let pendingPlants = 0;
-    let progress = 0;
-
-    const rows = formatMenuData(
-      gardenInfo.vegetables,
-      gardenInfo.herbs,
-      gardenInfo.fruit,
-    );
-
-    const planted = getPlantedList(drafts);
-
-    // if drafts exist {...}
-    if (drafts.length > 0) {
-      rows.forEach(column => {
-        // check drafts for plant
-        const plantIsSaved = planted.find(plant => plant.key === column.key);
-
-        // if plant is saved {...}
-        if (plantIsSaved) {
-          completePlants += 1;
-        } else {
-          pendingPlants += 1;
-        }
-      });
-    } else {
-      pendingPlants = totalPlants;
+    if (order.type === types.INITIAL_PLANTING) {
+      gardenInfo = order.bid.line_items;
+    } else if (order.type === types.CROP_ROTATION) {
+      gardenInfo = this.props.route.params.order.customer.garden_info;
     }
 
-    // set progress
-    progress =
-      pendingPlants === 0
-        ? 100
-        : (completePlants / (pendingPlants + completePlants)) * 100;
+    let label = null;
+    let progress = 0;
 
-    const label = `${completePlants} / ${pendingPlants + completePlants}`;
+    if (gardenInfo) {
+
+      // calculate total plants
+      let totalPlants = 0;
+      gardenInfo.vegetables.forEach(vegetable => (totalPlants += vegetable.qty));
+      gardenInfo.herbs.forEach(herb => (totalPlants += herb.qty));
+      gardenInfo.fruit.forEach(fr => (totalPlants += fr.qty));
+
+      let completePlants = 0;
+      let pendingPlants = 0;
+
+      const rows = formatMenuData(
+        gardenInfo.vegetables,
+        gardenInfo.herbs,
+        gardenInfo.fruit,
+      );
+
+      const plantingData = (order.type === types.INITIAL_PLANTING) ? drafts : beds;
+
+      // if drafts exist {...}
+      if (plantingData.length > 0) {
+        const planted = getPlantedList(plantingData);
+        rows.forEach(column => {
+
+          // check drafts for plant
+          const plantIsSaved = planted.find(plant => plant.key === column.key);
+
+          // if plant is saved {...}
+          if (plantIsSaved) {
+            completePlants += 1;
+          } else {
+            pendingPlants += 1;
+          }
+        });
+      } else {
+        pendingPlants = totalPlants;
+      }
+
+      // set progress
+      progress =
+        pendingPlants === 0
+          ? 100
+          : (completePlants / (pendingPlants + completePlants)) * 100;
+
+      label = `${completePlants} / ${pendingPlants + completePlants}`;
+    }
 
     return (
       <SafeAreaView
@@ -562,17 +401,17 @@ class Beds extends Component {
               </Text>
             </View>
 
-            <View>
-              {/* progress indicator (dynamically visible) */}
-              {(order.type === types.INITIAL_PLANTING || order.type === types.CROP_ROTATION) && this.renderProgress(progress, label)}
+            {/* progress indicator (dynamically visible) */}
+            {(order.type === types.INITIAL_PLANTING || order.type === types.CROP_ROTATION) && this.renderProgress(progress, label)}
 
-              {/* garden beds list */}
-              {this.renderGardenBedList()}
-
-              {/* save button */}
-              {this.renderButton(progress)}
-
+            {/* garden beds list */}
+            <View style={{ marginTop: units.unit4 }}>
+              {this.renderBeds()}
             </View>
+
+            {/* button */}
+            {this.renderButton(progress)}
+
           </View>
         </ScrollView>
       </SafeAreaView>

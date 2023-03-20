@@ -52,85 +52,12 @@ class Approval extends Component {
             // combine plants from selection
             const combinedPlants = combinePlants(this.props.plantSelections);
 
-            // if user has garden info {...}
-            if (this.props.user.garden_info) {
-
-                // set current plants
-                const currentVegetables = minifyDataToID(this.props.user.garden_info.vegetables);
-                const currentFruit = minifyDataToID(this.props.user.garden_info.fruit);
-                const currentHerbs = minifyDataToID(this.props.user.garden_info.herbs);
-
-                // set initial updated plants
-                let newVegetables = [];
-                let newFruit = [];
-                let newHerbs = [];
-
-                // set initial combined plants
-                let currentAndNewVegetables = [];
-                let currentAndNewFruit = [];
-                let currentAndNewHerbs = [];
-
-                // if current vegetables {...}
-                if (currentVegetables) {
-
-                    // iterate through vegetables
-                    combinedPlants.vegetables.forEach((vegetable) => {
-
-                        // only add new vegetables that don't already exist
-                        const alreadyExists = currentVegetables.find((veg) => veg === vegetable);
-                        if (!alreadyExists) newVegetables.push(vegetable);
-
-                    })
-
-                    // combine current and new vegetables
-                    currentAndNewVegetables = currentVegetables.concat(newVegetables);
-
-                }
-
-                // if current fruit {...}
-                if (currentFruit) {
-
-                    // iterate through fruit
-                    combinedPlants.fruit.forEach((fr) => {
-
-                        // only add new fruit that don't already exist
-                        const alreadyExists = currentFruit.find((frt) => frt === fr);
-                        if (!alreadyExists) newFruit.push(fr);
-
-                    })
-
-                    // combine current and new fruit
-                    currentAndNewFruit = currentFruit.concat(newFruit);
-                }
-
-                // if current herbs {...}
-                if (currentHerbs) {
-
-                    // iterate through herbs
-                    combinedPlants.herbs.forEach((herb) => {
-
-                        // only add new herbs that don't already exist
-                        const alreadyExists = currentHerbs.find((h) => h === herb);
-                        if (!alreadyExists) newHerbs.push(herb);
-
-                    })
-
-                    // combine current and new herbs
-                    currentAndNewHerbs = currentHerbs.concat(newHerbs);
-                }
-
-                this.setState({
-                    vegetables: currentAndNewVegetables,
-                    herbs: currentAndNewHerbs,
-                    fruit: currentAndNewFruit
-                })
-            } else {
-                this.setState({
-                    vegetables: combinedPlants.vegetables,
-                    herbs: combinedPlants.herbs,
-                    fruit: combinedPlants.fruit
-                })
-            }
+            // update plant list
+            this.setState({
+                vegetables: combinedPlants.vegetables,
+                herbs: combinedPlants.herbs,
+                fruit: combinedPlants.fruit
+            })
         }
 
         // if multiple quotes {...}

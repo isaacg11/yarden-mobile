@@ -1,5 +1,6 @@
 // libraries
 import React, { Component } from 'react';
+import moment from 'moment';
 import {
   SafeAreaView,
   View,
@@ -42,7 +43,7 @@ import types from '../vars/types';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
-import moment from 'moment';
+import getSeason from '../helpers/getSeason';
 
 class GardenMap extends Component {
   constructor() {
@@ -116,8 +117,8 @@ class GardenMap extends Component {
     // if current user is a gardener {...}
     if (this.props.user.type === types.GARDENER) {
 
-      // if order type is initial planting
-      if ((this.props.order.type === types.INITIAL_PLANTING) || (this.props.order.type === types.CROP_ROTATION)) {
+      // if order type is initial planting {...}
+      if (this.props.order.type === types.INITIAL_PLANTING) {
 
         // if drafts are found {...}
         if (this.props.drafts.length > 0) {
@@ -134,15 +135,45 @@ class GardenMap extends Component {
           }
         }
       } else {
-        const match = this.props.beds.find(
-          bed => bed.key === this.props.bedId
-        );
 
-        // if bed key matches selected bed id {...}
-        if (match) {
+        // get beds
+        const beds = this.props.beds;
+        let bedsOutOfSeason = false;
 
-          // set plot points using bed
-          plotPoints = match.plot_points;
+        // if crop rotation {...}
+        if(this.props.order.type === types.CROP_ROTATION) {
+
+          // get current season
+          const season = getSeason();
+
+          // iterate through beds
+          beds.forEach((bed) => {
+            bed.plot_points.forEach((rows) => {
+              rows.forEach((column) => {
+
+                // if plant is not in season {...}
+                if (column.plant && ((column.plant.id.season !== season) && (column.plant.id.season !== 'annual'))) {
+
+                  // flag the beds as out of season
+                  bedsOutOfSeason = true;
+                }
+              })
+            })
+          })
+        }
+
+        // if plants in bed are in season {...}
+        if(bedsOutOfSeason === false) {
+          const match = beds.find(
+            bed => bed.key === this.props.bedId
+          );
+  
+          // if bed key matches selected bed id {...}
+          if (match) {
+  
+            // set plot points using bed
+            plotPoints = match.plot_points;
+          }
         }
       }
     } else if (this.props.user.type === types.CUSTOMER) { // if current user is a customer {...}
@@ -163,12 +194,19 @@ class GardenMap extends Component {
     let vegetables = false;
     let herbs = false;
     let fruit = false;
+
+    // if gardener {...}
     if (this.props.user.type === types.GARDENER) {
+
+      // if initial planting {...}
       if (this.props.order.type === types.INITIAL_PLANTING) {
+
+        // set plants using bid line items
         vegetables = this.props.order.bid.line_items.vegetables;
         herbs = this.props.order.bid.line_items.herbs;
         fruit = this.props.order.bid.line_items.fruit;
-      } else {
+      } else if (this.props.order.type === types.CROP_ROTATION) { // if crop rotation {...}
+        // set plants using user garden info
         vegetables = this.props.order.customer.garden_info.vegetables;
         herbs = this.props.order.customer.garden_info.herbs;
         fruit = this.props.order.customer.garden_info.fruit;
@@ -253,7 +291,8 @@ class GardenMap extends Component {
     } else {
       // if read only (READ ONLY MODE)
       if (
-        (this.props.user.type === types.GARDENER && (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN)) ||
+        (this.props.user.type === types.GARDENER &&
+          (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN)) ||
         this.props.user.type === types.CUSTOMER
       ) {
 
@@ -270,6 +309,28 @@ class GardenMap extends Component {
           });
         } else {
           return;
+        }
+      } else if (
+        this.props.user.type === types.GARDENER &&
+        this.props.order.type === types.INITIAL_PLANTING
+      ) {
+        const match = this.props.drafts.find((draft) => draft.key === this.props.bedId);
+        if (match && match.published) {
+
+          // if the user selected a plot point with a plant {...}
+          if (plotPoint.plant) {
+
+            // determine if the plant menu should be open
+            const isOpen = this.state.selectedPlotPoint?.id !== plotPoint.id;
+
+            // open plant info menu
+            this.setState({
+              plantInfoIsOpen: isOpen,
+              selectedPlant: plotPoint.plant
+            });
+          } else {
+            return;
+          }
         }
       }
     }
@@ -461,8 +522,19 @@ class GardenMap extends Component {
               // set plant
               plotPoints[i][j].plant = p.selectedPlants[0];
 
+              // set date planted
+              plotPoints[i][j].plant.dt_planted = new Date();
+
+              // if no plant key found {...}
+              if (!plotPoints[i][j].plant.key) {
+
+                // add key (for newly added plants during maintenance)
+                plotPoints[i][j].plant.key = (i * plotPoints[i].length) + (j + 1);
+              }
+
               // check to see if quadrant size is 1 {...}
               if (planted === 0 && renderInfo.quadrantSize === 1) {
+
                 // set image
                 plotPoints[i][j].image = p.plant.id.common_type.image;
               }
@@ -505,9 +577,19 @@ class GardenMap extends Component {
                 // set plant
                 plotPoints[i][j].plant = p.selectedPlants[plantIndex];
 
+                // set date planted
+                plotPoints[i][j].plant.dt_planted = new Date();
+
+                // if no plant key found {...}
+                if (!plotPoints[i][j].plant.key) {
+
+                  // add key (for newly added plants during maintenance)
+                  plotPoints[i][j].plant.key = (i * plotPoints[i].length) + (j + 1);
+                }
+
                 // if there is only 1 quadrant to render OR if the last plant of a group is being rendered {...}
                 if (isOnlyOneQuadrant || isLastPlantOfGroup) {
-                  // add image
+                  // set image
                   plotPoints[i][j].image = p.plant.id.common_type.image;
                 }
 
@@ -1585,10 +1667,12 @@ class GardenMap extends Component {
         if (this.props.user.type === types.GARDENER) {
 
           // if order type is for initial planting {...}
-          if (this.props.order.type === types.INITIAL_PLANTING || this.props.order.type === types.CROP_ROTATION) {
-
-            // update render status
-            render = true;
+          if (this.props.order.type === types.INITIAL_PLANTING) {
+            const match = this.props.drafts.find((draft) => draft.key === this.props.bedId);
+            if (match && !match.published) {
+              // update render status
+              render = true;
+            }
           } else if (this.props.order.type === types.FULL_PLAN || this.props.order.type === types.ASSISTED_PLAN) { // if order type is for maintenance {...}
 
             // if service report is for new plants {...}
@@ -1597,6 +1681,8 @@ class GardenMap extends Component {
               // update render status
               render = true;
             }
+          } else if (this.props.order.type === types.CROP_ROTATION) {
+            render = true;
           }
         }
       }
@@ -2025,7 +2111,7 @@ class GardenMap extends Component {
         if (this.props.order.type === types.INITIAL_PLANTING) {
           data = this.props.drafts;
         } else if (this.props.order.type === types.CROP_ROTATION) {
-          data = this.props.drafts;
+          data = this.props.beds;
         }
       }
 
@@ -2154,6 +2240,7 @@ class GardenMap extends Component {
       order,
       bedId,
       beds,
+      drafts,
       serviceReport,
       navigateToNotes,
       navigateToHarvestInstructions
@@ -2177,8 +2264,23 @@ class GardenMap extends Component {
                 vegetables={vegetables}
                 herbs={herbs}
                 fruit={fruit}
+                order={order}
                 close={() => this.setState({ plantMenuIsOpen: false })}
-                addPlant={(p) => this.setPlant(p)}
+                addPlant={async (p) => {
+
+                  // set plant in bed
+                  await this.setPlant(p);
+
+                  if (order.type === types.CROP_ROTATION) {
+                    const bed = beds.find((b) => b.key === bedId);
+
+                    // update bed
+                    await this.props.updateBed(bed._id, { plot_points: this.state.plotPoints });
+
+                    // get updated beds
+                    await this.props.getBeds(`customer=${order.customer._id}`);
+                  }
+                }}
               />
             )}
 
@@ -2238,12 +2340,17 @@ class GardenMap extends Component {
                 isOpen={plantInfoIsOpen}
                 close={() => {
                   this.setState({ plantInfoIsOpen: false }, () => {
-                    if (
-                      ((user.type === types.GARDENER) && (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN)) ||
-                      user.type === types.CUSTOMER
-                    ) {
+                    if (user.type === types.GARDENER) {
+                      if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
+                        this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
+                      } else if (order.type === types.INITIAL_PLANTING) {
+                        const publishedDraft = drafts.find((draft) => draft.key === this.props.bedId && draft.published);
+                        if (publishedDraft) {
+                          this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
+                        }
+                      }
+                    } else if (user.type === types.CUSTOMER) {
                       this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
-
                     }
                   });
                 }}

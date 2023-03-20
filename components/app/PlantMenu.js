@@ -20,6 +20,7 @@ import formatMenuData from '../../helpers/formatMenuData';
 import units from '../styles/units';
 import fonts from '../styles/fonts';
 import colors from '../styles/colors';
+import types from '../../vars/types';
 
 class PlantMenu extends Component {
 
@@ -173,22 +174,29 @@ class PlantMenu extends Component {
         let pendingPlants = 0;
 
         const rows = formatMenuData(this.props.vegetables, this.props.herbs, this.props.fruit);
-        const planted = getPlantedList(this.props.drafts);
+        const planted = (this.props.order.type === types.INITIAL_PLANTING) ? getPlantedList(this.props.drafts) : getPlantedList(this.props.beds);
+        const plantData = (this.props.order.type === types.INITIAL_PLANTING) ? this.props.drafts : this.props.beds;
 
-        // if drafts exist {...}
-        if(this.props.drafts.length > 0) {
+        // if plant data exist {...}
+        if (plantData.length > 0) {
             rows.forEach((column) => {
                 // check drafts for plant
                 const plantIsSaved = (planted.find((plant) => plant.key === column.key));
-                
+
                 // if plant is saved {...}
-                if(plantIsSaved) {
+                if (plantIsSaved) {
+
+                    // increment complete plants
                     completePlants += 1;
                 } else {
+
+                    // increment pending plants
                     pendingPlants += 1;
                 }
             })
         } else {
+
+            // set pending plants
             pendingPlants = totalPlants;
         }
 
@@ -240,7 +248,7 @@ class PlantMenu extends Component {
         // get status filter
         const status = this.state.status;
         const rows = formatMenuData(this.props.vegetables, this.props.herbs, this.props.fruit);
-        const planted = getPlantedList(this.props.drafts);
+        const planted = (this.props.order.type === types.INITIAL_PLANTING) ? getPlantedList(this.props.drafts) : getPlantedList(this.props.beds);
 
         return (
             <View style={{ backgroundColor: colors.greenE10 }}>
@@ -401,7 +409,7 @@ class PlantMenu extends Component {
     renderListMenu() {
 
         const listItems = formatMenuData(this.props.vegetables, this.props.herbs, this.props.fruit, this.state.search);
-        const currentPlants = getPlantedList(this.props.drafts);
+        const currentPlants = (this.props.order.type === types.INITIAL_PLANTING) ? getPlantedList(this.props.drafts) : getPlantedList(this.props.beds);
 
         return (
             <View style={{ marginTop: units.unit2, backgroundColor: colors.greenE10 }}>
@@ -476,7 +484,7 @@ class PlantMenu extends Component {
     }
 
     renderMenuOptions() {
-        if(this.state.status === 'pending') {
+        if (this.state.status === 'pending') {
             return (
                 <View style={{
                     borderTopWidth: 1,
@@ -493,18 +501,18 @@ class PlantMenu extends Component {
                         style={{ width: '100%' }}
                         onPress={() => {
                             if (this.state.selectedPlants.length > 0) {
-    
+
                                 // add plant
                                 this.props.addPlant({
                                     plant: this.state.selectedPlant,
                                     selectedPlants: this.state.selectedPlants
                                 });
-    
+
                                 // clear selections
                                 this.setState({
                                     selectedPlants: []
                                 })
-    
+
                                 // close modal
                                 this.props.close();
                             }
@@ -514,7 +522,7 @@ class PlantMenu extends Component {
             )
         }
 
-        
+
     }
 
     renderSearchBar() {
@@ -568,7 +576,8 @@ class PlantMenu extends Component {
 function mapStateToProps(state) {
     return {
         user: state.user,
-        drafts: state.drafts
+        drafts: state.drafts,
+        beds: state.beds
     };
 }
 

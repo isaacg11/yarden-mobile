@@ -176,29 +176,31 @@ class Substitution extends Component {
             }
         }
 
-        let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
-        let herbs = this.props.route.params.order.customer.garden_info.herbs;
-        let fruit = this.props.route.params.order.customer.garden_info.fruit;
-        const gardenInfo = this.props.route.params.order.customer.garden_info;
-
-        if (substitute.id.category.name === types.VEGETABLE) {
-            const updatedVegetables = await this.updateQty(vegetables, substitute);
-            gardenInfo.vegetables = updatedVegetables;
+        if(this.props.route.params.order.type === types.CROP_ROTATION) {
+            let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
+            let herbs = this.props.route.params.order.customer.garden_info.herbs;
+            let fruit = this.props.route.params.order.customer.garden_info.fruit;
+            const gardenInfo = this.props.route.params.order.customer.garden_info;
+    
+            if (substitute.id.category.name === types.VEGETABLE) {
+                const updatedVegetables = await this.updateQty(vegetables, substitute);
+                gardenInfo.vegetables = updatedVegetables;
+            }
+    
+            if (substitute.id.category.name === types.CULINARY_HERB) {
+                const updatedHerbs = await this.updateQty(herbs, substitute);
+                gardenInfo.herbs = updatedHerbs;
+            }
+    
+            if (substitute.id.category.name === types.FRUIT) {
+                const updatedFruit = await this.updateQty(fruit, substitute);
+                gardenInfo.fruit = updatedFruit;
+            }
+    
+            // update customer with new garden info
+            await this.props.updateUser(`userId=${this.props.route.params.order.customer._id}`, { gardenInfo }, true);
         }
-
-        if (substitute.id.category.name === types.CULINARY_HERB) {
-            const updatedHerbs = await this.updateQty(herbs, substitute);
-            gardenInfo.herbs = updatedHerbs;
-        }
-
-        if (substitute.id.category.name === types.FRUIT) {
-            const updatedFruit = await this.updateQty(fruit, substitute);
-            gardenInfo.fruit = updatedFruit;
-        }
-
-        // update customer with new garden info
-        await this.props.updateUser(`userId=${this.props.route.params.order.customer._id}`, { gardenInfo }, true);
-
+        
         // get updated orders
         await this.props.getOrders(`status=pending`);
     }

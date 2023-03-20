@@ -22,7 +22,7 @@ import PlantSelection from '../components/app/PlantSelection';
 // actions
 import { getOrders, updateOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
-import { getBeds } from '../actions/beds/index';
+import { getBeds, updateBed } from '../actions/beds/index';
 import { getDrafts } from '../actions/drafts/index';
 import { getReports } from '../actions/reports/index';
 import { getReportType } from '../actions/reportTypes/index';
@@ -79,8 +79,8 @@ class OrderDetails extends Component {
       // get previous maintenance reports for customer
       await this.props.getReports(`customer=${order.customer._id}&type=${reportType._id}`);
 
-      // if order type is initial planting or crop rotation {...}
-      if (order.type == types.INITIAL_PLANTING || order.type == types.CROP_ROTATION) {
+      // if order type is initial planting {...}
+      if (order.type == types.INITIAL_PLANTING) {
 
         // get drafts
         await this.props.getDrafts(`order=${order._id}`);
@@ -114,51 +114,11 @@ class OrderDetails extends Component {
       }
     }
 
-    // if order type is crop rotation {...}
-    let renderPlantSelection = false;
-    if (order.type == types.CROP_ROTATION) {
-
-      // if current user is a gardener {...}
-      if (this.props.user.type === types.CUSTOMER) {
-
-        // get current season
-        const currentSeason = getSeason();
-
-        if (this.props.user.garden_info.vegetables.length > 0) {
-          const previousSeasonVegetable = this.props.user.garden_info.vegetables.find((v) => {
-            const vegetable = v.id || v;
-            if ((vegetable.season !== types.ANNUAL) && (vegetable.season !== currentSeason)) return true;
-          });
-
-          if (previousSeasonVegetable) renderPlantSelection = true;
-        }
-
-        if (this.props.user.garden_info.herbs.length > 0) {
-          const previousSeasonHerb = this.props.user.garden_info.herbs.find((h) => {
-            const herb = h.id || h;
-            if ((herb.season !== types.ANNUAL) && (herb.season !== currentSeason)) return true;
-          });
-
-          if (previousSeasonHerb) renderPlantSelection = true;
-        }
-
-        if (this.props.user.garden_info.fruit.length > 0) {
-          const previousSeasonFruit = this.props.user.garden_info.fruit.find((f) => {
-            const fruit = f.id || f;
-            if ((fruit.season !== types.ANNUAL) && (fruit.season !== currentSeason)) return true;
-          });
-
-          if (previousSeasonFruit) renderPlantSelection = true;
-        }
-      }
-    }
-
     // hide loading indicator
     this.setState({
       isLoading: false,
       changeOrders,
       wateringSchedule,
-      renderPlantSelection
     });
   }
 
@@ -199,19 +159,124 @@ class OrderDetails extends Component {
     );
   }
 
-  setPlants() {
+  processCropRotation(bedsOutOfSeason) {
 
+    // get order
+    const order = this.props.route.params;
+
+    // if current plants in beds are out of season {...}
+    if (bedsOutOfSeason) {
+
+      // show loading indicator
+      this.setState({ isLoading: true });
+
+      const beds = this.props.beds;
+      const updateBeds = [];
+
+      // iterate through beds
+      beds.forEach(async (bed) => {
+        const measurements = 2;
+        const rows = (bed.length / 12) * measurements;
+        const columns = (bed.width / 12) * measurements;
+        const plotPoints = await this.generatePlotPoints(rows, columns);
+
+        updateBeds.push(new Promise(async resolve => {
+
+          // resets bed with no plants
+          await this.props.updateBed(bed._id, { plot_points: plotPoints });
+          resolve();
+        }))
+      })
+
+      Promise.all(updateBeds).then(() => {
+
+        // NOTE: This timeout is necessary to give the database time to update the garden beds before attempting to query them
+        // Author: Isaac G. 3/19/23
+        setTimeout(async () => {
+
+          // get beds
+          await this.props.getBeds(`customer=${order.customer._id}`);
+
+          // navigate user to beds page
+          this.props.navigation.navigate('Beds', { order });
+
+          // hide loading indicator
+          this.setState({ isLoading: false });
+        }, 3000)
+      })
+    } else {
+      // navigate user to beds page
+      this.props.navigation.navigate('Beds', { order });
+    }
+  }
+
+  async generatePlotPoints(rows, columns) {
+    // set initial plot points list
+    let plotPoints = [];
+
+    // set initial plot points id
+    let plotPointId = 0;
+
+    // iterate rows
+    for (let i = 0; i < rows; i++) {
+      // set initial row value
+      let row = [];
+
+      // iterate columns
+      for (let j = 0; j < columns; j++) {
+        // set plot point id
+        plotPointId += 1;
+
+        // set row
+        row.push({
+          id: plotPointId,
+          plant: null,
+          selected: false,
+        });
+      }
+
+      // set plot points
+      plotPoints.push(row);
+    }
+
+    return plotPoints;
   }
 
   render() {
     const order = this.props.route.params;
-    const { user, beds, drafts } = this.props;
+    const { user, drafts, beds } = this.props;
     const {
       isLoading,
       changeOrders,
       wateringSchedule,
-      renderPlantSelection
     } = this.state;
+
+    let cropRotationSelectionComplete = true;
+    let selectionOutOfSeason = false;
+    let bedsOutOfSeason = false;
+    if (order.type === types.CROP_ROTATION) {
+      const season = getSeason();
+      if (user.type === types.CUSTOMER) {
+        if (user.garden_info.vegetables) {
+          selectionOutOfSeason = user.garden_info.vegetables.find((vegetable) => (vegetable.id.season !== season) && (vegetable.id.season !== 'annual'));
+        } else if (user.garden_info.herbs) {
+          selectionOutOfSeason = user.garden_info.herbs.find((herb) => (herb.id.season !== season) && (herb.id.season !== 'annual'));
+        } else if (user.garden_info.fruit) {
+          selectionOutOfSeason = user.garden_info.fruit.find((fr) => (fr.id.season !== season) && (fr.id.season !== 'annual'));
+        }
+        if (selectionOutOfSeason) cropRotationSelectionComplete = false;
+      } else if (user.type === types.GARDENER) {
+        beds.forEach((bed) => {
+          bed.plot_points.forEach((rows) => {
+            rows.forEach((column) => {
+              if (column.plant && ((column.plant.id.season !== season) && (column.plant.id.season !== 'annual'))) {
+                bedsOutOfSeason = true;
+              }
+            })
+          })
+        })
+      }
+    }
 
     return (
       <SafeAreaView
@@ -376,8 +441,8 @@ class OrderDetails extends Component {
 
                     {/* buttons */}
                     <Button
-                      variant={(drafts.length < 1) ? 'button' : 'btn2'}
-                      text={`${(drafts.length < 1)
+                      variant={drafts.find((draft) => !draft.published) ? 'button' : 'btn2'}
+                      text={`${drafts.find((draft) => !draft.published)
                         ? 'Build Garden Map'
                         : 'View Garden Beds'
                         } `}
@@ -394,7 +459,7 @@ class OrderDetails extends Component {
                     />
                     <Button
                       style={{
-                        display: (drafts.length < 1) ? 'none' : 'flex',
+                        display: drafts.find((draft) => !draft.published) ? 'none' : 'flex',
                         marginTop: units.unit4,
                       }}
                       text="Process Order"
@@ -435,46 +500,43 @@ class OrderDetails extends Component {
                   </View>
                 )}
 
-              {/* crop rotation UI (dynamically visible) */}
-              {(renderPlantSelection && (order.status === 'pending')) && (
-                <Button
-                  style={{
-                    marginTop: units.unit4
-                  }}
-                  text="Select Plants"
-                  onPress={() => this.props.navigation.navigate('Garden', { isCropRotation: true })}
-                />
-              )}
-
               {/* plant selections (dynamically visible) */}
               {order.status === 'pending' &&
                 order.type === types.CROP_ROTATION &&
                 user.type === types.CUSTOMER && (
                   <View style={{ marginTop: units.unit4 }}>
-                    <Collapse
-                      title="Vegetables"
-                      content={
-                        <PlantSelection
-                          plants={user.garden_info.vegetables}
-                        />
-                      }
-                    />
-                    <Collapse
-                      title="Herbs"
-                      content={
-                        <PlantSelection
-                          plants={user.garden_info.herbs}
-                        />
-                      }
-                    />
-                    <Collapse
-                      title="Fruit"
-                      content={
-                        <PlantSelection
-                          plants={user.garden_info.fruit}
-                        />
-                      }
-                    />
+                    <View style={{ display: (cropRotationSelectionComplete) ? 'flex' : 'none' }}>
+                      <Collapse
+                        title="Vegetables"
+                        content={
+                          <PlantSelection
+                            plants={user.garden_info.vegetables}
+                          />
+                        }
+                      />
+                      <Collapse
+                        title="Herbs"
+                        content={
+                          <PlantSelection
+                            plants={user.garden_info.herbs}
+                          />
+                        }
+                      />
+                      <Collapse
+                        title="Fruit"
+                        content={
+                          <PlantSelection
+                            plants={user.garden_info.fruit}
+                          />
+                        }
+                      />
+                    </View>
+                    <View style={{ display: (cropRotationSelectionComplete) ? 'none' : 'flex' }}>
+                      <Button
+                        text="Select Plants"
+                        onPress={() => this.props.navigation.navigate('Garden', { isCropRotation: true })}
+                      />
+                    </View>
                   </View>
                 )}
 
@@ -482,7 +544,7 @@ class OrderDetails extends Component {
               {order.status === 'pending' &&
                 order.type === types.CROP_ROTATION &&
                 user.type === types.GARDENER &&
-                drafts.length > 0 && (
+                cropRotationSelectionComplete && (
                   <View style={{ marginTop: units.unit4 }}>
                     <View>
                       <Collapse
@@ -520,21 +582,32 @@ class OrderDetails extends Component {
                         }
                       />
                     </View>
-                  </View>
-                )}
-
-              {/* crop rotation UI - gardener (dynamically visible) */}
-              {order.status === 'pending' &&
-                user.type === types.GARDENER &&
-                order.type === types.CROP_ROTATION &&
-                drafts.length > 0 && (
-                  <View style={{ marginTop: units.unit4 }}>
-                    <Button
-                      text="Process Order"
-                      onPress={() =>
-                        this.props.navigation.navigate('Beds', { order })
-                      }
-                    />
+                    <View>
+                      {/* buttons */}
+                      <Button
+                        variant={(bedsOutOfSeason) ? 'button' : 'btn2'}
+                        text={`${(bedsOutOfSeason)
+                          ? 'Build Garden Map'
+                          : 'View Garden Beds'
+                          } `}
+                        onPress={() => this.processCropRotation(bedsOutOfSeason)}
+                        icon={
+                          <Ionicons
+                            name="grid-outline"
+                            size={units.unit4}
+                            color={colors.purpleB}
+                          />
+                        }
+                      />
+                      <Button
+                        style={{
+                          display: (bedsOutOfSeason) ? 'none' : 'flex',
+                          marginTop: units.unit4,
+                        }}
+                        text="Process Order"
+                        onPress={() => this.props.navigation.navigate('Image Upload', { order })}
+                      />
+                    </View>
                   </View>
                 )}
             </View>
@@ -551,7 +624,8 @@ function mapStateToProps(state) {
     beds: state.beds,
     drafts: state.drafts,
     questions: state.questions,
-    reports: state.reports
+    answers: state.answers,
+    reports: state.reports,
   };
 }
 
@@ -566,7 +640,8 @@ function mapDispatchToProps(dispatch) {
       getReportType,
       getQuestions,
       getReports,
-      getAnswers
+      getAnswers,
+      updateBed
     },
     dispatch,
   );

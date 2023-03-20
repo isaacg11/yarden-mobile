@@ -194,7 +194,11 @@ class ImageUpload extends Component {
         // show loading indicator
         this.setState({ isLoading: true });
 
-        let beds = this.props.beds;
+        // get beds associated to initial planting order
+        let beds = this.props.beds.filter(item => {
+            return this.props.drafts.some(ele => ele.key === item.key);
+        });
+
         const order = this.props.selectedOrder;
         let updateBeds = [];
         let createPlantActivities = [];
@@ -203,9 +207,6 @@ class ImageUpload extends Component {
             bed.plot_points.forEach((row) => {
                 row.forEach((column) => {
                     if (column.plant) {
-
-                        // mark dt_planted for each plant was planted
-                        column.plant.dt_planted = new Date();
 
                         // check if column has image, as to only create a single plant activity
                         if (column.image) {
@@ -234,7 +235,7 @@ class ImageUpload extends Component {
             updateBeds.push(
                 new Promise(async resolve => {
 
-                    // update bed
+                    // update bed (date planted)
                     await this.props.updateBed(bed._id, { plot_points: bed.plot_points });
                     resolve();
                 }),
@@ -276,11 +277,11 @@ class ImageUpload extends Component {
 
                 let maintenancePlan = order.customer.garden_info.maintenance_plan;
 
-                // if customer selected a maintenance plan {...}
+                // if customer selected a maintenance plan and it has not been activated yet {...}
                 if ((maintenancePlan !== 'none') && (!order.customer.payment_info.plan_id)) {
 
                     // NOTE: This check is necessary because for the new mobile schema we use plan id's instead of name strings - change when mobile app development is done
-                    if (maintenancePlan !== 'full plan' && maintenancePlan !== 'assisted plan') {
+                    if (maintenancePlan !== types.FULL_PLAN && maintenancePlan !== types.ASSISTED_PLAN) {
 
                         // set maintance plan
                         const plan = this.props.plans.find((plan) => plan._id === maintenancePlan);
@@ -288,7 +289,7 @@ class ImageUpload extends Component {
                         maintenancePlan = plan.type;
                     }
 
-                    const orderDescription = (maintenancePlan === 'full plan') ? vars.orderDescriptions.customer.fullPlan : vars.orderDescriptions.customer.assistedPlan;
+                    const orderDescription = (maintenancePlan === types.FULL_PLAN) ? vars.orderDescriptions.customer.fullPlan : vars.orderDescriptions.customer.assistedPlan;
 
                     const maintenanceOrder = {
                         type: maintenancePlan,
@@ -323,7 +324,7 @@ class ImageUpload extends Component {
                     }
 
                     // update user payment info with new plan id
-                    await this.props.updateUser(`userId=${order.customer._id}`, { paymentInfo: paymentInfo }, true);
+                    await this.props.updateUser(`userId=${order.customer._id}`, { paymentInfo }, true);
 
                     // get pending orders
                     await this.props.getOrders(
@@ -336,6 +337,14 @@ class ImageUpload extends Component {
                     // hide loading indicator
                     this.setState({ isLoading: false });
                 } else {
+                    // get pending orders
+                    await this.props.getOrders(
+                        `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                    );
+                    
+                    // redirect user to success page
+                    this.props.navigation.navigate('Order Complete', { orderType: order.type });
+
                     // hide loading indicator
                     this.setState({ isLoading: false });
                 }
@@ -353,20 +362,11 @@ class ImageUpload extends Component {
         let updateBeds = [];
         let createPlantActivities = [];
 
+        // iterate through beds
         beds.forEach((bed) => {
-
-            // find matching draft
-            const draft = this.props.drafts.find((draft) => draft.key === bed.key);
-
-            // replace bed plot points with draft plot points
-            bed.plot_points = draft.plot_points;
-            
             bed.plot_points.forEach((row) => {
                 row.forEach((column) => {
                     if (column.plant) {
-
-                        // mark dt_planted for each plant was planted
-                        column.plant.dt_planted = new Date();
 
                         // check if column has image, as to only create a single plant activity
                         if (column.image) {
