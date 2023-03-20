@@ -1,56 +1,50 @@
-import minifyDataToID from "./minifyDataToID";
+import separatePlantsByType from "./separatePlantsByType";
 
 export default function combinePlants(plants) {
 
     let combinedVegetables = [];
-    let combinedFruit = [];
     let combinedHerbs = [];
+    let combinedFruit = [];
 
     plants.forEach((plant) => {
-        const vegetables = minifyDataToArray(plant.vegetables);
-        const fruit = minifyDataToArray(plant.fruit);
+        const vegetables = plant.vegetables;
         const herbs = plant.herbs;
+        const fruit = plant.fruit;
 
-        vegetables.forEach((v) => {
-            const vegetableExists = combinedVegetables.find((cv) => cv._id === v._id);
-            if(!vegetableExists) combinedVegetables.push(v);
-        })
+        for (let vegetable in vegetables) {
+            const vegetablesSeparatedByType = separatePlantsByType(vegetables[vegetable]);
+            vegetablesSeparatedByType.forEach((p) => {
+                combinedVegetables.push({
+                    id: p[0]._id,
+                    qty: p.length
+                })
+            })
+        }
 
-        fruit.forEach((f) => {
-            const fruitExists = combinedFruit.find((cf) => cf._id === f._id);
-            if(!fruitExists) combinedFruit.push(f);
-        })
+        for (let herb in herbs) {
+            const herbsSeparatedByType = separatePlantsByType(herbs[herb]);
+            herbsSeparatedByType.forEach((h) => {
+                combinedHerbs.push({
+                    id: h[0]._id,
+                    qty: h.length
+                })
+            })
+        }
 
-        herbs.forEach((h) => {
-            const herbsExists = combinedHerbs.find((ch) => ch._id === h._id);
-            if(!herbsExists) combinedHerbs.push(h);
-        })
+        for (let fr in fruit) {
+            const fruitSeparatedByType = separatePlantsByType(fruit[fr]);
+            fruitSeparatedByType.forEach((f) => {
+                combinedFruit.push({
+                    id: f[0]._id,
+                    qty: f.length
+                })
+            })
+        }
     })
 
-    const vegetableIds = minifyDataToID(combinedVegetables);
-    const fruitIds = minifyDataToID(combinedFruit);
-    const herbIds = minifyDataToID(combinedHerbs);
-
     return {
-        vegetables: vegetableIds,
-        herbs: herbIds,
-        fruit: fruitIds
+        vegetables: combinedVegetables,
+        herbs: combinedHerbs,
+        fruit: combinedFruit
     }
-}
-
-function minifyDataToArray(data) {
-    let plants = [];
-
-    // iterate through plants
-    for (let v in data) {
-
-        // iterate through plant classes
-        data[v].forEach((d) => {
-
-            // add to plant list
-            plants.push(d);
-        })
-    }
-
-    return plants;
 }

@@ -25,7 +25,7 @@ class CircularButton extends Component {
     let variant = {};
     if (this.props.small) {
       variant.paddingVertical = units.unit3;
-      variant.paddingHorizontal = units.unit4;
+      variant.paddingHorizontal = units.unit3;
     }
     if (this.props.large) {
       variant.paddingVertical = units.unit5;

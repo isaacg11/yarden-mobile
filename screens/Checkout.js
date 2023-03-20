@@ -1,3 +1,4 @@
+// libraries
 import React, { Component } from 'react';
 import { SafeAreaView, View, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -5,19 +6,36 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import CheckBox from '@react-native-community/checkbox';
+
+// vars
 import vars from '../vars/index';
+import types from '../vars/types';
+
+// UI components
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import Link from '../components/UI/Link';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
 import ElectronicSignatureAgreement from '../components/app/ElectronicSignatureAgreement';
+import PaymentMethod from '../components/app/PaymentMethod';
+import Header from '../components/UI/Header';
+import Label from '../components/UI/Label';
+import Card from '../components/UI/Card';
+
+// helpers
 import calculateQuoteCost from '../helpers/calculateQuote';
 import delimit from '../helpers/delimit';
 import getCompanyName from '../helpers/getCompanyName';
 import getScreenShot from '../helpers/getScreenShot';
 import uploadImage from '../helpers/uploadImage';
 import formatAddress from '../helpers/formatAddress';
+import formatMaterials from '../helpers/formatMaterials';
+import minifyDataToID from '../helpers/minifyDataToID';
+import combinePlants from '../helpers/combinePlants';
+import clearCart from '../helpers/clearCart';
+
+// actions
 import { chargeCard } from '../actions/cards/index';
 import { getIP } from '../actions/location/index';
 import { createApproval } from '../actions/approvals/index';
@@ -33,18 +51,12 @@ import {
   resetChangeOrders,
 } from '../actions/changeOrders/index';
 import { createPurchase } from '../actions/purchases/index';
-import formatMaterials from '../helpers/formatMaterials';
-import minifyDataToID from '../helpers/minifyDataToID';
-import combinePlants from '../helpers/combinePlants';
-import PaymentMethod from '../components/app/PaymentMethod';
-import Header from '../components/UI/Header';
 import { getItems } from '../actions/items/index';
-import clearCart from '../helpers/clearCart';
+
+// styles
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
-import Label from '../components/UI/Label';
-import Card from '../components/UI/Card';
 
 class Checkout extends Component {
   state = {};
@@ -52,87 +64,23 @@ class Checkout extends Component {
   async componentDidMount() {
     // get user info
     // NOTE: We need to do this to ensure that the user info is up-to-date before processing (example: if Yarden uploads new garden from web platform, system will add new gardens to garden_info - but the app won't be aware of these changes unless we fetch the users data)
+    // author: Isaac G. 2/25/23
     await this.props.getUser(this.props.user._id);
 
-    // if plant selections {...}
+    // if plant selections (i.e Installation or Revive) {...}
     if (this.props.route.params.plantSelections) {
+
       // combine plants from selection
       const combinedPlants = combinePlants(
         this.props.route.params.plantSelections,
       );
 
-      // if user has garden info {...}
-      if (this.props.user.garden_info) {
-        // set current plants
-        const currentVegetables = minifyDataToID(
-          this.props.user.garden_info.vegetables,
-        );
-        const currentFruit = minifyDataToID(this.props.user.garden_info.fruit);
-        const currentHerbs = minifyDataToID(this.props.user.garden_info.herbs);
-
-        // set initial updated plants
-        let newVegetables = [];
-        let newFruit = [];
-        let newHerbs = [];
-
-        // set initial combined plants
-        let currentAndNewVegetables = [];
-        let currentAndNewFruit = [];
-        let currentAndNewHerbs = [];
-
-        // if current vegetables {...}
-        if (currentVegetables) {
-          // iterate through vegetables
-          combinedPlants.vegetables.forEach(vegetable => {
-            // only add new vegetables that don't already exist
-            const alreadyExists = currentVegetables.find(
-              veg => veg === vegetable,
-            );
-            if (!alreadyExists) newVegetables.push(vegetable);
-          });
-
-          // combine current and new vegetables
-          currentAndNewVegetables = currentVegetables.concat(newVegetables);
-        }
-
-        // if current fruit {...}
-        if (currentFruit) {
-          // iterate through fruit
-          combinedPlants.fruit.forEach(fr => {
-            // only add new fruit that don't already exist
-            const alreadyExists = currentFruit.find(frt => frt === fr);
-            if (!alreadyExists) newFruit.push(fr);
-          });
-
-          // combine current and new fruit
-          currentAndNewFruit = currentFruit.concat(newFruit);
-        }
-
-        // if current herbs {...}
-        if (currentHerbs) {
-          // iterate through herbs
-          combinedPlants.herbs.forEach(herb => {
-            // only add new herbs that don't already exist
-            const alreadyExists = currentHerbs.find(h => h === herb);
-            if (!alreadyExists) newHerbs.push(herb);
-          });
-
-          // combine current and new herbs
-          currentAndNewHerbs = currentHerbs.concat(newHerbs);
-        }
-
-        this.setState({
-          vegetables: currentAndNewVegetables,
-          herbs: currentAndNewHerbs,
-          fruit: currentAndNewFruit,
-        });
-      } else {
-        this.setState({
-          vegetables: combinedPlants.vegetables,
-          herbs: combinedPlants.herbs,
-          fruit: combinedPlants.fruit,
-        });
-      }
+      // update plant list
+      this.setState({
+        vegetables: combinedPlants.vegetables,
+        herbs: combinedPlants.herbs,
+        fruit: combinedPlants.fruit,
+      });
     }
 
     // if multiple quotes {...}
@@ -251,6 +199,9 @@ class Checkout extends Component {
     if (!this.props.user.payment_info)
       return alert('Please add a payment method');
 
+    // take screenshot (proof of approval agreement)
+    const screenshot = await getScreenShot();
+
     // show loading indicator
     this.setState({ isLoading: true });
 
@@ -289,9 +240,6 @@ class Checkout extends Component {
 
     // get user IP (proof of location at time of approval)
     const ip = await this.props.getIP();
-
-    // take screenshot (proof of approval agreement)
-    const screenshot = await getScreenShot();
 
     // save screenshot of approval image
     const approvalImage = await uploadImage(screenshot, 'approval.jpg');
@@ -340,42 +288,60 @@ class Checkout extends Component {
 
       // check to see if the quote is for a garden
       const isGarden =
-        this.props.route.params.type === 'installation' ||
-        this.props.route.params.type === 'revive'
+        this.props.route.params.type === types.INSTALLATION ||
+        this.props.route.params.type === types.REVIVE
 
       // if garden quote {...}
       if (isGarden) {
-        // get plant selection
-        const plantList = this.getPlantsList(this.props.route.params);
+
+        // update garden info
+        await this.updateGardenInfo(
+          this.state.vegetables,
+          this.state.fruit,
+          this.state.herbs,
+        );
+
+        // combine plants from selection
+        const combinedPlants = combinePlants(
+          this.props.route.params.plantSelections,
+        );
 
         // get plant selection
         let lineItems = this.props.route.params.line_items;
 
+        let beds = lineItems.beds;
+        beds.forEach((bed) => {
+          bed.shape = bed.shape._id;
+        })
+
+        lineItems.beds = beds;
+
         // add plants to line items
-        lineItems.vegetables = minifyDataToID(plantList.vegetables);
-        lineItems.herbs = minifyDataToID(plantList.herbs);
-        lineItems.fruit = minifyDataToID(plantList.fruit);
-
+        lineItems.vegetables = combinedPlants.vegetables;
+        lineItems.herbs = combinedPlants.herbs;
+        lineItems.fruit = combinedPlants.fruit;
         updatedQuote.line_items = lineItems;
-
-        // update garden info
-        await this.updateGardenInfo(
-          lineItems.vegetables,
-          lineItems.fruit,
-          lineItems.herbs,
-        );
       }
 
-      // update quote as "approved"
-      await this.props.updateQuote(this.props.route.params._id, updatedQuote);
+      updatedQuote.line_items = lineItems;
 
-      // schedule a new order
-      order = await this.scheduleNewOrder(
-        approval.data,
-        this.props.route.params,
-        isGarden,
+      // update garden info
+      await this.updateGardenInfo(
+        lineItems.vegetables,
+        lineItems.fruit,
+        lineItems.herbs,
       );
     }
+
+    // update quote as "approved"
+    await this.props.updateQuote(this.props.route.params._id, updatedQuote);
+
+    // schedule a new order
+    order = await this.scheduleNewOrder(
+      approval.data,
+      this.props.route.params,
+      isGarden,
+    );
 
     this.finish(order);
   }
@@ -395,8 +361,13 @@ class Checkout extends Component {
           this.props.user.garden_info.maintenance_plan;
 
       // if user already has beds, set beds
-      if (this.props.user.garden_info.beds)
-        gardenInfo.beds = this.props.user.garden_info.beds;
+      if (this.props.user.garden_info.beds) {
+        let beds = this.props.user.garden_info.beds;
+        beds.forEach((bed) => {
+          bed.shape = bed.shape._id;
+        })
+        gardenInfo.beds = beds;
+      }
 
       // if user already has accessories, set accessories
       if (this.props.user.garden_info.accessories)
@@ -912,7 +883,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     orders: state.orders,
-    items: state.items,
+    items: state.items
   };
 }
 
@@ -936,7 +907,7 @@ function mapDispatchToProps(dispatch) {
       resetChangeOrders,
       sendSms,
       createPurchase,
-      getUser,
+      getUser
     },
     dispatch,
   );

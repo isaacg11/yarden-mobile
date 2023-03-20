@@ -1,7 +1,10 @@
+// libraries
 import React, { Component } from 'react';
 import { SafeAreaView, View, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+// UI components
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
@@ -10,16 +13,23 @@ import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
 import Status from '../components/UI/Status';
 import Link from '../components/UI/Link';
+
+// actions
 import { getReminders } from '../actions/reminders/index';
 import { setFilters } from '../actions/filters/index';
+import { setPagination } from '../actions/pagination/index';
+
+// styles
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
+
+// helpers
 import truncate from '../helpers/truncate';
 
 class Reminders extends Component {
   state = {
-    status: 'pending approval',
+    status: 'pending',
     page: 1,
     limit: 5,
   };
@@ -57,8 +67,12 @@ class Reminders extends Component {
     // if direction is back, decrease page by 1
     if (direction === 'back') page = this.state.page - 1;
 
+    // set pagination
+    this.props.setPagination({ reminders: page });
+
     // set new page
     this.setState({ page: page }, async () => {
+      
       // set status
       await this.setStatus(this.state.status);
 
@@ -69,7 +83,6 @@ class Reminders extends Component {
 
   render() {
     const { isLoading, page, limit } = this.state;
-
     const { reminders, filters } = this.props;
 
     return (
@@ -118,7 +131,7 @@ class Reminders extends Component {
             {/* reminders start */}
             <View style={{ marginTop: units.unit4 }}>
               {reminders.list &&
-                reminders.list.map((quote, index) => (
+                reminders.list.map((reminder, index) => (
                   <View key={index}>
                     <View
                       style={{
@@ -142,9 +155,9 @@ class Reminders extends Component {
                               textTransform: 'capitalize',
                               marginBottom: units.unit1,
                             }}>
-                            {truncate(quote.title, 15)}
+                            {truncate(reminder.title, 15)}
                           </Text>
-                          <Status status={quote.status} />
+                          <Status status={reminder.status} />
                         </View>
                       </View>
                       <View
@@ -157,8 +170,8 @@ class Reminders extends Component {
                           text="View Details"
                           onPress={() =>
                             this.props.navigation.navigate(
-                              'Quote Details',
-                              quote,
+                              'Reminder Details',
+                              reminder
                             )
                           }
                           variant="btn2"
@@ -215,6 +228,7 @@ function mapDispatchToProps(dispatch) {
     {
       getReminders,
       setFilters,
+      setPagination
     },
     dispatch,
   );

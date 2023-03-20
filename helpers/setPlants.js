@@ -1,15 +1,15 @@
 import separatePlantsByCategory from './separatePlantsByCategory';
-import separatePlantsByClass from './separatePlantsByClass';
+import separatePlantsByCommonType from './separatePlantsByCommonType';
 
 export default function setPlants(selectedPlants) {
 
     // separate plants by category
     const categorizedPlants = separatePlantsByCategory(selectedPlants);
 
-    // separate categorized plants by class
-    let vegetables = separatePlantsByClass(categorizedPlants.vegetables);
-    let fruit = separatePlantsByClass(categorizedPlants.fruit);
-    let herbs = categorizedPlants.herbs;
+    // separate categorized plants by common type
+    let vegetables = separatePlantsByCommonType(categorizedPlants.vegetables);
+    let fruit = separatePlantsByCommonType(categorizedPlants.fruit);
+    let herbs = separatePlantsByCommonType(categorizedPlants.herbs);
 
     // set garden plants
     const plants = {

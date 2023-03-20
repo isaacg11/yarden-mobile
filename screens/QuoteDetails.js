@@ -1,6 +1,9 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
+// libraries
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+
+// UI components
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Header from '../components/UI/Header';
 import Collapse from '../components/UI/Collapse';
@@ -13,6 +16,10 @@ import QuoteSummary from '../components/app/QuoteSummary';
 import QuoteInfo from '../components/app/QuoteInfo';
 import Button from '../components/UI/Button';
 import Link from '../components/UI/Link';
+
+import types from '../vars/types';
+
+// styles
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 
@@ -20,20 +27,16 @@ class QuoteDetails extends Component {
   state = {};
 
   proceedToCheckout() {
-    // format quote
     const quote = this.props.route.params;
 
-    // if installation or revive {...}
-    if (quote.type === 'installation' || quote.type === 'revive') {
-      // if no garden info {...}
-      if (!this.props.user.garden_info) {
-        // navigate to garden screen
-        return this.props.navigation.navigate('Garden', quote);
-      }
+    // if quote is for installation or revive {...}
+    if (quote.type === types.INSTALLATION || quote.type === types.REVIVE) {
+      // navigate to garden screen
+      this.props.navigation.navigate('Garden', quote);
+    } else {
+      // navigate to checkout screen
+      this.props.navigation.navigate('Checkout', quote);
     }
-
-    // navigate to checkout screen
-    this.props.navigation.navigate('Checkout', quote);
   }
 
   requestChanges() {
@@ -45,7 +48,7 @@ class QuoteDetails extends Component {
 
   render() {
     const quote = this.props.route.params;
-    const {isLoading} = this.state;
+    const { isLoading } = this.state;
 
     return (
       <SafeAreaView
@@ -53,13 +56,13 @@ class QuoteDetails extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView style={{padding: units.unit4 + units.unit3}}>
+        <ScrollView style={{ padding: units.unit4 + units.unit3 }}>
           {/* loading indicator */}
           <LoadingIndicator loading={isLoading} />
 
           <Header
             type="h4"
-            style={{...fonts.header, marginBottom: units.unit4}}>
+            style={{ ...fonts.header, marginBottom: units.unit4 }}>
             Quote Details
           </Header>
 
@@ -68,7 +71,6 @@ class QuoteDetails extends Component {
             <View>
               <Collapse
                 title="Quote Info"
-                open={true}
                 content={<QuoteInfo quote={quote} />}
               />
             </View>
@@ -160,7 +162,7 @@ class QuoteDetails extends Component {
                     onPress={() => this.requestChanges()}
                   />
                 </View>
-                <View style={{marginBottom: units.unit3}}>
+                <View style={{ marginBottom: units.unit3 }}>
                   <Button
                     text="Checkout"
                     onPress={() => this.proceedToCheckout()}

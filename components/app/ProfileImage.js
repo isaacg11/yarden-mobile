@@ -1,52 +1,70 @@
+// libraries
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { TouchableOpacity, Image, View, Text, ActivityIndicator } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// UI components
 import Card from '../UI/Card';
 import Paragraph from '../UI/Paragraph';
-import fonts from '../../components/styles/fonts';
-import colors from '../../components/styles/colors';
-import uploadImage from '../../helpers/uploadImage';
+import { alert } from '../UI/SystemAlert';
+
+// styles
+import fonts from '../styles/fonts';
+import colors from '../styles/colors';
 import units from '../styles/units';
+
+// helpers
+import uploadImage from '../../helpers/uploadImage';
+
 
 class ProfileImage extends Component {
 
     state = {}
 
     async selectImage() {
+
         // open image gallery
-        launchImageLibrary(
-            {
-                selectionLimit: 1,
-                maxWidth: 500,
-                maxHeight: 500,
-                quality: 1,
-            },
-            res => {
-                // if user selected an image {...}
-                if (!res.didCancel) {
-                    this.finish(res);
+        launchImageLibrary({
+            mediaType: 'photo',
+            selectionLimit: 1,
+            quality: 1,
+            maxWidth: 500,
+            maxHeight: 500
+        }, (res) => {
+            // if user selected an image {...}
+            if (!res.didCancel) {
+                const img = res.assets[0];
+
+                // check image dimensions
+                if (img.width === 0 || img.height === 0) {
+
+                    // show warning to user
+                    alert(`Your file "${img.fileName}" has no dimensions, please select another image and try again.`);
+                } else {
+                    // upload image
+                    this.finish(img);
                 }
-            },
-        );
+            }
+        })
     }
 
-    async finish(res) {
+    async finish(img) {
 
         // show loading indicator
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
         // upload image to S3
         const selectedImage = await uploadImage(
-            res.assets[0].uri,
-            'attachment.jpg',
+            img.uri,
+            'profile.jpg',
             'jpg',
         );
 
         // update UI
-        this.setState({ 
+        this.setState({
             selectedImage,
             isLoading: false
         });
@@ -57,10 +75,10 @@ class ProfileImage extends Component {
 
     render() {
 
-        const { 
+        const {
             selectedImage,
             isLoading
-         } = this.state;
+        } = this.state;
         const { user } = this.props;
         const imageStyle = {
             width: 100,
@@ -85,13 +103,13 @@ class ProfileImage extends Component {
 
                     {/* image preview */}
                     {(selectedImage && !isLoading) && (
-                        <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <Image
                                 style={imageStyle}
                                 source={{ uri: selectedImage }}
                                 alt="profile"
                             />
-                            <View style={{marginLeft: units.unit3}}>
+                            <View style={{ marginLeft: units.unit3 }}>
                                 <Text>Great job!{'\n'}Your profile photo has been{'\n'}successfully uploaded.</Text>
                             </View>
                         </View>
@@ -99,7 +117,7 @@ class ProfileImage extends Component {
 
                     {/* loading indicator*/}
                     {(isLoading) && (
-                        <View style={{display: 'flex', alignContent: 'center', padding: units.unit5}}>
+                        <View style={{ display: 'flex', alignContent: 'center', padding: units.unit5 }}>
                             <ActivityIndicator />
                         </View>
                     )}

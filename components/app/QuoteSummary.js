@@ -134,7 +134,7 @@ class QuoteSummary extends Component {
         </View>
         <View
           style={{
-            display: quote.line_items.materials ? 'flex' : 'none',
+            display: 'flex',
             flex: 1,
             alignSelf: 'stretch',
             flexDirection: 'row',

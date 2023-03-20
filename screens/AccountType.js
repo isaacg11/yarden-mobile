@@ -68,7 +68,7 @@ class AccountType extends Component {
                                         justifyContent: 'space-between',
                                     }}>
                                     <Paragraph style={{ fontWeight: 'bold' }}>
-                                        Sign up to garden
+                                        Apply for work
                                     </Paragraph>
                                     <Ionicons
                                         name="arrow-forward"

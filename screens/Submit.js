@@ -23,7 +23,7 @@ class Submit extends Component {
 
     async finish() {
         // render loading indicator
-        await this.setState({ isLoading: true });
+        this.setState({ isLoading: true });
 
         // get route params
         const info = this.props.route.params;

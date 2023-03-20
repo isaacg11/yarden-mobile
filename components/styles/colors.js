@@ -1,4 +1,5 @@
 let red = 0;
+let coral = 15;
 let orange = 30;
 let yellow = 60;
 let lime = 90;
@@ -54,12 +55,20 @@ let greenC95 = `hsla(${green}, ${saturation}, ${lightness - 30}%, 0.95)`;
 
 // greenB
 let greenB = `hsla(${green}, ${saturation}, ${lightness - 20}%, ${alpha})`;
+let greenB5 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.05)`;
 let greenB10 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.1)`;
 let greenB25 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.25)`;
 let greenB50 = `hsla(${green}, ${saturation}, ${lightness - 20}%, 0.5)`;
 
 //greenA
 let greenA = `hsla(${green}, ${saturation}, ${lightness - 10}%, ${alpha})`;
+let greenA95 = `hsla(${green}, ${saturation}, ${lightness}%, 0.95)`;
+let greenA90 = `hsla(${green}, ${saturation}, ${lightness}%, 0.90)`;
+let greenA75 = `hsla(${green}, ${saturation}, ${lightness}%, 0.75)`;
+let greenA50 = `hsla(${green}, ${saturation}, ${lightness}%, 0.5)`;
+let greenA25 = `hsla(${green}, ${saturation}, ${lightness}%, 0.25)`;
+let greenA10 = `hsla(${green}, ${saturation}, ${lightness}%, 0.1)`;
+let greenA5 = `hsla(${green}, ${saturation}, ${lightness}%, 0.05)`;
 
 //green0
 let green0 = `hsla(${green}, ${saturation}, ${lightness}%, ${alpha})`;
@@ -108,10 +117,24 @@ let purpleC25 = `hsla(${purple}, ${saturation}, ${lightness - 30}%, 0.25)`;
 let purpleC10 = `hsla(${purple}, ${saturation}, ${lightness - 30}%, 0.1)`;
 let purpleC5 = `hsla(${purple}, ${saturation}, ${lightness - 30}%, 0.05)`;
 
-// purpleB-5
+// purpleB
 let purpleB = `hsla(${purple}, ${saturation}, ${lightness - 20}%, ${alpha})`;
+let purpleB95 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.95)`;
+let purpleB90 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.90)`;
+let purpleB75 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.75)`;
+let purpleB50 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.5)`;
+let purpleB25 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.25)`;
+let purpleB10 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.1)`;
+let purpleB5 = `hsla(${purple}, ${saturation}, ${lightness - 45}%, 0.05)`;
+
 let purpleA = `hsla(${purple}, ${saturation}, ${lightness - 10}%, ${alpha})`;
-let purple0 = `hsla(${purple}, ${saturation}, ${lightness}%, ${alpha})`;
+let purpleA95 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.95)`;
+let purpleA90 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.90)`;
+let purpleA75 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.75)`;
+let purpleA50 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.5)`;
+let purpleA25 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.25)`;
+let purpleA10 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.1)`;
+let purpleA5 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.05)`;
 let purple1 = `hsla(${purple}, ${saturation}, ${lightness + 10}%, ${alpha})`;
 let purple2 = `hsla(${purple}, ${saturation}, ${lightness + 20}%, ${alpha})`;
 let purple3 = `hsla(${purple}, ${saturation}, ${lightness + 30}%, ${alpha})`;
@@ -140,6 +163,56 @@ let indigo2 = `hsla(${indigo}, ${saturation}, ${lightness + 20}%, ${alpha})`;
 let indigo3 = `hsla(${indigo}, ${saturation}, ${lightness + 30}%, ${alpha})`;
 let indigo4 = `hsla(${indigo}, ${saturation}, ${lightness + 40}%, ${alpha})`;
 let indigo5 = `hsla(${indigo}, ${saturation}, ${lightness + 50}%, ${alpha})`;
+
+//orange0
+let orange0 = `hsla(${orange}, ${saturation}, ${lightness}%, ${alpha})`;
+let orange095 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.95)`;
+let orange090 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.90)`;
+let orange075 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.75)`;
+let orange050 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.5)`;
+let orange025 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.25)`;
+let orange010 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.1)`;
+let orange05 = `hsla(${orange}, ${saturation}, ${lightness}%, 0.05)`;
+
+//magenta0
+let magenta0 = `hsla(${magenta}, ${saturation}, ${lightness}%, ${alpha})`;
+let magenta095 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.95)`;
+let magenta090 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.90)`;
+let magenta075 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.75)`;
+let magenta050 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.5)`;
+let magenta025 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.25)`;
+let magenta010 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.1)`;
+let magenta05 = `hsla(${magenta}, ${saturation}, ${lightness}%, 0.05)`;
+
+//red0
+let red0 = `hsla(${red}, ${saturation}, ${lightness}%, ${alpha})`;
+let red095 = `hsla(${red}, ${saturation}, ${lightness}%, 0.95)`;
+let red090 = `hsla(${red}, ${saturation}, ${lightness}%, 0.90)`;
+let red075 = `hsla(${red}, ${saturation}, ${lightness}%, 0.75)`;
+let red050 = `hsla(${red}, ${saturation}, ${lightness}%, 0.5)`;
+let red025 = `hsla(${red}, ${saturation}, ${lightness}%, 0.25)`;
+let red010 = `hsla(${red}, ${saturation}, ${lightness}%, 0.1)`;
+let red05 = `hsla(${red}, ${saturation}, ${lightness}%, 0.05)`;
+
+//coral0
+let coral0 = `hsla(${coral}, ${saturation}, ${lightness}%, ${alpha})`;
+let coral095 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.95)`;
+let coral090 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.90)`;
+let coral075 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.75)`;
+let coral050 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.5)`;
+let coral025 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.25)`;
+let coral010 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.1)`;
+let coral05 = `hsla(${coral}, ${saturation}, ${lightness}%, 0.05)`;
+
+//coral0
+let purple0 = `hsla(${purple}, ${saturation}, ${lightness}%, ${alpha})`;
+let purple095 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.95)`;
+let purple090 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.90)`;
+let purple075 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.75)`;
+let purple050 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.5)`;
+let purple025 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.25)`;
+let purple010 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.1)`;
+let purple05 = `hsla(${purple}, ${saturation}, ${lightness}%, 0.05)`;
 
 const colors = {
   //white
@@ -183,12 +256,20 @@ const colors = {
 
   //greenB
   greenB,
+  greenB5,
   greenB10,
   greenB25,
   greenB50,
 
   //greenA
   greenA,
+  greenA95,
+  greenA90,
+  greenA75,
+  greenA50,
+  greenA25,
+  greenA10,
+  greenA5,
 
   // green0
   green0,
@@ -217,6 +298,15 @@ const colors = {
   purpleE10,
   purpleE5,
 
+  // purpleB
+  purpleB95,
+  purpleB90,
+  purpleB75,
+  purpleB50,
+  purpleB25,
+  purpleB10,
+  purpleB5,
+
   // purpleD
   purpleD,
   purpleD95,
@@ -242,9 +332,15 @@ const colors = {
 
   //purpleA
   purpleA,
+  purpleA95,
+  purpleA90,
+  purpleA75,
+  purpleA50,
+  purpleA25,
+  purpleA10,
+  purpleA5,
 
   //purple0-5
-  purple0,
   purple1,
   purple2,
   purple3,
@@ -270,6 +366,56 @@ const colors = {
   indigo3,
   indigo4,
   indigo5,
+
+  //orange0
+  orange0,
+  orange095,
+  orange090,
+  orange075,
+  orange050,
+  orange025,
+  orange010,
+  orange05,
+
+  //magenta0
+  magenta0,
+  magenta095,
+  magenta090,
+  magenta075,
+  magenta050,
+  magenta025,
+  magenta010,
+  magenta05,
+
+  //red0
+  red0,
+  red095,
+  red090,
+  red075,
+  red050,
+  red025,
+  red010,
+  red05,
+
+  //coral0
+  coral0,
+  coral095,
+  coral090,
+  coral075,
+  coral050,
+  coral025,
+  coral010,
+  coral05,
+
+  //purple0
+  purple0,
+  purple095,
+  purple090,
+  purple075,
+  purple050,
+  purple025,
+  purple010,
+  purple05,
 };
 
 export default colors;

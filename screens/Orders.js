@@ -1,8 +1,11 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView, Text} from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+// libraries
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
+
+// UI components
 import Dropdown from '../components/UI/Dropdown';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
@@ -13,9 +16,14 @@ import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
-import {getOrders} from '../actions/orders/index';
-import {getChangeOrders} from '../actions/changeOrders/index';
-import {setFilters} from '../actions/filters/index';
+
+// actions
+import { setSelectedOrder } from '../actions/orders/index';
+import { getOrders } from '../actions/orders/index';
+import { getChangeOrders } from '../actions/changeOrders/index';
+import { setFilters } from '../actions/filters/index';
+
+// styles
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
@@ -39,7 +47,7 @@ class Orders extends Component {
     });
 
     // set new status
-    await this.props.setFilters({orders: status});
+    await this.props.setFilters({ orders: status });
 
     // set order query
     const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}${(this.props.user.type === 'gardener') ? `&vendor=${this.props.user._id}` : ''}`;
@@ -62,12 +70,12 @@ class Orders extends Component {
     }
 
     // show loading indicator
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
   }
 
   paginate(direction) {
     // show loading indicator
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     // set intitial page
     let page = 1;
@@ -79,19 +87,19 @@ class Orders extends Component {
     if (direction === 'back') page = this.state.page - 1;
 
     // set new page
-    this.setState({page: page}, async () => {
+    this.setState({ page: page }, async () => {
       // set status
       await this.setStatus(this.state.status);
 
       // hide loading indicator
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
     });
   }
 
   render() {
-    const {isLoading, page, limit} = this.state;
+    const { isLoading, page, limit } = this.state;
 
-    const {orders, changeOrders, filters} = this.props;
+    const { orders, changeOrders, filters } = this.props;
 
     return (
       <SafeAreaView
@@ -101,7 +109,7 @@ class Orders extends Component {
           backgroundColor: colors.greenD5,
         }}>
         <ScrollView>
-          <View style={{padding: units.unit3 + units.unit4}}>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
             {/* loading indicator start */}
             <LoadingIndicator loading={isLoading} />
 
@@ -130,7 +138,7 @@ class Orders extends Component {
                     value: 'complete',
                   },
                 ]}
-                style={{marginBottom: units.unit4}}
+                style={{ marginBottom: units.unit4 }}
               />
 
               {/* order list */}
@@ -139,24 +147,24 @@ class Orders extends Component {
                   <View key={index}>
                     {/* change order notification */}
                     {changeOrders.length > 0 &&
-                        changeOrders.find(c => c.order._id === order._id) && (
-                          <View>
-                            <Notification text="You have been sent a change order. Tap the button below to review and approve." />
-                            <Button
-                              style={{marginTop: units.unit3}}
-                              text="Review Change Order"
-                              onPress={() =>
-                                this.props.navigation.navigate(
-                                  'Change Order Details',
-                                  changeOrders.find(
-                                    c => c.order._id === order._id,
-                                  ),
-                                )
-                              }
-                              variant="primary"
-                            />
-                          </View>
-                        )}
+                      changeOrders.find(c => c.order._id === order._id) && (
+                        <View>
+                          <Notification text="You have been sent a change order. Tap the button below to review and approve." />
+                          <Button
+                            style={{ marginTop: units.unit3 }}
+                            text="Review Change Order"
+                            onPress={() =>
+                              this.props.navigation.navigate(
+                                'Change Order Details',
+                                changeOrders.find(
+                                  c => c.order._id === order._id,
+                                ),
+                              )
+                            }
+                            variant="primary"
+                          />
+                        </View>
+                      )}
                     <View
                       style={{
                         marginVertical: units.unit4 + units.unit3,
@@ -181,7 +189,7 @@ class Orders extends Component {
                             marginHorizontal: units.unit4,
                           }}>
                           <Label>{moment(order.date).format('ddd')} </Label>
-                          <Paragraph style={{color: colors.greenD50}}>
+                          <Paragraph style={{ color: colors.greenD50 }}>
                             {moment(order.date).format('MM/DD')}{' '}
                           </Paragraph>
                         </View>
@@ -198,8 +206,8 @@ class Orders extends Component {
                           <Label>
                             {order.time
                               ? `${moment(order.time, `HH:mm:ss`).format(
-                                  `h:mm A`,
-                                )}`
+                                `h:mm A`,
+                              )}`
                               : '9:00am - 5:00pm'}
                           </Label>
                         </View>
@@ -207,11 +215,17 @@ class Orders extends Component {
                       <View>
                         <Link
                           text="View Details"
-                          onPress={() =>
+                          onPress={() => {
+
+                            // set selected order
+                            this.props.setSelectedOrder(order);
+
+                            // redirect user to order details
                             this.props.navigation.navigate(
                               'Order Details',
                               order,
                             )
+                          }
                           }
                         />
                       </View>
@@ -223,7 +237,7 @@ class Orders extends Component {
               {/* pagination */}
               {orders.list && orders.total > limit && (
                 <View
-                  style={{marginTop: units.unit6, marginBottom: units.unit4}}>
+                  style={{ marginTop: units.unit6, marginBottom: units.unit4 }}>
                   <Paginate
                     page={page}
                     limit={limit}
@@ -235,7 +249,7 @@ class Orders extends Component {
 
               {/* no orders */}
               {orders.list && orders.list.length < 1 && (
-                <View style={{marginBottom: units.unit5}}>
+                <View style={{ marginBottom: units.unit5 }}>
                   <Paragraph
                     style={{
                       fontWeight: 'bold',
@@ -269,6 +283,7 @@ function mapDispatchToProps(dispatch) {
       getOrders,
       getChangeOrders,
       setFilters,
+      setSelectedOrder
     },
     dispatch,
   );

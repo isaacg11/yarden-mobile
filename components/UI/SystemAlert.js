@@ -6,7 +6,7 @@ export function alert(
     title = 'Uh Oh!',
     onPress = () => { },
     isConfirmPrompt
-) {
+) { 
     let buttons = [
         {
             text: "OK",

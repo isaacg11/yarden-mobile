@@ -1,0 +1,1 @@
+export const GET_PAGINATION = 'Get_Pagination';
