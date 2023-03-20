@@ -222,122 +222,128 @@ class Checkout extends Component {
     // format from dollars to cents
     const total = parseFloat(amount).toFixed(2) * 100;
 
-    // format payment description for materials
-    const description = `Materials - ${this.props.route.params.description}`;
+    if (total > 0) {
+      // format payment description for materials
+      const description = `Materials - ${this.props.route.params.description}`;
 
-    // format payment
-    const payment = {
-      amount: total,
-      currency: 'usd',
-      description: description,
-      statement_descriptor_suffix: `Materials`,
-    };
-
-    // charge card
-    const charge = await this.props.chargeCard(payment);
-
-    // if charge failed, show error message
-    if (charge.status !== 200) {
-      alert('Payment failed, please try again');
-    } else {
-      // get user IP (proof of location at time of approval)
-      const ip = await this.props.getIP();
-
-      // save screenshot of approval image
-      const approvalImage = await uploadImage(screenshot, 'approval.jpg');
-
-      // format new approval
-      const newApproval = {
-        image: approvalImage,
-        location: ip.data,
+      // format payment
+      const payment = {
+        amount: total,
+        currency: 'usd',
+        description: description,
+        statement_descriptor_suffix: `Materials`,
       };
 
-      // create approval
-      const approval = await this.props.createApproval(newApproval);
+      // charge card
+      await this.props.chargeCard(payment);
+    }
 
-      // set empty order
-      let order = {};
+    // get user IP (proof of location at time of approval)
+    const ip = await this.props.getIP();
 
-      if (this.props.route.params.isChangeOrder) {
-        // if approval is for a change order {...}
+    // save screenshot of approval image
+    const approvalImage = await uploadImage(screenshot, 'approval.jpg');
 
-        // update change order as "approved"
-        await this.props.updateChangeOrder(this.props.route.params._id, {
-          status: 'approved',
-          approval: approval._id,
-        });
+    // format new approval
+    const newApproval = {
+      image: approvalImage,
+      location: ip.data,
+    };
 
-        // assign order value
-        order = this.props.route.params.order;
-      } else if (this.props.route.params.isPurchase) {
-        // if approval is for a purchase {...}
+    // create approval
+    const approval = await this.props.createApproval(newApproval);
 
-        // if plant selections {...}
-        if (this.props.route.params.plantSelections) {
-          // update garden info
-          await this.updateGardenInfo(
-            this.state.vegetables,
-            this.state.fruit,
-            this.state.herbs,
-          );
-        }
+    // set empty order
+    let order = {};
 
-        // process purchase
-        return this.processPurchase(approval.data);
-      } else {
-        // set initial quote update
-        let updatedQuote = { status: 'approved' };
+    if (this.props.route.params.isChangeOrder) {
+      // if approval is for a change order {...}
 
-        // check to see if the quote is for a garden
-        const isGarden =
-          this.props.route.params.type === types.INSTALLATION ||
-          this.props.route.params.type === types.REVIVE
+      // update change order as "approved"
+      await this.props.updateChangeOrder(this.props.route.params._id, {
+        status: 'approved',
+        approval: approval._id,
+      });
 
-        // if garden quote {...}
-        if (isGarden) {
+      // assign order value
+      order = this.props.route.params.order;
+    } else if (this.props.route.params.isPurchase) {
+      // if approval is for a purchase {...}
 
-          // update garden info
-          await this.updateGardenInfo(
-            this.state.vegetables,
-            this.state.fruit,
-            this.state.herbs,
-          );
-
-          // combine plants from selection
-          const combinedPlants = combinePlants(
-            this.props.route.params.plantSelections,
-          );
-
-          // get plant selection
-          let lineItems = this.props.route.params.line_items;
-
-          let beds = lineItems.beds;
-          beds.forEach((bed) => {
-            bed.shape = bed.shape._id;
-          })
-
-          lineItems.beds = beds;
-
-          // add plants to line items
-          lineItems.vegetables = combinedPlants.vegetables;
-          lineItems.herbs = combinedPlants.herbs;
-          lineItems.fruit = combinedPlants.fruit;
-          updatedQuote.line_items = lineItems;
-        }
-
-        // update quote as "approved"
-        await this.props.updateQuote(this.props.route.params._id, updatedQuote);
-
-        // schedule a new order
-        order = await this.scheduleNewOrder(
-          approval.data,
-          this.props.route.params,
-          isGarden,
+      // if plant selections {...}
+      if (this.props.route.params.plantSelections) {
+        // update garden info
+        await this.updateGardenInfo(
+          this.state.vegetables,
+          this.state.fruit,
+          this.state.herbs,
         );
       }
 
-      this.finish(order);
+      // process purchase
+      return this.processPurchase(approval.data);
+    } else {
+      // set initial quote update
+      let updatedQuote = { status: 'approved' };
+
+      // check to see if the quote is for a garden
+      const isGarden =
+        this.props.route.params.type === types.INSTALLATION ||
+        this.props.route.params.type === types.REVIVE
+
+      // if garden quote {...}
+      if (isGarden) {
+
+        // update garden info
+        await this.updateGardenInfo(
+          this.state.vegetables,
+          this.state.fruit,
+          this.state.herbs,
+        );
+
+        // combine plants from selection
+        const combinedPlants = combinePlants(
+          this.props.route.params.plantSelections,
+        );
+
+        // get plant selection
+        let lineItems = this.props.route.params.line_items;
+
+        let beds = lineItems.beds;
+        beds.forEach((bed) => {
+          bed.shape = bed.shape._id;
+        })
+
+        lineItems.beds = beds;
+
+        // add plants to line items
+        lineItems.vegetables = combinedPlants.vegetables;
+        lineItems.herbs = combinedPlants.herbs;
+        lineItems.fruit = combinedPlants.fruit;
+        updatedQuote.line_items = lineItems;
+      }
+
+      updatedQuote.line_items = lineItems;
+
+      // update garden info
+      await this.updateGardenInfo(
+        lineItems.vegetables,
+        lineItems.fruit,
+        lineItems.herbs,
+      );
     }
+
+    // update quote as "approved"
+    await this.props.updateQuote(this.props.route.params._id, updatedQuote);
+
+    // schedule a new order
+    order = await this.scheduleNewOrder(
+      approval.data,
+      this.props.route.params,
+      isGarden,
+    );
+
+    this.finish(order);
   }
 
   async updateGardenInfo(vegetables, fruit, herbs) {

@@ -94,7 +94,7 @@ export function chargeCard(payment) {
                 console.log(error.response.status);
             }
             
-            alert('Something went wrong. We are working on a fix now!');
+            alert('Payment failed, please try again');
         }
     }
 }
