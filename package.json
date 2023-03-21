@@ -33,6 +33,7 @@
     "react-native": "0.66.0",
     "react-native-aws3": "0.0.9",
     "react-native-date-picker": "^4.1.0",
+    "react-native-device-info": "^10.4.0",
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-icon-badge": "^1.1.3",
