@@ -1,4 +1,7 @@
 import { Platform, NativeModules } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+
+const installerPackageName = DeviceInfo.getInstallerPackageName();
 
 let appUrl = null;
 
@@ -6,10 +9,7 @@ const isDevelopment =
   (typeof __DEV__ !== 'undefined' && __DEV__) ||
   NativeModules.PlatformConstants?.dev;
 
-const isTestFlight =
-  !isDevelopment &&
-  Platform.OS === 'ios' &&
-  NativeModules.PlatformConstants?.appVersion?.match(/TestFlight/);
+const isTestFlight = installerPackageName === 'com.apple.TestFlight';
 
 const isAppStore =
   !isDevelopment &&
