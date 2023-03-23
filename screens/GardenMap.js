@@ -10,6 +10,7 @@ import {
   Image,
   Text,
   Animated,
+  Dimensions
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -2251,6 +2252,7 @@ class GardenMap extends Component {
   }
 
   getMapScale() {
+    const { width } = Dimensions.get('window');
     switch (this.props.columns) {
       case 10: // 5 ft width
         return {
@@ -2262,7 +2264,8 @@ class GardenMap extends Component {
               translateY: -40 * 5
             },
             {
-              translateX: -36
+              translateX: (width / 10) * -1
+              // translateX: -36
             }
           ],
         }
