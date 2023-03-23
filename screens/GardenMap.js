@@ -1141,12 +1141,11 @@ class GardenMap extends Component {
     ).start();
   }
 
-  getSqFtBorder(row, column, rowsLength) {
+  getSqFtBorder(row, column) {
     let leftSqX = false;
     let rightSqX = false;
     let topSqY = false;
     let border = {};
-    const lastPlotPointY = row === rowsLength - 1;
 
     if (row % 2 === 0) {
       topSqY = true;
@@ -2259,6 +2258,71 @@ class GardenMap extends Component {
     }
   }
 
+  getMapScale() {
+    switch (this.props.columns) {
+      case 10: // 5 ft width
+        return {
+          transform: [
+            {
+              scale: 4 / 5
+            },
+            {
+              translateY: -40 * 5
+            },
+            {
+              translateX: -36
+            }
+          ],
+        }
+      case 8: // 4 ft width
+        return {
+          transform: [
+            {
+              scale: 1
+            },
+            {
+              translateY: 0
+            },
+            {
+              translateX: 10
+            },
+          ],
+        }
+      case 6: // 3 ft width
+        return {
+          transform: [
+            {
+              scale: 17 / 12.5
+            },
+            {
+              translateY: 95
+            },
+            {
+              translateX: 37.5
+            },
+          ],
+          paddingBottom: 250
+        }
+      case 4: // 2 ft width
+        return {
+          transform: [
+            {
+              scale: 15 / 7.5
+            },
+            {
+              translateY: 245
+            },
+            {
+              translateX: 45
+            },
+          ],
+          paddingBottom: 500
+        }
+      default:
+        return {}
+    }
+  }
+
   render() {
     const {
       isLoading,
@@ -2286,15 +2350,15 @@ class GardenMap extends Component {
       navigateToHarvestInstructions,
     } = this.props;
 
+    const mapScale = this.getMapScale();
+
     return (
       <SafeAreaView
         style={{
           flex: 1,
           width: '100%',
         }}>
-        <View
-        // contentContainerStyle={{ display: 'flex', alignItems: 'center' }}
-        >
+        <View>
           <View>
             {/* loading indicator (dynamically visible) */}
             <LoadingIndicator loading={isLoading} />
@@ -2430,15 +2494,8 @@ class GardenMap extends Component {
                 height: '100%',
               }}>
               <View
-                style={{
-                  transform: [
-                    { scale: 4 / 5 },
-                    { translateY: -40 * 5 },
-                    { translateX: -36 },
-                  ],
-                  marginBottom: -300,
-                  // if 3x6 transform: [{scale: 17 / 13}, {translateY: 55}]
-                }}>
+                style={mapScale}
+              >
                 {this.renderPlotPoints()}
               </View>
             </ScrollView>
