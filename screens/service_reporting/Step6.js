@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { KeyboardAvoidingView, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -73,11 +73,13 @@ class Step6 extends Component {
 
         if (question) {
             return (
-                <SafeAreaView style={{
-                    flex: 1,
-                    width: "100%",
-                    backgroundColor: colors.greenE10,
-                }}>
+                <KeyboardAvoidingView
+                    behavior="padding"
+                    style={{
+                        flex: 1,
+                        width: "100%",
+                        backgroundColor: colors.greenE10,
+                    }}>
                     <View style={{ padding: units.unit3 + units.unit4 }}>
                         <View style={{ height: '100%', display: 'flex', justifyContent: 'center' }}>
 
@@ -119,7 +121,7 @@ class Step6 extends Component {
 
                         </View>
                     </View>
-                </SafeAreaView>
+                </KeyboardAvoidingView>
             )
         } else {
             return <></>
