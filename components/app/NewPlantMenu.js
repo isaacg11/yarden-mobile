@@ -19,6 +19,7 @@ import { getPlants } from '../../actions/plants/index';
 // styles
 import colors from '../styles/colors';
 import units from '../styles/units';
+import fonts from '../styles/fonts';
 
 class NewPlantMenu extends Component {
 
