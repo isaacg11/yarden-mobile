@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View, Image, Text } from 'react-native';
+import { KeyboardAvoidingView, View, Image, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -81,7 +81,7 @@ class Notes extends Component {
         const daysToMature = calculateDaysToMature(selectedPlant);
 
         return (
-            <SafeAreaView>
+            <KeyboardAvoidingView behavior="padding">
                 <Card style={{
                     display: 'flex',
                     paddingTop: units.unit6
@@ -205,7 +205,7 @@ class Notes extends Component {
                         </View>
                     ))}
                 </KeyboardAwareScrollView>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }

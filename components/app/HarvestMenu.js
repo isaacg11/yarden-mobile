@@ -27,6 +27,7 @@ import capitalize from '../../helpers/capitalize';
 // styles
 import colors from '../styles/colors';
 import units from '../styles/units';
+import fonts from '../styles/fonts';
 
 class HarvestMenu extends Component {
 
