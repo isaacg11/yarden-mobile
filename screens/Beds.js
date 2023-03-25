@@ -177,6 +177,14 @@ class Beds extends Component {
   }
 
   renderProgress(progress, label) {
+    const order = this.props.route.params.order;
+    if(order.type === types.INITIAL_PLANTING) {
+      const published = this.props.drafts.filter((draft) => draft.published).length === this.props.drafts.length;
+      if(published) {
+        return <></>;
+      }
+    }
+
     return (
       <View style={{ marginBottom: units.unit3, marginTop: units.unit4 }}>
         <View

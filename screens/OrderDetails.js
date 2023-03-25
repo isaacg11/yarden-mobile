@@ -398,7 +398,7 @@ class OrderDetails extends Component {
                   <View style={{ marginTop: units.unit4 }}>
 
                     {/* plant lists */}
-                    {drafts.length > 0 && (
+                    {(drafts.filter((draft) => draft.published).length === this.props.drafts.length) && (
                       <View>
                         <View>
                           <Collapse
