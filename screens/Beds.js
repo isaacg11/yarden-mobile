@@ -178,9 +178,15 @@ class Beds extends Component {
 
   renderProgress(progress, label) {
     const order = this.props.route.params.order;
-    if(order.type === types.INITIAL_PLANTING) {
+    if (order.type === types.INITIAL_PLANTING) { // if initial planting {...}
+
+      // check to make sure all drafts have been published
       const published = this.props.drafts.filter((draft) => draft.published).length === this.props.drafts.length;
-      if(published) {
+
+      // if already published
+      if (published) {
+
+        // hide progress indicator
         return <></>;
       }
     }
@@ -311,8 +317,6 @@ class Beds extends Component {
 
     if (order.type === types.INITIAL_PLANTING) {
       gardenInfo = order.bid.line_items;
-    } else if (order.type === types.CROP_ROTATION) {
-      gardenInfo = this.props.route.params.order.customer.garden_info;
     }
 
     let label = null;
@@ -337,9 +341,11 @@ class Beds extends Component {
 
       const plantingData = (order.type === types.INITIAL_PLANTING) ? drafts : beds;
 
-      // if drafts exist {...}
+      // if plants exist {...}
       if (plantingData.length > 0) {
+
         const planted = getPlantedList(plantingData);
+
         rows.forEach(column => {
 
           // check drafts for plant
@@ -410,7 +416,7 @@ class Beds extends Component {
             </View>
 
             {/* progress indicator (dynamically visible) */}
-            {(order.type === types.INITIAL_PLANTING || order.type === types.CROP_ROTATION) && this.renderProgress(progress, label)}
+            {(order.type === types.INITIAL_PLANTING) && this.renderProgress(progress, label)}
 
             {/* garden beds list */}
             <View style={{ marginTop: units.unit4 }}>
@@ -429,6 +435,7 @@ class Beds extends Component {
 
 function mapStateToProps(state) {
   return {
+    user: state.user,
     drafts: state.drafts,
     beds: state.beds,
   };

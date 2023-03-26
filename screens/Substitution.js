@@ -90,44 +90,52 @@ class Substitution extends Component {
         );
     }
 
-    async substitutePlant(substitute) {
-        let drafts = this.props.drafts;
+    async getBedWithSubstitution(substitute) {
+        let beds = this.props.beds;
         let plantGroupToSubstitute = null;
         let substituted = 0;
+        let bedToUpdate = null;
+
+        beds.forEach((bed) => {
+            bed.plot_points.forEach((row) => {
+                row.forEach((column) => {
+                    if (column.plant) {
+                        const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
+                        const matchingPlantName = column.plant.id.name === substitute.id.name;
+                        if (
+                            matchingCommonType &&
+                            !matchingPlantName &&
+                            (substituted + 1) <= substitute.id.quadrant_size
+                        ) {
+                            bedToUpdate = bed._id;
+                            if (plantGroupToSubstitute) {
+                                if (column.group === plantGroupToSubstitute) {
+                                    column.plant = { ...substitute, ...{ dt_planted: new Date() } };
+                                    substituted += 1;
+                                }
+                            } else {
+                                plantGroupToSubstitute = column.group;
+                                column.plant = { ...substitute, ...{ dt_planted: new Date() } };;
+                                substituted += 1;
+                            }
+                        }
+                    }
+                })
+            })
+        })
+
+        const bedWithSubstitution = beds.find((bed) => bed._id === bedToUpdate);
+        return bedWithSubstitution;
+    }
+
+    async substitutePlant(substitute) {
+
+        // get bed with substitution
+        const bedWithSubstitution = await this.getBedWithSubstitution(substitute);
 
         // if initial planting {...}
         if (this.props.route.params.order.type === types.INITIAL_PLANTING) {
-            let beds = this.props.beds;
-            let bedToUpdate = null;
-            beds.forEach((bed) => {
-                bed.plot_points.forEach((row) => {
-                    row.forEach((column) => {
-                        if (column.plant) {
-                            const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
-                            const matchingPlantName = column.plant.id.name === substitute.id.name;
-                            if (
-                                matchingCommonType &&
-                                !matchingPlantName &&
-                                (substituted + 1) <= substitute.id.quadrant_size
-                            ) {
-                                bedToUpdate = bed._id;
-                                if (plantGroupToSubstitute) {
-                                    if (column.group === plantGroupToSubstitute) {
-                                        column.plant = { ...substitute, ...{ dt_planted: new Date() } };
-                                        substituted += 1;
-                                    }
-                                } else {
-                                    plantGroupToSubstitute = column.group;
-                                    column.plant = { ...substitute, ...{ dt_planted: new Date() } };;
-                                    substituted += 1;
-                                }
-                            }
-                        }
-                    })
-                })
-            })
-
-            const bedWithSubstitution = beds.find((bed) => bed._id === bedToUpdate);
+            
             let vegetables = this.props.route.params.order.bid.line_items.vegetables;
             let herbs = this.props.route.params.order.bid.line_items.herbs;
             let fruit = this.props.route.params.order.bid.line_items.fruit;
@@ -154,7 +162,8 @@ class Substitution extends Component {
             // get updated beds
             await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
 
-            const draftToUpdate = drafts.find((draft) => draft.key === bedWithSubstitution.key);
+            // get draft to update
+            const draftToUpdate = this.props.drafts.find((draft) => draft.key === bedWithSubstitution.key);
 
             // update draft
             await this.props.updateDraft(draftToUpdate._id, { plot_points: bedWithSubstitution.plot_points });
@@ -164,69 +173,36 @@ class Substitution extends Component {
 
             // update quote
             await this.props.updateQuote(this.props.route.params.order.bid._id, { line_items: lineItems });
+        } else if (this.props.route.params.order.type === types.CROP_ROTATION) { // if crop rotation {...}
+            let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
+            let herbs = this.props.route.params.order.customer.garden_info.herbs;
+            let fruit = this.props.route.params.order.customer.garden_info.fruit;
+            const gardenInfo = this.props.route.params.order.customer.garden_info;
+
+            if (substitute.id.category.name === types.VEGETABLE) {
+                const updatedVegetables = await this.updateQty(vegetables, substitute);
+                gardenInfo.vegetables = updatedVegetables;
+            }
+
+            if (substitute.id.category.name === types.CULINARY_HERB) {
+                const updatedHerbs = await this.updateQty(herbs, substitute);
+                gardenInfo.herbs = updatedHerbs;
+            }
+
+            if (substitute.id.category.name === types.FRUIT) {
+                const updatedFruit = await this.updateQty(fruit, substitute);
+                gardenInfo.fruit = updatedFruit;
+            }
+
+            // update bed
+            await this.props.updateBed(bedWithSubstitution._id, { plot_points: bedWithSubstitution.plot_points });
+
+            // get updated beds
+            await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
+
+            // update customer with new garden info
+            await this.props.updateUser(`userId=${this.props.route.params.order.customer._id}`, { gardenInfo }, true);
         }
-
-        // else if (this.props.route.params.order.type === types.CROP_ROTATION) { // if crop rotation {...}
-        //     let draftToUpdate = null;
-        //     drafts.forEach((draft) => {
-        //         draft.plot_points.forEach((row) => {
-        //             row.forEach((column) => {
-        //                 if (column.plant) {
-        //                     const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
-        //                     const matchingPlantName = column.plant.id.name === substitute.id.name;
-        //                     if (
-        //                         matchingCommonType &&
-        //                         !matchingPlantName &&
-        //                         (substituted + 1) <= substitute.id.quadrant_size
-        //                     ) {
-        //                         if (plantGroupToSubstitute) {
-        //                             if (column.group === plantGroupToSubstitute) {
-        //                                 column.plant = substitute;
-        //                                 substituted += 1;
-        //                             }
-        //                         } else {
-        //                             draftToUpdate = draft;
-        //                             plantGroupToSubstitute = column.group;
-        //                             column.plant = substitute;
-        //                             substituted += 1;
-        //                         }
-        //                     }
-        //                 }
-        //             })
-        //         })
-        //     })
-
-        //     if (draftToUpdate) {
-
-        //         // update draft
-        //         await this.props.updateDraft(draftToUpdate._id, { plot_points: draftToUpdate.plot_points });
-        //     }
-        // }
-
-        // if(this.props.route.params.order.type === types.CROP_ROTATION) {
-        //     let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
-        //     let herbs = this.props.route.params.order.customer.garden_info.herbs;
-        //     let fruit = this.props.route.params.order.customer.garden_info.fruit;
-        //     const gardenInfo = this.props.route.params.order.customer.garden_info;
-
-        //     if (substitute.id.category.name === types.VEGETABLE) {
-        //         const updatedVegetables = await this.updateQty(vegetables, substitute);
-        //         gardenInfo.vegetables = updatedVegetables;
-        //     }
-
-        //     if (substitute.id.category.name === types.CULINARY_HERB) {
-        //         const updatedHerbs = await this.updateQty(herbs, substitute);
-        //         gardenInfo.herbs = updatedHerbs;
-        //     }
-
-        //     if (substitute.id.category.name === types.FRUIT) {
-        //         const updatedFruit = await this.updateQty(fruit, substitute);
-        //         gardenInfo.fruit = updatedFruit;
-        //     }
-
-        //     // update customer with new garden info
-        //     await this.props.updateUser(`userId=${this.props.route.params.order.customer._id}`, { gardenInfo }, true);
-        // }
 
         // get updated orders
         await this.props.getOrders(`status=pending`);

@@ -18,7 +18,6 @@ import {
     deleteCard,
     createCard,
 } from '../../actions/cards/index';
-import { updateUser } from '../../actions/user/index';
 import { getPlants } from '../../actions/plants/index';
 
 // styles
@@ -256,7 +255,6 @@ function mapDispatchToProps(dispatch) {
         {
             createToken,
             createCustomer,
-            updateUser,
             deleteCard,
             createCard,
             getPlants

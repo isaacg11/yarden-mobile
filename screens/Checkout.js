@@ -43,7 +43,7 @@ import { createOrder, getOrders } from '../actions/orders/index';
 import { createQuote, updateQuote, getQuotes } from '../actions/quotes/index';
 import { sendAlert } from '../actions/alerts/index';
 import { sendEmail } from '../actions/emails/index';
-import { updateUser, getUser } from '../actions/user/index';
+import { getUser, updateUser } from '../actions/user/index';
 import { sendSms } from '../actions/sms/index';
 import {
   updateChangeOrder,
@@ -205,6 +205,14 @@ class Checkout extends Component {
     // show loading indicator
     this.setState({ isLoading: true });
 
+    // set initial quote update
+    let updatedQuote = { status: 'approved' };
+
+    // check to see if the quote is for a new garden bed
+    const isGarden =
+      this.props.route.params.type === types.INSTALLATION ||
+      this.props.route.params.type === types.REVIVE
+
     // calculate total quote cost
     const amount =
       this.state.materialsTotal +
@@ -268,69 +276,45 @@ class Checkout extends Component {
       // assign order value
       order = this.props.route.params.order;
     } else if (this.props.route.params.isPurchase) {
-      // if approval is for a purchase {...}
-
-      // if plant selections {...}
-      if (this.props.route.params.plantSelections) {
-        // update garden info
-        await this.updateGardenInfo(
-          this.state.vegetables,
-          this.state.fruit,
-          this.state.herbs,
-        );
-      }
-
       // process purchase
       return this.processPurchase(approval.data);
     } else {
-      // set initial quote update
-      let updatedQuote = { status: 'approved' };
-
-      // check to see if the quote is for a garden
-      const isGarden =
-        this.props.route.params.type === types.INSTALLATION ||
-        this.props.route.params.type === types.REVIVE
-
       // if garden quote {...}
       if (isGarden) {
 
-        // update garden info
-        await this.updateGardenInfo(
-          this.state.vegetables,
-          this.state.fruit,
-          this.state.herbs,
-        );
+        // get plant selection
+        let lineItems = this.props.route.params.line_items;
 
         // combine plants from selection
         const combinedPlants = combinePlants(
           this.props.route.params.plantSelections,
         );
 
-        // get plant selection
-        let lineItems = this.props.route.params.line_items;
-
         let beds = lineItems.beds;
         beds.forEach((bed) => {
           bed.shape = bed.shape._id;
         })
 
+        // set line items
         lineItems.beds = beds;
-
-        // add plants to line items
         lineItems.vegetables = combinedPlants.vegetables;
         lineItems.herbs = combinedPlants.herbs;
         lineItems.fruit = combinedPlants.fruit;
         updatedQuote.line_items = lineItems;
+
+        // if user selected a new plan {...}
+        if (this.props.route.params.plan) {
+
+          // get current garden info
+          let gardenInfo = (this.props.user.garden_info) ? this.props.user.garden_info : {};
+
+          // set new maintenance plan
+          gardenInfo.maintenance_plan = this.props.route.params.plan;
+
+          // update user garden info
+          await this.props.updateUser(this.props.user._id, { gardenInfo });
+        }
       }
-
-      updatedQuote.line_items = lineItems;
-
-      // update garden info
-      await this.updateGardenInfo(
-        lineItems.vegetables,
-        lineItems.fruit,
-        lineItems.herbs,
-      );
     }
 
     // update quote as "approved"
@@ -340,46 +324,10 @@ class Checkout extends Component {
     order = await this.scheduleNewOrder(
       approval.data,
       this.props.route.params,
-      isGarden,
+      isGarden
     );
 
     this.finish(order);
-  }
-
-  async updateGardenInfo(vegetables, fruit, herbs) {
-    let gardenInfo = {
-      vegetables,
-      fruit,
-      herbs,
-    };
-
-    // if user has garden info {...}
-    if (this.props.user.garden_info) {
-      // if user already has a maintenance plan, set plan
-      if (this.props.user.garden_info.maintenance_plan)
-        gardenInfo.maintenance_plan =
-          this.props.user.garden_info.maintenance_plan;
-
-      // if user already has beds, set beds
-      if (this.props.user.garden_info.beds) {
-        let beds = this.props.user.garden_info.beds;
-        beds.forEach((bed) => {
-          bed.shape = bed.shape._id;
-        })
-        gardenInfo.beds = beds;
-      }
-
-      // if user already has accessories, set accessories
-      if (this.props.user.garden_info.accessories)
-        gardenInfo.accessories = this.props.user.garden_info.accessories;
-    } else {
-      // if user selected a new plan, set plan
-      if (this.props.route.params.plan)
-        gardenInfo.maintenance_plan = this.props.route.params.plan;
-    }
-
-    // update user with garden info
-    await this.props.updateUser(null, { gardenInfo });
   }
 
   async notifyHQ(quote, address, changeOrder) {
@@ -901,13 +849,13 @@ function mapDispatchToProps(dispatch) {
       getQuotes,
       sendAlert,
       sendEmail,
-      updateUser,
       updateChangeOrder,
       getChangeOrders,
       resetChangeOrders,
       sendSms,
       createPurchase,
-      getUser
+      getUser,
+      updateUser
     },
     dispatch,
   );

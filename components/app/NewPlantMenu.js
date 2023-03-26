@@ -168,7 +168,7 @@ class NewPlantMenu extends Component {
                         {this.renderSearchBar()}
 
                         {/* plant menu */}
-                        <KeyboardAwareScrollView>
+                        <KeyboardAwareScrollView style={{marginBottom: units.unit8}}>
                             {this.renderPlantMenu()}
                         </KeyboardAwareScrollView>
                     </View>

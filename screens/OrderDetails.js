@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -89,7 +89,9 @@ class OrderDetails extends Component {
       // if order for maintenance service {...}
       if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
         if (this.props.reports.length > 0) {
-          const latestReport = this.props.reports[this.props.reports.length - 1];
+
+          // get latest report
+          const latestReport = await this.getLatestReport();
 
           // get answers
           const answers = await this.props.getAnswers(`report=${latestReport._id}`);
@@ -100,10 +102,11 @@ class OrderDetails extends Component {
           // get report type
           const initialPlantingReportType = await this.props.getReportType(`name=${types.INITIAL_PLANTING}`);
 
-          // get previous maintenance reports for customer
+          // get previous reports for customer
           await this.props.getReports(`customer=${order.customer._id}&type=${initialPlantingReportType._id}`);
 
-          const latestReport = this.props.reports[this.props.reports.length - 1];
+          // get latest report
+          const latestReport = await this.getLatestReport();
 
           // get answers
           const answers = await this.props.getAnswers(`report=${latestReport._id}`);
@@ -120,6 +123,21 @@ class OrderDetails extends Component {
       changeOrders,
       wateringSchedule,
     });
+  }
+
+  async getLatestReport() {
+    // get latest report
+    let latestReport = null;
+    let newestDate = null;
+    for (const report of this.props.reports) {
+      const date = new Date(report.order.date);
+      if (!newestDate || date > newestDate) {
+        latestReport = report;
+        newestDate = date;
+      }
+    }
+
+    return latestReport;
   }
 
   cancel() {
@@ -254,27 +272,54 @@ class OrderDetails extends Component {
     let cropRotationSelectionComplete = true;
     let selectionOutOfSeason = false;
     let bedsOutOfSeason = false;
-    if (order.type === types.CROP_ROTATION) {
+
+    if (order.type === types.CROP_ROTATION) { // if crop rotation {...}
+
+      // get current season
       const season = getSeason();
-      if (user.type === types.CUSTOMER) {
-        if (user.garden_info.vegetables) {
-          selectionOutOfSeason = user.garden_info.vegetables.find((vegetable) => (vegetable.id.season !== season) && (vegetable.id.season !== 'annual'));
-        } else if (user.garden_info.herbs) {
-          selectionOutOfSeason = user.garden_info.herbs.find((herb) => (herb.id.season !== season) && (herb.id.season !== 'annual'));
-        } else if (user.garden_info.fruit) {
-          selectionOutOfSeason = user.garden_info.fruit.find((fr) => (fr.id.season !== season) && (fr.id.season !== 'annual'));
+
+      // if no plant selections are found {...}
+      if (
+        !order.customer.garden_info.vegetables &&
+        !order.customer.garden_info.herbs &&
+        !order.customer.garden_info.fruit
+      ) {
+        cropRotationSelectionComplete = false;
+      } else {
+        // check plants for out of season selections
+        if (order.customer.garden_info.vegetables) {
+          selectionOutOfSeason = order.customer.garden_info.vegetables.find((vegetable) => (vegetable.id.season !== season) && (vegetable.id.season !== 'annual'));
+        } else if (order.customer.garden_info.herbs) {
+          selectionOutOfSeason = order.customer.garden_info.herbs.find((herb) => (herb.id.season !== season) && (herb.id.season !== 'annual'));
+        } else if (order.customer.garden_info.fruit) {
+          selectionOutOfSeason = order.customer.garden_info.fruit.find((fr) => (fr.id.season !== season) && (fr.id.season !== 'annual'));
         }
+
         if (selectionOutOfSeason) cropRotationSelectionComplete = false;
-      } else if (user.type === types.GARDENER) {
+      }
+
+      if (user.type === types.GARDENER) { // if gardener {...}
+        let plants = 0;
         beds.forEach((bed) => {
           bed.plot_points.forEach((rows) => {
             rows.forEach((column) => {
-              if (column.plant && ((column.plant.id.season !== season) && (column.plant.id.season !== 'annual'))) {
-                bedsOutOfSeason = true;
+              if (column.plant) {
+                plants += 1;
+
+                // check plants for out of season selections
+                if (((column.plant.id.season !== season) && (column.plant.id.season !== 'annual'))) {
+                  bedsOutOfSeason = true;
+                }
               }
             })
           })
         })
+
+        // NOTE: This is necessary for the initial crop rotation of legacy customer pre garden map, as they will start with an empty state
+        // Author: Isaac G. 3/25/23
+        if (plants < 1) {
+          bedsOutOfSeason = true;
+        }
       }
     }
 
@@ -546,41 +591,43 @@ class OrderDetails extends Component {
                 user.type === types.GARDENER &&
                 cropRotationSelectionComplete && (
                   <View style={{ marginTop: units.unit4 }}>
-                    <View>
-                      <Collapse
-                        title="Vegetables"
-                        content={
-                          <Plants
-                            plants={order.customer.garden_info.vegetables}
-                            order={order}
-                            onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
-                          />
-                        }
-                      />
-                    </View>
-                    <View>
-                      <Collapse
-                        title="Herbs"
-                        content={
-                          <Plants
-                            plants={order.customer.garden_info.herbs}
-                            order={order}
-                            onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
-                          />
-                        }
-                      />
-                    </View>
-                    <View>
-                      <Collapse
-                        title="Fruit"
-                        content={
-                          <Plants
-                            plants={order.customer.garden_info.fruit}
-                            order={order}
-                            onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
-                          />
-                        }
-                      />
+                    <View style={{display: (bedsOutOfSeason) ? 'none' : 'flex'}}>
+                      <View>
+                        <Collapse
+                          title="Vegetables"
+                          content={
+                            <Plants
+                              plants={order.customer.garden_info.vegetables}
+                              order={order}
+                              onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                            />
+                          }
+                        />
+                      </View>
+                      <View>
+                        <Collapse
+                          title="Herbs"
+                          content={
+                            <Plants
+                              plants={order.customer.garden_info.herbs}
+                              order={order}
+                              onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                            />
+                          }
+                        />
+                      </View>
+                      <View>
+                        <Collapse
+                          title="Fruit"
+                          content={
+                            <Plants
+                              plants={order.customer.garden_info.fruit}
+                              order={order}
+                              onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                            />
+                          }
+                        />
+                      </View>
                     </View>
                     <View>
                       {/* buttons */}
@@ -607,6 +654,24 @@ class OrderDetails extends Component {
                         text="Process Order"
                         onPress={() => this.props.navigation.navigate('Image Upload', { order })}
                       />
+                    </View>
+                  </View>
+                )}
+
+              {/* plant selections (dynamically visible) */}
+              {order.status === 'pending' &&
+                order.type === types.CROP_ROTATION &&
+                user.type === types.GARDENER &&
+                !cropRotationSelectionComplete && (
+                  <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: units.unit5 }}>
+                    <View style={{ display: 'flex', alignItems: 'center' }}>
+                      <Ionicons
+                        name="information-circle-outline"
+                        size={units.unit4}
+                        color={colors.purpleB}
+                        size={units.unit5}
+                      />
+                      <Text>The customer has not selected their plants for the crop rotation, please check back later.</Text>
                     </View>
                   </View>
                 )}
