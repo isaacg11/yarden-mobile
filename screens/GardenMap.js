@@ -2252,7 +2252,6 @@ class GardenMap extends Component {
   }
 
   getMapScale() {
-    const { width } = Dimensions.get('window');
     switch (this.props.columns) {
       case 10: // 5 ft width
         return {
@@ -2264,8 +2263,7 @@ class GardenMap extends Component {
               translateY: -40 * 5
             },
             {
-              translateX: (width / 10) * -1
-              // translateX: -36
+              translateX: 0
             }
           ],
         }
@@ -2274,44 +2272,24 @@ class GardenMap extends Component {
           transform: [
             {
               scale: 1
-            },
-            {
-              translateY: 0
-            },
-            {
-              translateX: 10
-            },
+            }
           ],
         }
       case 6: // 3 ft width
         return {
           transform: [
             {
-              scale: 17 / 12.5
-            },
-            {
-              translateY: 95
-            },
-            {
-              translateX: 37.5
-            },
+              scale: 1
+            }
           ],
-          paddingBottom: 250
         }
       case 4: // 2 ft width
         return {
           transform: [
             {
-              scale: 15 / 7.5
-            },
-            {
-              translateY: 245
-            },
-            {
-              translateX: 45
-            },
+              scale: 1
+            }
           ],
-          paddingBottom: 500
         }
       default:
         return {}
@@ -2482,15 +2460,12 @@ class GardenMap extends Component {
 
             {/* garden map */}
             <ScrollView
-              horizontal={true}
               contentContainerStyle={{
                 display: 'flex',
                 alignItems: 'center',
-                height: '100%',
+                justifyContent: 'center',
               }}>
-              <View
-                style={mapScale}
-              >
+              <View style={mapScale}>
                 {this.renderPlotPoints()}
               </View>
             </ScrollView>
