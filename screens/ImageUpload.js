@@ -328,7 +328,7 @@ class ImageUpload extends Component {
 
                     // get pending orders
                     await this.props.getOrders(
-                        `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                        `status=pending&vendor=${this.props.user._id}`,
                     );
 
                     // redirect user to success page
@@ -339,9 +339,9 @@ class ImageUpload extends Component {
                 } else {
                     // get pending orders
                     await this.props.getOrders(
-                        `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                        `status=pending&vendor=${this.props.user._id}`,
                     );
-                    
+
                     // redirect user to success page
                     this.props.navigation.navigate('Order Complete', { orderType: order.type });
 
@@ -410,7 +410,7 @@ class ImageUpload extends Component {
 
                 // get pending orders
                 await this.props.getOrders(
-                    `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+                    `status=pending&vendor=${this.props.user._id}`,
                 );
 
                 // redirect user to success page
@@ -531,7 +531,7 @@ class ImageUpload extends Component {
             }
 
             // get updated orders
-            await this.props.getOrders(`status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`);
+            await this.props.getOrders(`status=pending&vendor=${this.props.user._id}`);
 
             // get new reminders
             await this.props.getReminders(`status=pending&page=1&limit=50`);

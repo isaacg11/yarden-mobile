@@ -18,7 +18,6 @@ import {
     deleteCard,
     createCard,
 } from '../../actions/cards/index';
-import { updateUser } from '../../actions/user/index';
 
 // helpers
 import capitalize from '../../helpers/capitalize';
@@ -194,7 +193,6 @@ function mapDispatchToProps(dispatch) {
         {
             createToken,
             createCustomer,
-            updateUser,
             deleteCard,
             createCard,
         },

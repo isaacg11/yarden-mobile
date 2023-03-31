@@ -66,9 +66,11 @@ class Step5 extends Component {
         // if order for maintenance service {...}
         if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
 
-            // if reports are found for watering schedule {...}
+            // if reports are found {...}
             if (this.props.reports.length > 0) {
-                const latestReport = this.props.reports[this.props.reports.length - 1];
+
+                // get latest report
+                const latestReport = await this.getLatestReport();
 
                 // get answers
                 const answers = await this.props.getAnswers(`report=${latestReport._id}`);
@@ -79,10 +81,11 @@ class Step5 extends Component {
                 // get report type
                 const initialPlantingReportType = await this.props.getReportType(`name=${types.INITIAL_PLANTING}`);
 
-                // get previous maintenance reports for customer
+                // get previous reports for customer
                 await this.props.getReports(`customer=${order.customer._id}&type=${initialPlantingReportType._id}`);
 
-                const latestReport = this.props.reports[this.props.reports.length - 1];
+                // get latest report
+                const latestReport = await this.getLatestReport();
 
                 // get answers
                 const answers = await this.props.getAnswers(`report=${latestReport._id}`);
@@ -98,6 +101,21 @@ class Step5 extends Component {
             wateringSchedule,
             isLoading: false
         });
+    }
+
+    async getLatestReport() {
+        // get latest report
+        let latestReport = null;
+        let newestDate = null;
+        for (const report of this.props.reports) {
+            const date = new Date(report.order.date);
+            if (!newestDate || date > newestDate) {
+                latestReport = report;
+                newestDate = date;
+            }
+        }
+
+        return latestReport;
     }
 
     renderDayIntervalControl() {

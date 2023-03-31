@@ -20,6 +20,7 @@ import combinePlants from '../helpers/combinePlants';
 // actions
 import { getPlants } from '../actions/plants/index';
 import { updateUser } from '../actions/user/index';
+import { getOrders } from '../actions/orders/index';
 
 // styles
 import units from '../components/styles/units';
@@ -37,6 +38,7 @@ class Garden extends Component {
 
     // set current season
     const season = getSeason();
+    // const season = 'fall';
 
     // get all plants associated with the current season
     await this.props.getPlants(`season=${season}`);
@@ -77,6 +79,9 @@ class Garden extends Component {
         combinedPlants.herbs,
         combinedPlants.fruit,
       );
+
+      // get updated orders, to update the order.customer.garden_info which is used to determine if a CR selection has been made or not
+      await this.props.getOrders(`status=pending`);
 
       // hide loading indicator
       this.setState({ isLoading: false });
@@ -131,11 +136,11 @@ class Garden extends Component {
       // if user already has accessories, set accessories
       if (this.props.user.garden_info.accessories)
         gardenInfo.accessories = this.props.user.garden_info.accessories;
-    } else {
-      // if user selected a new plan, set plan
-      if (this.props.route.params.plan)
-        gardenInfo.maintenance_plan = this.props.route.params.plan;
     }
+
+    // if user selected a new plan, set plan
+    if (this.props.route.params.plan)
+    gardenInfo.maintenance_plan = this.props.route.params.plan;
 
     // update user with garden info
     await this.props.updateUser(null, { gardenInfo });
@@ -239,7 +244,8 @@ class Garden extends Component {
 function mapStateToProps(state) {
   return {
     user: state.user,
-    plants: state.plants
+    plants: state.plants,
+    orders: state.orders
   };
 }
 
@@ -248,6 +254,7 @@ function mapDispatchToProps(dispatch) {
     {
       getPlants,
       updateUser,
+      getOrders
     },
     dispatch,
   );

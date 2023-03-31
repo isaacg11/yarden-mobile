@@ -168,20 +168,22 @@ class HarvestMenu extends Component {
                         borderTopWidth: 1
                     }}
                 >
-                    <View style={{ display: 'flex', alignItems: 'center' }}>
-
-                        {/* close button */}
+                    {/* close button */}
+                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', padding: units.unit4}}>
                         <TouchableOpacity
                             onPress={() => close(true)}>
                             <Ionicons
-                                name={'remove-outline'}
+                                name={'close-outline'}
                                 color={colors.purpleB}
-                                size={units.unit6}
+                                size={units.unit5}
                             />
                         </TouchableOpacity>
+                    </View>
+
+                    <View style={{ display: 'flex', alignItems: 'center' }}>
 
                         {/* plant image */}
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit5}}>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit5 }}>
                             <Image
                                 source={{ uri: selectedPlotPoint.plant.id.image }}
                                 style={{
@@ -248,7 +250,7 @@ class HarvestMenu extends Component {
                             label="Produce Type"
                             value={selectedProduceType}
                             onChange={value => {
-                                this.setState({ 
+                                this.setState({
                                     selectedProduceType: value,
                                     harvestType: (value === types.HEAD) ? types.FULL_HARVEST : harvestType
                                 });

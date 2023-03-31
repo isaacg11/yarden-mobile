@@ -10,6 +10,7 @@ import {
   Image,
   Text,
   Animated,
+  Dimensions
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -822,41 +823,33 @@ class GardenMap extends Component {
   }
 
   async updatePlantedList() {
-    // show saving indicator
-    this.setState({ isSaving: true });
 
-    // check for match
-    const match = this.props.drafts.find(
-      draft => draft.key === this.props.bedId,
-    );
+    // if initial planting{...}
+    if (this.props.order.type === types.INITIAL_PLANTING) {
 
-    // if draft key matches selected bed id {...}
-    if (match) {
-      // update draft
-      await this.props.updateDraft(match._id, {
-        plot_points: this.state.plotPoints,
-      });
+      // show saving indicator
+      this.setState({ isSaving: true });
 
-      // get updated drafts
-      await this.props.getDrafts(`order=${this.props.order._id}`);
-    } else {
-      // create a new draft
-      await this.props.createDraft({
-        key: this.props.bedId,
-        order: this.props.order._id,
-        plot_points: this.state.plotPoints,
-        width: this.props.bed.width,
-        length: this.props.bed.length,
-        height: this.props.bed.height,
-        shape: this.props.bed.shape._id,
-      });
+      // check for match
+      const match = this.props.drafts.find(
+        draft => draft.key === this.props.bedId,
+      );
 
-      // get new drafts
-      await this.props.getDrafts(`order=${this.props.order._id}`);
+      // if draft key matches selected bed id {...}
+      if (match) {
+        
+        // update draft
+        await this.props.updateDraft(match._id, {
+          plot_points: this.state.plotPoints,
+        });
+
+        // get updated drafts
+        await this.props.getDrafts(`order=${this.props.order._id}`);
+      }
+
+      // hide saving indicator
+      this.setState({ isSaving: false });
     }
-
-    // hide saving indicator
-    this.setState({ isSaving: false });
   }
 
   async removePlant() {
@@ -2259,6 +2252,7 @@ class GardenMap extends Component {
   }
 
   getMapScale() {
+    const { width } = Dimensions.get('window');
     switch (this.props.columns) {
       case 10: // 5 ft width
         return {
@@ -2270,7 +2264,8 @@ class GardenMap extends Component {
               translateY: -40 * 5
             },
             {
-              translateX: -36
+              translateX: (width / 10) * -1
+              // translateX: -36
             }
           ],
         }

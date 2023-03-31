@@ -47,7 +47,7 @@ const types = {
 
     // plant categories
     VEGETABLE: 'vegetable',
-    CULINARY_HERB: 'culinary_herb',
+    CULINARY_HERB: 'culinary herb',
     FRUIT: 'fruit'
 }
 
