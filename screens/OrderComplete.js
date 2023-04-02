@@ -32,7 +32,13 @@ class OrderComplete extends Component {
           step2: 'Use the garden map to keep track of your plants during maintenance services.',
           step3: 'Be sure to let the customer know about any issues you ran into while rotating crops.'
         }
-      case types.FULL_PLAN || types.ASSISTED_PLAN:
+      case types.FULL_PLAN:
+        return {
+          step1: 'A new maintenance order will be scheduled for continued service.',
+          step2: 'Your service report will be sent to the customer for review.',
+          step3: 'Be sure to let the customer know about any issues you ran into while performing maintenance.'
+        }
+      case types.ASSISTED_PLAN:
         return {
           step1: 'A new maintenance order will be scheduled for continued service.',
           step2: 'Your service report will be sent to the customer for review.',

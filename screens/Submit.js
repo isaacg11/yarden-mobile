@@ -9,7 +9,7 @@ import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Paragraph from '../components/UI/Paragraph';
 import Header from '../components/UI/Header';
 import Card from '../components/UI/Card';
-import { createUser, updateUser } from '../actions/user/index';
+import { createUser } from '../actions/user/index';
 import { createOrder } from '../actions/orders/index';
 import { sendEmail } from '../actions/emails/index';
 import { sendAlert } from '../actions/alerts/index';
@@ -221,7 +221,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         createUser,
-        updateUser,
         createOrder,
         sendEmail,
         sendAlert,

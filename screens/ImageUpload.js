@@ -85,7 +85,9 @@ class ImageUpload extends Component {
         switch (order.type) {
             case types.INITIAL_PLANTING:
                 return 'Upload a minimum of 2 photos: 1 before the planting, and 1 after the planting. Submit additional photos as needed.';
-            case types.FULL_PLAN || types.ASSISTED_PLAN:
+            case types.FULL_PLAN:
+                return 'Upload a minimum of 2 photos. If there was a harvest, make sure to upload photos of the harvested plants.';
+            case types.ASSISTED_PLAN:
                 return 'Upload a minimum of 2 photos. If there was a harvest, make sure to upload photos of the harvested plants.';
             default:
                 return 'Upload a minimum of 2 photos. Submit additional photos as needed.';
@@ -169,7 +171,9 @@ class ImageUpload extends Component {
                 return this.processInitialPlanting();
             case types.CROP_ROTATION:
                 return this.processCropRotation();
-            case types.FULL_PLAN || types.ASSISTED_PLAN:
+            case types.FULL_PLAN:
+                return this.processMaintenance();
+            case types.ASSISTED_PLAN:
                 return this.processMaintenance();
             default:
                 return;

@@ -24,7 +24,7 @@ import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
 // actions
-import { createBed, updateBed, getBeds } from '../actions/beds/index';
+import { createBed, getBeds } from '../actions/beds/index';
 import { updateDraft, getDrafts } from '../actions/drafts/index';
 
 // helpers
@@ -112,7 +112,18 @@ class Beds extends Component {
         return (this.props.drafts.find((draft) => !draft.published)) ? 'Build and publish the garden map before starting the initial planting so you can use it as a guide while working.' : '';
       case types.CROP_ROTATION:
         return 'Build the garden map before starting the crop rotation so you can use it as a guide while working.';
-      case types.FULL_PLAN || types.ASSISTED_PLAN:
+      case types.FULL_PLAN:
+        switch (this.props.route.params.serviceReport) {
+          case types.DEAD_PLANTS:
+            return 'Tap on each garden bed where you found dead plants. Use the number on the garden bed to identify which bed to use for reporting.';
+          case types.HARVESTED_PLANTS:
+            return 'Tap on each garden bed where you harvested. Use the number on the garden bed to identify which bed to use for reporting.';
+          case types.NEW_PLANTS:
+            return 'Tap on each garden bed where added new plants. Use the number on the garden bed to identify which bed to use for reporting.';
+          default:
+            return '';
+        }
+      case types.ASSISTED_PLAN:
         switch (this.props.route.params.serviceReport) {
           case types.DEAD_PLANTS:
             return 'Tap on each garden bed where you found dead plants. Use the number on the garden bed to identify which bed to use for reporting.';
@@ -151,7 +162,27 @@ class Beds extends Component {
             </Text>
           </View>
         )
-      case (types.FULL_PLAN || types.ASSISTED_PLAN):
+      case types.FULL_PLAN:
+        if (this.props.route.params.serviceReport) {
+          return (
+            <View>
+              <Button
+                alignIconRight
+                icon={
+                  <Ionicons
+                    name="arrow-forward-outline"
+                    size={fonts.h3}
+                    color={colors.purpleB}
+                  />
+                }
+                text="Next"
+                variant="button"
+                onPress={() => this.next()}
+              />
+            </View>
+          )
+        }
+      case types.ASSISTED_PLAN:
         if (this.props.route.params.serviceReport) {
           return (
             <View>
@@ -445,7 +476,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       createBed,
-      updateBed,
       updateDraft,
       getDrafts,
       getBeds

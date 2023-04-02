@@ -105,14 +105,17 @@ class OrderDetails extends Component {
           // get previous reports for customer
           await this.props.getReports(`customer=${order.customer._id}&type=${initialPlantingReportType._id}`);
 
-          // get latest report
-          const latestReport = await this.getLatestReport();
+          if (this.props.reports.length > 0) {
 
-          // get answers
-          const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+            // get latest report
+            const latestReport = await this.getLatestReport();
 
-          // set watering schedule
-          wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+            // get answers
+            const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+
+            // set watering schedule
+            wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+          }
         }
       }
     }

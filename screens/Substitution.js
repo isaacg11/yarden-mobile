@@ -135,7 +135,7 @@ class Substitution extends Component {
 
         // if initial planting {...}
         if (this.props.route.params.order.type === types.INITIAL_PLANTING) {
-            
+
             let vegetables = this.props.route.params.order.bid.line_items.vegetables;
             let herbs = this.props.route.params.order.bid.line_items.herbs;
             let fruit = this.props.route.params.order.bid.line_items.fruit;
@@ -177,7 +177,10 @@ class Substitution extends Component {
             let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
             let herbs = this.props.route.params.order.customer.garden_info.herbs;
             let fruit = this.props.route.params.order.customer.garden_info.fruit;
-            const gardenInfo = this.props.route.params.order.customer.garden_info;
+            let gardenInfo = this.props.route.params.order.customer.garden_info;
+            gardenInfo.beds.forEach((bed) => {
+                bed.shape = bed.shape._id;
+            })
 
             if (substitute.id.category.name === types.VEGETABLE) {
                 const updatedVegetables = await this.updateQty(vegetables, substitute);
