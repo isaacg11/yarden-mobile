@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import LoadingIndicator from '../UI/LoadingIndicator';
 
 // UI components
 import Orders from '../../screens/Orders';
 import Quotes from '../../screens/Quotes';
-import Shop from '../../screens/Shop';
+// import Shop from '../../screens/Shop';
 import Messages from '../../screens/Messages';
 import Reminders from '../../screens/Reminders';
 import Reports from '../../screens/Reports';

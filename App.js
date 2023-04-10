@@ -71,6 +71,7 @@ import Referrals from './screens/Referrals';
 import Subscription from './screens/Subscription';
 import ReminderDetails from './screens/ReminderDetails';
 import PlantsSelected from './screens/PlantsSelected';
+import NewBeds from './screens/NewBeds';
 
 // UI components
 import Link from './components/UI/Link';
@@ -844,6 +845,16 @@ function App() {
               component={PlantsSelected}
               options={{
                 headerLeft: displayNone,
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="New Beds"
+              component={NewBeds}
+              options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,
