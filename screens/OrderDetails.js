@@ -684,6 +684,17 @@ class OrderDetails extends Component {
                       </View>
                     </View>
                     <View>
+                      <View style={{ display: (bedsOutOfSeason) ? 'flex' : 'none', flexDirection: 'row', justifyContent: 'center', padding: units.unit5 }}>
+                        <View style={{ display: 'flex', alignItems: 'center' }}>
+                          <Ionicons
+                            name="information-circle-outline"
+                            size={units.unit4}
+                            color={colors.purpleB}
+                            size={units.unit5}
+                          />
+                          <Text style={{textAlign: 'center'}}>Build the garden map before going to the nursery to pick up plants</Text>
+                        </View>
+                      </View>
                       {/* buttons */}
                       <Button
                         variant={(bedsOutOfSeason) ? 'button' : 'btn2'}

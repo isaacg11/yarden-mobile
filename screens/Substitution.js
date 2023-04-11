@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View, Text, Image } from 'react-native';
+import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -10,6 +10,8 @@ import Header from '../components/UI/Header';
 import Dropdown from '../components/UI/Dropdown';
 import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Link from '../components/UI/Link';
+import Input from '../components/UI/Input';
 import { alert } from '../components/UI/SystemAlert';
 
 // actions
@@ -19,12 +21,17 @@ import { getBeds, updateBed } from '../actions/beds';
 import { updateDraft, getDrafts } from '../actions/drafts';
 import { getOrders, getOrder } from '../actions/orders';
 import { updateQuote } from '../actions/quotes';
+import { createPlant } from '../actions/plants';
+import { sendEmail } from '../actions/emails/index';
 
 // styles
 import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
 import card from '../components/styles/card';
+
+// config
+import config from '../config';
 
 // types
 import types from '../vars/types';
@@ -36,11 +43,15 @@ class Substitution extends Component {
         plants: [],
         vegetables: [],
         herbs: [],
-        fruit: []
+        fruit: [],
+        varietalName: ''
     };
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.setPlantList();
+    }
 
+    async setPlantList() {
         // get plants with the same common type and quadrant size
         const plants = await this.props.getPlants(`common_type=${this.props.route.params.selectedPlant.id.common_type._id}&quadrant_size=${this.props.route.params.selectedPlant.id.quadrant_size}`, true);
 
@@ -231,12 +242,88 @@ class Substitution extends Component {
         return plants;
     }
 
+    async createVarietal() {
+
+        // if no plant name {...}
+        if (!this.state.varietalName) {
+
+            // show warning
+            alert(
+                'Please enter a varietal name',
+                'Uh Oh!'
+            );
+        } else {
+
+            // show loading indicator
+            this.setState({ isLoading: true });
+
+            // set selected plant data as the base of new varietal (new varietal will be reviewed by HQ and adjusted as needed after creation)
+            const similarVarietal = this.props.route.params.selectedPlant.id;
+
+            // set new varietal
+            const newVarietal = {
+                average_head_weight: similarVarietal.average_head_weight,
+                average_produce_weight: similarVarietal.average_produce_weight,
+                botanical_type: similarVarietal.botanical_type._id,
+                category: similarVarietal.category._id,
+                common_type: similarVarietal.common_type._id,
+                days_to_mature: similarVarietal.days_to_mature,
+                edible: similarVarietal.edible,
+                family_type: similarVarietal.family_type._id,
+                growth_style: similarVarietal.growth_style._id,
+                image: similarVarietal.image,
+                name: this.state.varietalName,
+                partial_sun: similarVarietal.partial_sun,
+                produce_type: similarVarietal.produce_type._id,
+                quadrant_size: similarVarietal.quadrant_size,
+                season: similarVarietal.season
+            }
+
+            // create plant
+            const varietal = await this.props.createPlant(newVarietal);
+
+            // set plant list
+            await this.setPlantList();
+
+            // update UI
+            this.setState({
+                isLoading: false,
+                varietalName: '',
+                isEditingName: false,
+            });
+
+            // format email
+            const newBedsRequest = {
+                email: config.email,
+                subject: `Yarden - (ACTION REQUIRED) New plant added`,
+                label: 'New Varietal',
+                body: (
+                    '<p>Hello <b>Yarden HQ</b>,</p>' +
+                    '<p style="margin-bottom: 15px;">A new plant varietal has been created by <u>' + this.props.user.email + '</u>, please review and update as needed.</p>' +
+                    '<p><b>New Plant</b></p>' +
+                    '<p>' + '"' + `${varietal.name} ${similarVarietal.common_type.name}` + '"' + '</p>'
+                )
+            }
+
+            // send email
+            await this.props.sendEmail(newBedsRequest);
+
+            // show success message
+            alert(
+                'The new varietal has been added to the plant list',
+                'Success!'
+            );
+        }
+    }
+
     render() {
 
         const {
             plants,
             substitutePlant,
-            isLoading
+            isLoading,
+            varietalName,
+            isEditingName
         } = this.state;
 
         const {
@@ -392,6 +479,65 @@ class Substitution extends Component {
                             />
                         )}
                     />
+
+                    {/* new varietal */}
+
+                    {(!isEditingName) && (
+                        <View>
+                            <View style={{ marginTop: units.unit6, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                                <Text>Don't see the varietal you need?</Text>
+                            </View>
+                            <View style={{ marginTop: units.unit4, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                                <Link
+                                    icon={
+                                        <Ionicons
+                                            name="add-outline"
+                                            size={fonts.h3}
+                                            color={colors.purpleB}
+                                        />
+                                    }
+                                    text={'Add New Varietal'}
+                                    onPress={() => this.setState({ isEditingName: true })}
+                                />
+                            </View>
+                        </View>
+                    )}
+                    {(isEditingName) && (
+                        <View>
+                            <View style={{ marginTop: units.unit6, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                                <Text>Enter the varietal name. For example, if you are adding "Sweet Corn", only enter "Sweet".</Text>
+                            </View>
+                            <Input
+                                onChange={value => this.setState({ varietalName: value })}
+                                value={varietalName}
+                                placeholder="Varietal Name"
+                            />
+                            <View
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                    marginBottom: units.unit3,
+                                }}>
+                                <TouchableOpacity
+                                    onPress={() => this.createVarietal()}>
+                                    <Ionicons
+                                        name={'checkmark'}
+                                        color={colors.purple0}
+                                        size={fonts.h2}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => this.setState({ isEditingName: false })}>
+                                    <Ionicons
+                                        name={'close'}
+                                        color={colors.purple0}
+                                        size={fonts.h2}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
                 </View>
             </SafeAreaView>
         );
@@ -418,7 +564,9 @@ function mapDispatchToProps(dispatch) {
             getOrders,
             getPlants,
             getOrder,
-            updateQuote
+            updateQuote,
+            createPlant,
+            sendEmail
         },
         dispatch,
     );
