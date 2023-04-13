@@ -28,6 +28,9 @@ import units from '../components/styles/units';
 import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
 
+// types
+import types from '../vars/types';
+
 class Orders extends Component {
   state = {
     status: 'pending',
@@ -99,7 +102,7 @@ class Orders extends Component {
   render() {
     const { isLoading, page, limit } = this.state;
 
-    const { orders, changeOrders, filters } = this.props;
+    const { orders, changeOrders, filters, user } = this.props;
 
     return (
       <SafeAreaView
@@ -194,6 +197,9 @@ class Orders extends Component {
                           </Paragraph>
                         </View>
                         <View>
+                          {user.type === types.GARDENER && (
+                            <Text>{order.customer.address}</Text>
+                          )}
                           <Text
                             style={{
                               fontSize: fonts.h3,

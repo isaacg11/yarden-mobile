@@ -398,12 +398,13 @@ function App() {
             <Stack.Screen
               name="Message"
               component={Message}
-              options={{
+              options={(navigation) => ({
+                headerLeft: () => renderBackButton(navigation),
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,
                 headerShadowVisible: false,
-              }}
+              })}
             />
             <Stack.Screen
               name="Request Quote Change"
@@ -569,7 +570,7 @@ function App() {
             <Stack.Screen
               name="Beds"
               component={Beds}
-              options={(navigation, route) => ({
+              options={(navigation) => ({
                 headerLeft: () => renderBackButton(navigation),
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
