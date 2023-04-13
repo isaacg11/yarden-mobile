@@ -1,3 +1,4 @@
+// libraries
 import React, { Component } from 'react';
 import { View, ScrollView, Image, TouchableOpacity, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -6,6 +7,8 @@ import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// UI components
 import ImageDetails from '../app/ImageDetails';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
@@ -13,6 +16,8 @@ import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
 import Divider from '../UI/Divider';
 import Label from '../UI/Label';
+
+// actions
 import { alert } from '../../components/UI/SystemAlert';
 import {
   createMessage,
@@ -20,7 +25,11 @@ import {
   updateMessage,
 } from '../../actions/messages/index';
 import { getConversations } from '../../actions/conversations/index';
+
+// helpers
 import uploadImage from '../../helpers/uploadImage';
+
+// styles
 import units from '../../components/styles/units';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
@@ -35,6 +44,10 @@ class Messenger extends Component {
   async componentDidMount() {
     // if current conversation {...}
     if (this.props.conversationId) {
+
+      // show loading indicator
+      this.setState({ isLoading: true });
+
       // get messages for conversation
       const messages = await this.props.getMessages(
         `conversation_id=${this.props.conversationId}`,
@@ -84,6 +97,7 @@ class Messenger extends Component {
         receiver: receiver,
         contacts: contacts,
         conversation: messages,
+        isLoading: false
       });
     } else {
       // set contacts

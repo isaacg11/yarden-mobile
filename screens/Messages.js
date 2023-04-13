@@ -1,8 +1,13 @@
-import React, {Component} from 'react';
-import {SafeAreaView, View, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
+// libraries
+import React, { Component } from 'react';
+import { SafeAreaView, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+
+// UI components
 import Inbox from '../components/app/Inbox';
 import Header from '../components/UI/Header';
+
+// styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 
@@ -16,8 +21,8 @@ class Messages extends Component {
           backgroundColor: colors.greenD5,
         }}>
         <ScrollView>
-          <View style={{padding: units.unit3 + units.unit4}}>
-            <Header type="h4" style={{marginBottom: units.unit5}}>
+          <View style={{ padding: units.unit3 + units.unit4 }}>
+            <Header type="h4" style={{ marginBottom: units.unit3 }}>
               Messages
             </Header>
             {/* inbox */}

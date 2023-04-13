@@ -337,7 +337,8 @@ class OrderDetails extends Component {
       }
     } else if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) { // if maintenance {...}
       if (user.type === types.GARDENER) { // if gardener {...}
-        const pendingCropRotation = orders.list.find((order) => order.type === types.CROP_ROTATION);
+        // check for pending crop rotation for customer with maintenance order
+        const pendingCropRotation = orders.list.find((o) => (o.type === types.CROP_ROTATION) && (o.customer._id === order.customer._id));
         if (pendingCropRotation) { // if pending crop rotation {...}
           let plants = 0;
           beds.forEach((bed) => {
