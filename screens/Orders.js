@@ -4,6 +4,7 @@ import { SafeAreaView, View, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
+import { debounce } from 'lodash';
 
 // UI components
 import Dropdown from '../components/UI/Dropdown';
@@ -16,6 +17,7 @@ import Divider from '../components/UI/Divider';
 import Notification from '../components/UI/Notification';
 import Paginate from '../components/UI/Paginate';
 import Header from '../components/UI/Header';
+import Input from '../components/UI/Input';
 
 // actions
 import { setSelectedOrder } from '../actions/orders/index';
@@ -36,6 +38,7 @@ class Orders extends Component {
     status: 'pending',
     page: 1,
     limit: 5,
+    search: ''
   };
 
   componentDidMount() {
@@ -43,23 +46,34 @@ class Orders extends Component {
   }
 
   async setStatus(status) {
-    // show loading indicator and set status
-    this.setState({
-      isLoading: true,
-      status: status,
-    });
+
+    // set status
+    this.setState({ status });
 
     // set new status
     await this.props.setFilters({ orders: status });
 
+    // set orders
+    await this.setOrders();
+  }
+
+  async setOrders() {
+    // show loading indicator
+    this.setState({
+      isLoading: true
+    });
+
     // set order query
-    const query = `status=${status}&page=${this.state.page}&limit=${this.state.limit}${(this.props.user.type === 'gardener') ? `&vendor=${this.props.user._id}` : ''}`;
+    let query = `status=${this.state.status}&page=${this.state.page}&limit=${this.state.limit}${(this.props.user.type === 'gardener') ? `&vendor=${this.props.user._id}` : ''}`;
+
+    // if search value exists, add to query
+    if(this.state.search) query = `${query}&search=${this.state.search}`;
+
+    // get pending orders
+    await this.props.getOrders(query);
 
     // if status is pending {...}
-    if (status === 'pending') {
-      // get pending orders
-      await this.props.getOrders(query);
-
+    if (this.state.status === 'pending') {
       // iterate through order list
       await this.props.orders.list.forEach(async order => {
         // get pending change orders
@@ -67,12 +81,9 @@ class Orders extends Component {
           `order=${order._id}&status=pending approval`,
         );
       });
-    } else {
-      // get completed orders
-      await this.props.getOrders(query);
     }
 
-    // show loading indicator
+    // hide loading indicator
     this.setState({ isLoading: false });
   }
 
@@ -99,10 +110,24 @@ class Orders extends Component {
     });
   }
 
-  render() {
-    const { isLoading, page, limit } = this.state;
+  searchOrders = debounce(() => {
+    this.setOrders();
+  }, 1000);
 
-    const { orders, changeOrders, filters, user } = this.props;
+  render() {
+    const {
+      isLoading,
+      page,
+      limit,
+      search
+    } = this.state;
+
+    const {
+      orders,
+      changeOrders,
+      filters,
+      user
+    } = this.props;
 
     return (
       <SafeAreaView
@@ -113,7 +138,8 @@ class Orders extends Component {
         }}>
         <ScrollView>
           <View style={{ padding: units.unit3 + units.unit4 }}>
-            {/* loading indicator start */}
+
+            {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
             <View>
@@ -128,7 +154,7 @@ class Orders extends Component {
 
               {/* status filter */}
               <Dropdown
-                label="Filter"
+                label="Status"
                 value={filters.orders}
                 onChange={value => this.setStatus(value)}
                 options={[
@@ -143,6 +169,20 @@ class Orders extends Component {
                 ]}
                 style={{ marginBottom: units.unit4 }}
               />
+
+              {/* search input */}
+              {(user.type === types.GARDENER) && (
+                <Input
+                  label="Search"
+                  placeholder="Search Orders"
+                  value={search}
+                  onChange={(value) => {
+                    this.setState({ search: value }, () => {
+                      this.searchOrders();
+                    })
+                  }}
+                />
+              )}
 
               {/* order list */}
               {orders.list &&
