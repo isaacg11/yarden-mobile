@@ -1,6 +1,6 @@
 // libraries
-import React, {Component} from 'react';
-import {View, Image, Text, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { View, Image, Text, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
@@ -12,7 +12,7 @@ import ProgressIndicator from '../../components/UI/ProgressIndicator';
 import Divider from '../../components/UI/Divider';
 import CircularButton from '../../components/UI/CircularButton';
 import Header from '../../components/UI/Header';
-import {alert} from '../../components/UI/SystemAlert';
+import { alert } from '../../components/UI/SystemAlert';
 
 // helpers
 import capitalize from '../../helpers/capitalize';
@@ -85,7 +85,7 @@ class PlantList extends Component {
                   justifyContent: 'center',
                 }}>
                 <Paragraph
-                  style={{marginBottom: units.unit3, color: colors.purpleB}}>
+                  style={{ marginBottom: units.unit3, color: colors.purpleB }}>
                   {capitalize(p.name)}
                 </Paragraph>
                 <View
@@ -139,7 +139,7 @@ class PlantList extends Component {
               />
             </View>
           </View>
-          <Divider style={{marginVertical: units.unit4}} />
+          <Divider style={{ marginVertical: units.unit4 }} />
         </View>
       ));
     });
@@ -150,7 +150,7 @@ class PlantList extends Component {
   onSelect(action, plant, index) {
     const currentValue =
       this.state[`${plant.name}-${plant.common_type.name}-${index}`] ===
-      undefined
+        undefined
         ? 0
         : this.state[`${plant.name}-${plant.common_type.name}-${index}`];
     const newValue = action === 'add' ? currentValue + 1 : currentValue - 1;
@@ -194,7 +194,7 @@ class PlantList extends Component {
   }
 
   render() {
-    const {selectedPlants} = this.state;
+    const { selectedPlants } = this.state;
     const {
       plants,
       title = 'Plant Selection',
@@ -227,10 +227,13 @@ class PlantList extends Component {
       );
 
       return (
-        <View style={{overflow: 'visible'}}>
-          <View>
+        <ScrollView 
+          stickyHeaderIndices={[0]} 
+          showsVerticalScrollIndicator={false}>
+          <View style={{ backgroundColor: colors.white, marginBottom: units.unit3 }}>
+
             {/* progress indicator */}
-            <View style={{marginVertical: units.unit4}}>
+            <View style={{ marginVertical: units.unit4 }}>
               <ProgressIndicator progress={progress} />
             </View>
 
@@ -251,97 +254,96 @@ class PlantList extends Component {
                 {progress}% of garden filled ({measurements.sqft} Sq Ft)
               </Paragraph>
             </View>
+            <Divider />
           </View>
 
-          <ScrollView>
-            {/* vegetables */}
-            {Object.keys(vegetables).length > 0 && (
-              <Collapse
-                title={
-                  <View
+          {/* vegetables */}
+          {Object.keys(vegetables).length > 0 && (
+            <Collapse
+              title={
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Paragraph
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                    Vegetables
+                  </Paragraph>
+                  <Text
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
+                      ...fonts.small,
+                      color: colors.purpleB,
+                      opacity: selectedVegetables.length < 1 ? 0.5 : 1,
+                      fontFamily: fonts.default,
                     }}>
-                    <Paragraph
-                      style={{fontSize: fonts.h3, color: colors.greenD75}}>
-                      Vegetables
-                    </Paragraph>
-                    <Text
-                      style={{
-                        ...fonts.small,
-                        color: colors.purpleB,
-                        opacity: selectedVegetables.length < 1 ? 0.5 : 1,
-                        fontFamily: fonts.default,
-                      }}>
-                      {selectedVegetables.length} Selected
-                    </Text>
-                  </View>
-                }
-                content={vegetables}
-              />
-            )}
+                    {selectedVegetables.length} Selected
+                  </Text>
+                </View>
+              }
+              content={vegetables}
+            />
+          )}
 
-            {/* herbs */}
-            {herbs.length > 0 && (
-              <Collapse
-                title={
-                  <View
+          {/* herbs */}
+          {herbs.length > 0 && (
+            <Collapse
+              title={
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Paragraph
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                    Herbs
+                  </Paragraph>
+                  <Text
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
+                      ...fonts.small,
+                      color: colors.purpleB,
+                      fontFamily: fonts.default,
+                      opacity: selectedHerbs.length < 1 ? 0.5 : 1,
                     }}>
-                    <Paragraph
-                      style={{fontSize: fonts.h3, color: colors.greenD75}}>
-                      Herbs
-                    </Paragraph>
-                    <Text
-                      style={{
-                        ...fonts.small,
-                        color: colors.purpleB,
-                        fontFamily: fonts.default,
-                        opacity: selectedHerbs.length < 1 ? 0.5 : 1,
-                      }}>
-                      {selectedHerbs.length} Selected
-                    </Text>
-                  </View>
-                }
-                content={herbs}
-              />
-            )}
+                    {selectedHerbs.length} Selected
+                  </Text>
+                </View>
+              }
+              content={herbs}
+            />
+          )}
 
-            {/* fruit */}
-            {Object.keys(fruit).length > 0 && (
-              <Collapse
-                title={
-                  <View
+          {/* fruit */}
+          {Object.keys(fruit).length > 0 && (
+            <Collapse
+              title={
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  <Paragraph
+                    style={{ fontSize: fonts.h3, color: colors.greenD75 }}>
+                    Fruit
+                  </Paragraph>
+                  <Text
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
+                      ...fonts.small,
+                      color: colors.purpleB,
+                      fontFamily: fonts.default,
+                      opacity: selectedFruit.length < 1 ? 0.5 : 1,
                     }}>
-                    <Paragraph
-                      style={{fontSize: fonts.h3, color: colors.greenD75}}>
-                      Fruit
-                    </Paragraph>
-                    <Text
-                      style={{
-                        ...fonts.small,
-                        color: colors.purpleB,
-                        fontFamily: fonts.default,
-                        opacity: selectedFruit.length < 1 ? 0.5 : 1,
-                      }}>
-                      {selectedFruit.length} Selected
-                    </Text>
-                  </View>
-                }
-                content={fruit}
-              />
-            )}
-          </ScrollView>
-        </View>
+                    {selectedFruit.length} Selected
+                  </Text>
+                </View>
+              }
+              content={fruit}
+            />
+          )}
+        </ScrollView>
       );
     }
 
