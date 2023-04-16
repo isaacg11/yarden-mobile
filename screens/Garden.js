@@ -195,7 +195,7 @@ class Garden extends Component {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView>
+        <View>
           <View style={{ padding: units.unit3 + units.unit4 }}>
 
             {/* loading indicator */}
@@ -238,7 +238,7 @@ class Garden extends Component {
               </View>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     );
   }
