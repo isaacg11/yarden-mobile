@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View, Text, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -336,7 +336,8 @@ class Substitution extends Component {
                     flex: 1,
                     width: '100%',
                 }}>
-                <View
+                <KeyboardAvoidingView
+                    behavior="padding"
                     style={{
                         height: '100%',
                         backgroundColor: colors.greenE10,
@@ -538,7 +539,7 @@ class Substitution extends Component {
                             </View>
                         </View>
                     )}
-                </View>
+                </KeyboardAvoidingView>
             </SafeAreaView>
         );
 

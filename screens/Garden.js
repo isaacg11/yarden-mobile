@@ -206,7 +206,7 @@ class Garden extends Component {
               {isCropRotation ? 'Crop Rotation' : 'Garden Setup'}
             </Header>
 
-            <View style={{ padding: 0 }}>
+            <View style={{ padding: 0, height: '100%' }}>
               {/* plant list */}
               <View style={{ marginBottom: units.unit3 }}>
                 <PlantList
