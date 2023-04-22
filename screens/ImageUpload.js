@@ -417,11 +417,29 @@ class ImageUpload extends Component {
                     `status=pending&vendor=${this.props.user._id}`,
                 );
 
-                // redirect user to success page
-                this.props.navigation.navigate('Order Complete', { orderType: types.CROP_ROTATION });
+                // check for a pending maintenance order
+                const maintanceOrder = this.props.orders.list.find((o) => (o.customer._id === order.customer._id) && (o.type === types.FULL_PLAN || o.type === types.ASSISTED_PLAN));
+
+                // if maintenance order found {...}
+                if (maintanceOrder) {
+
+                    // set new date for 1 week from today
+                    const orderDate = moment().add(8, 'days').startOf('day');
+
+                    // update order date
+                    await this.props.updateOrder(maintanceOrder._id, { date: orderDate });
+
+                    // get pending orders
+                    await this.props.getOrders(
+                        `status=pending&vendor=${this.props.user._id}`,
+                    );
+                }
 
                 // hide loading indicator
                 this.setState({ isLoading: false });
+
+                // redirect user to success page
+                this.props.navigation.navigate('Order Complete', { orderType: types.CROP_ROTATION });
             });
         });
     }
@@ -644,6 +662,7 @@ function mapStateToProps(state) {
         plans: state.plans,
         beds: state.beds,
         drafts: state.drafts,
+        orders: state.orders,
         answers: state.answers,
         questions: state.questions,
         plantActivities: state.plantActivities,
