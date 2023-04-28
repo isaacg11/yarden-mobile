@@ -294,7 +294,7 @@ class Substitution extends Component {
 
             // format email
             const newBedsRequest = {
-                email: config.email,
+                email: 'isaac.grey@yardengarden.com',
                 subject: `Yarden - (ACTION REQUIRED) New plant added`,
                 label: 'New Varietal',
                 body: (
