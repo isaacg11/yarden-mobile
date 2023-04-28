@@ -30,9 +30,6 @@ import fonts from '../components/styles/fonts';
 import colors from '../components/styles/colors';
 import card from '../components/styles/card';
 
-// config
-import config from '../config';
-
 // types
 import types from '../vars/types';
 
@@ -271,8 +268,8 @@ class Substitution extends Component {
                 edible: similarVarietal.edible,
                 family_type: similarVarietal.family_type._id,
                 growth_style: similarVarietal.growth_style._id,
-                image: similarVarietal.image,
-                name: this.state.varietalName,
+                image: 'https://yarden-garden.s3.us-west-1.amazonaws.com/plant-images/placeholder.png',
+                name: this.state.varietalName.trim(),
                 partial_sun: similarVarietal.partial_sun,
                 produce_type: similarVarietal.produce_type._id,
                 quadrant_size: similarVarietal.quadrant_size,
