@@ -837,7 +837,7 @@ class GardenMap extends Component {
 
       // if draft key matches selected bed id {...}
       if (match) {
-        
+
         // update draft
         await this.props.updateDraft(match._id, {
           plot_points: this.state.plotPoints,
@@ -2134,6 +2134,7 @@ class GardenMap extends Component {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
+            paddingHorizontal: units.unit4
           }}>
           <Paragraph style={{ ...fonts.label }}>
             Garden Bed #{this.props.bedId}
@@ -2257,7 +2258,7 @@ class GardenMap extends Component {
         return {
           transform: [
             {
-              scale: 4 / 5
+              scale: 0.8
             },
             {
               translateY: -40 * 5
@@ -2310,6 +2311,7 @@ class GardenMap extends Component {
       fruit,
       harvestMenuIsOpen,
       newPlantMenuIsOpen,
+      plotPoints
     } = this.state;
 
     const {
@@ -2320,19 +2322,21 @@ class GardenMap extends Component {
       drafts,
       serviceReport,
       navigateToNotes,
-      navigateToHarvestInstructions,
+      navigateToHarvestInstructions
     } = this.props;
 
     const mapScale = this.getMapScale();
 
     return (
       <SafeAreaView
+        forceInset={{ bottom: 'never' }}
         style={{
           flex: 1,
           width: '100%',
+          overflow: 'visible'
         }}>
-        <View>
-          <View>
+        <View style={{ overflow: 'visible' }}>
+          <View style={{ overflow: 'visible' }}>
             {/* loading indicator (dynamically visible) */}
             <LoadingIndicator loading={isLoading} />
 
@@ -2464,11 +2468,101 @@ class GardenMap extends Component {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                position: 'relative'
+              }}
+              style={{
+                overflow: 'visible',
+                position: 'relative',
               }}>
-              <View style={mapScale}>
+              <View
+                style={{
+                  ...mapScale,
+                  position: 'relative',
+                  paddingTop: 8,
+                  marginTop: 24,
+                  overflow: 'visible'
+                }}>
+
+                {/* plot points */}
                 {this.renderPlotPoints()}
+
+                {/* vertical ruler */}
+                <View
+                  style={{
+                    position: 'absolute',
+                    flexDirection: 'row',
+                    top: -8,
+                    left: -8,
+                    height: '100%',
+                    width: 8,
+                    overflow: 'visible',
+                  }}>
+                  <View style={{
+                    marginTop: units.unit4,
+                    borderBottomColor: colors.greenD25,
+                    borderBottomWidth: 1,
+                    display: 'flex',
+                    flexGrow: 1,
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'space-between',
+                    overflow: 'visible',
+                  }}>
+                    {/* rows */}
+                    {this.state.plotPoints.map((row, i) => {
+                      const text = (i % 2 === 0) ? <Paragraph style={{ width: 24, color: colors.greenD25, position: 'absolute', right: '150%', top: -8, overflow: 'visible', textAlign: 'right' }}>{i / 2}</Paragraph> : <></>;
+                      return (
+                        <View key={i} style={{ overflow: 'visible', backgroundColor: colors.greenD25, height: 1, width: 8, marginBottom: 39 }}>
+                          {text}
+                        </View>
+                      )
+                    })}
+                    <View style={{ overflow: 'visible', height: 0, width: '100%' }}>
+                      <Paragraph style={{ width: 24, color: colors.greenD25, position: 'absolute', right: '150%', top: -8, overflow: 'visible', textAlign: 'right' }}>
+                        {this.state.plotPoints.length / 2}
+                      </Paragraph>
+                    </View>
+                  </View>
+                </View>
+
+                {/* horizontal ruler */}
+                <View
+                  style={{
+                    position: 'absolute',
+                    flexDirection: 'row',
+                    height: 8,
+                    width: 40 * this.state.plotPoints[0]?.length || 8,
+                    flex: 1,
+                    top: 0,
+                    left: 0,
+                    justifyContent: 'space-between',
+                    borderRightWidth: 1,
+                    borderRightColor: colors.greenD25,
+                    overflow: 'visible'
+                  }}>
+                  {/* columns */}
+                  {this.state.plotPoints.map((row, index) => {
+                    if (index === 0) {
+                      return row.map((column, i) => {
+                        const text = (i % 2 === 0) ? <Paragraph style={{ width: 16, textAlign: 'center', color: colors.greenD25, position: 'absolute', left: -8, top: -18, overflow: 'visible' }}>{i / 2}</Paragraph> : <></>;
+                        return (
+                          <View key={i} style={{ overflow: 'visible', backgroundColor: colors.greenD25, height: 8, width: 1, marginRight: 39 }}>
+                            {text}
+                          </View>
+                        )
+                      })
+                    }
+                  })}
+                  <View style={{ overflow: 'visible', height: 0, width: '100%' }}>
+                    <Paragraph style={{ width: 16, textAlign: 'center', color: colors.greenD25, position: 'absolute', left: -8, top: -18, overflow: 'visible' }}>
+                      {this.state.plotPoints[0]?.length / 2}
+                    </Paragraph>
+                  </View>
+                </View>
+
               </View>
             </ScrollView>
+
 
             {/* saving indicator (dynamically visible) */}
             {user.type === types.GARDENER &&
@@ -2479,6 +2573,7 @@ class GardenMap extends Component {
                 </View>
               )}
           </View>
+
         </View>
       </SafeAreaView>
     );
