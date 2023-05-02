@@ -28,6 +28,7 @@ import { getReports } from '../actions/reports/index';
 import { getReportType } from '../actions/reportTypes/index';
 import { getQuestions } from '../actions/questions/index';
 import { getAnswers } from '../actions/answers/index';
+import { getPlantList, updatePlantList } from '../actions/plantList/index';
 
 // helpers
 import getSeason from '../helpers/getSeason';
@@ -84,6 +85,9 @@ class OrderDetails extends Component {
 
         // get drafts
         await this.props.getDrafts(`order=${order._id}`);
+
+        // get plant list
+        await this.props.getPlantList(`order=${order._id}`);
       }
 
       // if order for maintenance service {...}
@@ -124,7 +128,7 @@ class OrderDetails extends Component {
     this.setState({
       isLoading: false,
       changeOrders,
-      wateringSchedule,
+      wateringSchedule
     });
   }
 
@@ -271,18 +275,28 @@ class OrderDetails extends Component {
     return plotPoints;
   }
 
+  async onSelectPlant(updatedPlantList) {
+
+    // update plant list
+    await this.props.updatePlantList(this.props.plantList._id, updatedPlantList);
+
+    // get plant list
+    await this.props.getPlantList(`order=${this.props.route.params._id}`);
+  }
+
   render() {
     const order = this.props.route.params;
     const {
       user,
       drafts,
       beds,
-      orders
+      orders,
+      plantList
     } = this.props;
     const {
       isLoading,
       changeOrders,
-      wateringSchedule,
+      wateringSchedule
     } = this.state;
 
     const season = getSeason();
@@ -485,16 +499,18 @@ class OrderDetails extends Component {
                   <View style={{ marginTop: units.unit4 }}>
 
                     {/* plant lists */}
-                    {(drafts.filter((draft) => draft.published).length === this.props.drafts.length) && (
+                    {((drafts.filter((draft) => draft.published).length === this.props.drafts.length) && plantList) && (
                       <View>
                         <View>
                           <Collapse
                             title="Vegetables"
                             content={
                               <Plants
-                                plants={order.bid.line_items.vegetables}
+                                plants={plantList.vegetables}
+                                plantListId={plantList._id}
                                 order={order}
                                 onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                                onSelectPlant={(updatedPlantList) => this.onSelectPlant(updatedPlantList)}
                               />
                             }
                           />
@@ -504,9 +520,11 @@ class OrderDetails extends Component {
                             title="Herbs"
                             content={
                               <Plants
-                                plants={order.bid.line_items.herbs}
+                                plants={plantList.herbs}
+                                plantListId={plantList._id}
                                 order={order}
                                 onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                                onSelectPlant={(updatedPlantList) => this.onSelectPlant(updatedPlantList)}
                               />
                             }
                           />
@@ -516,9 +534,11 @@ class OrderDetails extends Component {
                             title="Fruit"
                             content={
                               <Plants
-                                plants={order.bid.line_items.fruit}
+                                plants={plantList.fruit}
+                                plantListId={plantList._id}
                                 order={order}
                                 onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                                onSelectPlant={(updatedPlantList) => this.onSelectPlant(updatedPlantList)}
                               />
                             }
                           />
@@ -693,7 +713,7 @@ class OrderDetails extends Component {
                             color={colors.purpleB}
                             size={units.unit5}
                           />
-                          <Text style={{textAlign: 'center'}}>Build the garden map before going to the nursery to pick up plants</Text>
+                          <Text style={{ textAlign: 'center' }}>Build the garden map before going to the nursery to pick up plants</Text>
                         </View>
                       </View>
                       {/* buttons */}
@@ -757,7 +777,8 @@ function mapStateToProps(state) {
     questions: state.questions,
     answers: state.answers,
     reports: state.reports,
-    orders: state.orders
+    orders: state.orders,
+    plantList: state.plantList
   };
 }
 
@@ -773,7 +794,9 @@ function mapDispatchToProps(dispatch) {
       getQuestions,
       getReports,
       getAnswers,
-      updateBed
+      updateBed,
+      getPlantList,
+      updatePlantList
     },
     dispatch,
   );
