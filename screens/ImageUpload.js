@@ -287,9 +287,10 @@ class ImageUpload extends Component {
                     // NOTE: This check is necessary because for the new mobile schema we use plan id's instead of name strings - change when mobile app development is done
                     if (maintenancePlan !== types.FULL_PLAN && maintenancePlan !== types.ASSISTED_PLAN) {
 
-                        // set maintance plan
+                        // get maintance plan
                         const plan = this.props.plans.find((plan) => plan._id === maintenancePlan);
 
+                        // set maintance plan
                         maintenancePlan = plan.type;
                     }
 

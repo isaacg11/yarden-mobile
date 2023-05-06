@@ -12,15 +12,18 @@ class Logout extends Component {
     componentDidMount() {
         setTimeout(() => {
             this.logout();
-        }, 2500)
+        }, 2000)
     }
 
     async logout() {
         // logout
         await this.props.logout();
 
-        // redirect to login
-        this.props.navigation.navigate('Login');
+        setTimeout(() => {
+
+            // redirect to login
+            this.props.navigation.navigate('Login');
+        }, 1000)
     }
 
     render() {

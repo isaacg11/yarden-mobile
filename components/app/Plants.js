@@ -15,6 +15,7 @@ import separatePlantsByCommonType from '../../helpers/separatePlantsByCommonType
 // styles
 import units from '../styles/units';
 import colors from '../styles/colors';
+import types from '../../vars/types';
 
 class Plants extends Component {
 
@@ -27,7 +28,9 @@ class Plants extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.plants !== this.props.plants) {
+        if (
+            prevProps.plants !== this.props.plants
+        ) {
             this.formatPlants();
         }
     }
@@ -37,39 +40,67 @@ class Plants extends Component {
         let key = 0;
         let sortedPlants = separatePlantsByCommonType(this.props.plants);
         let plantList = [];
-        for(let item in sortedPlants) {
+        for (let item in sortedPlants) {
             sortedPlants[item].forEach((plant) => plantList.push(plant));
         }
 
         plantList.forEach((plant) => {
+            const completed = plant.completed;
             for (let i = 0; i < plant.qty; i++) {
                 key += 1;
-                plants.push({
+                let formattedPlant = {
                     ...plant,
                     key
-                });
+                };
+
+                if (i < completed) {
+                    formattedPlant.checked = true;
+                }
+
+                plants.push(formattedPlant);
             }
         })
 
         this.setState({ plants });
     }
 
-    onSelect(plant) {
+    async onSelect(plant) {
 
         // determine selection state
-        let select = !this.state[`${plant.key}`] ? true : false;
+        let select = !plant.checked;
 
-        // set selection state
-        this.setState({ [`${plant.key}`]: select });
+        let plants = this.props.plants;
+        plants.forEach((p) => {
+            if (p.id._id === plant.id._id) {
+
+                // increment / decrement completed total
+                const val = (select) ? 1 : -1;
+                p.completed = p.completed += val;
+            }
+
+            // set as id string before saving
+            p.id = p.id._id;
+        });
+
+        const plantCategory = plant.id.category.name;
+        let updatedPlantList = {};
+        if (plantCategory === types.VEGETABLE) updatedPlantList.vegetables = plants;
+        if (plantCategory === types.CULINARY_HERB) updatedPlantList.herbs = plants;
+        if (plantCategory === types.FRUIT) updatedPlantList.fruit = plants;            
+
+        // run callback
+        this.props.onSelectPlant(updatedPlantList);
     }
 
     render() {
-
-        const { plants } = this.state;
+        const {
+            plants,
+        } = this.state;
         const { onNavigateToSubstitution } = this.props;
 
         return (
             <View>
+
                 {/* helper text */}
                 <Text style={{ marginVertical: units.unit3 }}>Mark off each plant as you pick it up from the nursery. If you can't find a certain varietal, substitute it by tapping the arrow button next to the plant.</Text>
 
@@ -90,7 +121,7 @@ class Plants extends Component {
                                 alignItems: 'center',
                             }}>
                                 <CheckBox
-                                    value={this.state[`${plant.key}`]}
+                                    value={plant.checked}
                                     onValueChange={() => this.onSelect(plant)}
                                     boxType="square"
                                     tintColor={colors.purpleB}
@@ -110,15 +141,17 @@ class Plants extends Component {
                                         uri: plant.id.common_type.image,
                                     }}
                                 />
-                                <Paragraph>{truncate(`${plant.id.name} ${plant.id.common_type.name}`, 15)}</Paragraph>
+                                <Paragraph>
+                                    {truncate(`${plant.id.name} ${plant.id.common_type.name}`, 20)}
+                                </Paragraph>
                             </View>
                             <TouchableOpacity
-                                disabled={this.state[`${plant.key}`]}
+                                disabled={plant.checked}
                                 onPress={() => onNavigateToSubstitution(plant)}>
                                 <Ionicons
                                     name="swap-horizontal-outline"
                                     size={units.unit4}
-                                    color={(this.state[`${plant.key}`]) ? colors.purple4 : colors.purpleB}
+                                    color={(plant.checked) ? colors.purple4 : colors.purpleB}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -132,7 +165,8 @@ class Plants extends Component {
 function mapStateToProps(state) {
     return {
         beds: state.beds,
-        drafts: state.drafts
+        drafts: state.drafts,
+        plantList: state.plantList
     };
 }
 

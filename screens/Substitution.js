@@ -23,6 +23,7 @@ import { getOrders, getOrder } from '../actions/orders';
 import { updateQuote } from '../actions/quotes';
 import { createPlant } from '../actions/plants';
 import { sendEmail } from '../actions/emails/index';
+import { getPlantList, updatePlantList } from '../actions/plantList/index';
 
 // styles
 import units from '../components/styles/units';
@@ -52,6 +53,7 @@ class Substitution extends Component {
         // get plants with the same common type and quadrant size
         const plants = await this.props.getPlants(`common_type=${this.props.route.params.selectedPlant.id.common_type._id}&quadrant_size=${this.props.route.params.selectedPlant.id.quadrant_size}`, true);
 
+        // format data for dropdown list
         let dropdownFormatData = [];
         plants.forEach((plant) => {
             if (`${plant.name} ${plant.common_type.name}` !== `${this.props.route.params.selectedPlant.id.name} ${this.props.route.params.selectedPlant.id.common_type.name}`) {
@@ -103,16 +105,19 @@ class Substitution extends Component {
         let plantGroupToSubstitute = null;
         let substituted = 0;
         let bedToUpdate = null;
+        let selectedPlant = this.props.route.params.selectedPlant;
 
         beds.forEach((bed) => {
             bed.plot_points.forEach((row) => {
                 row.forEach((column) => {
                     if (column.plant) {
-                        const matchingCommonType = column.plant.id.common_type._id === substitute.id.common_type._id;
-                        const matchingPlantName = column.plant.id.name === substitute.id.name;
+
+                        const matchingCommonType = column.plant.id.common_type._id === selectedPlant.id.common_type._id;
+                        const matchingPlantName = column.plant.id.name === selectedPlant.id.name;
+
                         if (
                             matchingCommonType &&
-                            !matchingPlantName &&
+                            matchingPlantName &&
                             (substituted + 1) <= substitute.id.quadrant_size
                         ) {
                             bedToUpdate = bed._id;
@@ -144,23 +149,50 @@ class Substitution extends Component {
         // if initial planting {...}
         if (this.props.route.params.order.type === types.INITIAL_PLANTING) {
 
-            let vegetables = this.props.route.params.order.bid.line_items.vegetables;
-            let herbs = this.props.route.params.order.bid.line_items.herbs;
-            let fruit = this.props.route.params.order.bid.line_items.fruit;
+            let vegetables = this.props.plantList.vegetables;
+            let herbs = this.props.plantList.herbs;
+            let fruit = this.props.plantList.fruit;
             const lineItems = this.props.route.params.order.bid.line_items;
 
             if (substitute.id.category.name === types.VEGETABLE) {
+
+                // set qty based on selection
                 const updatedVegetables = await this.updateQty(vegetables, substitute);
+
+                // update plant list
+                await this.props.updatePlantList(this.props.plantList._id, { vegetables: updatedVegetables });
+
+                // get plant list
+                await this.props.getPlantList(`order=${this.props.route.params.order._id}`);
+
                 lineItems.vegetables = updatedVegetables;
             }
 
             if (substitute.id.category.name === types.CULINARY_HERB) {
+
+                // set qty based on selection
                 const updatedHerbs = await this.updateQty(herbs, substitute);
+
+                // update plant list
+                await this.props.updatePlantList(this.props.plantList._id, { herbs: updatedHerbs });
+
+                // get plant list
+                await this.props.getPlantList(`order=${this.props.route.params.order._id}`);
+
                 lineItems.herbs = updatedHerbs;
             }
 
             if (substitute.id.category.name === types.FRUIT) {
+
+                // set qty based on selection
                 const updatedFruit = await this.updateQty(fruit, substitute);
+
+                // update plant list
+                await this.props.updatePlantList(this.props.plantList._id, { fruit: updatedFruit });
+
+                // get plant list
+                await this.props.getPlantList(`order=${this.props.route.params.order._id}`);
+
                 lineItems.fruit = updatedFruit;
             }
 
@@ -181,28 +213,48 @@ class Substitution extends Component {
 
             // update quote
             await this.props.updateQuote(this.props.route.params.order.bid._id, { line_items: lineItems });
+
+
         } else if (this.props.route.params.order.type === types.CROP_ROTATION) { // if crop rotation {...}
-            let vegetables = this.props.route.params.order.customer.garden_info.vegetables;
-            let herbs = this.props.route.params.order.customer.garden_info.herbs;
-            let fruit = this.props.route.params.order.customer.garden_info.fruit;
-            let gardenInfo = this.props.route.params.order.customer.garden_info;
-            gardenInfo.beds.forEach((bed) => {
-                bed.shape = bed.shape._id;
-            })
+            let vegetables = this.props.plantList.vegetables;
+            let herbs = this.props.plantList.herbs;
+            let fruit = this.props.plantList.fruit;
 
             if (substitute.id.category.name === types.VEGETABLE) {
+
+                // set qty based on selection
                 const updatedVegetables = await this.updateQty(vegetables, substitute);
-                gardenInfo.vegetables = updatedVegetables;
+
+
+                // update plant list
+                await this.props.updatePlantList(this.props.plantList._id, { vegetables: updatedVegetables });
+
+
+                // get plant list
+                await this.props.getPlantList(`order=${this.props.route.params.order._id}`);
             }
 
             if (substitute.id.category.name === types.CULINARY_HERB) {
+                // set qty based on selection
                 const updatedHerbs = await this.updateQty(herbs, substitute);
-                gardenInfo.herbs = updatedHerbs;
+
+                // update plant list
+                await this.props.updatePlantList(this.props.plantList._id, { herbs: updatedHerbs });
+
+                // get plant list
+                await this.props.getPlantList(`order=${this.props.route.params.order._id}`);
             }
 
             if (substitute.id.category.name === types.FRUIT) {
+
+                // set qty based on selection
                 const updatedFruit = await this.updateQty(fruit, substitute);
-                gardenInfo.fruit = updatedFruit;
+
+                // update plant list
+                await this.props.updatePlantList(this.props.plantList._id, { fruit: updatedFruit });
+
+                // get plant list
+                await this.props.getPlantList(`order=${this.props.route.params.order._id}`);
             }
 
             // update bed
@@ -210,9 +262,6 @@ class Substitution extends Component {
 
             // get updated beds
             await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
-
-            // update customer with new garden info
-            await this.props.updateUser(`userId=${this.props.route.params.order.customer._id}`, { gardenInfo }, true);
         }
 
         // get updated orders
@@ -224,7 +273,11 @@ class Substitution extends Component {
         if (existingMatchingPlantIndex >= 0) {
             plants[existingMatchingPlantIndex].qty += 1;
         } else {
-            plants.unshift({ id: substitute.id, qty: 1 });
+            plants.unshift({
+                id: substitute.id,
+                qty: 1,
+                completed: 0
+            });
         }
 
         const plantToReplaceIndex = plants.findIndex((plant) => plant.id._id === this.props.route.params.selectedPlant.id._id);
@@ -547,7 +600,8 @@ function mapStateToProps(state) {
     return {
         user: state.user,
         beds: state.beds,
-        drafts: state.drafts
+        drafts: state.drafts,
+        plantList: state.plantList
     };
 }
 
@@ -564,7 +618,9 @@ function mapDispatchToProps(dispatch) {
             getOrder,
             updateQuote,
             createPlant,
-            sendEmail
+            sendEmail,
+            updatePlantList,
+            getPlantList
         },
         dispatch,
     );

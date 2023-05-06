@@ -1,8 +1,14 @@
-import React, {Component} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+// libraries
+import React, { Component } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+
+// UI components
 import Paragraph from './Paragraph';
 import colors from '../styles/colors';
+
+// styles
 import units from '../../components/styles/units';
 import fonts from '../styles/fonts';
 
@@ -11,13 +17,24 @@ class Collapse extends Component {
 
   componentDidMount() {
     if (this.props.open) {
-      this.setState({isOpen: true});
+      this.setState({ isOpen: true });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+
+    // NOTE: this check is specifically for the case when a gardener substitutes a plant. Without it, the UI checkboxes don't update properly
+    // Author: Isaac G. 5/1/23
+    if(prevProps.plantList !== this.props.plantList) {
+      this.setState({ isOpen: false }, () => {
+        this.setState({ isOpen: true })
+      });
     }
   }
 
   render() {
     const {
-      title = 'View Details', 
+      title = 'View Details',
       content,
       icon,
       icon2,
@@ -47,7 +64,7 @@ class Collapse extends Component {
           shadowRadius: 8,
           shadowColor: colors.greenC10,
         }}>
-        <TouchableOpacity onPress={() => this.setState({isOpen: !isOpen})}>
+        <TouchableOpacity onPress={() => this.setState({ isOpen: !isOpen })}>
           <View
             style={{
               display: 'flex',
@@ -62,13 +79,13 @@ class Collapse extends Component {
             {(icon2) && (
               <View>{icon2}</View>
             )}
-            <Paragraph style={{color: colors.greenD75, fontSize: fonts.h3}}>
+            <Paragraph style={{ color: colors.greenD75, fontSize: fonts.h3 }}>
               {title}
             </Paragraph>
             <Ionicons
               name={`caret-${isOpen ? 'up' : 'down'}`}
               size={fonts.h2}
-              style={{alignSelf: 'center'}}
+              style={{ alignSelf: 'center' }}
               color={colors.purpleB}
             />
           </View>
@@ -78,5 +95,15 @@ class Collapse extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+      plantList: state.plantList
+  };
+}
+
+Collapse = connect(mapStateToProps, null)(Collapse);
+
+export default Collapse;
 
 module.exports = Collapse;
