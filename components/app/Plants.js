@@ -64,7 +64,7 @@ class Plants extends Component {
         this.setState({ plants });
     }
 
-    onSelect(plant) {
+    async onSelect(plant) {
 
         // determine selection state
         let select = !plant.checked;
@@ -77,24 +77,30 @@ class Plants extends Component {
                 const val = (select) ? 1 : -1;
                 p.completed = p.completed += val;
             }
+
+            // set as id string before saving
+            p.id = p.id._id;
         });
 
         const plantCategory = plant.id.category.name;
         let updatedPlantList = {};
         if (plantCategory === types.VEGETABLE) updatedPlantList.vegetables = plants;
         if (plantCategory === types.CULINARY_HERB) updatedPlantList.herbs = plants;
-        if (plantCategory === types.FRUIT) updatedPlantList.fruit = plants;
+        if (plantCategory === types.FRUIT) updatedPlantList.fruit = plants;            
 
         // run callback
         this.props.onSelectPlant(updatedPlantList);
     }
 
     render() {
-        const { plants } = this.state;
+        const {
+            plants,
+        } = this.state;
         const { onNavigateToSubstitution } = this.props;
 
         return (
             <View>
+
                 {/* helper text */}
                 <Text style={{ marginVertical: units.unit3 }}>Mark off each plant as you pick it up from the nursery. If you can't find a certain varietal, substitute it by tapping the arrow button next to the plant.</Text>
 
@@ -135,7 +141,9 @@ class Plants extends Component {
                                         uri: plant.id.common_type.image,
                                     }}
                                 />
-                                <Paragraph>{truncate(`${plant.id.name} ${plant.id.common_type.name}`, 15)}</Paragraph>
+                                <Paragraph>
+                                    {truncate(`${plant.id.name} ${plant.id.common_type.name}`, 20)}
+                                </Paragraph>
                             </View>
                             <TouchableOpacity
                                 disabled={plant.checked}

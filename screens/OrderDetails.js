@@ -90,6 +90,13 @@ class OrderDetails extends Component {
         await this.props.getPlantList(`order=${order._id}`);
       }
 
+      // if order type is crop rotation {...}
+      if (order.type == types.CROP_ROTATION) {
+
+        // get plant list
+        await this.props.getPlantList(`order=${order._id}`);
+      }
+
       // if order for maintenance service {...}
       if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
         if (this.props.reports.length > 0) {
@@ -277,11 +284,22 @@ class OrderDetails extends Component {
 
   async onSelectPlant(updatedPlantList) {
 
+    // show loading indicator
+    this.setState({ isLoading: true });
+
     // update plant list
     await this.props.updatePlantList(this.props.plantList._id, updatedPlantList);
 
     // get plant list
     await this.props.getPlantList(`order=${this.props.route.params._id}`);
+
+    // NOTE: This timeout is necessary to give the loading indicator time to render
+    // Author: Isaac G. 5/3/23
+    setTimeout(() => {
+
+      // hide loading indicator
+      this.setState({ isLoading: false });
+    }, 1000)
   }
 
   render() {
@@ -654,7 +672,7 @@ class OrderDetails extends Component {
                     <View style={{ display: (cropRotationSelectionComplete) ? 'none' : 'flex' }}>
                       <Button
                         text="Select Plants"
-                        onPress={() => this.props.navigation.navigate('Garden', { isCropRotation: true })}
+                        onPress={() => this.props.navigation.navigate('Garden', { isCropRotation: true, order })}
                       />
                     </View>
                   </View>
@@ -664,7 +682,8 @@ class OrderDetails extends Component {
               {order.status === 'pending' &&
                 order.type === types.CROP_ROTATION &&
                 user.type === types.GARDENER &&
-                cropRotationSelectionComplete && (
+                cropRotationSelectionComplete &&
+                plantList && (
                   <View style={{ marginTop: units.unit4 }}>
                     <View style={{ display: (bedsOutOfSeason) ? 'none' : 'flex' }}>
                       <View>
@@ -672,9 +691,11 @@ class OrderDetails extends Component {
                           title="Vegetables"
                           content={
                             <Plants
-                              plants={order.customer.garden_info.vegetables}
+                              plants={plantList.vegetables}
+                              plantListId={plantList._id}
                               order={order}
                               onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                              onSelectPlant={(updatedPlantList) => this.onSelectPlant(updatedPlantList)}
                             />
                           }
                         />
@@ -684,9 +705,11 @@ class OrderDetails extends Component {
                           title="Herbs"
                           content={
                             <Plants
-                              plants={order.customer.garden_info.herbs}
+                              plants={plantList.herbs}
+                              plantListId={plantList._id}
                               order={order}
                               onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                              onSelectPlant={(updatedPlantList) => this.onSelectPlant(updatedPlantList)}
                             />
                           }
                         />
@@ -696,9 +719,11 @@ class OrderDetails extends Component {
                           title="Fruit"
                           content={
                             <Plants
-                              plants={order.customer.garden_info.fruit}
+                              plants={plantList.fruit}
+                              plantListId={plantList._id}
                               order={order}
                               onNavigateToSubstitution={(selectedPlant) => this.props.navigation.navigate('Substitution', { selectedPlant, order })}
+                              onSelectPlant={(updatedPlantList) => this.onSelectPlant(updatedPlantList)}
                             />
                           }
                         />

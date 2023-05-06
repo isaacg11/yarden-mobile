@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -21,6 +21,7 @@ import combinePlants from '../helpers/combinePlants';
 import { getPlants } from '../actions/plants/index';
 import { updateUser } from '../actions/user/index';
 import { getOrders } from '../actions/orders/index';
+import { createPlantList } from '../actions/plantList/index';
 
 // styles
 import units from '../components/styles/units';
@@ -38,7 +39,6 @@ class Garden extends Component {
 
     // set current season
     const season = getSeason();
-    // const season = 'fall';
 
     // get all plants associated with the current season
     await this.props.getPlants(`season=${season}`);
@@ -67,6 +67,7 @@ class Garden extends Component {
 
     // if crop rotation {...}
     if (this.props.route.params.isCropRotation) {
+
       // show loading indicator
       this.setState({ isLoading: true });
 
@@ -79,6 +80,41 @@ class Garden extends Component {
         combinedPlants.herbs,
         combinedPlants.fruit,
       );
+
+      // format vegetables for plant list
+      const v = combinedPlants.vegetables.map((vegetable) => {
+        return {
+          id: vegetable.id,
+          qty: vegetable.qty,
+          completed: 0
+        }
+      })
+
+      // format herbs for plant list
+      const h = combinedPlants.herbs.map((herb) => {
+        return {
+          id: herb.id,
+          qty: herb.qty,
+          completed: 0
+        }
+      })
+
+      // format fruit for plant list
+      const f = combinedPlants.fruit.map((fr) => {
+        return {
+          id: fr.id,
+          qty: fr.qty,
+          completed: 0
+        }
+      })
+
+      // create plant list
+      await this.props.createPlantList({
+        order: this.props.route.params.order._id,
+        vegetables: v,
+        herbs: h,
+        fruit: f
+      })
 
       // get updated orders, to update the order.customer.garden_info which is used to determine if a CR selection has been made or not
       await this.props.getOrders(`status=pending`);
@@ -104,7 +140,7 @@ class Garden extends Component {
 
       // if user already has maintenance plan selected {...}
       if (
-        this.props.user.garden_info?.maintenance_plan && 
+        this.props.user.garden_info?.maintenance_plan &&
         this.props.user.garden_info?.maintenance_plan !== 'none') {
         // navigate to checkout
         this.props.navigation.navigate('Checkout', params);
@@ -132,9 +168,9 @@ class Garden extends Component {
       // if user already has beds, set beds
       if (this.props.user.garden_info.beds)
         gardenInfo.beds = this.props.user.garden_info.beds;
-        gardenInfo.beds.forEach((bed) => {
-          bed.shape = bed.shape._id;
-        })
+      gardenInfo.beds.forEach((bed) => {
+        bed.shape = bed.shape._id;
+      })
 
       // if user already has accessories, set accessories
       if (this.props.user.garden_info.accessories)
@@ -143,7 +179,7 @@ class Garden extends Component {
 
     // if user selected a new plan, set plan
     if (this.props.route.params.plan)
-    gardenInfo.maintenance_plan = this.props.route.params.plan;
+      gardenInfo.maintenance_plan = this.props.route.params.plan;
 
     // update user with garden info
     await this.props.updateUser(null, { gardenInfo });
@@ -257,7 +293,8 @@ function mapDispatchToProps(dispatch) {
     {
       getPlants,
       updateUser,
-      getOrders
+      getOrders,
+      createPlantList
     },
     dispatch,
   );
