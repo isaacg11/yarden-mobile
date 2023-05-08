@@ -16,12 +16,11 @@ import { alert } from '../components/UI/SystemAlert';
 
 // actions
 import { updateUser } from '../actions/user/index';
-import { getPlants } from '../actions/plants/index';
 import { getBeds, updateBed } from '../actions/beds';
 import { updateDraft, getDrafts } from '../actions/drafts';
 import { getOrders, getOrder } from '../actions/orders';
 import { updateQuote } from '../actions/quotes';
-import { createPlant } from '../actions/plants';
+import { createPlant, getPlants } from '../actions/plants';
 import { sendEmail } from '../actions/emails/index';
 import { getPlantList, updatePlantList } from '../actions/plantList/index';
 
@@ -303,66 +302,85 @@ class Substitution extends Component {
                 'Uh Oh!'
             );
         } else {
-
             // show loading indicator
             this.setState({ isLoading: true });
 
             // set selected plant data as the base of new varietal (new varietal will be reviewed by HQ and adjusted as needed after creation)
             const similarVarietal = this.props.route.params.selectedPlant.id;
 
-            // set new varietal
-            const newVarietal = {
-                average_head_weight: similarVarietal.average_head_weight,
-                average_produce_weight: similarVarietal.average_produce_weight,
-                botanical_type: similarVarietal.botanical_type._id,
-                category: similarVarietal.category._id,
-                common_type: similarVarietal.common_type._id,
-                days_to_mature: similarVarietal.days_to_mature,
-                edible: similarVarietal.edible,
-                family_type: similarVarietal.family_type._id,
-                growth_style: similarVarietal.growth_style._id,
-                image: 'https://yarden-garden.s3.us-west-1.amazonaws.com/plant-images/placeholder.png',
-                name: this.state.varietalName.trim(),
-                partial_sun: similarVarietal.partial_sun,
-                produce_type: similarVarietal.produce_type._id,
-                quadrant_size: similarVarietal.quadrant_size,
-                season: similarVarietal.season
+            // set plant name
+            const plantName = this.state.varietalName.trim();
+
+            // get plants with matching name
+            const plantsWithMatchingName = await this.props.getPlants(`name=${plantName}&common_type=${similarVarietal.common_type._id}`, true);
+            if (plantsWithMatchingName.length > 0) {
+                // update UI
+                this.setState({
+                    isLoading: false,
+                    varietalName: '',
+                    isEditingName: false,
+                });
+
+                // show warning
+                alert(
+                    'There is already a varietal with that name, check the dropdown list',
+                    'Uh Oh!'
+                );
+            } else {
+                // set new varietal
+                const newVarietal = {
+                    average_head_weight: similarVarietal.average_head_weight,
+                    average_produce_weight: similarVarietal.average_produce_weight,
+                    botanical_type: similarVarietal.botanical_type._id,
+                    category: similarVarietal.category._id,
+                    common_type: similarVarietal.common_type._id,
+                    days_to_mature: similarVarietal.days_to_mature,
+                    edible: similarVarietal.edible,
+                    family_type: similarVarietal.family_type._id,
+                    growth_style: similarVarietal.growth_style._id,
+                    image: 'https://yarden-garden.s3.us-west-1.amazonaws.com/plant-images/placeholder.png',
+                    name: plantName,
+                    partial_sun: similarVarietal.partial_sun,
+                    produce_type: similarVarietal.produce_type._id,
+                    quadrant_size: similarVarietal.quadrant_size,
+                    season: similarVarietal.season
+                }
+
+                // create plant
+                const varietal = await this.props.createPlant(newVarietal);
+
+                // set plant list
+                await this.setPlantList();
+
+                // update UI
+                this.setState({
+                    isLoading: false,
+                    varietalName: '',
+                    isEditingName: false,
+                });
+
+                // format email
+                const newBedsRequest = {
+                    email: 'isaac.grey@yardengarden.com',
+                    subject: `Yarden - (ACTION REQUIRED) New plant added`,
+                    label: 'New Varietal',
+                    body: (
+                        '<p>Hello <b>Yarden HQ</b>,</p>' +
+                        '<p style="margin-bottom: 15px;">A new plant varietal has been created by <u>' + this.props.user.email + '</u>, please review and update as needed.</p>' +
+                        '<p><b>New Plant</b></p>' +
+                        '<p>' + '"' + `${varietal.name} ${similarVarietal.common_type.name}` + '"' + '</p>'
+                    )
+                }
+
+                // send email
+                await this.props.sendEmail(newBedsRequest);
+
+                // show success message
+                alert(
+                    'The new varietal has been added to the plant list',
+                    'Success!'
+                );
             }
-
-            // create plant
-            const varietal = await this.props.createPlant(newVarietal);
-
-            // set plant list
-            await this.setPlantList();
-
-            // update UI
-            this.setState({
-                isLoading: false,
-                varietalName: '',
-                isEditingName: false,
-            });
-
-            // format email
-            const newBedsRequest = {
-                email: 'isaac.grey@yardengarden.com',
-                subject: `Yarden - (ACTION REQUIRED) New plant added`,
-                label: 'New Varietal',
-                body: (
-                    '<p>Hello <b>Yarden HQ</b>,</p>' +
-                    '<p style="margin-bottom: 15px;">A new plant varietal has been created by <u>' + this.props.user.email + '</u>, please review and update as needed.</p>' +
-                    '<p><b>New Plant</b></p>' +
-                    '<p>' + '"' + `${varietal.name} ${similarVarietal.common_type.name}` + '"' + '</p>'
-                )
-            }
-
-            // send email
-            await this.props.sendEmail(newBedsRequest);
-
-            // show success message
-            alert(
-                'The new varietal has been added to the plant list',
-                'Success!'
-            );
         }
     }
 
