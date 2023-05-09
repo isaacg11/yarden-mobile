@@ -11,22 +11,7 @@ const styles = StyleSheet.create({
     color: colors.purpleB,
     fontSize: fonts.h1,
     fontFamily: fonts.default,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  welcome: {
-    fontSize: fonts.h3,
-    textAlign: 'center',
-    margin: 0,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: colors.purpleB,
-    marginBottom: 0,
-  },
+  }
 });
 
 class LoadingIndicator extends Component {

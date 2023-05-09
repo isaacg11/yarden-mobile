@@ -11,9 +11,12 @@ import * as Sentry from "@sentry/react-native";
 // global state
 import store from './config/store';
 
-// screens
+// helpers
 import ErrorBoundary from './components/app/ErrorBoundary';
 import Mark from './components/app/branding/Mark';
+
+// screens
+import Splash from './screens/Splash';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
@@ -173,7 +176,18 @@ function App() {
     <ErrorBoundary>
       <Provider store={store}>
         <NavigationContainer linking={linking} theme={AppTheme}>
-          <Stack.Navigator initialRouteName="Login">
+          <Stack.Navigator initialRouteName="Splash">
+            <Stack.Screen
+              name="Splash"
+              component={Splash}
+              options={{
+                headerLeft: displayNone,
+                headerTitle: displayNone,
+                headerStyle: appHeaderStyle,
+                headerShadowVisible: false,
+                headerTintColor: appHeaderTint,
+              }}
+            />
             <Stack.Screen
               name="Login"
               component={Login}

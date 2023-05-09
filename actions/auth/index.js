@@ -12,7 +12,7 @@ export function login(user) {
         try {
             const response = await axios.post(`${API_URL}/users/login`, user);
             AsyncStorage.setItem(`auth-token`, response.data.token);
-            AsyncStorage.setItem(`auth-token-exp`, moment(moment().add('30', 'days')).format());
+            AsyncStorage.setItem(`auth-token-exp`, moment(moment().add('180', 'days')).format());
             dispatch({type: GET_USER, payload: response.data.user});
             return response.data.user;
         }
