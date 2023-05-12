@@ -319,6 +319,7 @@ class OrderDetails extends Component {
 
     const season = getSeason();
     let cropRotationSelectionComplete = true;
+    let cropRotationMapComplete = false;
     let selectionOutOfSeason = false;
     let bedsOutOfSeason = false;
     let disableMaintenance = false;
@@ -341,7 +342,32 @@ class OrderDetails extends Component {
           selectionOutOfSeason = order.customer.garden_info.fruit.find((fr) => (fr.id.season !== season) && (fr.id.season !== 'annual'));
         }
 
-        if (selectionOutOfSeason) cropRotationSelectionComplete = false;
+        if (selectionOutOfSeason) { // if selection out of season {...}
+          cropRotationSelectionComplete = false;
+        } else {
+          // calculate total required plot points
+          let requiredPlotPoints = 0;
+          let totalUsedPlotPoints = 0;
+          plantList?.vegetables?.forEach(vegetable => (requiredPlotPoints += (vegetable.qty * vegetable.id.quadrant_size)));
+          plantList?.herbs?.forEach(herb => (requiredPlotPoints += (herb.qty * herb.id.quadrant_size)));
+          plantList?.fruit?.forEach(fr => (requiredPlotPoints += (fr.qty * fr.id.quadrant_size)));
+
+          // calculate used plot points
+          beds.forEach((bed) => {
+            bed.plot_points.forEach((row) => {
+              row.forEach((column) => {
+                if (column.plant) {
+                  totalUsedPlotPoints += 1;
+                }
+              })
+            })
+          })
+
+          // if map is not done being built {...}
+          if ((requiredPlotPoints - totalUsedPlotPoints) === 0) {
+            cropRotationMapComplete = true;
+          }
+        }
       }
 
       if (user.type === types.GARDENER) { // if gardener {...}
@@ -685,7 +711,7 @@ class OrderDetails extends Component {
                 cropRotationSelectionComplete &&
                 plantList && (
                   <View style={{ marginTop: units.unit4 }}>
-                    <View style={{ display: (bedsOutOfSeason) ? 'none' : 'flex' }}>
+                    <View style={{ display: (bedsOutOfSeason || !cropRotationMapComplete) ? 'none' : 'flex' }}>
                       <View>
                         <Collapse
                           title="Vegetables"
@@ -759,7 +785,7 @@ class OrderDetails extends Component {
                       />
                       <Button
                         style={{
-                          display: (bedsOutOfSeason) ? 'none' : 'flex',
+                          display: (bedsOutOfSeason || !cropRotationMapComplete) ? 'none' : 'flex',
                           marginTop: units.unit4,
                         }}
                         text="Process Order"
