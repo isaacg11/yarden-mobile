@@ -1,5 +1,5 @@
 export default function calculatePlantingProgress(data) {
-    if(data) {
+    if(data?.plot_points?.length > 0) {
         let plotPoints = 0;
         let complete = 0;
         data.plot_points.forEach((row) => {
