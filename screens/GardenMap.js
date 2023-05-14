@@ -2105,6 +2105,7 @@ class GardenMap extends Component {
               justifyContent: 'space-between',
               alignItems: 'center',
               marginBottom: units.unit3,
+              paddingHorizontal: units.unit4
             }}>
             <Paragraph style={{ ...fonts.label }}>
               Garden Bed #{this.props.bedId}
@@ -2202,6 +2203,7 @@ class GardenMap extends Component {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+              paddingHorizontal: units.unit4
             }}>
             <Header>
               {this.props.beds.find(bed => bed._id === this.props.bed._id).name}
