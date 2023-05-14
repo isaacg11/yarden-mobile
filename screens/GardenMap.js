@@ -167,7 +167,7 @@ class GardenMap extends Component {
           );
 
           // if bed key matches selected bed id {...}
-          if (match) {
+          if (match?.plot_points?.length > 0) {
 
             // set plot points using bed
             plotPoints = match.plot_points;
