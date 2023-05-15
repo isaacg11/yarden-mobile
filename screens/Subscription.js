@@ -22,6 +22,7 @@ import { updateUser } from '../actions/user/index';
 // styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
+import types from '../vars/types';
 
 class Subscription extends Component {
 
@@ -31,49 +32,77 @@ class Subscription extends Component {
     }
 
     async componentDidMount() {
+
+        // show loading indicator
+        this.setState({ isLoading: true });
+
+        // get plants
         await this.props.getPlans();
-        this.setSubscription();
+
+        // set subscription
+        await this.setSubscription();
+
+        // hide loading indicator
+        this.setState({ isLoading: false });
     }
 
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (prevProps.user !== this.props.user) {
-            this.setSubscription();
+            
+            // show loading indicator
+            this.setState({ isLoading: true });
+
+            // set subscription
+            await this.setSubscription();
+
+            // hide loading indicator
+            this.setState({ isLoading: false });
         }
     }
 
     async setSubscription() {
-        // show loading indicator
-        this.setState({ isLoading: true });
+
+        let plan = null;
+        let subscription = null;
 
         // if user has a maintenance plan {...}
         if (this.props.user.garden_info && this.props.user.garden_info.maintenance_plan) {
+
             // if no current maintenance plan
             if (this.props.user.garden_info.maintenance_plan === 'none') {
                 this.setState({
-                    plan: null,
-                    subscription: null
+                    plan,
+                    subscription,
                 })
+            } else if (this.props.user.garden_info.maintenance_plan === types.ASSISTED_PLAN) { // NOTE: This check is necessary because for the new mobile schema we use plan id's instead of name strings - change when mobile app development is done
+                // get assisted plan
+                plan = this.props.plans.find((p) => p.type === types.ASSISTED_PLAN);
+            } else if (this.props.user.garden_info.maintenance_plan === types.FULL_PLAN) { // NOTE: This check is necessary because for the new mobile schema we use plan id's instead of name strings - change when mobile app development is done
+                // get full plan
+                plan = this.props.plans.find((p) => p.type === types.FULL_PLAN);
             } else {
                 // get plan
-                const plan = this.props.plans.find((p) => p._id === this.props.user.garden_info.maintenance_plan);
-
-                // if user has a payment plan id {...}
-                if (this.props.user.payment_info && this.props.user.payment_info.plan_id) {
-
-                    // get subscription
-                    const subscription = await this.props.getSubscription(this.props.user.payment_info.plan_id);
-
-                    // update UI
-                    this.setState({
-                        subscription: subscription,
-                        plan: plan
-                    });
-                }
+                plan = this.props.plans.find((p) => p._id === this.props.user.garden_info.maintenance_plan);
             }
-        }
 
-        // hide loading indicator
-        this.setState({ isLoading: false });
+            // if user has a payment plan id {...}
+            if (this.props.user.payment_info && this.props.user.payment_info.plan_id) {
+
+                // get subscription
+                const subscription = await this.props.getSubscription(this.props.user.payment_info.plan_id);
+
+                // update UI
+                this.setState({
+                    subscription,
+                    plan,
+                });
+            }
+        } else {
+            this.setState({
+                plan,
+                subscription,
+            })
+        }
     }
 
     async cancel() {
