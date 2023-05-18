@@ -755,7 +755,7 @@ function App() {
                     text={'Back'}
                     onPress={() => {
                       const state = store.getState();
-                      if (state.selectedOrder.type === types.INITIAL_PLANTING) {
+                      if (state.selectedOrder.type === types.INITIAL_PLANTING || state.selectedOrder.type === types.CROP_ROTATION) {
                         nav.navigation.navigate('Order Details', state.selectedOrder);
                       } else {
                         nav.navigation.navigate('Step 4');

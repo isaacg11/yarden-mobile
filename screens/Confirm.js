@@ -159,8 +159,8 @@ class Confirm extends Component {
 
             // send alert to HQ
             await this.props.sendAlert({
-                channel: 'new-customers',
-                text: `*New Customer!* \n${info.firstName.trim()} ${info.lastName.trim()}\n${address}\n${info.date} @ ${moment(info.time, `HH:mm:ss`).format(`h:mm A`)}`
+                channel: 'leads',
+                text: `*New Lead!* \n${info.firstName.trim()} ${info.lastName.trim()}\n${address}\n${info.date} @ ${moment(info.time, `HH:mm:ss`).format(`h:mm A`)}`
             })
 
             // navigate to next screen

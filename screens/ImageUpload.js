@@ -23,7 +23,7 @@ import { updateBed } from '../actions/beds';
 import { createPlantActivity, getPlantActivities } from '../actions/plantActivities';
 import { getReportType } from '../actions/reportTypes/index';
 import { createReport } from '../actions/reports/index';
-import { createAnswer } from '../actions/answers/index';
+import { createAnswer, setAnswers } from '../actions/answers/index';
 import { createReminder, getReminders } from '../actions/reminders/index';
 import { createMessage } from '../actions/messages/index';
 import { createConversation, getConversations } from '../actions/conversations/index';
@@ -49,6 +49,8 @@ class ImageUpload extends Component {
 
     async componentDidMount() {
         if (this.props.route.params.order.type === types.INITIAL_PLANTING) {
+
+            // get plans
             this.props.getPlans();
         } else if (this.props.route.params.order.type === types.FULL_PLAN || this.props.route.params.order.type === types.ASSISTED_PLAN) {
 
@@ -336,22 +338,28 @@ class ImageUpload extends Component {
                         `status=pending&vendor=${this.props.user._id}`,
                     );
 
-                    // redirect user to success page
-                    this.props.navigation.navigate('Order Complete', { orderType: order.type });
+                    // reset answers
+                    await this.props.setAnswers([]);
 
                     // hide loading indicator
                     this.setState({ isLoading: false });
+
+                    // redirect user to success page
+                    this.props.navigation.navigate('Order Complete', { orderType: order.type });
                 } else {
                     // get pending orders
                     await this.props.getOrders(
                         `status=pending&vendor=${this.props.user._id}`,
                     );
 
-                    // redirect user to success page
-                    this.props.navigation.navigate('Order Complete', { orderType: order.type });
+                    // reset answers
+                    await this.props.setAnswers([]);
 
                     // hide loading indicator
                     this.setState({ isLoading: false });
+
+                    // redirect user to success page
+                    this.props.navigation.navigate('Order Complete', { orderType: order.type });
                 }
             });
         });
@@ -407,6 +415,33 @@ class ImageUpload extends Component {
             );
         })
 
+        // get report type
+        const reportType = await this.props.getReportType(`name=${order.type}`);
+
+        // create report
+        const report = await this.props.createReport({
+            type: reportType._id,
+            order: order._id,
+            customer: order.customer._id,
+        })
+
+        let createAnswers = [];
+        this.props.answers.forEach((data) => {
+            createAnswers.push(new Promise(async (resolve) => {
+
+                // create answer
+                await this.props.createAnswer({
+                    report: report._id,
+                    question: data.question,
+                    result: data.result
+                })
+                resolve();
+            }))
+        })
+
+        // create answers
+        await Promise.all(createAnswers);
+
         // update beds
         Promise.all(updateBeds).then(async () => {
 
@@ -435,6 +470,9 @@ class ImageUpload extends Component {
                         `status=pending&vendor=${this.props.user._id}`,
                     );
                 }
+
+                // reset answers
+                await this.props.setAnswers([]);
 
                 // hide loading indicator
                 this.setState({ isLoading: false });
@@ -558,6 +596,9 @@ class ImageUpload extends Component {
 
             // get new reminders
             await this.props.getReminders(`status=pending&page=1&limit=50`);
+            
+            // reset answers
+            await this.props.setAnswers([]);
 
             // redirect user to success page
             this.props.navigation.navigate('Order Complete', { orderType: order.type });
@@ -690,7 +731,8 @@ function mapDispatchToProps(dispatch) {
             getReminders,
             createMessage,
             getConversations,
-            createConversation
+            createConversation,
+            setAnswers
         },
         dispatch,
     );
