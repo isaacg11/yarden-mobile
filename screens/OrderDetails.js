@@ -56,6 +56,7 @@ class OrderDetails extends Component {
 
     // if order type is installation, revive, or misc {...}
     if (order.type == types.INSTALLATION || order.type == types.REVIVE || order.type == types.MISC) {
+
       // get change orders
       changeOrders = await this.props.getChangeOrders(
         `order=${order._id}`,
@@ -77,57 +78,31 @@ class OrderDetails extends Component {
       // get questions
       await this.props.getQuestions(`report_type=${reportType._id}`);
 
-      // get previous maintenance reports for customer
-      await this.props.getReports(`customer=${order.customer._id}&type=${reportType._id}`);
-
-      // if order type is initial planting {...}
-      if (order.type == types.INITIAL_PLANTING) {
-
-        // get drafts
-        await this.props.getDrafts(`order=${order._id}`);
+      // if order type is initial planting or crop rotation {...}
+      if (order.type == types.INITIAL_PLANTING || order.type == types.CROP_ROTATION) {
 
         // get plant list
         await this.props.getPlantList(`order=${order._id}`);
-      }
 
-      // if order type is crop rotation {...}
-      if (order.type == types.CROP_ROTATION) {
+        // if order type is initial planting {...}
+        if (order.type == types.INITIAL_PLANTING) {
 
-        // get plant list
-        await this.props.getPlantList(`order=${order._id}`);
-      }
-
-      // if order for maintenance service {...}
-      if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
-        if (this.props.reports.length > 0) {
-
-          // get latest report
-          const latestReport = await this.getLatestReport();
-
-          // get answers
-          const answers = await this.props.getAnswers(`report=${latestReport._id}`);
-
-          // set watering schedule
-          wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
-        } else {
-          // get report type
-          const initialPlantingReportType = await this.props.getReportType(`name=${types.INITIAL_PLANTING}`);
-
-          // get previous reports for customer
-          await this.props.getReports(`customer=${order.customer._id}&type=${initialPlantingReportType._id}`);
-
-          if (this.props.reports.length > 0) {
-
-            // get latest report
-            const latestReport = await this.getLatestReport();
-
-            // get answers
-            const answers = await this.props.getAnswers(`report=${latestReport._id}`);
-
-            // set watering schedule
-            wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
-          }
+          // get drafts
+          await this.props.getDrafts(`order=${order._id}`);
         }
+      } else if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) { // if order for maintenance service {...}
+
+        // get previous reports for customer
+        await this.props.getReports(`customer=${order.customer._id}`);
+
+        // get latest report
+        const latestReport = await this.getLatestReport();
+
+        // get answers
+        const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+
+        // set watering schedule
+        wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
       }
     }
 
@@ -144,7 +119,7 @@ class OrderDetails extends Component {
     let latestReport = null;
     let newestDate = null;
     for (const report of this.props.reports) {
-      const date = new Date(report.order.date);
+      const date = new Date(report.dt_created);
       if (!newestDate || date > newestDate) {
         latestReport = report;
         newestDate = date;
@@ -789,7 +764,7 @@ class OrderDetails extends Component {
                           marginTop: units.unit4,
                         }}
                         text="Process Order"
-                        onPress={() => this.props.navigation.navigate('Image Upload', { order })}
+                        onPress={() => this.props.navigation.navigate('Step 5', { order })}
                       />
                     </View>
                   </View>

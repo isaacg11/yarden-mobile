@@ -93,7 +93,32 @@ class Step5 extends Component {
 
                     // set watering schedule
                     wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
-                }  
+                }
+            }
+        } else if (order.type === types.CROP_ROTATION) { // if order is for crop rotation {...}
+
+            // get current maintenance plan type
+            const maintenanceType = order.customer.garden_info.maintenance_plan;
+
+            // get report type
+            const maintenanceReportType = await this.props.getReportType(`name=${maintenanceType}`);
+
+            // get previous reports for customer
+            await this.props.getReports(`customer=${order.customer._id}&type=${maintenanceReportType._id}`);
+
+            if (this.props.reports.length > 0) {
+                // get latest report
+                const latestReport = await this.getLatestReport();
+
+                // get answers
+                const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+
+                // set watering schedule
+                wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+            } else {
+                // NOTE: This is temporary, it was needed for the first crop rotation for customers new to the map, as they had no previous services to pull a water schedule from
+                // Author: Isaac G. 5/17/23
+                wateringSchedule = [];
             }
         }
 
@@ -167,8 +192,19 @@ class Step5 extends Component {
         // set answers
         await this.props.setAnswers(answers);
 
-        // redirect user to next screen
-        this.props.navigation.navigate('Step 6');
+        // if crop rotation {...}
+        if (this.props.selectedOrder.type === types.CROP_ROTATION) {
+
+            // get order
+            const order = this.props.selectedOrder;
+
+            // redirect user to next screen
+            this.props.navigation.navigate('Image Upload', { order });
+        } else {
+
+            // redirect user to next screen
+            this.props.navigation.navigate('Step 6');
+        }
     }
 
     disableButton() {
