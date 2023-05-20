@@ -86,7 +86,7 @@ class PlantList extends Component {
                   justifyContent: 'center',
                 }}>
                 <Paragraph
-                  style={{ marginBottom: units.unit3, color: colors.purpleB }}>
+                  style={{ marginBottom: units.unit3 }}>
                   <Ionicons
                     name={'leaf-outline'}
                     color={colors.purpleB}
@@ -94,7 +94,7 @@ class PlantList extends Component {
                   "{capitalize(p.name)}"
                 </Paragraph>
                 <Paragraph
-                  style={{ marginBottom: units.unit3, color: colors.purpleB }}>
+                  style={{ marginBottom: units.unit3 }}>
                   <Ionicons
                     name={'time-outline'}
                     color={colors.purpleB}
@@ -102,12 +102,12 @@ class PlantList extends Component {
                   {p.days_to_mature} days to mature
                 </Paragraph>
                 <Paragraph
-                  style={{ marginBottom: units.unit3, color: colors.purpleB }}>
+                  style={{ marginBottom: units.unit3 }}>
                   <Ionicons
-                    name={'resize-outline'}
+                    name={'apps-outline'}
                     color={colors.purpleB}
                   />{' '}
-                  {(p.quadrant_size / 2) / 4} Sq Ft
+                  {Math.sqrt(p.quadrant_size) * 6}" x {Math.sqrt(p.quadrant_size) * 6}"
                 </Paragraph>
                 <View
                   style={{
