@@ -71,19 +71,18 @@ class Table extends Component {
         return (
           <View
             style={{
-              flex: 1,
-              alignSelf: 'stretch',
-              padding: units.unit3,
+              padding: units.unit4,
               justifyContent: 'center',
-              alignItems: 'center',
+              display: 'flex',
+              alignItems: 'center'
             }}
             key={index}>
-            <Paragraph numberOfLines={3}>
+            <View>
               <Link
                 url={column.url}
-                text={<Ionicons name="globe" size={fonts.h2} />}
+                text={<Ionicons name="globe" size={fonts.h3} />}
               />
-            </Paragraph>
+            </View>
           </View>
         );
       } else {

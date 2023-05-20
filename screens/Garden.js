@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -241,6 +241,9 @@ class Garden extends Component {
             <Header type="h4">
               {isCropRotation ? 'Crop Rotation' : 'Garden Setup'}
             </Header>
+
+            {/* helper text */}
+            <Text style={{ marginTop: units.unit3 }}>Pick your plants by selecting a dropdown and setting the quantity. Use the progress bar to track how much of your total available garden space has been used.</Text>
 
             <View style={{ padding: 0, height: '100%' }}>
               {/* plant list */}
