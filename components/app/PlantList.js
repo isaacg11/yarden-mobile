@@ -76,6 +76,7 @@ class PlantList extends Component {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                alignItems: 'center',
                 width: '100%',
               }}>
               <View
@@ -86,7 +87,27 @@ class PlantList extends Component {
                 }}>
                 <Paragraph
                   style={{ marginBottom: units.unit3, color: colors.purpleB }}>
-                  {capitalize(p.name)}
+                  <Ionicons
+                    name={'leaf-outline'}
+                    color={colors.purpleB}
+                  />{' '}
+                  "{capitalize(p.name)}"
+                </Paragraph>
+                <Paragraph
+                  style={{ marginBottom: units.unit3, color: colors.purpleB }}>
+                  <Ionicons
+                    name={'time-outline'}
+                    color={colors.purpleB}
+                  />{' '}
+                  {p.days_to_mature} days to mature
+                </Paragraph>
+                <Paragraph
+                  style={{ marginBottom: units.unit3, color: colors.purpleB }}>
+                  <Ionicons
+                    name={'resize-outline'}
+                    color={colors.purpleB}
+                  />{' '}
+                  {(p.quadrant_size / 2) / 4} Sq Ft
                 </Paragraph>
                 <View
                   style={{
@@ -128,8 +149,8 @@ class PlantList extends Component {
               </View>
               <Image
                 style={{
-                  height: units.unit6,
-                  width: units.unit6,
+                  height: units.unit6 + units.unit3,
+                  width: units.unit6 + units.unit3,
                   borderRadius: units.unit3,
                   marginLeft: 'auto',
                 }}
@@ -227,8 +248,8 @@ class PlantList extends Component {
       );
 
       return (
-        <ScrollView 
-          stickyHeaderIndices={[0]} 
+        <ScrollView
+          stickyHeaderIndices={[0]}
           showsVerticalScrollIndicator={false}>
           <View style={{ backgroundColor: colors.white, marginBottom: units.unit3 }}>
 

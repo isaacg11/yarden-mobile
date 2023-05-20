@@ -13,7 +13,6 @@ class Materials extends Component {
             <View>
                 <Table 
                     data={materials} 
-                    excludedColumns={['name']}
                 />
             </View>
         )
