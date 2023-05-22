@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { View, Modal, TouchableOpacity, Image } from 'react-native';
+import { View, Modal, TouchableOpacity, Image, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -52,7 +52,7 @@ class PlantInfo extends Component {
                 transparent={true}>
                 <View
                     style={{
-                        height: '60%',
+                        height: '55%',
                         marginTop: 'auto',
                         backgroundColor: colors.white,
                         borderTopColor: colors.purpleB,
@@ -62,6 +62,7 @@ class PlantInfo extends Component {
 
                         {/* close button */}
                         <TouchableOpacity
+                            style={{ padding: 0, margin: 0, height: 50 }}
                             onPress={() => close()}>
                             <Ionicons
                                 name={'remove-outline'}
@@ -70,10 +71,28 @@ class PlantInfo extends Component {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View style={{ padding: units.unit4 }}>
+                    {(user.type === types.GARDENER) && (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
+                        <TouchableOpacity
+                            style={{
+                                position: 'absolute',
+                                right: units.unit4,
+                                top: units.unit4
+                            }}
+                            onPress={() => {
+                                navigateToNotes(selectedPlant);
+                                close();
+                            }}>
+                            <Ionicons
+                                name={'create'}
+                                color={colors.purpleB}
+                                size={units.unit5}
+                            />
+                        </TouchableOpacity>
+                    )}
+                    <View style={{ paddingVertical: 0, paddingHorizontal: units.unit5 }}>
 
                         {/* plant image */}
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit5}}>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit3 }}>
                             <Image
                                 source={{ uri: selectedPlant.id.image }}
                                 style={{
@@ -88,77 +107,66 @@ class PlantInfo extends Component {
                         <View style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between' }}>
                             <Header
                                 style={{
-                                    ...fonts.header
+                                    textAlign: 'center',
+                                    width: '100%',
+                                    ...fonts.header,
                                 }}>
                                 {selectedPlant.id.name} {selectedPlant.id.common_type.name}
                             </Header>
-                            {(user.type === types.GARDENER) && (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        navigateToNotes(selectedPlant);
-                                        close();
-                                    }}>
-                                    <Ionicons
-                                        name={'chatbubbles'}
-                                        color={colors.purpleB}
-                                        size={units.unit5}
-                                    />
-                                </TouchableOpacity>
-                            )}
                         </View>
 
                         {/* plant info */}
-                        <View style={{ marginTop: units.unit3 }}>
-                            <View style={{ marginBottom: units.unit3 }}>
-                                <Paragraph style={{ fontStyle: 'italic', color: colors.purpleC }}>{selectedPlant.id.family_type.name} {selectedPlant.id.botanical_type.name}</Paragraph>
+                        <View>
+                            <View style={{ marginBottom: units.unit5 }}>
+                                <Text style={{ textAlign: 'center', fontStyle: 'italic', color: colors.purpleD50 }}>{selectedPlant.id.family_type.name} {selectedPlant.id.botanical_type.name}</Text>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     Planted On
                                 </Paragraph>
-                                <Paragraph style={{ flex: 1 }}>
+                                <Text style={{ flex: 1, color: colors.greenD50 }}>
                                     {moment(selectedPlant.dt_planted).format('MM/DD/YYYY')}
-                                </Paragraph>
+                                </Text>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     Harvest After
                                 </Paragraph>
-                                <Paragraph style={{ flex: 1 }}>
+                                <Text style={{ flex: 1, color: colors.greenD50 }}>
                                     {moment(selectedPlant.dt_planted).add(selectedPlant.id.days_to_mature, 'days').format('MM/DD/YYYY')}
-                                </Paragraph>
+                                </Text>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     Category
                                 </Paragraph>
-                                <Paragraph style={{ flex: 1 }}>
+                                <Text style={{ flex: 1, color: colors.greenD50 }}>
                                     {capitalize(selectedPlant.id.category.name)}
-                                </Paragraph>
+                                </Text>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     Growth Style
                                 </Paragraph>
-                                <Paragraph style={{ flex: 1 }}>
+                                <Text style={{ flex: 1, color: colors.greenD50 }}>
                                     {capitalize(selectedPlant.id.growth_style.name)}
-                                </Paragraph>
+                                </Text>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     Season
                                 </Paragraph>
-                                <Paragraph style={{ flex: 1 }}>
+                                <Text style={{ flex: 1, color: colors.greenD50 }}>
                                     {capitalize(selectedPlant.id.season)}
-                                </Paragraph>
+                                </Text>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <Paragraph style={{ fontWeight: 'bold', flex: 1 }}>
+                                <Paragraph style={{ flex: 1 }}>
                                     Partial Sun
                                 </Paragraph>
-                                <Paragraph style={{ flex: 1 }}>
+                                <Text style={{ flex: 1, color: colors.greenD50 }}>
                                     {selectedPlant.id.partial_sun ? "Yes" : "No"}
-                                </Paragraph>
+                                </Text>
                             </View>
                         </View>
 
@@ -168,6 +176,9 @@ class PlantInfo extends Component {
                                 small
                                 text="View Harvest Instructions"
                                 variant="btn2"
+                                style={{
+                                    paddingVertical: units.unit4
+                                }}
                                 onPress={() => {
                                     navigateToHarvestInstructions(selectedPlant);
                                     close();
