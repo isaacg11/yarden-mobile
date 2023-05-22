@@ -10,7 +10,6 @@ import {
   Image,
   Text,
   Animated,
-  Dimensions
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -44,6 +43,7 @@ import types from '../vars/types';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
+import calculateDaysToMature from '../helpers/calculateDaysToMature';
 import getSeason from '../helpers/getSeason';
 
 class GardenMap extends Component {
@@ -1893,6 +1893,14 @@ class GardenMap extends Component {
                 // determine if popover should render
                 const renderPopover = this.renderPopover(row, column, i, index);
 
+                // get days left to mature
+                const daysLeft = column.plant?.id?.image ? calculateDaysToMature(column.plant) : 0;
+
+                // get plant progress
+                const totalDaysToMature = column.plant?.id?.days_to_mature;
+                const currentDays = totalDaysToMature - daysLeft;
+                const progress = (currentDays / totalDaysToMature) * 100;
+
                 // render plot point
                 return (
                   <View key={index}>
@@ -2006,6 +2014,25 @@ class GardenMap extends Component {
                                           : column.plant.id.common_type.name}
                                       </Paragraph>
                                     )}
+                                  </View>
+                                  <View style={{
+                                    position: 'absolute',
+                                    bottom: '10%',
+                                    left: '10%',
+                                    height: '5%',
+                                    width: '80%',
+                                    backgroundColor: colors.greenD10,
+                                    borderRadius: units.unit2
+                                  }}>
+                                    <View
+                                      style={{
+                                        height: '100%',
+                                        width: `${progress.toFixed(2)}%`,
+                                        minWidth: units.unit1,
+                                        backgroundColor: colors.greenB,
+                                        borderRadius: units.unit2
+                                      }}>
+                                    </View>
                                   </View>
                                 </View>
                               </>

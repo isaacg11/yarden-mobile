@@ -1,7 +1,7 @@
 // libraries
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { Provider } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -75,6 +75,7 @@ import Subscription from './screens/Subscription';
 import ReminderDetails from './screens/ReminderDetails';
 import PlantsSelected from './screens/PlantsSelected';
 import NewBeds from './screens/NewBeds';
+import BedPlants from './screens/BedPlants';
 
 // UI components
 import Link from './components/UI/Link';
@@ -167,6 +168,24 @@ function renderBackButton(nav) {
       text={'Back'}
       onPress={() => redirect()}
     />
+  )
+}
+
+function renderListButton(nav) {
+  return (
+    <View style={{ marginRight: units.unit3 }}>
+      <Link
+        icon={
+          <Ionicons
+            name="list-outline"
+            size={fonts.h2}
+            color={colors.purpleB}
+          />
+        }
+        text={''}
+        onPress={() => nav.navigation.navigate('Bed Plants', { bed: nav.route.params.bed })}
+      />
+    </View>
   )
 }
 
@@ -595,12 +614,13 @@ function App() {
             <Stack.Screen
               name="Bed"
               component={Bed}
-              options={{
+              options={(navigation) => ({
+                headerRight: () => renderListButton(navigation),
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
                 headerTintColor: appHeaderTint,
                 headerShadowVisible: false,
-              }}
+              })}
             />
             <Stack.Screen
               name="Planted"
@@ -869,6 +889,16 @@ function App() {
             <Stack.Screen
               name="New Beds"
               component={NewBeds}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Bed Plants"
+              component={BedPlants}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,
