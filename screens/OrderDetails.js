@@ -98,11 +98,14 @@ class OrderDetails extends Component {
         // get latest report
         const latestReport = await this.getLatestReport();
 
-        // get answers
-        const answers = await this.props.getAnswers(`report=${latestReport._id}`);
+        if (latestReport) {
+          
+          // get answers
+          const answers = await this.props.getAnswers(`report=${latestReport._id}`);
 
-        // set watering schedule
-        wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+          // set watering schedule
+          wateringSchedule = answers.filter((answer) => answer.question.placement === 5);
+        }
       }
     }
 
