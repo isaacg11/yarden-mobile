@@ -1899,7 +1899,8 @@ class GardenMap extends Component {
                 // get plant progress
                 const totalDaysToMature = column.plant?.id?.days_to_mature;
                 const currentDays = totalDaysToMature - daysLeft;
-                const progress = (currentDays / totalDaysToMature) * 100;
+                let progress = (currentDays / totalDaysToMature) * 100;
+                if(progress > 100) progress = 100;
 
                 // render plot point
                 return (

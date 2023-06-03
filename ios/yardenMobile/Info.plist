@@ -44,6 +44,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Yarden uses location to render work orders on a map</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Yarden uses photos to process work orders for gardening services</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
