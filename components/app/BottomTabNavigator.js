@@ -127,7 +127,6 @@ class BottomTabNavigator extends Component {
 
   render() {
     const { inbox, renderTabNavigator } = this.state;
-
     const {
       quotes,
       filters,
@@ -176,42 +175,6 @@ class BottomTabNavigator extends Component {
               listeners={({ navigation }) => ({
                 tabPress: async e => {
                   // do stuff
-                },
-              })}
-            />
-
-            <Tab.Screen
-              name="Orders"
-              component={Orders}
-              listeners={({ navigation }) => ({
-                tabPress: async e => {
-                  // Prevent default action
-                  e.preventDefault();
-
-                  // set order query
-                  const query = `status=${filters.orders}&page=${1}&limit=${5}`;
-
-                  // if status is pending {...}
-                  if (filters.orders === 'pending') {
-                    // get pending orders
-                    await this.props.getOrders(query);
-
-                    if (orders.list) {
-                      // iterate through order list
-                      await orders.list.forEach(async order => {
-                        // get pending change orders
-                        await this.props.getChangeOrders(
-                          `order=${order._id}&status=pending approval`,
-                        );
-                      });
-                    }
-                  } else {
-                    // get completed orders
-                    await this.props.getOrders(query);
-                  }
-
-                  // navigate to orders
-                  navigation.jumpTo('Orders');
                 },
               })}
             />

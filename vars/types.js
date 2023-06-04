@@ -48,7 +48,11 @@ const types = {
     // plant categories
     VEGETABLE: 'vegetable',
     CULINARY_HERB: 'culinary herb',
-    FRUIT: 'fruit'
+    FRUIT: 'fruit',
+
+    // order status types
+    PENDING: 'pending',
+    COMPLETE: 'complete',
 }
 
 export default types;
