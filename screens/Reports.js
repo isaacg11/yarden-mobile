@@ -1,9 +1,10 @@
 // libraries
 import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView } from 'react-native';
+import { SafeAreaView, View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
 
 // UI components
 import HarvestReport from '../components/app/HarvestReport';
@@ -11,9 +12,14 @@ import BedList from '../components/app/BedList';
 import Header from '../components/UI/Header';
 import Paragraph from '../components/UI/Paragraph';
 import CircularButton from '../components/UI/CircularButton';
+import Label from '../components/UI/Label';
+import Link from '../components/UI/Link';
+import Divider from '../components/UI/Divider';
+import LoadingIndicator from '../components/UI/LoadingIndicator';
 
 // actions
 import { getBeds } from '../actions/beds/index';
+import { getOrders, setSelectedOrder } from '../actions/orders/index';
 import { getPlantActivities } from '../actions/plantActivities/index';
 
 // styles
@@ -21,17 +27,157 @@ import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
+// types
+import types from '../vars/types';
+
 class Reports extends Component {
 
-    state = {}
+    state = {
+        pendingOrders: [],
+        completedOrders: [],
+        dateFilter: 1
+    }
 
-    componentDidMount() {
+    async componentDidMount() {
 
         // get beds
         this.props.getBeds(`customer=${this.props.user._id}`);
+
+        // get pending orders
+        const pendingOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.PENDING}`, true);
+
+        // get completed orders
+        const completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}&start=${new Date(moment().startOf('month'))}&end=${new Date(moment().endOf('month'))}`, true);
+
+        // update UI
+        this.setState({
+            pendingOrders,
+            completedOrders
+        })
+    }
+
+    setDateFilter(dateFilter) {
+        this.setState({ dateFilter, isLoading: true }, async () => {
+            let completedOrders = [];
+            if (dateFilter === 1) {
+                completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}&start=${new Date(moment().startOf('month'))}&end=${new Date(moment().endOf('month'))}`, true);
+            } else if (dateFilter === 2) {
+                completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}&start=${new Date(moment().subtract(1, 'month').startOf('month'))}&end=${new Date(moment().subtract(1, 'month').endOf('month'))}`, true);
+            } else if (dateFilter === 3) {
+                completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}&start=${new Date(moment().subtract(2, 'month').startOf('month'))}&end=${new Date(moment().subtract(2, 'month').endOf('month'))}`, true);
+            } else if (dateFilter === 4) {
+                completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}&start=${new Date(moment().subtract(3, 'month').startOf('month'))}&end=${new Date(moment().subtract(3, 'month').endOf('month'))}`, true);
+            } else if (dateFilter === 5) {
+                completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}`, true);
+            }
+
+            this.setState({
+                completedOrders,
+                isLoading: false
+            })
+        });
+    }
+
+    renderOrder(order) {
+        const { user } = this.props;
+        return (
+            <View>
+                <View
+                    style={{
+                        marginVertical: units.unit4 + units.unit3,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}>
+
+                    {/* order info */}
+                    <View
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}>
+                        <View
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginHorizontal: units.unit4,
+                            }}>
+                            <Label>{moment(order.date).format('ddd')} </Label>
+                            <Paragraph style={{ color: colors.greenD50 }}>
+                                {moment(order.date).format('MM/DD')}{' '}
+                            </Paragraph>
+                        </View>
+                        <View>
+                            {user.type === types.GARDENER && (
+                                <Text>{order.customer.address}</Text>
+                            )}
+                            <Text
+                                style={{
+                                    fontSize: fonts.h3,
+                                    textTransform: 'capitalize',
+                                    color: colors.greenE75,
+                                    fontWeight: 'bold',
+                                }}>
+                                {order.type}
+                            </Text>
+                            <Label>
+                                {order.time
+                                    ? `${moment(order.time, `HH:mm:ss`).format(
+                                        `h:mm A`,
+                                    )}`
+                                    : '9:00am - 5:00pm'}
+                            </Label>
+                        </View>
+                    </View>
+                    <View>
+                        <Link
+                            text="View Details"
+                            onPress={() => {
+
+                                // set selected order
+                                this.props.setSelectedOrder(order);
+
+                                // redirect user to order details
+                                this.props.navigation.navigate(
+                                    'Order Details',
+                                    order,
+                                )
+                            }
+                            }
+                        />
+                    </View>
+                </View>
+                <Divider />
+            </View>
+        )
     }
 
     render() {
+
+        const {
+            pendingOrders,
+            completedOrders,
+            dateFilter,
+            isLoading
+        } = this.state;
+
+        const activeDateFilter = {
+            paddingVertical: units.unit1,
+            paddingHorizontal: units.unit3 + units.unit1,
+            color: colors.purpleB,
+            backgroundColor: colors.purpleC25,
+            borderRadius: units.unit2,
+            overflow: 'hidden', // Ensures that the content is clipped within the rounded borders
+        }
+
+        const inActiveDateFilter = {
+            paddingVertical: units.unit1,
+            paddingHorizontal: units.unit4,
+            color: colors.purpleB,
+        }
 
         return (
             <SafeAreaView
@@ -40,6 +186,12 @@ class Reports extends Component {
                     width: '100%',
                     backgroundColor: colors.greenD5,
                 }}>
+
+                {/* loading indicator */}
+                <LoadingIndicator
+                    loading={isLoading}
+                />
+
                 <ScrollView>
 
                     {/* harvest report */}
@@ -49,18 +201,19 @@ class Reports extends Component {
 
                     {/* bed list */}
                     <View style={{ padding: units.unit4 }}>
-                        <View style={{ 
-                            display: 'flex', 
-                            flexDirection: 'row', 
-                            justifyContent: 'space-between', 
+                        <View style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
                             alignItems: 'center',
-                            marginBottom: units.unit4}}>
+                            marginBottom: units.unit4
+                        }}>
                             <Header
                                 type="h5"
                                 style={{ color: colors.purpleC75 }}>
                                 Garden Beds
                             </Header>
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <Paragraph style={{ color: colors.purpleB, marginRight: units.unit3 }}>
                                     Add
                                 </Paragraph>
@@ -78,6 +231,75 @@ class Reports extends Component {
                         <BedList onSelect={(bed) => this.props.navigation.navigate('Bed', bed)} />
                     </View>
 
+                    {/* pending orders */}
+                    <View style={{ padding: units.unit4 }}>
+                        <View style={{
+                            marginBottom: units.unit4
+                        }}>
+                            <Header
+                                type="h5"
+                                style={{ color: colors.greenE50 }}>
+                                Pending Orders
+                            </Header>
+                            {pendingOrders?.list?.map((order, index) => (
+                                <View key={index}>
+                                    {this.renderOrder(order)}
+                                </View>
+                            ))}
+                            {pendingOrders?.list?.length < 1 && (
+                                <View style={{ padding: units.unit5 }}>
+                                    <Text style={{ textAlign: 'center' }}>No results found</Text>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+
+                    {/* completed orders */}
+                    <View style={{ padding: units.unit4 }}>
+                        <View style={{
+                            marginBottom: units.unit4
+                        }}>
+                            <Header
+                                type="h5"
+                                style={{ color: colors.greenE50, marginBottom: units.unit3 }}>
+                                Completed Orders
+                            </Header>
+                            <View style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-evenly',
+                                paddingVertical: units.unit3
+                            }}>
+                                <TouchableOpacity onPress={() => this.setDateFilter(1)}>
+                                    <Text style={dateFilter === 1 ? activeDateFilter : inActiveDateFilter}>
+                                        This Month
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.setDateFilter(2)}>
+                                    <Text style={dateFilter === 2 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(1, 'month').format('MMM')}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.setDateFilter(3)}>
+                                    <Text style={dateFilter === 3 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(2, 'month').format('MMM')}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.setDateFilter(4)}>
+                                    <Text style={dateFilter === 4 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(3, 'month').format('MMM')}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => this.setDateFilter(5)}>
+                                    <Text style={dateFilter === 5 ? activeDateFilter : inActiveDateFilter}>View All</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {completedOrders?.list?.map((order, index) => (
+                                <View key={index}>
+                                    {this.renderOrder(order)}
+                                </View>
+                            ))}
+                            {completedOrders?.list?.length < 1 && (
+                                <View style={{ padding: units.unit5 }}>
+                                    <Text style={{ textAlign: 'center' }}>No results found</Text>
+                                </View>
+                            )}
+                        </View>
+                    </View>
                 </ScrollView>
             </SafeAreaView>
         );
@@ -86,7 +308,8 @@ class Reports extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        user: state.user,
+        orders: state.orders
     };
 }
 
@@ -94,7 +317,9 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         {
             getBeds,
-            getPlantActivities
+            getPlantActivities,
+            getOrders,
+            setSelectedOrder
         },
         dispatch,
     );

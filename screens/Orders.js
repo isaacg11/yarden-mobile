@@ -21,8 +21,7 @@ import Paginate from '../components/UI/Paginate';
 import Input from '../components/UI/Input';
 
 // actions
-import { setSelectedOrder } from '../actions/orders/index';
-import { getOrders } from '../actions/orders/index';
+import { getOrders, setSelectedOrder } from '../actions/orders/index';
 import { getChangeOrders } from '../actions/changeOrders/index';
 import { setFilters } from '../actions/filters/index';
 
