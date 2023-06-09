@@ -57,7 +57,7 @@ class NavMenu extends Component {
                                 <TouchableOpacity
                                     onPress={() => close('Subscription')}
                                     style={menuItemContainerStyles}>
-                                    <Text style={menuItemTextStyles}>Subscription</Text>
+                                    <Text style={menuItemTextStyles}>Membership</Text>
                                 </TouchableOpacity>
                             </View>
                         )}

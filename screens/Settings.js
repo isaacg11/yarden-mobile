@@ -87,7 +87,7 @@ class Settings extends Component {
                         this.setState({ isLoading: false });
 
                         // show warning
-                        return alert('You need to cancel your maintenance subscription before you can delete your account. Please go to the Subscription page to manage your maintenance plan.');
+                        return alert('You need to cancel your membership plan before you can delete your account. Please go to the Membership page to manage your plan.');
                     }
                 } else {
 

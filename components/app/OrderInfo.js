@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -45,7 +45,8 @@ class OrderInfo extends Component {
         const {
             order,
             wateringSchedule,
-            onChangeDate
+            onChangeDate,
+            user
         } = this.props;
 
         const orderDescription = this.formatOrderDescription(order);
@@ -93,7 +94,7 @@ class OrderInfo extends Component {
 
                         </View>
                         <Paragraph style={{ ...fonts.label, marginTop: units.unit5 }}>
-                            Customer/Address
+                            Member/Address
                         </Paragraph>
 
                         {/* name */}
@@ -118,6 +119,25 @@ class OrderInfo extends Component {
                             {/* zip */}
                             <Text>{order.customer.zip_code}</Text>
                         </View>
+
+                        {/* directions link */}
+                        {user.type === 'gardener' && (
+                            <View>
+                                <Link
+                                    text="Get Directions"
+                                    onPress={() => {
+                                        Linking.openURL(`http://maps.apple.com/?q=${encodeURIComponent(`${order.customer.address}, ${order.customer.city}, ${order.customer.state}`)}&dirflg=d`)
+                                    }}
+                                    icon={(
+                                        <Ionicons
+                                            name="navigate-circle-outline"
+                                            size={units.unit4}
+                                            color={colors.purpleB}
+                                        />
+                                    )}
+                                />
+                            </View>
+                        )}
 
                         {/* watering schedule */}
                         {wateringSchedule?.length > 0 && (
