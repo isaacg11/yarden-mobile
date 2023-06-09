@@ -77,7 +77,7 @@ class Enrollment extends Component {
           )} using the credit card on file ending in ${
             this.props.user.payment_info.card_last4
           }`,
-          'Start Subscription?',
+          'Start Plan?',
           async () => {
             // show loading indicator
             this.setState({isLoading: true});

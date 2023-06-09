@@ -41,11 +41,11 @@ class Bed extends Component {
     // format email
     const newSubscriptionRequest = {
       email: 'isaac.grey@yardengarden.com',
-      subject: `Yarden - (ACTION REQUIRED) New subscription request`,
-      label: 'Subscription Request',
+      subject: `Yarden - (ACTION REQUIRED) New membership request`,
+      label: 'Membership Request',
       body: (
         '<p>Hello <b>Yarden HQ</b>,</p>' +
-        '<p style="margin-bottom: 15px;">A new subscription request has been submitted by <u>' + this.props.user.email + '</u>, please contact the customer to finalize the request.</p>'
+        '<p style="margin-bottom: 15px;">A new membership request has been submitted by <u>' + this.props.user.email + '</u>, please contact the lead to finalize the request.</p>'
       )
     }
 

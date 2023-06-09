@@ -108,7 +108,7 @@ class Subscription extends Component {
     async cancel() {
         alert(
             `By cancelling your plan, Yarden will cancel all your scheduled gardening services. You will not be prorated or reimbursed for any subscription payment that was already charged. Once this action has been selected, it cannot be undone.`,
-            'Cancel Subscription?',
+            'Cancel Membership?',
             async () => {
                 // show loading indicator
                 this.setState({ isLoading: true });
@@ -172,7 +172,7 @@ class Subscription extends Component {
 
                         {/* subscription start */}
                         <Header type="h4" style={{ marginBottom: units.unit5 }}>
-                            Subscription
+                            Membership
                         </Header>
                         <Card>
                             <View style={{ marginBottom: units.unit5 }}>
@@ -195,7 +195,7 @@ class Subscription extends Component {
                         </View>
                         <View>
                             <Button
-                                text="Cancel Subscription"
+                                text="Cancel Membership"
                                 onPress={() => this.cancel()}
                                 variant="secondary"
                             />
@@ -208,12 +208,12 @@ class Subscription extends Component {
                 {(!plan && !subscription) && (
                     <View style={{ padding: units.unit3 + units.unit4 }}>
                         <Header type="h4" style={{ marginBottom: units.unit5 }}>
-                            Subscription
+                            Membership
                         </Header>
                         <Card>
                             <View>
-                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No subscription found</Paragraph>
-                                <Paragraph style={{ marginTop: units.unit4, textAlign: 'center' }}>Yarden offers garden maintenance subscription plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
+                                <Paragraph style={{ fontWeight: 'bold', marginTop: units.unit5, textAlign: 'center' }}>No membership found</Paragraph>
+                                <Paragraph style={{ marginTop: units.unit4, textAlign: 'center' }}>Yarden offers garden maintenance plans to help you grow a successful vegetable garden! Get started by clicking the button below.</Paragraph>
                             </View>
                         </Card>
                         <View style={{ marginTop: units.unit4 }}>

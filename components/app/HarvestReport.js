@@ -13,7 +13,6 @@ import Label from '../UI/Label';
 import Divider from '../UI/Divider';
 import BarChart from '../UI/BarChart';
 import ToggleSwitch from '../UI/ToggleSwitch';
-import Button from '../UI/Button';
 import LoadingIndicator from '../UI/LoadingIndicator';
 
 // actions
@@ -268,10 +267,6 @@ class HarvestReport extends Component {
                 }}>
                 Your harvest data will appear here after your first harvest.
               </Text>
-              <Button
-                text="Check Order Status"
-                onPress={() => onCheckStatus()}
-              />
             </View>
           </View>
         ) : (

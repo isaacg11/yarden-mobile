@@ -37,8 +37,10 @@ class Inbox extends Component {
 
   async componentDidMount() {
 
-    // set inbox
-    await this.setInbox();
+    if (this.props.conversations.length > 0) {
+      // set inbox
+      await this.setInbox();
+    }
 
     // if customer and there is no conversations {...}
     if (this.props.user.type === types.CUSTOMER && this.state.inbox.length < 1) {
@@ -51,9 +53,10 @@ class Inbox extends Component {
 
       // get maintenance order
       const maintenanceOrder = pendingOrders.list.find((order) => order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN);
-
-      // update UI
-      this.setState({ gardener: maintenanceOrder.vendor });
+      if (maintenanceOrder) {
+        // update UI
+        this.setState({ gardener: maintenanceOrder.vendor });
+      }
     }
   }
 
@@ -83,7 +86,7 @@ class Inbox extends Component {
 
       // if last iteration of loop, set inbox
       if (index === this.props.conversations.length - 1)
-        this.setState({ 
+        this.setState({
           inbox: conversations,
           isLoading: false
         });
@@ -144,9 +147,9 @@ class Inbox extends Component {
           let correspondant = null;
 
           conversation.forEach((message) => {
-            if(message.sender._id !== this.props.user._id) {
+            if (message.sender._id !== this.props.user._id) {
               correspondant = message.sender;
-            } else if(message.receiver._id !== this.props.user._id) {
+            } else if (message.receiver._id !== this.props.user._id) {
               correspondant = message.receiver;
             }
           })
@@ -212,7 +215,7 @@ class Inbox extends Component {
           <View style={{ marginBottom: units.unit5, marginTop: units.unit4 }}>
             <Paragraph
               style={{
-                display: (user.type === types.CUSTOMER) ? 'none' : 'flex',
+                display: (user.type === types.CUSTOMER && gardener) ? 'none' : 'flex',
                 fontWeight: 'bold',
                 marginTop: units.unit3,
                 textAlign: 'center',
