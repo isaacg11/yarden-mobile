@@ -48,8 +48,6 @@
 	<string>Yarden uses location to render work orders on a map</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Yarden uses photos to process work orders for gardening services</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Yarden uses photos to process work orders for gardening services</string>
 	<key>UIAppFonts</key>
