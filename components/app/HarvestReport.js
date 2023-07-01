@@ -162,7 +162,6 @@ class HarvestReport extends Component {
     } = this.state;
 
     const {
-      onCheckStatus,
       plantActivities
     } = this.props;
 
