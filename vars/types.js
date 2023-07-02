@@ -8,6 +8,7 @@ const types = {
     INITIAL_PLANTING: 'initial planting',
     CROP_ROTATION: 'crop rotation',
     MISC: 'misc',
+    YARD_ASSESSMENT: 'yard assessment',
 
     // reports
     DEAD_PLANTS: 'dead plants',

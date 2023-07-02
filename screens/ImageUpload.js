@@ -27,6 +27,7 @@ import { createAnswer, setAnswers } from '../actions/answers/index';
 import { createReminder, getReminders } from '../actions/reminders/index';
 import { createMessage } from '../actions/messages/index';
 import { createConversation, getConversations } from '../actions/conversations/index';
+import { getReschedules } from '../actions/reschedules/index';
 
 // helpers
 import uploadImage from '../helpers/uploadImage';
@@ -518,12 +519,26 @@ class ImageUpload extends Component {
         Promise.all(createAnswers).then(async () => {
             const orderDate = (order.type === types.FULL_PLAN) ? moment(order.date).add(1, 'week').startOf('day') : moment(order.date).add(2, 'weeks').startOf('day');
             const orderDescription = (order.type === types.FULL_PLAN) ? vars.orderDescriptions.customer.fullPlan : vars.orderDescriptions.customer.assistedPlan;
-            const nextOrder = {
+
+            // set next order
+            let nextOrder = {
                 type: order.type,
                 date: orderDate,
                 customer: order.customer._id,
                 vendor: order.vendor._id,
                 description: orderDescription
+            }
+
+            // check for reschedules associated with order
+            const reschedules = await this.props.getReschedules(`order=${order._id}`);
+
+            // if reschedule is found {...}
+            if (reschedules.length > 0) {
+                const sortedReschedules = reschedules.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const reschedule = sortedReschedules[0];
+
+                // set date according to reschedule
+                nextOrder.date = reschedule.date;
             }
 
             // create next order
@@ -596,7 +611,7 @@ class ImageUpload extends Component {
 
             // get new reminders
             await this.props.getReminders(`status=pending&page=1&limit=50`);
-            
+
             // reset answers
             await this.props.setAnswers([]);
 
@@ -732,7 +747,8 @@ function mapDispatchToProps(dispatch) {
             createMessage,
             getConversations,
             createConversation,
-            setAnswers
+            setAnswers,
+            getReschedules
         },
         dispatch,
     );
