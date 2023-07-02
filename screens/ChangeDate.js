@@ -1,9 +1,12 @@
+// libraries
 import React, { Component } from 'react';
 import { SafeAreaView, View, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// UI components
 import Dropdown from '../components/UI/Dropdown';
 import Label from '../components/UI/Label';
 import DateSelect from '../components/UI/DateSelect';
@@ -11,38 +14,81 @@ import Button from '../components/UI/Button';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import { alert } from '../components/UI/SystemAlert';
 import Header from '../components/UI/Header';
+import Radio from '../components/UI/Radio';
+
+// actions
 import { updateOrder, getOrders } from '../actions/orders/index';
+import { createReschedule } from '../actions/reschedules/index';
+import { sendSms } from '../actions/sms/index';
+
+// styles
 import units from '../components/styles/units';
 import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 import card from '../components/styles/card';
 
+// types
+import types from '../vars/types';
+
 class ChangeDate extends Component {
-  state = {};
+
+  state = {
+    changeFutureEvents: 'no'
+  };
 
   async save() {
+
     // render loading indicator
-    await this.setState({ isLoading: true });
+    this.setState({ isLoading: true });
+    const currentOrder = this.props.route.params.order;
 
     // format new date
-    const newDate = {
-      date: this.state.date,
-      time: this.state.time,
+    let newDate = {
+      date: this.state.date
     };
 
+    if (currentOrder.time) {
+      newDate.time = this.state.time;
+    }
+
     // update order with new date
-    await this.props.updateOrder(this.props.route.params.order._id, newDate);
+    await this.props.updateOrder(currentOrder._id, newDate);
+
+    // if maintenance order {...}
+    if (currentOrder.type === types.FULL_PLAN || currentOrder.type === types.ASSISTED_PLAN) {
+      const nextOrderDate = (currentOrder.type === types.FULL_PLAN) ? moment(currentOrder.date).add(1, 'week').startOf('day') : moment(currentOrder.date).add(2, 'weeks').startOf('day');
+      if (this.state.changeFutureEvents === 'no') {
+        const reschedule = {
+          date: nextOrderDate,
+          order: currentOrder._id
+        }
+
+        // create a reschedule
+        await this.props.createReschedule(reschedule);
+      }
+
+      const sms = {
+        from: '8888289287',
+        to: currentOrder.customer.phone_number,
+        body: `Greetings from Yarden! Your upcoming garden service was rescheduled from ${moment(currentOrder.date).format('MM/DD/YYYY')} to ${moment(this.state.date).format('MM/DD/YYYY')}, please contact your gardener for any questions.`
+      }
+
+      // send sms notification to customer
+      await this.props.sendSms(sms);
+    }
 
     // get pending orders
     await this.props.getOrders(
-      `status=pending&start=none&end=${new Date(moment().add(1, 'year'))}`,
+      `status=${types.PENDING}&start=none&end=${new Date(moment().add(1, 'year'))}`,
     );
 
     // hide loading indicator
-    await this.setState({ isLoading: false });
+    this.setState({ isLoading: false });
+
+    const alertMessage = (this.props.user.type === types.CUSTOMER) ? `Your order date has been changed` : `Your order date has been changed and the customer has been notified`;
 
     // render success alert
-    alert('Your order date has been changed', 'Success!', () =>
+    alert(alertMessage, 'Success!', () =>
       this.props.navigation.navigate('Orders'),
     );
   }
@@ -61,7 +107,6 @@ class ChangeDate extends Component {
         }}>
         {/* loading indicator start */}
         <LoadingIndicator loading={isLoading} />
-        {/* loading indicator end */}
 
         <View
           style={{
@@ -87,7 +132,7 @@ class ChangeDate extends Component {
                 marginBottom: units.unit5,
               }}>
               <View>
-                <Label>Current Date</Label>
+                <Label>Order Date</Label>
                 <View
                   style={{
                     display: 'flex',
@@ -106,11 +151,13 @@ class ChangeDate extends Component {
                     }}>
                     {moment(order.date).format('MM/DD')}
                   </Text>
-                  <Text style={{ ...fonts.small, color: colors.greenD50 }}>
-                    {`${moment(order.time, `HH:mm:ss`).format(
-                      `h:mm A`,
-                    )}`}
-                  </Text>
+                  {(order.time) && (
+                    <Text style={{ ...fonts.small, color: colors.greenD50 }}>
+                      {`${moment(order.time, `HH:mm:ss`).format(
+                        `h:mm A`,
+                      )}`}
+                    </Text>
+                  )}
                 </View>
               </View>
 
@@ -147,20 +194,22 @@ class ChangeDate extends Component {
                     }}>
                     {date ? moment(date).format('MM/DD') : 'mm/dd'}
                   </Text>
-                  <Text
-                    style={{
-                      ...fonts.small,
-                      color: colors.greenE75,
-                      fontWeight: 'bold',
-                    }}>
-                    {time ? `${moment(time, `HH:mm:ss`).format(
-                      `h:mm A`,
-                    )}` : 'Time...'}
-                  </Text>
+                  {(order.time) && (
+                    <Text
+                      style={{
+                        ...fonts.small,
+                        color: colors.greenE75,
+                        fontWeight: 'bold',
+                      }}>
+                      {time ? `${moment(time, `HH:mm:ss`).format(
+                        `h:mm A`,
+                      )}` : 'Time...'}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
-            <View style={{marginBottom: units.unit4}}>
+            <View style={{ marginBottom: units.unit4 }}>
               <DateSelect
                 mode="date"
                 value={date}
@@ -175,62 +224,87 @@ class ChangeDate extends Component {
                 appearance="dropdown"
               />
             </View>
-            <View>
-              <Dropdown
-                label="Time"
-                onChange={value => this.setState({ time: value })}
-                options={[
-                  {
-                    label: 'Same Time',
-                    value: order.time,
-                  },
-                  {
-                    label: '9:00 AM',
-                    value: '09',
-                  },
-                  {
-                    label: '10:00 AM',
-                    value: '10',
-                  },
-                  {
-                    label: '11:00 AM',
-                    value: '11',
-                  },
-                  {
-                    label: '12:00 PM',
-                    value: '12',
-                  },
-                  {
-                    label: '1:00 PM',
-                    value: '13',
-                  },
-                  {
-                    label: '2:00 PM',
-                    value: '14',
-                  },
-                  {
-                    label: '3:00 PM',
-                    value: '15',
-                  },
-                  {
-                    label: '4:00 PM',
-                    value: '16',
-                  },
-                  {
-                    label: '5:00 PM',
-                    value: '17',
-                  },
-                ]}
-                placeholder="Choose a new time..."
-              />
-            </View>
+            {(order.time) && (
+              <View>
+                <Dropdown
+                  label="Time"
+                  onChange={value => this.setState({ time: value })}
+                  options={[
+                    {
+                      label: 'Same Time',
+                      value: order.time,
+                    },
+                    {
+                      label: '9:00 AM',
+                      value: '09',
+                    },
+                    {
+                      label: '10:00 AM',
+                      value: '10',
+                    },
+                    {
+                      label: '11:00 AM',
+                      value: '11',
+                    },
+                    {
+                      label: '12:00 PM',
+                      value: '12',
+                    },
+                    {
+                      label: '1:00 PM',
+                      value: '13',
+                    },
+                    {
+                      label: '2:00 PM',
+                      value: '14',
+                    },
+                    {
+                      label: '3:00 PM',
+                      value: '15',
+                    },
+                    {
+                      label: '4:00 PM',
+                      value: '16',
+                    },
+                    {
+                      label: '5:00 PM',
+                      value: '17',
+                    },
+                  ]}
+                  placeholder="Choose a new time..."
+                />
+              </View>
+            )}
+            {(order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) && (
+              <View>
+                <View
+                  style={{
+                    ...card
+                  }}>
+                  <Header type="h6" style={{ marginBottom: units.unit4 }}>
+                    Change all future events?
+                  </Header>
+                  <Radio
+                    defaultValue={'no'}
+                    options={
+                      [
+                        { name: 'YES', value: 'yes', helperText: `Schedule next order ${order.type === types.FULL_PLAN ? '1 week' : '2 weeks'} from newly updated order date` },
+                        { name: 'NO', value: 'no', helperText: `Schedule next order ${order.type === types.FULL_PLAN ? '1 week' : '2 weeks'} from original date ${moment(order.date).format('MM/DD/YYYY')}` }
+                      ]
+                    }
+                    onChange={(value) => this.setState({
+                      changeFutureEvents: value
+                    })}
+                  />
+                </View>
+              </View>
+            )}
           </View>
-
           <View style={{ marginTop: units.unit4 }}>
             <Button
               text="Save Changes"
               onPress={() => this.save()}
-              disabled={!date || !time}
+              disabled={!date || (order.time && !time)}
               icon={
                 <Ionicons name="save" size={fonts.h4} color={colors.purpleB} />
               }
@@ -244,17 +318,25 @@ class ChangeDate extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+      user: state.user
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       updateOrder,
       getOrders,
+      createReschedule,
+      sendSms
     },
     dispatch,
   );
 }
 
-ChangeDate = connect(null, mapDispatchToProps)(ChangeDate);
+ChangeDate = connect(mapStateToProps, mapDispatchToProps)(ChangeDate);
 
 export default ChangeDate;
 

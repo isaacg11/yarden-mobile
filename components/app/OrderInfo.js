@@ -21,19 +21,22 @@ import formatWateringSchedule from '../../helpers/formatWateringSchedule';
 // vars
 import vars from '../../vars/index';
 
+// types
+import types from '../../vars/types';
+
 class OrderInfo extends Component {
 
     formatOrderDescription(order) {
-        const userType = (this.props.user.type !== 'customer') ? 'vendor' : 'customer';
-        if (order.type === 'yard assessment') {
+        const userType = (this.props.user.type !== types.CUSTOMER) ? 'vendor' : 'customer';
+        if (order.type === types.YARD_ASSESSMENT) {
             return vars.orderDescriptions[userType].yardAssessment;
-        } else if (order.type === 'crop rotation') {
+        } else if (order.type === types.CROP_ROTATION) {
             return vars.orderDescriptions[userType].cropRotation;
-        } else if (order.type === 'full plan') {
+        } else if (order.type === types.FULL_PLAN) {
             return vars.orderDescriptions[userType].fullPlan;
-        } else if (order.type === 'assisted plan') {
+        } else if (order.type === types.ASSISTED_PLAN) {
             return vars.orderDescriptions[userType].assistedPlan;
-        } else if (order.type === 'initial planting') {
+        } else if (order.type === types.INITIAL_PLANTING) {
             return vars.orderDescriptions[userType].initialPlanting;
         } else {
             return order.description;
@@ -50,6 +53,20 @@ class OrderInfo extends Component {
         } = this.props;
 
         const orderDescription = this.formatOrderDescription(order);
+        let renderDateChange = false;
+        if(
+            user.type === types.CUSTOMER && 
+            order.status === types.PENDING && 
+            order.type === types.YARD_ASSESSMENT
+        ) {
+            renderDateChange = true;
+        } else if(
+            user.type === types.GARDENER &&
+            order.status === types.PENDING && 
+            (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN)
+        ) {
+            renderDateChange = true;
+        }
 
         return (
             <View>
@@ -78,7 +95,7 @@ class OrderInfo extends Component {
                                     {moment(order.date).format('MM/DD/YYYY')}
                                 </Text>
                             </View>
-                            {(order.status === 'pending' && order.type === 'yard assessment') && (
+                            {renderDateChange && (
                                 <Link
                                     text="Change"
                                     onPress={() => onChangeDate()}
@@ -91,7 +108,6 @@ class OrderInfo extends Component {
                                     )}
                                 />
                             )}
-
                         </View>
                         <Paragraph style={{ ...fonts.label, marginTop: units.unit5 }}>
                             Member/Address

@@ -27,6 +27,7 @@ import plantActivities from './plantActivities';
 import reports from './reports';
 import pagination from './pagination';
 import plantList from './plantList';
+import reschedules from './reschedules';
 
 const rootReducer = combineReducers({
     user,
@@ -56,7 +57,8 @@ const rootReducer = combineReducers({
     plantActivities,
     reports,
     pagination,
-    plantList
+    plantList,
+    reschedules
 })
 
 export default rootReducer;
