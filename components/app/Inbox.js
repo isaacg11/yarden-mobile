@@ -67,29 +67,36 @@ class Inbox extends Component {
   }
 
   async setInbox() {
+    
     // show loading indicator
     this.setState({ isLoading: true });
 
-    // set initial conversations
-    let conversations = [];
+    let getConversations = [];
 
     // iterate through conversations
-    this.props.conversations.forEach(async (conversation, index) => {
+    this.props.conversations.forEach((conversation) => {
 
-      // get messages for conversation
-      const messages = await this.props.getMessages(
-        `conversation_id=${conversation._id}`,
+      getConversations.push(
+        new Promise(async resolve => {
+
+          // get messages for conversation
+          const messages = await this.props.getMessages(
+            `conversation_id=${conversation._id}`,
+          );
+
+          resolve(messages);
+        }),
       );
+    });
 
-      // if messages, add messages to conversations
-      if (messages.length > 0) conversations.push(messages);
+    // get conversations
+    Promise.all(getConversations).then(async (conversations) => {
 
-      // if last iteration of loop, set inbox
-      if (index === this.props.conversations.length - 1)
-        this.setState({
-          inbox: conversations,
-          isLoading: false
-        });
+      // hide loading indicator
+      this.setState({ 
+        inbox: conversations,
+        isLoading: false 
+      });
     });
   }
 
