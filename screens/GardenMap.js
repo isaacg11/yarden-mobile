@@ -1609,9 +1609,9 @@ class GardenMap extends Component {
   renderHelperText(serviceReport) {
     switch (serviceReport) {
       case types.DEAD_PLANTS:
-        return 'Select all dead plants';
+        return 'Select dead plants';
       case types.HARVESTED_PLANTS:
-        return 'Select all harvested plants';
+        return 'Select harvested plants';
       case types.NEW_PLANTS:
         return 'Add new plants';
       default:
@@ -2123,7 +2123,7 @@ class GardenMap extends Component {
     ) {
       return (
         <View>
-          <Header style={{ marginBottom: units.unit3, textTransform: 'none' }}>
+          <Header style={{ marginBottom: units.unit3, marginLeft: units.unit4, textTransform: 'none' }}>
             {this.renderHelperText(serviceReport)}
           </Header>
           <View
