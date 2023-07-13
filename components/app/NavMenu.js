@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { View, Modal, TouchableOpacity, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // types
 import types from '../../vars/types';
@@ -26,12 +27,23 @@ class NavMenu extends Component {
 
     state = {};
 
+    async componentDidMount() {
+        const secondaryUser = await AsyncStorage.getItem(`secondary`);
+        this.setState({ 
+            secondary: secondaryUser
+        })
+    }
+
     render() {
         const {
             user,
             isOpen = false,
             close
         } = this.props;
+
+        const {
+            secondary
+        } = this.state;
 
         return (
             <Modal
@@ -47,7 +59,7 @@ class NavMenu extends Component {
                             style={menuItemContainerStyles}>
                             <Text style={menuItemTextStyles}>Home</Text>
                         </TouchableOpacity>
-                        {(user.type === types.CUSTOMER) && (
+                        {(user.type === types.CUSTOMER && !secondary) && (
                             <View>
                                 <TouchableOpacity
                                     onPress={() => close('Referrals')}
@@ -61,11 +73,13 @@ class NavMenu extends Component {
                                 </TouchableOpacity>
                             </View>
                         )}
-                        <TouchableOpacity
-                            onPress={() => close('Settings')}
-                            style={menuItemContainerStyles}>
-                            <Text style={menuItemTextStyles}>Settings</Text>
-                        </TouchableOpacity>
+                        {(!secondary) && (
+                            <TouchableOpacity
+                                onPress={() => close('Settings')}
+                                style={menuItemContainerStyles}>
+                                <Text style={menuItemTextStyles}>Settings</Text>
+                            </TouchableOpacity>
+                        )}
                         <TouchableOpacity
                             onPress={() => close('Log Out')}
                             style={menuItemContainerStyles}>
