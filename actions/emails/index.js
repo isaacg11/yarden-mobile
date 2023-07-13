@@ -2,9 +2,10 @@ import axios from 'axios'
 import { API_URL } from '../../helpers/getUrl';
 import config from '../../config/index';
 
-export function sendEmail(info) {
+export function sendEmail(info, query) {
     return async function() {
         try {
+            const q = (query) ? `?${query}` : '';
             const email = {
                 to: info.email,
                 subject: info.subject,
@@ -57,7 +58,7 @@ export function sendEmail(info) {
                 '</table>'
             }
     
-            axios.post(`${API_URL}/emails`, email);
+            axios.post(`${API_URL}/emails${q}`, email);
         }
 
         catch(error) {

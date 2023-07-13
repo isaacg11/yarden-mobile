@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // UI components
 import Orders from '../../screens/Orders';
@@ -62,6 +63,7 @@ class BottomTabNavigator extends Component {
   }
 
   async setInbox() {
+    const secondary = await AsyncStorage.getItem(`secondary`);
     if (this.props.conversations.length > 0) {
       // iterate through conversations
       this.props.conversations.forEach(async (conversation, index) => {
@@ -76,11 +78,18 @@ class BottomTabNavigator extends Component {
 
         // if last iteration of loop, set inbox and render UI
         if (index === this.props.conversations.length - 1)
-          this.setState({ inbox: conversations, renderTabNavigator: true });
+          this.setState({ 
+            inbox: conversations, 
+            renderTabNavigator: true,
+            secondary
+          });
       });
     } else {
       // render UI
-      this.setState({ renderTabNavigator: true });
+      this.setState({ 
+        renderTabNavigator: true,
+        secondary 
+      });
     }
   }
 
@@ -126,7 +135,12 @@ class BottomTabNavigator extends Component {
   }
 
   render() {
-    const { inbox, renderTabNavigator } = this.state;
+    const { 
+      inbox, 
+      renderTabNavigator,
+      secondary 
+    } = this.state;
+
     const {
       quotes,
       filters,
@@ -210,30 +224,32 @@ class BottomTabNavigator extends Component {
               })}
             />
 
-            <Tab.Screen
-              name="Messages"
-              component={Messages}
-              options={{
-                tabBarBadge: inbox.length > 0 ? inbox.length : null,
-                tabBarBadgeStyle: {
-                  backgroundColor: '#ff6060',
-                  color: 'white',
-                  fontWeight: 'bold',
-                },
-              }}
-              listeners={({ navigation }) => ({
-                tabPress: async e => {
-                  // Prevent default action
-                  e.preventDefault();
+            {(!secondary) && (
+              <Tab.Screen
+                name="Messages"
+                component={Messages}
+                options={{
+                  tabBarBadge: inbox.length > 0 ? inbox.length : null,
+                  tabBarBadgeStyle: {
+                    backgroundColor: '#ff6060',
+                    color: 'white',
+                    fontWeight: 'bold',
+                  },
+                }}
+                listeners={({ navigation }) => ({
+                  tabPress: async e => {
+                    // Prevent default action
+                    e.preventDefault();
 
-                  // get conversations
-                  await this.props.getConversations(`users=${user._id}`);
+                    // get conversations
+                    await this.props.getConversations(`users=${user._id}`);
 
-                  // navigate to messages
-                  navigation.jumpTo('Messages');
-                },
-              })}
-            />
+                    // navigate to messages
+                    navigation.jumpTo('Messages');
+                  },
+                })}
+              />
+            )}
 
             {/* NOTE: temporarily removing shop until e-commerce is possible
             Author: Isaac G. 2/28/23 */}

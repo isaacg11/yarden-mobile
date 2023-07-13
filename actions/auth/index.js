@@ -13,6 +13,10 @@ export function login(user) {
             const response = await axios.post(`${API_URL}/users/login`, user);
             AsyncStorage.setItem(`auth-token`, response.data.token);
             AsyncStorage.setItem(`auth-token-exp`, moment(moment().add('180', 'days')).format());
+            if(response.data.secondary) {
+                AsyncStorage.setItem(`secondary`, 'true');
+            }
+
             dispatch({type: GET_USER, payload: response.data.user});
             return response.data.user;
         }

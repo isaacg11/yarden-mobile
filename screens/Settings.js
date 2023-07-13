@@ -13,13 +13,20 @@ import PaymentMethod from '../components/app/PaymentMethod';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
 import Button from '../components/UI/Button';
 import { alert } from '../components/UI/SystemAlert';
+import CircularButton from '../components/UI/CircularButton';
+import Dialog from '../components/UI/Dialog';
+import Input from '../components/UI/Input';
 
 // actions
 import { updateUser } from '../actions/user';
+import { getUsers } from '../actions/users';
 import { getSubscription } from '../actions/subscriptions/index';
+import { sendEmail } from '../actions/emails/index';
 
 // helpers
 import formatPhoneNumber from '../helpers/formatPhoneNumber';
+import capitalize from '../helpers/capitalize';
+import { APP_URL } from '../helpers/getUrl';
 
 // styles
 import units from '../components/styles/units';
@@ -34,7 +41,16 @@ class Settings extends Component {
     state = {
         sms: this.props.user.notifications.sms,
         email: this.props.user.notifications.email,
-        deleteAccountModalIsOpen: false
+        deleteAccountModalIsOpen: false,
+        deleteSecondaryUserModalIsOpen: false,
+        addAccountModalIsOpen: false,
+        invitationSent: false,
+        secondaryEmail: '',
+        selectedSecondaryUser: null
+    }
+
+    componentDidMount() {
+        this.props.getUsers(`primary=${this.props.user._id}`);
     }
 
     updateNotificationSettings(notificationType, value) {
@@ -69,7 +85,7 @@ class Settings extends Component {
     deleteAccount() {
 
         // show loading indicator
-        this.setState({ isLoading: true, deleteAccountModalIsOpen: false }, () => {
+        this.setState({ isLoading: true }, () => {
 
             // wait 1 second to let the loading indicator render
             setTimeout(async () => {
@@ -84,7 +100,7 @@ class Settings extends Component {
                     if (subscription.status === 'active' || subscription.status === 'trialing') {
 
                         // hide loading indicator
-                        this.setState({ isLoading: false });
+                        this.setState({ isLoading: false, deleteAccountModalIsOpen: false });
 
                         // show warning
                         return alert('You need to cancel your membership plan before you can delete your account. Please go to the Membership page to manage your plan.');
@@ -95,7 +111,7 @@ class Settings extends Component {
                     await this.props.updateUser(null, { dtDeleted: new Date() });
 
                     // hide loading indicator
-                    this.setState({ isLoading: false });
+                    this.setState({ isLoading: false, deleteAccountModalIsOpen: false });
 
                     // redirect user to logout
                     this.props.navigation.navigate('Log Out');
@@ -104,17 +120,74 @@ class Settings extends Component {
         });
     }
 
+    addSecondaryAccount() {
+
+        // show loading indicator
+        this.setState({ isLoading: true }, () => {
+
+            // wait 1 second to let the loading indicator render
+            setTimeout(async () => {
+                const url = `${APP_URL}/invitation?primary=${this.props.user._id}&secondary=${this.state.secondaryEmail}`;
+
+                // format email
+                const accountInvitation = {
+                    email: this.state.secondaryEmail,
+                    subject: `${capitalize(this.props.user.first_name)} invited you to view their Yarden account`,
+                    label: 'Account Invitation',
+                    body: (
+                        '<p>Greetings from Yarden!</p>' +
+                        `<p style="margin-bottom: 15px;">You have been invited to view ${capitalize(this.props.user.first_name)}'s Yarden account, click the link below to view.</p>` +
+                        `<div><a href="${url}">${url}</a></div>`
+                    )
+                }
+
+                // send email
+                await this.props.sendEmail(accountInvitation, `override=${true}`);
+
+                // hide loading indicator
+                this.setState({
+                    isLoading: false,
+                    invitationSent: true
+                })
+            })
+        }, 1000)
+    }
+
+    deleteSecondaryUser() {
+
+        // show loading indicator
+        this.setState({ isLoading: true }, async () => {
+
+            // delete user
+            await this.props.updateUser(`userId=${this.state.selectedSecondaryUser._id}`, { dtDeleted: new Date() }, true);
+
+            // get updated list of secondary users
+            await this.props.getUsers(`primary=${this.props.user._id}`);
+
+            // hide loading indicator
+            this.setState({ 
+                isLoading: false, 
+                deleteSecondaryUserModalIsOpen: false 
+            });
+        })
+    }
+
     render() {
 
         const {
-            user
+            user,
+            users
         } = this.props;
 
         const {
             isLoading,
             email,
             sms,
-            deleteAccountModalIsOpen
+            deleteAccountModalIsOpen,
+            deleteSecondaryUserModalIsOpen,
+            addAccountModalIsOpen,
+            invitationSent,
+            secondaryEmail
         } = this.state;
 
         return (
@@ -167,7 +240,7 @@ class Settings extends Component {
 
                             {/* notification management */}
                             {user.type === types.CUSTOMER && (
-                                <Card>
+                                <Card style={{ marginBottom: units.unit4 }}>
                                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <View>
                                             <Paragraph style={{ fontWeight: 'bold' }}>Text Notifications</Paragraph>
@@ -196,6 +269,45 @@ class Settings extends Component {
                                     </View>
                                 </Card>
                             )}
+
+                            {/* account users */}
+                            {user.type === types.CUSTOMER && (
+                                <Card>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: units.unit3 }}>
+                                        <Paragraph style={{ fontWeight: 'bold', marginBottom: units.unit3 }}>Account Users</Paragraph>
+                                        <CircularButton
+                                            small
+                                            variant="btn2"
+                                            icon={(<Ionicons
+                                                name={'add-outline'}
+                                                color={colors.purpleB}
+                                                size={fonts.h3}
+                                            />)}
+                                            onPress={() => this.setState({ addAccountModalIsOpen: true })}
+                                        />
+                                    </View>
+                                    <View>
+                                        {users.length > 0 ? users.map((u, index) => (
+                                            <View key={index} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Paragraph>
+                                                    {capitalize(u.first_name)} {capitalize(u.last_name)}
+                                                </Paragraph>
+                                                <TouchableOpacity onPress={() => this.setState({ deleteSecondaryUserModalIsOpen: true, selectedSecondaryUser: u })}>
+                                                    <Ionicons
+                                                        name={'close-outline'}
+                                                        color={colors.purpleB}
+                                                        size={fonts.h2}
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
+                                        )) : (
+                                            <View>
+                                                <Paragraph>Invite others to view your account</Paragraph>
+                                            </View>
+                                        )}
+                                    </View>
+                                </Card>
+                            )}
                         </View>
                     </ScrollView>
                 </View>
@@ -210,23 +322,10 @@ class Settings extends Component {
                 )}
 
                 {/* delete account modal */}
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={deleteAccountModalIsOpen}>
-                    <View style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100%',
-                        paddingHorizontal: units.unit5
-                    }}>
-                        <View style={{
-                            backgroundColor: colors.white,
-                            padding: units.unit5,
-                            borderRadius: units.unit4
-                        }}>
+                <Dialog
+                    isOpen={deleteAccountModalIsOpen}
+                    content={(
+                        <View>
                             <Header type="h5" style={{ color: colors.purpleB, textAlign: 'center', marginBottom: units.unit3, marginTop: units.unit6 }}>
                                 (⌒-⌒; )
                             </Header>
@@ -247,8 +346,99 @@ class Settings extends Component {
                                 />
                             </View>
                         </View>
-                    </View>
-                </Modal>
+                    )}
+                />
+
+                {/* add account user modal */}
+                <Dialog
+                    isOpen={addAccountModalIsOpen}
+                    content={(
+                        <View>
+                            {invitationSent ? (
+                                <View>
+                                    <Header type="h5" style={{ color: colors.purpleB, textAlign: 'center', marginBottom: units.unit3, marginTop: units.unit3 }}>
+                                        Success!
+                                    </Header>
+                                    <Text
+                                        style={{
+                                            fontSize: fonts.h1,
+                                            textAlign: 'center',
+                                            color: colors.purpleB,
+                                            marginBottom: units.unit4
+                                        }}>
+                                        ٩( ᐛ )و
+                                    </Text>
+                                    <Text style={{ textAlign: 'center', marginBottom: units.unit3 }}>
+                                        Great job, your invite was sent. Your new account user will appear once they have accepted the invite.
+                                    </Text>
+                                    <Button
+                                        text="Close"
+                                        variant="btn5"
+                                        onPress={() => this.setState({ addAccountModalIsOpen: false, invitationSent: false, secondaryEmail: '' })}
+                                    />
+                                </View>
+                            ) : (
+                                <View>
+                                    <Header type="h5" style={{
+                                        color: colors.purpleB,
+                                        textAlign: 'center',
+                                        marginBottom: units.unit3,
+                                        marginTop: units.unit3
+                                    }}>
+                                        Add new user?
+                                    </Header>
+                                    <Text style={{ textAlign: 'center', marginBottom: units.unit3 }}>
+                                        Invite a family member to view your account
+                                    </Text>
+                                    <Input
+                                        label="Email"
+                                        onChange={value => this.setState({ secondaryEmail: value })}
+                                        value={secondaryEmail}
+                                        placeholder="Ex. johnsmith@gmail.com"
+                                    />
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: units.unit5 }}>
+                                        <Button
+                                            text="Cancel"
+                                            variant="btn5"
+                                            onPress={() => this.setState({ addAccountModalIsOpen: false })}
+                                        />
+                                        <Button
+                                            text="Add"
+                                            variant="button"
+                                            disabled={!secondaryEmail}
+                                            onPress={() => this.addSecondaryAccount()}
+                                        />
+                                    </View>
+                                </View>
+                            )}
+                        </View>
+                    )}
+                />
+
+                {/* delete secondary user modal */}
+                <Dialog
+                    isOpen={deleteSecondaryUserModalIsOpen}
+                    content={(
+                        <View>
+                            <Header type="h5" style={{ color: colors.purpleB, textAlign: 'center', marginBottom: units.unit3, marginTop: units.unit3 }}>
+                                Are you sure?
+                            </Header>
+                            <Text style={{ color: colors.greenD50, fontSize: 12 }}>This person will no longer have access to your account after being removed.</Text>
+                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: units.unit5 }}>
+                                <Button
+                                    text="Delete"
+                                    variant="btn5"
+                                    onPress={() => this.deleteSecondaryUser()}
+                                />
+                                <Button
+                                    text="Cancel"
+                                    variant="button"
+                                    onPress={() => this.setState({ deleteSecondaryUserModalIsOpen: false })}
+                                />
+                            </View>
+                        </View>
+                    )}
+                />
             </SafeAreaView>
         )
     }
@@ -256,7 +446,8 @@ class Settings extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        user: state.user,
+        users: state.users
     }
 }
 
@@ -264,7 +455,9 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         {
             updateUser,
-            getSubscription
+            getSubscription,
+            sendEmail,
+            getUsers
         },
         dispatch,
     );
