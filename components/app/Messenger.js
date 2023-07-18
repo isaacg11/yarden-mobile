@@ -25,9 +25,14 @@ import {
   updateMessage,
 } from '../../actions/messages/index';
 import { getConversations } from '../../actions/conversations/index';
+import { sendSms } from '../../actions/sms/index';
 
 // helpers
 import uploadImage from '../../helpers/uploadImage';
+import capitalize from '../../helpers/capitalize';
+
+// config
+import config from '../../config/index';
 
 // styles
 import units from '../../components/styles/units';
@@ -216,6 +221,15 @@ class Messenger extends Component {
     const messages = await this.props.getMessages(
       `conversation_id=${this.props.conversationId}`,
     );
+
+    const sms = {
+      from: config.phoneNumber,
+      to: this.state.conversation[0].sender.phone_number.replace(/\D/g, ''),
+      body: `Greetings from Yarden! You just received a new message from ${capitalize(this.props.user.first_name)}, log in to your Yarden account to view it.`
+    }
+
+    // send sms notification
+    await this.props.sendSms(sms);
 
     // update UI
     this.setState({
@@ -514,6 +528,7 @@ function mapDispatchToProps(dispatch) {
       getMessages,
       updateMessage,
       getConversations,
+      sendSms
     },
     dispatch,
   );
