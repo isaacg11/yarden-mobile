@@ -76,6 +76,7 @@ import ReminderDetails from './screens/ReminderDetails';
 import PlantsSelected from './screens/PlantsSelected';
 import NewBeds from './screens/NewBeds';
 import BedPlants from './screens/BedPlants';
+import PlantSelectionType from './screens/PlantSelectionType';
 
 // UI components
 import Link from './components/UI/Link';
@@ -899,6 +900,16 @@ function App() {
             <Stack.Screen
               name="Bed Plants"
               component={BedPlants}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Plant Selection Type"
+              component={PlantSelectionType}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,

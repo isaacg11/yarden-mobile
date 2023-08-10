@@ -17,6 +17,7 @@ import QuoteInfo from '../components/app/QuoteInfo';
 import Button from '../components/UI/Button';
 import Link from '../components/UI/Link';
 
+// types
 import types from '../vars/types';
 
 // styles
@@ -32,7 +33,7 @@ class QuoteDetails extends Component {
     // if quote is for installation or revive {...}
     if (quote.type === types.INSTALLATION || quote.type === types.REVIVE) {
       // navigate to garden screen
-      this.props.navigation.navigate('Garden', quote);
+      this.props.navigation.navigate('Plant Selection Type', quote);
     } else {
       // navigate to checkout screen
       this.props.navigation.navigate('Checkout', quote);
