@@ -73,6 +73,7 @@ class GardenMap extends Component {
     scale: 1,
     harvestInfo: [],
     plantQueuedToMove: false,
+    isLoading: true
   };
 
   translateX = Animated.Value;
@@ -83,26 +84,25 @@ class GardenMap extends Component {
   };
 
   componentDidMount() {
-    // show loading indicator
-    this.setState({ isLoading: true });
-
-    // set initial plot points list
+    const {
+      plantList,
+      rows,
+      columns,
+      user,
+      order,
+      beds,
+      drafts,
+      bedId
+    } = this.props;
     let plotPoints = [];
-
-    // set initial plot points id
     let plotPointId = 0;
+    const season = getSeason();
+    let bedsOutOfSeason = false;
 
-    // iterate rows
-    for (let i = 0; i < this.props.rows; i++) {
-      // set initial row value
+    for (let i = 0; i < rows; i++) {
       let row = [];
-
-      // iterate columns
-      for (let j = 0; j < this.props.columns; j++) {
-        // set plot point id
+      for (let j = 0; j < columns; j++) {
         plotPointId += 1;
-
-        // set row
         row.push({
           id: plotPointId,
           plant: null,
@@ -110,20 +110,14 @@ class GardenMap extends Component {
         });
       }
 
-      // set plot points
       plotPoints.push(row);
     }
 
-    // if current user is a gardener {...}
-    if (this.props.user.type === types.GARDENER) {
-
-      // if order type is initial planting {...}
-      if (this.props.order.type === types.INITIAL_PLANTING) {
-
-        // if drafts are found {...}
-        if (this.props.drafts.length > 0) {
-          const match = this.props.drafts.find(
-            draft => draft.key === this.props.bedId,
+    if (user.type === types.GARDENER) {
+      if (order.type === types.INITIAL_PLANTING) {
+        if (drafts.length > 0) {
+          const match = drafts.find(
+            draft => draft.key === bedId,
           );
 
           // if draft key matches selected bed id {...}
@@ -133,24 +127,13 @@ class GardenMap extends Component {
           }
         }
       } else {
-
-        // get beds
-        const beds = this.props.beds;
-        let bedsOutOfSeason = false;
-
-        // if crop rotation {...}
-        if (this.props.order.type === types.CROP_ROTATION) {
-
-          // get current season
-          const season = getSeason();
-
-          // iterate through beds
+        if (order.type === types.CROP_ROTATION) {
           beds.forEach((bed) => {
             bed.plot_points.forEach((rows) => {
               rows.forEach((column) => {
 
                 // if plant is not in season {...}
-                if (column.plant && ((column.plant.id.season !== season) && (column.plant.id.season !== 'annual'))) {
+                if (column.plant && ((column.plant.id.season !== season) && (column.plant.id.season !== types.ANNUAL))) {
 
                   // flag the beds as out of season
                   bedsOutOfSeason = true;
@@ -163,7 +146,7 @@ class GardenMap extends Component {
         // if plants in bed are in season {...}
         if (bedsOutOfSeason === false) {
           const match = beds.find(
-            bed => bed.key === this.props.bedId
+            bed => bed.key === bedId
           );
 
           // if bed key matches selected bed id {...}
@@ -174,10 +157,8 @@ class GardenMap extends Component {
           }
         }
       }
-    } else if (this.props.user.type === types.CUSTOMER) {
-      // if current user is a customer {...}
-
-      const match = this.props.beds.find(bed => bed.key === this.props.bedId);
+    } else if (user.type === types.CUSTOMER) {
+      const match = beds.find(bed => bed.key === bedId);
 
       // if bed key matches selected bed id {...}
       if (match) {
@@ -186,26 +167,22 @@ class GardenMap extends Component {
       }
     }
 
-    // set plants
     let vegetables = false;
     let herbs = false;
     let fruit = false;
 
-    // if gardener {...}
-    if (this.props.user.type === types.GARDENER) {
-
-      // if initial planting {...}
-      if (this.props.order.type === types.INITIAL_PLANTING) {
+    if (user.type === types.GARDENER) {
+      if (order.type === types.INITIAL_PLANTING) {
 
         // set plants using bid line items
-        vegetables = this.props.order.bid.line_items.vegetables;
-        herbs = this.props.order.bid.line_items.herbs;
-        fruit = this.props.order.bid.line_items.fruit;
-      } else if (this.props.order.type === types.CROP_ROTATION) { // if crop rotation {...}
-        // set plants using user garden info
-        vegetables = this.props.order.customer.garden_info.vegetables;
-        herbs = this.props.order.customer.garden_info.herbs;
-        fruit = this.props.order.customer.garden_info.fruit;
+        vegetables = order.bid.line_items.vegetables;
+        herbs = order.bid.line_items.herbs;
+        fruit = order.bid.line_items.fruit;
+      } else if (order.type === types.CROP_ROTATION) {
+        // set plants using plant list
+        vegetables = plantList.vegetables;
+        herbs = plantList.herbs;
+        fruit = plantList.fruit;
       }
     }
 
@@ -215,7 +192,7 @@ class GardenMap extends Component {
       plotPoints,
       vegetables,
       herbs,
-      fruit,
+      fruit
     });
   }
 
@@ -1379,13 +1356,13 @@ class GardenMap extends Component {
         <TouchableOpacity
           style={{
             display:
-              this.state.selectedPlotPoint && this.state.selectedPlotPoint.plant
+              this.state.selectedPlotPoint?.plant
                 ? 'none'
                 : 'flex',
           }}
           onPress={async () => {
             // if plant already in selected plot point {...}
-            if (this.state.selectedPlotPoint.plant) {
+            if (this.state.selectedPlotPoint?.plant) {
               // render warning
               alert(
                 'The selected space already has a plant. If you want to replace with a different plant, delete the current plant and try again.',
@@ -1900,7 +1877,7 @@ class GardenMap extends Component {
                 const totalDaysToMature = column.plant?.id?.days_to_mature;
                 const currentDays = totalDaysToMature - daysLeft;
                 let progress = (currentDays / totalDaysToMature) * 100;
-                if(progress > 100) progress = 100;
+                if (progress > 100) progress = 100;
 
                 // render plot point
                 return (
@@ -2163,7 +2140,7 @@ class GardenMap extends Component {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingHorizontal: units.unit4
+            paddingHorizontal: units.unit4,
           }}>
           <Paragraph style={{ ...fonts.label }}>
             Garden Bed #{this.props.bedId}
@@ -2184,9 +2161,7 @@ class GardenMap extends Component {
     const { isEditingName, bedName } = this.state;
     const { user } = this.props;
 
-    // if customer {...}
     if (user.type === types.CUSTOMER) {
-      // if editing name {...}
       if (isEditingName) {
         // render edit inputs
         return (
@@ -2248,9 +2223,6 @@ class GardenMap extends Component {
         );
       }
     } else if (user.type === types.GARDENER) {
-      // if gardener {...}
-
-      // if not beds or drafts found {...}
       if (
         !this.props.drafts.find(draft => draft.key === this.props.bedId) &&
         !this.props.beds.find(bed => bed.key === this.props.bedId)
@@ -2284,6 +2256,20 @@ class GardenMap extends Component {
 
   getMapScale() {
     switch (this.props.columns) {
+      case 12: // 6 ft width
+        return {
+          transform: [
+            {
+              scale: 0.7
+            },
+            {
+              translateY: -70 * 5
+            },
+            {
+              translateX: 0
+            }
+          ],
+        }
       case 10: // 5 ft width
         return {
           transform: [
@@ -2341,7 +2327,6 @@ class GardenMap extends Component {
       fruit,
       harvestMenuIsOpen,
       newPlantMenuIsOpen,
-      plotPoints
     } = this.state;
 
     const {
@@ -2356,6 +2341,9 @@ class GardenMap extends Component {
     } = this.props;
 
     const mapScale = this.getMapScale();
+    const bed = beds.find((b) => b.key === bedId);
+    const draft = drafts.find((d) => d.key === bedId);
+    const bedInfoMarginBottom = (draft?.width > 48 || bed?.width > 48) ? (units.unit6 + units.unit5) : units.unit4;
 
     return (
       <SafeAreaView
@@ -2385,7 +2373,6 @@ class GardenMap extends Component {
                   await this.setPlant(p);
 
                   if (order.type === types.CROP_ROTATION) {
-                    const bed = beds.find((b) => b.key === bedId);
 
                     // update bed
                     await this.props.updateBed(bed._id, { plot_points: this.state.plotPoints });
@@ -2416,8 +2403,6 @@ class GardenMap extends Component {
                     },
                   ],
                 });
-
-                const bed = beds.find(b => b.key === bedId);
 
                 // update bed
                 await this.props.updateBed(bed._id, {
@@ -2464,7 +2449,7 @@ class GardenMap extends Component {
                       if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) {
                         this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
                       } else if (order.type === types.INITIAL_PLANTING) {
-                        const publishedDraft = drafts.find((draft) => draft.key === this.props.bedId && draft.published);
+                        const publishedDraft = drafts.find((d) => d.key === this.props.bedId && d.published);
                         if (publishedDraft) {
                           this.selectPlotPoint(selectedPlotPoint, selectedRowIndex, selectedColumnIndex);
                         }
@@ -2483,7 +2468,7 @@ class GardenMap extends Component {
 
             <View
               style={{
-                marginBottom: units.unit2,
+                marginBottom: bedInfoMarginBottom
               }}>
               {/* id / stats */}
               {this.renderBedInfo(serviceReport)}
@@ -2615,6 +2600,7 @@ function mapStateToProps(state) {
     user: state.user,
     drafts: state.drafts,
     beds: state.beds,
+    plantList: state.plantList
   };
 }
 

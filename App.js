@@ -46,7 +46,6 @@ import Product from './screens/Product';
 import Cart from './screens/Cart';
 import PurchaseDetails from './screens/PurchaseDetails';
 import Purchases from './screens/Purchases';
-import Plants from './screens/Plants';
 import ReferralHistory from './screens/ReferralHistory';
 import LearnMore from './screens/LearnMore';
 import AccountType from './screens/AccountType';
@@ -77,6 +76,7 @@ import PlantsSelected from './screens/PlantsSelected';
 import NewBeds from './screens/NewBeds';
 import BedPlants from './screens/BedPlants';
 import PlantSelectionType from './screens/PlantSelectionType';
+import PlantsConfirmation from './screens/PlantsConfirmation';
 
 // UI components
 import Link from './components/UI/Link';
@@ -103,7 +103,8 @@ const config = {
   screens: {
     PasswordConfirm: 'password-confirm/:userId',
     AccountActivation: 'account-activation/:applicationId',
-  },
+    Dashboard: 'dashboard'
+  }
 };
 
 // set linking prefixes
@@ -522,16 +523,6 @@ function App() {
               }}
             />
             <Stack.Screen
-              name="Plants"
-              component={Plants}
-              options={{
-                headerTitle: () => logo,
-                headerStyle: appHeaderStyle,
-                headerTintColor: appHeaderTint,
-                headerShadowVisible: false,
-              }}
-            />
-            <Stack.Screen
               name="Referral History"
               component={ReferralHistory}
               options={{
@@ -908,8 +899,18 @@ function App() {
               }}
             />
             <Stack.Screen
-              name="Plant Selection Type"
+              name="Selection Type"
               component={PlantSelectionType}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Confirm Plants"
+              component={PlantsConfirmation}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,

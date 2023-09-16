@@ -29,6 +29,7 @@ import { getReportType } from '../actions/reportTypes/index';
 import { getQuestions } from '../actions/questions/index';
 import { getAnswers } from '../actions/answers/index';
 import { getPlantList, updatePlantList } from '../actions/plantList/index';
+import { getSpecialRequest } from '../actions/specialRequests/index';
 
 // helpers
 import getSeason from '../helpers/getSeason';
@@ -43,16 +44,15 @@ import colors from '../components/styles/colors';
 class OrderDetails extends Component {
   state = {
     changeOrders: [],
-    renderPlantSelection: false
+    renderPlantSelection: false,
+    isLoading: true
   };
 
   async componentDidMount() {
-
-    // show loading indicator
-    this.setState({ isLoading: true });
-
     const order = this.props.route.params;
     let changeOrders = [];
+    let wateringSchedule = [];
+    let specialRequest = false;
 
     // if order type is installation, revive, or misc {...}
     if (order.type == types.INSTALLATION || order.type == types.REVIVE || order.type == types.MISC) {
@@ -64,10 +64,10 @@ class OrderDetails extends Component {
       );
     }
 
-    let wateringSchedule = [];
-
     // if current user is a gardener {...}
     if (this.props.user.type === types.GARDENER) {
+
+      specialRequest = await this.props.getSpecialRequest(`order=${order._id}`);
 
       // get beds
       await this.props.getBeds(`customer=${order.customer._id}`);
@@ -113,7 +113,8 @@ class OrderDetails extends Component {
     this.setState({
       isLoading: false,
       changeOrders,
-      wateringSchedule
+      wateringSchedule,
+      specialRequest
     });
   }
 
@@ -292,63 +293,17 @@ class OrderDetails extends Component {
     const {
       isLoading,
       changeOrders,
-      wateringSchedule
+      wateringSchedule,
+      specialRequest
     } = this.state;
 
     const season = getSeason();
-    let cropRotationSelectionComplete = true;
-    let cropRotationMapComplete = false;
-    let selectionOutOfSeason = false;
+    let cropRotationSelectionComplete = plantList;
     let bedsOutOfSeason = false;
     let disableMaintenance = false;
 
-    if (order.type === types.CROP_ROTATION) { // if crop rotation {...}
-      // if no plant selections are found {...}
-      if (
-        !order.customer.garden_info.vegetables &&
-        !order.customer.garden_info.herbs &&
-        !order.customer.garden_info.fruit
-      ) {
-        cropRotationSelectionComplete = false;
-      } else {
-        // check plants for out of season selections
-        if (order.customer.garden_info.vegetables) {
-          selectionOutOfSeason = order.customer.garden_info.vegetables.find((vegetable) => (vegetable.id.season !== season) && (vegetable.id.season !== 'annual'));
-        } else if (order.customer.garden_info.herbs) {
-          selectionOutOfSeason = order.customer.garden_info.herbs.find((herb) => (herb.id.season !== season) && (herb.id.season !== 'annual'));
-        } else if (order.customer.garden_info.fruit) {
-          selectionOutOfSeason = order.customer.garden_info.fruit.find((fr) => (fr.id.season !== season) && (fr.id.season !== 'annual'));
-        }
-
-        if (selectionOutOfSeason) { // if selection out of season {...}
-          cropRotationSelectionComplete = false;
-        } else {
-          // calculate total required plot points
-          let requiredPlotPoints = 0;
-          let totalUsedPlotPoints = 0;
-          plantList?.vegetables?.forEach(vegetable => (requiredPlotPoints += (vegetable.qty * vegetable.id.quadrant_size)));
-          plantList?.herbs?.forEach(herb => (requiredPlotPoints += (herb.qty * herb.id.quadrant_size)));
-          plantList?.fruit?.forEach(fr => (requiredPlotPoints += (fr.qty * fr.id.quadrant_size)));
-
-          // calculate used plot points
-          beds.forEach((bed) => {
-            bed.plot_points.forEach((row) => {
-              row.forEach((column) => {
-                if (column.plant) {
-                  totalUsedPlotPoints += 1;
-                }
-              })
-            })
-          })
-
-          // if map is not done being built {...}
-          if ((requiredPlotPoints - totalUsedPlotPoints) === 0) {
-            cropRotationMapComplete = true;
-          }
-        }
-      }
-
-      if (user.type === types.GARDENER) { // if gardener {...}
+    if (order.type === types.CROP_ROTATION) {
+      if (user.type === types.GARDENER) {
         let plants = 0;
         beds.forEach((bed) => {
           bed.plot_points.forEach((rows) => {
@@ -357,7 +312,7 @@ class OrderDetails extends Component {
                 plants += 1;
 
                 // check plants for out of season selections
-                if (((column.plant.id.season !== season) && (column.plant.id.season !== 'annual'))) {
+                if (((column.plant.id.season !== season) && (column.plant.id.season !== types.ANNUAL))) {
                   bedsOutOfSeason = true;
                 }
               }
@@ -372,10 +327,10 @@ class OrderDetails extends Component {
         }
       }
     } else if (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN) { // if maintenance {...}
-      if (user.type === types.GARDENER) { // if gardener {...}
+      if (user.type === types.GARDENER) {
         // check for pending crop rotation for customer with maintenance order
         const pendingCropRotation = orders.list.find((o) => (o.type === types.CROP_ROTATION) && (o.customer._id === order.customer._id));
-        if (pendingCropRotation) { // if pending crop rotation {...}
+        if (pendingCropRotation) {
           let plants = 0;
           beds.forEach((bed) => {
             bed.plot_points.forEach((rows) => {
@@ -424,6 +379,7 @@ class OrderDetails extends Component {
                 <OrderInfo
                   order={order}
                   wateringSchedule={wateringSchedule}
+                  specialRequest={specialRequest?.description}
                   onChangeDate={() =>
                     this.props.navigation.navigate('Change Date', { order })
                   }
@@ -652,7 +608,7 @@ class OrderDetails extends Component {
                         title="Vegetables"
                         content={
                           <PlantSelection
-                            plants={user.garden_info.vegetables}
+                            plants={plantList?.vegetables}
                           />
                         }
                       />
@@ -660,7 +616,7 @@ class OrderDetails extends Component {
                         title="Herbs"
                         content={
                           <PlantSelection
-                            plants={user.garden_info.herbs}
+                            plants={plantList?.herbs}
                           />
                         }
                       />
@@ -668,7 +624,7 @@ class OrderDetails extends Component {
                         title="Fruit"
                         content={
                           <PlantSelection
-                            plants={user.garden_info.fruit}
+                            plants={plantList?.fruit}
                           />
                         }
                       />
@@ -676,7 +632,7 @@ class OrderDetails extends Component {
                     <View style={{ display: (cropRotationSelectionComplete) ? 'none' : 'flex' }}>
                       <Button
                         text="Select Plants"
-                        onPress={() => this.props.navigation.navigate('Garden', { isCropRotation: true, order })}
+                        onPress={() => this.props.navigation.navigate('Selection Type', { isCropRotation: true, order })}
                       />
                     </View>
                   </View>
@@ -689,7 +645,7 @@ class OrderDetails extends Component {
                 cropRotationSelectionComplete &&
                 plantList && (
                   <View style={{ marginTop: units.unit4 }}>
-                    <View style={{ display: (bedsOutOfSeason || !cropRotationMapComplete) ? 'none' : 'flex' }}>
+                    <View style={{ display: (bedsOutOfSeason) ? 'none' : 'flex' }}>
                       <View>
                         <Collapse
                           title="Vegetables"
@@ -763,7 +719,7 @@ class OrderDetails extends Component {
                       />
                       <Button
                         style={{
-                          display: (bedsOutOfSeason || !cropRotationMapComplete) ? 'none' : 'flex',
+                          display: (bedsOutOfSeason) ? 'none' : 'flex',
                           marginTop: units.unit4,
                         }}
                         text="Process Order"
@@ -825,7 +781,8 @@ function mapDispatchToProps(dispatch) {
       getAnswers,
       updateBed,
       getPlantList,
-      updatePlantList
+      updatePlantList,
+      getSpecialRequest
     },
     dispatch,
   );

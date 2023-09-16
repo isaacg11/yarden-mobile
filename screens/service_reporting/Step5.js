@@ -101,7 +101,7 @@ class Step5 extends Component {
             const maintenanceType = order.customer.garden_info.maintenance_plan;
 
             // get report type
-            const maintenanceReportType = await this.props.getReportType(`name=${maintenanceType}`);
+            const maintenanceReportType = await this.props.getReportType(`name=${maintenanceType}`);            
 
             // get previous reports for customer
             await this.props.getReports(`customer=${order.customer._id}&type=${maintenanceReportType._id}`);

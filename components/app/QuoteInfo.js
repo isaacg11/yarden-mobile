@@ -43,7 +43,7 @@ class QuoteInfo extends Component {
             </View>
           )}
           <Paragraph style={{...fonts.label, marginTop: units.unit5}}>
-            Customer/Address
+            Person/Address
           </Paragraph>
 
           {/* name */}

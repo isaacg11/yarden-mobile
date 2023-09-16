@@ -16,11 +16,17 @@ import Label from '../components/UI/Label';
 import Link from '../components/UI/Link';
 import Divider from '../components/UI/Divider';
 import LoadingIndicator from '../components/UI/LoadingIndicator';
+import Dialog from '../components/UI/Dialog';
+import Button from '../components/UI/Button';
 
 // actions
 import { getBeds } from '../actions/beds/index';
 import { getOrders, setSelectedOrder } from '../actions/orders/index';
 import { getPlantActivities } from '../actions/plantActivities/index';
+import { getPlantList } from '../actions/plantList';
+
+// helpers
+import getSeason from '../helpers/getSeason';
 
 // styles
 import units from '../components/styles/units';
@@ -35,10 +41,13 @@ class Reports extends Component {
     state = {
         pendingOrders: [],
         completedOrders: [],
-        dateFilter: 1
+        dateFilter: 1,
+        isLoading: true,
+        cropRotationOrder: null
     }
 
     async componentDidMount() {
+        let plantSelectionModalIsOpen = false;
 
         // get beds
         this.props.getBeds(`customer=${this.props.user._id}`);
@@ -49,11 +58,40 @@ class Reports extends Component {
         // get completed orders
         const completedOrders = await this.props.getOrders(`customer=${this.props.user._id}&status=${types.COMPLETE}&start=${new Date(moment().startOf('month'))}&end=${new Date(moment().endOf('month'))}`, true);
 
+        // check for crop rotation order
+        const cropRotationOrder = pendingOrders.list.find((order) => order.type === types.CROP_ROTATION);
+
+        if (cropRotationOrder) {
+
+            // get plant list associated to crop rotation
+            const plantList = await this.props.getPlantList(`order=${cropRotationOrder._id}`);
+
+            // if no previous crop rotation plant selections are found, show modal
+            plantSelectionModalIsOpen = !plantList;
+        }
+
         // update UI
         this.setState({
+            plantSelectionModalIsOpen,
             pendingOrders,
-            completedOrders
-        })
+            completedOrders,
+            cropRotationOrder,
+            isLoading: false
+        });
+    }
+
+    goToCropRotationOrder() {
+        const { setSelectedOrder, navigation } = this.props;
+        const order = this.state.cropRotationOrder;
+
+        // set selected order
+        setSelectedOrder(order);
+
+        // hide plant selection modal
+        this.setState({ plantSelectionModalIsOpen: false });
+
+        // redirect user to order details
+        navigation.navigate('Selection Type', { isCropRotation: true, order });
     }
 
     setDateFilter(dateFilter) {
@@ -161,7 +199,8 @@ class Reports extends Component {
             pendingOrders,
             completedOrders,
             dateFilter,
-            isLoading
+            isLoading,
+            plantSelectionModalIsOpen
         } = this.state;
 
         const activeDateFilter = {
@@ -179,137 +218,170 @@ class Reports extends Component {
             color: colors.purpleB,
         }
 
-        return (
-            <SafeAreaView
-                style={{
-                    flex: 1,
-                    width: '100%',
-                    backgroundColor: colors.greenD5,
-                }}>
-
-                {/* loading indicator */}
-                <LoadingIndicator
-                    loading={isLoading}
-                />
-
-                <ScrollView>
-
-                    {/* harvest report */}
-                    <HarvestReport
-                        onCheckStatus={() => this.props.navigation.navigate('Orders')}
-                    />
-
-                    {/* bed list */}
-                    <View style={{ padding: units.unit4 }}>
-                        <View style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: units.unit4
-                        }}>
-                            <Header
-                                type="h5"
-                                style={{ color: colors.purpleC75 }}>
-                                Garden Beds
+        if (isLoading) {
+            return (<LoadingIndicator loading={true} />)
+        } else if (plantSelectionModalIsOpen) {
+            return (
+                <Dialog
+                    isOpen={true}
+                    content={(
+                        <View>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginBottom: units.unit3 }}>
+                                <Ionicons
+                                    name={'time-outline'}
+                                    color={colors.purpleB}
+                                    size={fonts.h1} />
+                            </View>
+                            <Header type="h6" style={{ color: colors.purpleB }}>
+                                It's time to pick your plants for the upcoming {getSeason()} season!
                             </Header>
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <Paragraph style={{ color: colors.purpleB, marginRight: units.unit3 }}>
-                                    Add
-                                </Paragraph>
-                                <CircularButton
-                                    small
-                                    icon={(<Ionicons
-                                        name={'add-outline'}
-                                        color={colors.purpleB}
-                                        size={fonts.h3}
-                                    />)}
-                                    onPress={() => this.props.navigation.navigate('New Beds')}
+                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: units.unit4 }}>
+                                <Button
+                                    text="Next"
+                                    variant="button"
+                                    style={{ width: '100%' }}
+                                    onPress={() => this.goToCropRotationOrder()}
                                 />
                             </View>
                         </View>
-                        <BedList onSelect={(bed) => this.props.navigation.navigate('Bed', bed)} />
-                    </View>
+                    )
+                    }
+                />
+            )
+        } else {
+            return (
+                <SafeAreaView
+                    style={{
+                        flex: 1,
+                        width: '100%',
+                        backgroundColor: colors.greenD5,
+                    }}>
 
-                    {/* pending orders */}
-                    <View style={{ padding: units.unit4 }}>
-                        <View style={{
-                            marginBottom: units.unit4
-                        }}>
-                            <Header
-                                type="h5"
-                                style={{ color: colors.greenE50 }}>
-                                Pending Orders
-                            </Header>
-                            {pendingOrders?.list?.map((order, index) => (
-                                <View key={index}>
-                                    {this.renderOrder(order)}
-                                </View>
-                            ))}
-                            {pendingOrders?.list?.length < 1 && (
-                                <View style={{ padding: units.unit5 }}>
-                                    <Text style={{ textAlign: 'center' }}>No results found</Text>
-                                </View>
-                            )}
-                        </View>
-                    </View>
+                    {/* loading indicator */}
+                    <LoadingIndicator
+                        loading={isLoading}
+                    />
 
-                    {/* completed orders */}
-                    <View style={{ padding: units.unit4 }}>
-                        <View style={{
-                            marginBottom: units.unit4
-                        }}>
-                            <Header
-                                type="h5"
-                                style={{ color: colors.greenE50, marginBottom: units.unit3 }}>
-                                Completed Orders
-                            </Header>
+                    <ScrollView>
+
+                        {/* harvest report */}
+                        <HarvestReport
+                            onCheckStatus={() => this.props.navigation.navigate('Orders')}
+                        />
+
+                        {/* bed list */}
+                        <View style={{ padding: units.unit4 }}>
                             <View style={{
                                 display: 'flex',
                                 flexDirection: 'row',
-                                justifyContent: 'space-evenly',
-                                paddingVertical: units.unit3
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: units.unit4
                             }}>
-                                <TouchableOpacity onPress={() => this.setDateFilter(1)}>
-                                    <Text style={dateFilter === 1 ? activeDateFilter : inActiveDateFilter}>
-                                        This Month
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.setDateFilter(2)}>
-                                    <Text style={dateFilter === 2 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(1, 'month').format('MMM')}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.setDateFilter(3)}>
-                                    <Text style={dateFilter === 3 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(2, 'month').format('MMM')}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.setDateFilter(4)}>
-                                    <Text style={dateFilter === 4 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(3, 'month').format('MMM')}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.setDateFilter(5)}>
-                                    <Text style={dateFilter === 5 ? activeDateFilter : inActiveDateFilter}>View All</Text>
-                                </TouchableOpacity>
+                                <Header
+                                    type="h5"
+                                    style={{ color: colors.purpleC75 }}>
+                                    Garden Beds
+                                </Header>
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <Paragraph style={{ color: colors.purpleB, marginRight: units.unit3 }}>
+                                        Add
+                                    </Paragraph>
+                                    <CircularButton
+                                        small
+                                        icon={(<Ionicons
+                                            name={'add-outline'}
+                                            color={colors.purpleB}
+                                            size={fonts.h3}
+                                        />)}
+                                        onPress={() => this.props.navigation.navigate('New Beds')}
+                                    />
+                                </View>
                             </View>
-                            {completedOrders?.list?.map((order, index) => (
-                                <View key={index}>
-                                    {this.renderOrder(order)}
-                                </View>
-                            ))}
-                            {completedOrders?.list?.length < 1 && (
-                                <View style={{ padding: units.unit5 }}>
-                                    <Text style={{ textAlign: 'center' }}>No results found</Text>
-                                </View>
-                            )}
+                            <BedList onSelect={(bed) => this.props.navigation.navigate('Bed', bed)} />
                         </View>
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        );
+
+                        {/* pending orders */}
+                        <View style={{ padding: units.unit4 }}>
+                            <View style={{
+                                marginBottom: units.unit4
+                            }}>
+                                <Header
+                                    type="h5"
+                                    style={{ color: colors.greenE50 }}>
+                                    Pending Orders
+                                </Header>
+                                {pendingOrders?.list?.map((order, index) => (
+                                    <View key={index}>
+                                        {this.renderOrder(order)}
+                                    </View>
+                                ))}
+                                {pendingOrders?.list?.length < 1 && (
+                                    <View style={{ padding: units.unit5 }}>
+                                        <Text style={{ textAlign: 'center' }}>No results found</Text>
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+
+                        {/* completed orders */}
+                        <View style={{ padding: units.unit4 }}>
+                            <View style={{
+                                marginBottom: units.unit4
+                            }}>
+                                <Header
+                                    type="h5"
+                                    style={{ color: colors.greenE50, marginBottom: units.unit3 }}>
+                                    Completed Orders
+                                </Header>
+                                <View style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-evenly',
+                                    paddingVertical: units.unit3
+                                }}>
+                                    <TouchableOpacity onPress={() => this.setDateFilter(1)}>
+                                        <Text style={dateFilter === 1 ? activeDateFilter : inActiveDateFilter}>
+                                            This Month
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.setDateFilter(2)}>
+                                        <Text style={dateFilter === 2 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(1, 'month').format('MMM')}</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.setDateFilter(3)}>
+                                        <Text style={dateFilter === 3 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(2, 'month').format('MMM')}</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.setDateFilter(4)}>
+                                        <Text style={dateFilter === 4 ? activeDateFilter : inActiveDateFilter}>{moment().subtract(3, 'month').format('MMM')}</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.setDateFilter(5)}>
+                                        <Text style={dateFilter === 5 ? activeDateFilter : inActiveDateFilter}>View All</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {completedOrders?.list?.map((order, index) => (
+                                    <View key={index}>
+                                        {this.renderOrder(order)}
+                                    </View>
+                                ))}
+                                {completedOrders?.list?.length < 1 && (
+                                    <View style={{ padding: units.unit5 }}>
+                                        <Text style={{ textAlign: 'center' }}>No results found</Text>
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+                    </ScrollView>
+                </SafeAreaView>
+            );
+        }
     }
 }
 
 function mapStateToProps(state) {
     return {
         user: state.user,
-        orders: state.orders
+        orders: state.orders,
+        beds: state.beds
     };
 }
 
@@ -319,6 +391,7 @@ function mapDispatchToProps(dispatch) {
             getBeds,
             getPlantActivities,
             getOrders,
+            getPlantList,
             setSelectedOrder
         },
         dispatch,
