@@ -17,7 +17,7 @@ class ChangeOrderInfo extends Component {
                 <View style={{ marginBottom: units.unit5 }}>
                     <Label style={{ marginTop: units.unit5 }}>Status</Label>
                     <Status status={changeOrder.status} />
-                    <Label style={{ marginTop: units.unit5 }}>Customer</Label>
+                    <Label style={{ marginTop: units.unit5 }}>Person</Label>
                     <Text>
                         {changeOrder.order.customer.first_name} {changeOrder.order.customer.last_name}{"\n"}
                         {formatAddress(changeOrder.order.customer)}{"\n"}

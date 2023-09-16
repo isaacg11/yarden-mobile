@@ -1,7 +1,7 @@
 import separatePlantsByCategory from './separatePlantsByCategory';
 import separatePlantsByCommonType from './separatePlantsByCommonType';
 
-export default function setPlants(selectedPlants) {
+export default async function setPlants(selectedPlants) {
 
     // separate plants by category
     const categorizedPlants = separatePlantsByCategory(selectedPlants);

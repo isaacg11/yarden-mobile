@@ -128,7 +128,7 @@ class ChangePlan extends Component {
         const paymentInfo = this.props.user.payment_info;
         const gardenInfo = this.props.user.garden_info;
         paymentInfo.plan_id = subscription.id;
-        gardenInfo.maintenance_plan = this.state.selectedPlan._id;
+        gardenInfo.maintenance_plan = this.state.selectedPlan.type;
 
         // update user with new payment info and garden info
         await this.props.updateUser(`userId=${this.props.user._id}`, { paymentInfo: paymentInfo, gardenInfo: gardenInfo });

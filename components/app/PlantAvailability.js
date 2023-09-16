@@ -1,11 +1,14 @@
-import React, {Component} from 'react';
+// libraries
+import React, { Component } from 'react';
+import { Text, View } from 'react-native';
+
+// config
 import config from '../../config/index';
-import Paragraph from '../UI/Paragraph';
+
+// UI components
 import Label from '../UI/Label';
-import {Text, View} from 'react-native';
-import Card from '../UI/Card';
-import units from '../../components/styles/units';
-import colors from '../styles/colors';
+
+// styles
 import fonts from '../styles/fonts';
 
 class PlantAvailability extends Component {

@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Paragraph from '../UI/Paragraph';
 import Label from '../UI/Label';
@@ -16,7 +16,8 @@ class Plans extends Component {
     let selectedPlan = 'none';
 
     // if "none" was selected {...}
-    if (plan === 'none') {
+    if (plan.type === 'none') {
+      
       // if "none" is already selected {...}
       if (this.state.selectedPlan === 'none') {
         // reset plan
@@ -40,26 +41,26 @@ class Plans extends Component {
     }
 
     // set plan
-    this.setState({selectedPlan: selectedPlan});
+    this.setState({ selectedPlan });
 
     // return value
     this.props.onSelect(selectedPlan);
   }
 
   render() {
-    const {plans, isCheckout} = this.props;
-    const {selectedPlan} = this.state;
+    const { plans, isCheckout } = this.props;
+    const { selectedPlan } = this.state;
 
     return (
       <View>
-        <Text style={{marginBottom: units.unit5, color: colors.greenD75}}>
+        <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
           Please select a plan from the list below. 1st Month FREE! Cancel
           anytime.
         </Text>
-        <Label style={{marginBottom: units.unit2}}>Plans</Label>
+        <Label style={{ marginBottom: units.unit2 }}>Plans</Label>
         <View>
           {plans.map((plan, index) => (
-            <Card style={{marginBottom: units.unit4}} key={index}>
+            <Card style={{ marginBottom: units.unit4 }} key={index}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -67,7 +68,7 @@ class Plans extends Component {
                   marginBottom: units.unit4,
                 }}>
                 <View
-                  style={{paddingRight: units.unit4, marginRight: units.unit0}}>
+                  style={{ paddingRight: units.unit4, marginRight: units.unit0 }}>
                   <CheckBox
                     disabled={
                       selectedPlan === 'none' ||
@@ -76,6 +77,10 @@ class Plans extends Component {
                     value={selectedPlan.type === plan.type}
                     onValueChange={() => this.onSelect(plan)}
                     boxType="square"
+                    tintColor={colors.purpleB}
+                    onTintColor={colors.green0}
+                    onCheckColor={colors.green0}
+                    onFillColor={colors.purpleB}
                   />
                 </View>
                 <View>
@@ -87,18 +92,18 @@ class Plans extends Component {
                     }}>
                     {plan.type}
                   </Paragraph>
-                  <Paragraph style={{color: colors.greenD}}>
+                  <Paragraph style={{ color: colors.greenD }}>
                     ${plan.rate.toFixed(2)} / month
                   </Paragraph>
                 </View>
               </View>
               <View>
-                <Text style={{color: colors.greenD75}}>{plan.description}</Text>
+                <Text style={{ color: colors.greenD75 }}>{plan.description}</Text>
               </View>
             </Card>
           ))}
           <View
-            style={{padding: units.unit4, display: isCheckout ? null : 'none'}}>
+            style={{ padding: units.unit4, display: isCheckout ? null : 'none' }}>
             <View
               style={{
                 flex: 1,
@@ -108,11 +113,15 @@ class Plans extends Component {
                 marginBottom: units.unit4,
               }}>
               <View
-                style={{paddingRight: units.unit4, marginRight: units.unit0}}>
+                style={{ paddingRight: units.unit4, marginRight: units.unit0 }}>
                 <CheckBox
                   disabled={selectedPlan.type}
-                  onValueChange={() => this.onSelect('none')}
+                  onValueChange={() => this.onSelect({ type: 'none' })}
                   boxType="square"
+                  tintColor={colors.purpleB}
+                  onTintColor={colors.green0}
+                  onCheckColor={colors.green0}
+                  onFillColor={colors.purpleB}
                 />
               </View>
               <View>
@@ -129,7 +138,7 @@ class Plans extends Component {
               </View>
             </View>
             <View>
-              <Text style={{marginBottom: units.unit5, color: colors.greenD75}}>
+              <Text style={{ marginBottom: units.unit5, color: colors.greenD75 }}>
                 None - I want to maintain my garden without any help
               </Text>
             </View>

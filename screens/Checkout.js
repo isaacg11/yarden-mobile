@@ -50,7 +50,7 @@ import {
   getChangeOrders,
   resetChangeOrders,
 } from '../actions/changeOrders/index';
-import { createPurchase } from '../actions/purchases/index';
+import { createSpecialRequest } from '../actions/specialRequests/index';
 import { getItems } from '../actions/items/index';
 
 // styles
@@ -275,9 +275,6 @@ class Checkout extends Component {
 
       // assign order value
       order = this.props.route.params.order;
-    } else if (this.props.route.params.isPurchase) {
-      // process purchase
-      return this.processPurchase(approval.data);
     } else {
       // if garden quote {...}
       if (isGarden) {
@@ -326,6 +323,15 @@ class Checkout extends Component {
       this.props.route.params,
       isGarden
     );
+
+    if (this.props.route.params.specialRequest) {
+
+      // create a special request for this order
+      await this.props.createSpecialRequest({
+        order: order?._id,
+        description: this.props.route.params.specialRequest
+      })
+    }
 
     this.finish(order);
   }
@@ -498,97 +504,6 @@ class Checkout extends Component {
 
     // send customer confirmation email
     await this.props.sendEmail(email);
-  }
-
-  async processPurchase(approval) {
-    // iterate through quotes
-    await this.props.route.params.quotes.forEach(async (quote, index) => {
-      // set initial quote data
-      let data = quote;
-
-      // format quote materials
-      data.line_items.materials = await formatMaterials(
-        quote.line_items.materials,
-      );
-
-      // set quote estimated start date
-      const startDate = moment().add(2, 'weeks').startOf('day');
-      data.estimated_start_dt = startDate;
-
-      // check to see if the purchase is for a garden
-      const isGarden = quote.product.type.name === 'garden';
-
-      // check to see if the purchase is for an accessory
-      const isAccessory = quote.product.type.name === 'accessory';
-
-      // if garden purchase {...}
-      if (isGarden) {
-        // get plant selection
-        const plantList = this.getPlantsList(quote);
-
-        // set plant selection
-        data.line_items.vegetables = minifyDataToID(plantList.vegetables);
-        data.line_items.herbs = minifyDataToID(plantList.herbs);
-        data.line_items.fruit = minifyDataToID(plantList.fruit);
-
-        // if product category is "potted plants" {...}
-        if (quote.product.category.name === 'potted plants') {
-          let accessories = [];
-
-          // iterate through product variants
-          quote.product.variants.forEach(variant => {
-            // add variant to accessories list
-            accessories.push({
-              name: variant.name,
-              width: variant.dimensions.width,
-              length: variant.dimensions.length,
-              height: variant.dimensions.height,
-              qty: variant.qty,
-            });
-          });
-
-          // set accessories in line items
-          data.line_items.accessories = accessories;
-        }
-      }
-
-      // if accessory purchase {...}
-      if (isAccessory) {
-        let accessories = [];
-
-        // iterate through product variants
-        quote.product.variants.forEach(variant => {
-          // add variant to accessories list
-          accessories.push({
-            name: variant.name,
-            width: variant.dimensions.width,
-            length: variant.dimensions.length,
-            height: variant.dimensions.height,
-            qty: variant.qty,
-          });
-        });
-
-        // set accessories in line items
-        data.line_items.accessories = accessories;
-      }
-
-      // create quote
-      const q = await this.props.createQuote(data);
-
-      // schedule a new order
-      const newOrder = await this.scheduleNewOrder(approval, q, isGarden);
-
-      // create purchase record
-      await this.props.createPurchase({
-        customer: this.props.user._id,
-        order: newOrder._id,
-      });
-
-      // if last iteration of loop, finish processing
-      if (index === this.props.route.params.quotes.length - 1) {
-        this.finish();
-      }
-    });
   }
 
   async finish(order) {
@@ -790,6 +705,10 @@ class Checkout extends Component {
                         })
                       }
                       boxType="square"
+                      tintColor={colors.purpleB}
+                      onTintColor={colors.green0}
+                      onCheckColor={colors.green0}
+                      onFillColor={colors.purpleB}
                     />
                     <View
                       style={{
@@ -853,9 +772,9 @@ function mapDispatchToProps(dispatch) {
       getChangeOrders,
       resetChangeOrders,
       sendSms,
-      createPurchase,
       getUser,
-      updateUser
+      updateUser,
+      createSpecialRequest
     },
     dispatch,
   );

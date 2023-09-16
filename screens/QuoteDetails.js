@@ -17,6 +17,7 @@ import QuoteInfo from '../components/app/QuoteInfo';
 import Button from '../components/UI/Button';
 import Link from '../components/UI/Link';
 
+// types
 import types from '../vars/types';
 
 // styles
@@ -32,7 +33,7 @@ class QuoteDetails extends Component {
     // if quote is for installation or revive {...}
     if (quote.type === types.INSTALLATION || quote.type === types.REVIVE) {
       // navigate to garden screen
-      this.props.navigation.navigate('Garden', quote);
+      this.props.navigation.navigate('Selection Type', quote);
     } else {
       // navigate to checkout screen
       this.props.navigation.navigate('Checkout', quote);
@@ -49,7 +50,7 @@ class QuoteDetails extends Component {
   render() {
     const quote = this.props.route.params;
     const { isLoading } = this.state;
-
+    
     return (
       <SafeAreaView
         style={{
@@ -79,7 +80,7 @@ class QuoteDetails extends Component {
               // quote summary
               <View>
                 <Collapse
-                  title="Quote Summary"
+                  title="Cost Summary"
                   content={<QuoteSummary quote={quote} />}
                 />
               </View>
@@ -164,7 +165,7 @@ class QuoteDetails extends Component {
                 </View>
                 <View style={{ marginBottom: units.unit3 }}>
                   <Button
-                    text="Checkout"
+                    text="Next"
                     onPress={() => this.proceedToCheckout()}
                   />
                 </View>

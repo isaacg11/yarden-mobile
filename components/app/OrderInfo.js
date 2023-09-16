@@ -48,21 +48,22 @@ class OrderInfo extends Component {
         const {
             order,
             wateringSchedule,
+            specialRequest,
             onChangeDate,
             user
         } = this.props;
 
         const orderDescription = this.formatOrderDescription(order);
         let renderDateChange = false;
-        if(
-            user.type === types.CUSTOMER && 
-            order.status === types.PENDING && 
+        if (
+            user.type === types.CUSTOMER &&
+            order.status === types.PENDING &&
             order.type === types.YARD_ASSESSMENT
         ) {
             renderDateChange = true;
-        } else if(
+        } else if (
             user.type === types.GARDENER &&
-            order.status === types.PENDING && 
+            order.status === types.PENDING &&
             (order.type === types.FULL_PLAN || order.type === types.ASSISTED_PLAN)
         ) {
             renderDateChange = true;
@@ -110,7 +111,7 @@ class OrderInfo extends Component {
                             )}
                         </View>
                         <Paragraph style={{ ...fonts.label, marginTop: units.unit5 }}>
-                            Member/Address
+                            Person/Address
                         </Paragraph>
 
                         {/* name */}
@@ -137,7 +138,7 @@ class OrderInfo extends Component {
                         </View>
 
                         {/* directions link */}
-                        {user.type === 'gardener' && (
+                        {user.type === types.GARDENER && (
                             <View>
                                 <Link
                                     text="Get Directions"
@@ -165,6 +166,44 @@ class OrderInfo extends Component {
                             </View>
                         )}
 
+                        {/* special request */}
+                        {(specialRequest && (user.type === types.GARDENER)) && (
+                            <View style={{
+                                borderColor: colors.green0,
+                                borderWidth: 1,
+                                borderRadius: units.unit3,
+                                padding: units.unit4,
+                                marginTop: units.unit5,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'center'
+
+                            }}>
+                                <View>
+                                    <View style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        marginBottom: units.unit3
+                                    }}>
+                                        <Ionicons
+                                            name="flash-outline"
+                                            size={units.unit4 + units.unit3}
+                                            color={colors.purpleB}
+                                        />
+                                    </View>
+                                    <Paragraph style={{
+                                        ...fonts.label,
+                                        color: colors.purpleB,
+                                        textAlign: 'center',
+                                        marginBottom: units.unit3
+                                    }}>
+                                        Special Request
+                                    </Paragraph>
+                                    <Text>"{specialRequest}"</Text>
+                                </View>
+                            </View>
+                        )}
                     </View>
                 </View>
             </View>
