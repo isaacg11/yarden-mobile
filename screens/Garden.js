@@ -23,6 +23,7 @@ import setPlants from '../helpers/setPlants';
 import calculatePlotPoints from '../helpers/calculatePlotPoints';
 import capitalize from '../helpers/capitalize';
 import calculateTotalFeet from '../helpers/calculateTotalFeet';
+import combineBeds from '../helpers/combineBeds';
 
 // actions
 import { getOrders } from '../actions/orders/index';
@@ -50,12 +51,16 @@ class Garden extends Component {
     // set plants
     const plants = await setPlants(this.props.plants);
 
+    // set beds
+    const gardenBeds = combineBeds(this.props.beds);
+
     // update UI
     this.setState({
       vegetables: plants.vegetables,
       herbs: plants.herbs,
       fruit: plants.fruit,
       isLoading: false,
+      gardenBeds
     });
   }
 
@@ -417,17 +422,17 @@ class Garden extends Component {
         vegetables,
         herbs,
         fruit,
+        gardenBeds
       } = this.state;
 
       const {
-        user,
         title = 'Plant Selection',
       } = this.props;
 
       const progress = this.getProgress();
       const isCropRotation = this.props.route.params.isCropRotation;
       const beds = isCropRotation
-        ? user.garden_info.beds
+        ? gardenBeds
         : this.props.route.params.line_items.beds;
       const measurements = calculateTotalFeet(beds);
 

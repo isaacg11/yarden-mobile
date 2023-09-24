@@ -31,7 +31,7 @@ class ProductCategories extends Component {
     const {isLoading} = this.state;
 
     // check to see if customer already has garden beds
-    const customerHasGarden = user.garden_info && user.garden_info.beds;
+    const customerHasGarden = user.garden_info;
 
     return (
       <View>

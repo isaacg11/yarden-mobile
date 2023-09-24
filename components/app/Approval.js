@@ -281,9 +281,6 @@ class Approval extends Component {
             // if user already has a maintenance plan, set plan
             if (this.props.user.garden_info.maintenance_plan) gardenInfo.maintenance_plan = this.props.user.garden_info.maintenance_plan;
 
-            // if user already has beds, set beds
-            if (this.props.user.garden_info.beds) gardenInfo.beds = this.props.user.garden_info.beds;
-
             // if user already has accessories, set accessories
             if (this.props.user.garden_info.accessories) gardenInfo.accessories = this.props.user.garden_info.accessories;
         } else {
