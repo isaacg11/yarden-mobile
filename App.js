@@ -103,7 +103,7 @@ const config = {
   screens: {
     PasswordConfirm: 'password-confirm/:userId',
     AccountActivation: 'account-activation/:applicationId',
-    Dashboard: 'dashboard'
+    Splash: 'splash'
   }
 };
 

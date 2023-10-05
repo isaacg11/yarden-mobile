@@ -88,10 +88,11 @@ class Reports extends Component {
         setSelectedOrder(order);
 
         // hide plant selection modal
-        this.setState({ plantSelectionModalIsOpen: false });
-
-        // redirect user to order details
-        navigation.navigate('Selection Type', { isCropRotation: true, order });
+        this.setState({ plantSelectionModalIsOpen: false }, () => {
+            
+            // redirect user to order details
+            navigation.navigate('Selection Type', { isCropRotation: true, order });
+        });
     }
 
     setDateFilter(dateFilter) {

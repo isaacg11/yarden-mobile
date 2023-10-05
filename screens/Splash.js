@@ -22,13 +22,36 @@ import units from '../components/styles/units';
 
 class Splash extends Component {
 
-    async componentDidMount() {
+    state = {
+        redirected: false
+    }
+
+    componentDidMount() {
+        const authToken = getAuthToken();
+        if(authToken) {
+            this.loadApp();
+        } else {
+            this.props.navigation.navigate('Login');
+        }
+    }
+
+    componentDidUpdate() {
+        if(!this.state.redirected && this.props.user) {
+            this.loadApp();
+        } else {
+            this.props.navigation.navigate('Login');
+        }
+    }
+
+    async loadApp() {
 
         // look for auth token
         const authToken = await getAuthToken();
 
+        this.setState({ redirected: true });
+
         // if auth token {...}
-        if (authToken) {
+        if (authToken !== null) {
 
             // check auth token expiration date
             const authTokenExp = await getAuthTokenExp();
@@ -62,7 +85,7 @@ class Splash extends Component {
     render() {
 
         return (
-            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: Dimensions.get('window').height - units.unit7 }}>
+            <View style={{ display: (this.state.redirected) ? 'none' : 'flex', justifyContent: 'center', alignItems: 'center', height: Dimensions.get('window').height - units.unit7 }}>
                 <Mark size={units.unit7} />
             </View>
         )
