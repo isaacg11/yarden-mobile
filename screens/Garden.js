@@ -40,7 +40,8 @@ import types from '../vars/types';
 class Garden extends Component {
   state = {
     selectedPlants: [],
-    customQty: false
+    customQty: false,
+    gardenBeds: []
   };
 
   async componentDidMount() {
