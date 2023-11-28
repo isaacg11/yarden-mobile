@@ -189,7 +189,7 @@ class ImageUpload extends Component {
         const updatedOrder = {
             images: this.state.selectedImages,
             status: 'complete',
-            dt_completed: new Date()
+            dateCompleted: new Date()
         }
 
         // update order with results
