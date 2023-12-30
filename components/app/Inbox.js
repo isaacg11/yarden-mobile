@@ -12,6 +12,7 @@ import LoadingIndicator from '../UI/LoadingIndicator';
 import Paragraph from '../UI/Paragraph';
 import Label from '../UI/Label';
 import Divider from '../UI/Divider';
+import Input from '../UI/Input';
 
 // actions
 import { getMessages, createMessage } from '../../actions/messages/index';
@@ -32,7 +33,8 @@ import types from '../../vars/types';
 
 class Inbox extends Component {
   state = {
-    inbox: []
+    inbox: [],
+    search: ''
   };
 
   async componentDidMount() {
@@ -67,7 +69,7 @@ class Inbox extends Component {
   }
 
   async setInbox() {
-    
+
     // show loading indicator
     this.setState({ isLoading: true });
 
@@ -92,10 +94,17 @@ class Inbox extends Component {
     // get conversations
     Promise.all(getConversations).then(async (conversations) => {
 
+      // Sort the inbox array by the dt_created property of the latest message
+      const sortedInbox = conversations.sort((a, b) => {
+        const latestMessageA = a[a.length - 1];
+        const latestMessageB = b[b.length - 1];
+        return new Date(latestMessageB.dt_created) - new Date(latestMessageA.dt_created);
+      });
+
       // hide loading indicator
-      this.setState({ 
-        inbox: conversations,
-        isLoading: false 
+      this.setState({
+        inbox: sortedInbox,
+        isLoading: false,
       });
     });
   }
@@ -134,7 +143,8 @@ class Inbox extends Component {
     const {
       inbox,
       isLoading,
-      gardener
+      gardener,
+      search
     } = this.state;
 
     const {
@@ -146,6 +156,16 @@ class Inbox extends Component {
       <View>
         {/* loading indicator start */}
         <LoadingIndicator loading={isLoading} />
+
+        {/* search */}
+        <Input
+            label="Search"
+            placeholder="Search Messages"
+            value={search}
+            onChange={(value) => {
+              this.setState({ search: value });
+            }}
+          />
 
         {/* inbox messages */}
         {inbox.map((conversation, index) => {
@@ -160,6 +180,13 @@ class Inbox extends Component {
               correspondant = message.receiver;
             }
           })
+
+          const regex = new RegExp(`^${search}`, 'i');
+          const match = regex.test(correspondant.first_name);
+
+          if(search && !match) {
+            return <View key={index}></View>;
+          }
 
           return (
             <View key={index}>
