@@ -1,7 +1,15 @@
+// libs
 import axios from 'axios';
+
+// helpers
 import { API_URL } from '../../helpers/getUrl';
 import getAuthToken from '../../helpers/getAuthToken';
+import removeSelectionsFromBed from '../../helpers/removeSelectionsFromBed';
+
+// actions
 import { GET_BEDS } from '../../actions/beds/types';
+
+// UI components
 import { alert } from '../../components/UI/SystemAlert';
 
 export function createBed(bed) {
@@ -50,7 +58,8 @@ export function updateBed(id, bed) {
     return async function () {
         try {
             const authToken = await getAuthToken();
-            const updatedBed = await axios.put(`${API_URL}/beds/${id}`, bed, { headers: { authorization: authToken } });
+            const bedToUpdate = removeSelectionsFromBed(bed);
+            const updatedBed = await axios.put(`${API_URL}/beds/${id}`, bedToUpdate, { headers: { authorization: authToken } });
             return updatedBed;
         }
 
