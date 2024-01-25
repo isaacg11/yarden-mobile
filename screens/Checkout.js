@@ -30,8 +30,6 @@ import getCompanyName from '../helpers/getCompanyName';
 import getScreenShot from '../helpers/getScreenShot';
 import uploadImage from '../helpers/uploadImage';
 import formatAddress from '../helpers/formatAddress';
-import formatMaterials from '../helpers/formatMaterials';
-import minifyDataToID from '../helpers/minifyDataToID';
 import combinePlants from '../helpers/combinePlants';
 import clearCart from '../helpers/clearCart';
 
@@ -62,10 +60,6 @@ class Checkout extends Component {
   state = {};
 
   async componentDidMount() {
-    // get user info
-    // NOTE: We need to do this to ensure that the user info is up-to-date before processing (example: if Yarden uploads new garden from web platform, system will add new gardens to garden_info - but the app won't be aware of these changes unless we fetch the users data)
-    // author: Isaac G. 2/25/23
-    await this.props.getUser(this.props.user._id);
 
     // if plant selections (i.e Installation or Revive) {...}
     if (this.props.route.params.plantSelections) {
