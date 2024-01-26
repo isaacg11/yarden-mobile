@@ -66,15 +66,6 @@ class ChangeDate extends Component {
         // create a reschedule
         await this.props.createReschedule(reschedule);
       }
-
-      const sms = {
-        from: '8888289287',
-        to: currentOrder.customer.phone_number,
-        body: `Greetings from Yarden! Your upcoming garden service was rescheduled from ${moment(currentOrder.date).format('MM/DD/YYYY')} to ${moment(this.state.date).format('MM/DD/YYYY')}, please contact your gardener for any questions.`
-      }
-
-      // send sms notification to customer
-      await this.props.sendSms(sms);
     }
 
     // get pending orders
@@ -96,7 +87,6 @@ class ChangeDate extends Component {
   render() {
     const { date, time, isLoading } = this.state;
     const { order } = this.props.route.params;
-    const minDate = moment().add(3, 'days').startOf('day');
 
     return (
       <SafeAreaView
@@ -215,7 +205,7 @@ class ChangeDate extends Component {
                 value={date}
                 date={new Date()}
                 placeholder="Choose a new date..."
-                minDate={new Date(minDate)}
+                minDate={new Date()}
                 onConfirm={value => {
                   this.setState({
                     date: value,
