@@ -601,46 +601,6 @@ class OrderDetails extends Component {
               {/* plant selections (dynamically visible) */}
               {order.status === 'pending' &&
                 order.type === types.CROP_ROTATION &&
-                user.type === types.CUSTOMER && (
-                  <View style={{ marginTop: units.unit4 }}>
-                    <View style={{ display: (cropRotationSelectionComplete) ? 'flex' : 'none' }}>
-                      <Collapse
-                        title="Vegetables"
-                        content={
-                          <PlantSelection
-                            plants={plantList?.vegetables}
-                          />
-                        }
-                      />
-                      <Collapse
-                        title="Herbs"
-                        content={
-                          <PlantSelection
-                            plants={plantList?.herbs}
-                          />
-                        }
-                      />
-                      <Collapse
-                        title="Fruit"
-                        content={
-                          <PlantSelection
-                            plants={plantList?.fruit}
-                          />
-                        }
-                      />
-                    </View>
-                    <View style={{ display: (cropRotationSelectionComplete) ? 'none' : 'flex' }}>
-                      <Button
-                        text="Select Plants"
-                        onPress={() => this.props.navigation.navigate('Selection Type', { isCropRotation: true, order })}
-                      />
-                    </View>
-                  </View>
-                )}
-
-              {/* plant selections (dynamically visible) */}
-              {order.status === 'pending' &&
-                order.type === types.CROP_ROTATION &&
                 user.type === types.GARDENER &&
                 cropRotationSelectionComplete &&
                 plantList && (
