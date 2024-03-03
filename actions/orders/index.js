@@ -4,7 +4,6 @@ import getAuthToken from '../../helpers/getAuthToken';
 import { GET_ORDERS, SET_SELECTED_ORDER } from '../../actions/orders/types';
 import { alert } from '../../components/UI/SystemAlert';
 
-
 export function createOrder(order) {
     return async function () {
         try {
