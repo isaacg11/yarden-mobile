@@ -157,9 +157,9 @@ class Reports extends Component {
           backgroundColor: '#ffff66',
         }}>
         <Text style={{marginBottom: units.unit4}}>
-          Starting Spring 2024, you will be asked to build a permanent plant
-          list for the warm and cold seasons. This way, you will no longer be
-          required to manually select your garden plants during every season
+          Starting Spring 2024, we will kindly ask you to build a permanent
+          plant list for the warm and cold seasons. This way, you will no longer
+          be required to manually select your garden plants during every season
           change like you did in the past.
         </Text>
         <Button
@@ -174,7 +174,7 @@ class Reports extends Component {
             />
           }
           onPress={() => {
-            Linking.openURL(`${APP_URL}/plant-selection`);
+            Linking.openURL(`${APP_URL}/crop-rotation`);
           }}
         />
       </View>
