@@ -30,7 +30,7 @@ import {getBeds} from '../actions/beds/index';
 import {getOrders, setSelectedOrder} from '../actions/orders/index';
 import {getPlantActivities} from '../actions/plantActivities/index';
 import {getPlantList} from '../actions/plantList';
-import {getPlantSelection} from '../actions/plantSelections';
+import {getPlantSelection} from '../actions/plantSelection';
 
 // helpers
 import {APP_URL} from '../helpers/getUrl';
