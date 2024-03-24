@@ -77,6 +77,7 @@ import NewBeds from './screens/NewBeds';
 import BedPlants from './screens/BedPlants';
 import PlantSelectionType from './screens/PlantSelectionType';
 import PlantsConfirmation from './screens/PlantsConfirmation';
+import Plants from './screens/Plants';
 
 // UI components
 import Link from './components/UI/Link';
@@ -911,6 +912,16 @@ function App() {
             <Stack.Screen
               name="Confirm Plants"
               component={PlantsConfirmation}
+              options={{
+                headerTitle: () => logo,
+                headerStyle: appHeaderStyle,
+                headerTintColor: appHeaderTint,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="Plants"
+              component={Plants}
               options={{
                 headerTitle: () => logo,
                 headerStyle: appHeaderStyle,

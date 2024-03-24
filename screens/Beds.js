@@ -1,5 +1,5 @@
 // libraries
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,8 +8,8 @@ import {
   Text,
   Image,
 } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
@@ -24,8 +24,8 @@ import colors from '../components/styles/colors';
 import fonts from '../components/styles/fonts';
 
 // actions
-import { createBed, getBeds } from '../actions/beds/index';
-import { updateDraft, getDrafts } from '../actions/drafts/index';
+import {createBed, getBeds} from '../actions/beds/index';
+import {updateDraft, getDrafts} from '../actions/drafts/index';
 
 // helpers
 import calculatePlantingProgress from '../helpers/calculatePlantingProgress';
@@ -38,12 +38,11 @@ import capitalize from '../helpers/capitalize';
 import types from '../vars/types';
 
 class Beds extends Component {
-
   state = {};
 
   publish() {
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     let createBeds = [];
     const drafts = this.props.drafts;
@@ -64,12 +63,11 @@ class Beds extends Component {
 
       createBeds.push(
         new Promise(async resolve => {
-
           // create bed
           await this.props.createBed(newBed);
 
           // update draft status as published
-          await this.props.updateDraft(draft._id, { published: true });
+          await this.props.updateDraft(draft._id, {published: true});
 
           resolve();
         }),
@@ -78,40 +76,51 @@ class Beds extends Component {
 
     // create beds
     Promise.all(createBeds).then(async () => {
-
       // get drafts
       await this.props.getDrafts(`order=${this.props.route.params.order._id}`);
 
       // get beds
-      await this.props.getBeds(`customer=${this.props.route.params.order.customer._id}`);
+      await this.props.getBeds(
+        `customer=${this.props.route.params.order.customer._id}`,
+      );
 
       // redirect user to "planted" screen
       this.props.navigation.navigate('Planted');
 
       // hide loading indicator
-      this.setState({ isLoading: false });
+      this.setState({isLoading: false});
     });
   }
 
   next() {
     switch (this.props.route.params.serviceReport) {
       case types.DEAD_PLANTS:
-        return this.props.navigation.navigate('Step 2', { order: this.props.route.params.order });
+        return this.props.navigation.navigate('Step 2', {
+          order: this.props.route.params.order,
+        });
       case types.HARVESTED_PLANTS:
-        return this.props.navigation.navigate('Step 3', { order: this.props.route.params.order });
+        return this.props.navigation.navigate('Step 3', {
+          order: this.props.route.params.order,
+        });
       case types.NEW_PLANTS:
-        return this.props.navigation.navigate('Step 4', { order: this.props.route.params.order });
+        return this.props.navigation.navigate('Step 4', {
+          order: this.props.route.params.order,
+        });
       default:
-        return this.props.navigation.navigate('Step 1', { order: this.props.route.params.order });
+        return this.props.navigation.navigate('Step 1', {
+          order: this.props.route.params.order,
+        });
     }
   }
 
   renderHelperText() {
     switch (this.props.route.params.order.type) {
       case types.INITIAL_PLANTING:
-        return (this.props.drafts.find((draft) => !draft.published)) ? 'Build and publish the garden map before starting the initial planting so you can use it as a guide while working.' : '';
+        return this.props.drafts.find(draft => !draft.published)
+          ? 'Build and publish the garden map before starting the initial planting so you can use it as a guide while working.'
+          : '';
       case types.CROP_ROTATION:
-        return 'Build the garden map before starting the crop rotation so you can use it as a guide while working.';
+        return 'Tap on any garden bed to add plants for the crop rotation.';
       case types.FULL_PLAN:
         switch (this.props.route.params.serviceReport) {
           case types.DEAD_PLANTS:
@@ -143,25 +152,28 @@ class Beds extends Component {
     switch (this.props.route.params.order.type) {
       case types.INITIAL_PLANTING:
         return (
-          <View style={{ display: (this.props.drafts.find((draft) => !draft.published)) ? "flex" : "none" }}>
+          <View
+            style={{
+              display: this.props.drafts.find(draft => !draft.published)
+                ? 'flex'
+                : 'none',
+            }}>
             <Button
               icon={
-                <Ionicons
-                  name="share"
-                  size={fonts.h3}
-                  color={colors.purpleB}
-                />
+                <Ionicons name="share" size={fonts.h3} color={colors.purpleB} />
               }
               disabled={progress < 100 ? true : false}
               text="Publish Garden"
               variant="button"
               onPress={() => this.publish()}
             />
-            <Text style={{ color: colors.greenD75, marginTop: units.unit4 }}>
-              Tapping the "Publish Garden" button will make your garden layout visible to the customer. Once this action is taken, it cannot be undone.
+            <Text style={{color: colors.greenD75, marginTop: units.unit4}}>
+              Tapping the "Publish Garden" button will make your garden layout
+              visible to the customer. Once this action is taken, it cannot be
+              undone.
             </Text>
           </View>
-        )
+        );
       case types.FULL_PLAN:
         if (this.props.route.params.serviceReport) {
           return (
@@ -180,7 +192,7 @@ class Beds extends Component {
                 onPress={() => this.next()}
               />
             </View>
-          )
+          );
         }
       case types.ASSISTED_PLAN:
         if (this.props.route.params.serviceReport) {
@@ -200,30 +212,32 @@ class Beds extends Component {
                 onPress={() => this.next()}
               />
             </View>
-          )
+          );
         }
       default:
-        return (<View></View>)
+        return <View></View>;
     }
   }
 
   renderProgress(progress, label) {
     const order = this.props.route.params.order;
-    if (order.type === types.INITIAL_PLANTING) { // if initial planting {...}
+    if (order.type === types.INITIAL_PLANTING) {
+      // if initial planting {...}
 
       // check to make sure all drafts have been published
-      const published = this.props.drafts.filter((draft) => draft.published).length === this.props.drafts.length;
+      const published =
+        this.props.drafts.filter(draft => draft.published).length ===
+        this.props.drafts.length;
 
       // if already published
       if (published) {
-
         // hide progress indicator
         return <></>;
       }
     }
 
     return (
-      <View style={{ marginBottom: units.unit3, marginTop: units.unit4 }}>
+      <View style={{marginBottom: units.unit3, marginTop: units.unit4}}>
         <View
           style={{
             display: 'flex',
@@ -232,10 +246,10 @@ class Beds extends Component {
             alignItems: 'center',
             marginBottom: units.unit3,
           }}>
-          <Text style={{ ...fonts.label, marginRight: units.unit3 }}>
+          <Text style={{...fonts.label, marginRight: units.unit3}}>
             Planted
           </Text>
-          <Text style={{ ...fonts.label, textAlign: 'center' }}>{label}</Text>
+          <Text style={{...fonts.label, textAlign: 'center'}}>{label}</Text>
         </View>
         <ProgressIndicator progress={progress} />
       </View>
@@ -252,9 +266,9 @@ class Beds extends Component {
     let columns = [];
 
     if (order.type === types.INITIAL_PLANTING) {
-      drafts.forEach((draft) => columns.push(draft));
+      drafts.forEach(draft => columns.push(draft));
     } else {
-      beds.forEach((bed) => columns.push(bed));
+      beds.forEach(bed => columns.push(bed));
     }
 
     const size = 2;
@@ -284,7 +298,12 @@ class Beds extends Component {
                 }}
                 key={index}
                 onPress={() =>
-                  this.props.navigation.navigate('Bed', { bed, order, bedId, serviceReport })
+                  this.props.navigation.navigate('Bed', {
+                    bed,
+                    order,
+                    bedId,
+                    serviceReport,
+                  })
                 }>
                 <View
                   style={{
@@ -293,8 +312,8 @@ class Beds extends Component {
                     justifyContent: 'space-between',
                     marginBottom: units.unit2,
                   }}>
-                  <Paragraph style={{ ...fonts.label }}>#{bedId}</Paragraph>
-                  <Paragraph style={{ ...fonts.label }}>
+                  <Paragraph style={{...fonts.label}}>#{bedId}</Paragraph>
+                  <Paragraph style={{...fonts.label}}>
                     {calculatePlantingProgress(bed)}
                   </Paragraph>
                 </View>
@@ -312,7 +331,7 @@ class Beds extends Component {
                       height: 100,
                     }}
                   />
-                  <View style={{ display: 'flex', alignItems: 'center' }}>
+                  <View style={{display: 'flex', alignItems: 'center'}}>
                     <Paragraph
                       style={{
                         maxWidth: '100%',
@@ -341,8 +360,8 @@ class Beds extends Component {
   }
 
   render() {
-    const { isLoading } = this.state;
-    const { drafts, beds } = this.props;
+    const {isLoading} = this.state;
+    const {drafts, beds} = this.props;
     const order = this.props.route.params.order;
     let gardenInfo = null;
 
@@ -354,10 +373,11 @@ class Beds extends Component {
     let progress = 0;
 
     if (gardenInfo) {
-
       // calculate total plants
       let totalPlants = 0;
-      gardenInfo.vegetables.forEach(vegetable => (totalPlants += vegetable.qty));
+      gardenInfo.vegetables.forEach(
+        vegetable => (totalPlants += vegetable.qty),
+      );
       gardenInfo.herbs.forEach(herb => (totalPlants += herb.qty));
       gardenInfo.fruit.forEach(fr => (totalPlants += fr.qty));
 
@@ -370,15 +390,14 @@ class Beds extends Component {
         gardenInfo.fruit,
       );
 
-      const plantingData = (order.type === types.INITIAL_PLANTING) ? drafts : beds;
+      const plantingData =
+        order.type === types.INITIAL_PLANTING ? drafts : beds;
 
       // if plants exist {...}
       if (plantingData.length > 0) {
-
         const planted = getPlantedList(plantingData);
 
         rows.forEach(column => {
-
           // check drafts for plant
           const plantIsSaved = planted.find(plant => plant.key === column.key);
 
@@ -410,8 +429,7 @@ class Beds extends Component {
           backgroundColor: colors.greenE10,
         }}>
         <ScrollView>
-          <View style={{ padding: units.unit3 + units.unit4 }}>
-
+          <View style={{padding: units.unit3 + units.unit4}}>
             {/* loading indicator */}
             <LoadingIndicator loading={isLoading} />
 
@@ -419,7 +437,7 @@ class Beds extends Component {
             <Header type="h4">Garden Beds</Header>
 
             {/* customer info */}
-            <Text style={{ marginTop: units.unit2 }}>
+            <Text style={{marginTop: units.unit2}}>
               {capitalize(
                 `${order.customer.first_name} ${order.customer.last_name}`,
               )}
@@ -427,13 +445,13 @@ class Beds extends Component {
             <Text>{capitalize(`${order.customer.address}`)}</Text>
             <Text>
               {capitalize(`${order.customer.city}`)},{' '}
-              <Text style={{ textTransform: 'uppercase' }}>
+              <Text style={{textTransform: 'uppercase'}}>
                 {order.customer.state}
               </Text>{' '}
               {order.customer.zip_code}
             </Text>
 
-            {/* helper text (dynamically visible) */}
+            {/* helper text () */}
             <View
               style={{
                 marginTop: units.unit3,
@@ -441,22 +459,20 @@ class Beds extends Component {
                 borderTopWidth: 1,
                 borderTopColor: colors.greenD10,
               }}>
-              <Text style={{ color: colors.greenE50 }}>
+              <Text style={{color: colors.greenE50}}>
                 {this.renderHelperText()}
               </Text>
             </View>
 
-            {/* progress indicator (dynamically visible) */}
-            {(order.type === types.INITIAL_PLANTING) && this.renderProgress(progress, label)}
+            {/* progress indicator () */}
+            {order.type === types.INITIAL_PLANTING &&
+              this.renderProgress(progress, label)}
 
             {/* garden beds list */}
-            <View style={{ marginTop: units.unit4 }}>
-              {this.renderBeds()}
-            </View>
+            <View style={{marginTop: units.unit4}}>{this.renderBeds()}</View>
 
             {/* button */}
             {this.renderButton(progress)}
-
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -478,7 +494,7 @@ function mapDispatchToProps(dispatch) {
       createBed,
       updateDraft,
       getDrafts,
-      getBeds
+      getBeds,
     },
     dispatch,
   );

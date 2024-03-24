@@ -9,11 +9,11 @@ export default function separatePlantsByCommonType(plants) {
         const plant = plants[i].id || plants[i];
 
         // get plant name
-        let name = plant.common_type.name;
+        const name = plant.common_type.name;
 
         // if key for plant does not exist on separatedPlants object yet {...}
         if (!separatedPlants[plant.common_type.name]) {
-
+ 
             // set new key and value on separatedPlants
             separatedPlants[`${name}`] = [plants[i]];
         } else {

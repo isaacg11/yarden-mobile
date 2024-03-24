@@ -1,8 +1,8 @@
 // libraries
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, {Component} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Popover from 'react-native-popover-view';
@@ -16,7 +16,7 @@ import ToggleSwitch from '../UI/ToggleSwitch';
 import LoadingIndicator from '../UI/LoadingIndicator';
 
 // actions
-import { getPlantActivities } from '../../actions/plantActivities/index';
+import {getPlantActivities} from '../../actions/plantActivities/index';
 
 // types
 import types from '../../vars/types';
@@ -35,7 +35,7 @@ class HarvestReport extends Component {
     rangeFilter: 2,
     harvestData: [],
     total: 0,
-    price: 0
+    price: 0,
   };
 
   componentDidMount() {
@@ -50,7 +50,6 @@ class HarvestReport extends Component {
 
     // if plant activities {...}
     if (plantActivities.length > 0) {
-
       // group plant activities by week
       const weeklyPlantActivity = await groupByWeek(plantActivities);
 
@@ -58,7 +57,6 @@ class HarvestReport extends Component {
       for (let group in weeklyPlantActivity) {
         let weeklyTotal = 0;
         weeklyPlantActivity[group].forEach(plantActivity => {
-
           // calculate harvest weight
           const harvestWeight = calculateHarvestWeight(plantActivity);
 
@@ -66,10 +64,15 @@ class HarvestReport extends Component {
           weeklyTotal += harvestWeight;
 
           // add 34% value because it's organic
-          const additionalValue = (plantActivity.plant.common_type.price_per_pound * harvestWeight) * .34;
+          const additionalValue =
+            plantActivity.plant.common_type.price_per_pound *
+            harvestWeight *
+            0.34;
 
           // set price
-          price += (plantActivity.plant.common_type.price_per_pound * harvestWeight) + additionalValue;
+          price +=
+            plantActivity.plant.common_type.price_per_pound * harvestWeight +
+            additionalValue;
         });
 
         // add to combined total
@@ -86,7 +89,7 @@ class HarvestReport extends Component {
     this.setState({
       harvestData,
       total,
-      price
+      price,
     });
   }
 
@@ -117,7 +120,7 @@ class HarvestReport extends Component {
 
   async setTimeRange(days) {
     // show loading indicator
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true});
 
     // get plant activities
     await this.props.getPlantActivities(
@@ -138,7 +141,7 @@ class HarvestReport extends Component {
         const diff = days / 7 - this.state.harvestData.length;
         for (let i = 0; i < diff; i++) {
           // add empty bar
-          harvestData.unshift({ value: 0 });
+          harvestData.unshift({value: 0});
         }
       }
     }
@@ -158,12 +161,10 @@ class HarvestReport extends Component {
       harvestData,
       total,
       isLoading,
-      price
+      price,
     } = this.state;
 
-    const {
-      plantActivities
-    } = this.props;
+    const {plantActivities} = this.props;
 
     // render harvest report
     return (
@@ -173,17 +174,17 @@ class HarvestReport extends Component {
           paddingVertical: units.unit3,
           paddingHorizontal: units.unit4,
           shadowColor: colors.greenD10,
-          shadowOffset: { width: 0, height: 1 },
+          shadowOffset: {width: 0, height: 1},
           shadowOpacity: 1,
           shadowRadius: 6,
         }}>
-        {/* loading indicator (dynamically visible) */}
+        {/* loading indicator () */}
         <LoadingIndicator loading={isLoading} />
 
         {/* header */}
-        <Label style={{ marginBottom: units.unit2 }}>TOTAL CROP YIELD</Label>
+        <Label style={{marginBottom: units.unit2}}>TOTAL CROP YIELD</Label>
         {harvestData.length < 1 ? (
-          <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
             <Header
               type="h4"
               style={{
@@ -206,23 +207,31 @@ class HarvestReport extends Component {
             <View>
               <Header
                 type="h4"
-                style={{ marginRight: units.unit3, color: colors.purpleB }}>
+                style={{marginRight: units.unit3, color: colors.purpleB}}>
                 {total.toFixed(1)} lbs
               </Header>
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: colors.greenA, marginRight: units.unit1 }}>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: colors.greenA, marginRight: units.unit1}}>
                   Retail Price ${price.toFixed(2)}
                 </Text>
                 <Popover
-                  from={(
+                  from={
                     <Ionicons
                       size={fonts.h4}
                       name="information-circle-outline"
                       color={colors.purpleB}
                     />
-                  )}>
-                  <View style={{ padding: units.unit3 }}>
-                    <Text>This price is based on the average price per pound statistics provided by the USDA.</Text>
+                  }>
+                  <View style={{padding: units.unit3}}>
+                    <Text>
+                      This price is based on the average price per pound
+                      statistics provided by the USDA.
+                    </Text>
                   </View>
                 </Popover>
               </View>
@@ -230,7 +239,7 @@ class HarvestReport extends Component {
             <ToggleSwitch
               trackLabel="Weekly Yield"
               thumbLabel="Weekly Yield"
-              onChange={value => this.setState({ weeklyYieldIsActive: value })}
+              onChange={value => this.setState({weeklyYieldIsActive: value})}
             />
           </View>
         )}
@@ -238,7 +247,7 @@ class HarvestReport extends Component {
         {/* bar chart */}
         {harvestData.length < 1 ? (
           <View>
-            <View style={{ display: 'flex', flexDirection: 'row' }}>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
               <Text
                 style={{
                   color: colors.greenD50,
@@ -247,7 +256,7 @@ class HarvestReport extends Component {
                 }}>
                 - No Data (...%)
               </Text>
-              <Text style={{ color: colors.greenD50 }}>
+              <Text style={{color: colors.greenD50}}>
                 You don't have any harvest data yet
               </Text>
             </View>
@@ -271,7 +280,7 @@ class HarvestReport extends Component {
         ) : (
           <BarChart showValues={weeklyYieldIsActive} data={harvestData} />
         )}
-        <Divider style={{ backgroundColor: colors.purpleB }} />
+        <Divider style={{backgroundColor: colors.purpleB}} />
 
         {/* range filters */}
         <View
@@ -283,7 +292,7 @@ class HarvestReport extends Component {
           }}>
           <TouchableOpacity
             disabled={plantActivities.length < 1}
-            style={{ ...this.getRangeFilterStyles(rangeFilter === 2) }}
+            style={{...this.getRangeFilterStyles(rangeFilter === 2)}}
             onPress={() => this.setTimeRange(14)}>
             <Text
               style={{
@@ -294,7 +303,7 @@ class HarvestReport extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={plantActivities.length < 1}
-            style={{ ...this.getRangeFilterStyles(rangeFilter === 4) }}
+            style={{...this.getRangeFilterStyles(rangeFilter === 4)}}
             onPress={() => this.setTimeRange(28)}>
             <Text
               style={{
@@ -305,7 +314,7 @@ class HarvestReport extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={plantActivities.length < 1}
-            style={{ ...this.getRangeFilterStyles(rangeFilter === 12) }}
+            style={{...this.getRangeFilterStyles(rangeFilter === 12)}}
             onPress={() => this.setTimeRange(84)}>
             <Text
               style={{
@@ -316,7 +325,7 @@ class HarvestReport extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={plantActivities.length < 1}
-            style={{ ...this.getRangeFilterStyles(rangeFilter === 26) }}
+            style={{...this.getRangeFilterStyles(rangeFilter === 26)}}
             onPress={() => this.setTimeRange(182)}>
             <Text
               style={{
