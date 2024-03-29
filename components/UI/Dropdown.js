@@ -15,6 +15,14 @@ const componentStyles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
   },
+  disabledDropdown: {
+    borderWidth: 1,
+    padding: units.unit4,
+    borderColor: colors.purpleB50,
+    backgroundColor: '#eeeeee',
+    display: 'flex',
+    alignItems: 'center',
+  },
   label: {
     fontSize: fonts.h4,
     marginBottom: units.unit2,
@@ -26,6 +34,7 @@ const componentStyles = StyleSheet.create({
 class Dropdown extends Component {
   render() {
     const {placeholder, options, onChange, value, disabled, style} = this.props;
+    const dropdownStyle = (disabled) ? componentStyles.disabledDropdown : componentStyles.dropdown;
 
     return (
       <View>
@@ -33,7 +42,7 @@ class Dropdown extends Component {
           <Text style={fonts.inputLabel}>{this.props.label}</Text>
         )}
 
-        <View style={{...componentStyles.dropdown, ...style}}>
+        <View style={{...dropdownStyle, ...style}}>
           <RNPickerSelect
             disabled={disabled}
             value={value}
@@ -43,13 +52,14 @@ class Dropdown extends Component {
             Icon={() => (
               <Ionicons
                 name={'chevron-down'}
-                color={colors.purpleB}
+                color={disabled ? '#cccccc' : colors.purpleB}
                 size={fonts.h2}
               />
             )}
             textInputProps={{
               style: {
                 fontSize: fonts.h3,
+                color: disabled ? '#cccccc' : 'black'
               },
             }}
           />
