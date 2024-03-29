@@ -4,6 +4,7 @@ import {View, Modal, Text, TouchableOpacity, Image} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 // UI components
 import CircularButton from '../UI/CircularButton';
@@ -14,6 +15,10 @@ import Card from '../UI/Card';
 import SizeIndicator from '../UI/SizeIndicator';
 import Header from '../UI/Header';
 import Dropdown from '../UI/Dropdown';
+import SuccessIndicator from '../app/SuccessIndicator';
+import Paragraph from '../UI/Paragraph';
+
+import {sendEmail} from '../../actions/emails/index';
 
 // helpers
 import formatMenuData from '../../helpers/formatMenuData';
@@ -32,6 +37,8 @@ class PlantMenu extends Component {
     menuType: 'list',
     selectedPlants: [],
     selectedPlant: null,
+    newPlantVariety: null,
+    requestSentForNewPlantVariety: false,
   };
 
   selectPlant(plant) {
@@ -59,6 +66,31 @@ class PlantMenu extends Component {
 
   searchPlants(value) {
     this.setState({search: value});
+  }
+
+  async submitRequestForNewPlantVariety() {
+    const newPlantVarietyRequest = {
+      email: 'isaac.grey@yardengarden.com',
+      subject: `Yarden - (ACTION REQUIRED) New plant variety`,
+      label: 'New Plant Variety',
+      body:
+        '<p>Hello <b>Yarden HQ</b>,</p>' +
+        '<p style="margin-bottom: 15px;">A new plant variety has been requested by <u>' +
+        this.props.user.email +
+        '</u>, please review and update as needed.</p>' +
+        '<p><b>New Plant</b></p>' +
+        '<p>' +
+        '"' +
+        `${this.state.newPlantVariety}` +
+        '"' +
+        '</p>',
+    };
+
+    await this.props.sendEmail(newPlantVarietyRequest);
+
+    this.setState({
+      requestSentForNewPlantVariety: true,
+    });
   }
 
   renderHeader() {
@@ -310,7 +342,13 @@ class PlantMenu extends Component {
   }
 
   renderMenuOptions() {
-    const {plantQty, selectedPlant} = this.state;
+    const {
+      plantQty,
+      selectedPlant,
+      requestNewPlantVariety,
+      newPlantVariety,
+      requestSentForNewPlantVariety,
+    } = this.state;
     const {plants} = this.props;
 
     const varieties = plants
@@ -326,12 +364,6 @@ class PlantMenu extends Component {
       })
       .filter(variety => variety !== undefined);
 
-    console.log('selectedPlant');
-    console.log(selectedPlant);
-
-    console.log('varieties');
-    console.log(varieties);
-
     return (
       <View
         style={{
@@ -339,106 +371,187 @@ class PlantMenu extends Component {
           borderTopColor: colors.purpleB,
           padding: units.unit4,
         }}>
-        {/* plant variety dropdown */}
-        <View style={{paddingHorizontal: units.unit3}}>
-          <Dropdown
-            disabled={plantQty < 1}
-            label="Variety"
-            value={selectedPlant ? selectedPlant._id : 'none'}
-            options={
-              selectedPlant ? varieties : [{label: 'None', value: 'none'}]
-            }
-            onChange={value => {
-              // do stuff...
-            }}
-          />
-        </View>
-        <View
-          style={{
-            padding: units.unit4,
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-          }}>
-          {/* subtract button */}
+        {requestNewPlantVariety && !requestSentForNewPlantVariety && (
           <View>
-            <CircularButton
-              small
-              disabled={plantQty === 0 || !selectedPlant}
-              variant="btn2"
-              icon={
-                <Ionicons
-                  name={'remove-outline'}
-                  color={colors.purpleB}
-                  size={fonts.h3}
+            <Input
+              label="New Plant Variety"
+              placeholder='i.e "Roma Tomato"'
+              value={newPlantVariety}
+              onChange={value => this.setState({newPlantVariety: value})}
+            />
+            <Button
+              disabled={!newPlantVariety}
+              text="Send Request"
+              style={{width: '100%'}}
+              onPress={() => this.submitRequestForNewPlantVariety()}
+            />
+            <View
+              style={{
+                marginTop: units.unit4,
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <Link
+                text="Cancel"
+                onPress={() =>
+                  this.setState({
+                    requestNewPlantVariety: false,
+                  })
+                }
+              />
+            </View>
+          </View>
+        )}
+        {requestSentForNewPlantVariety && (
+          <View>
+            <Header
+              style={{
+                marginTop: units.unit4,
+                marginBottom: units.unit4,
+                textAlign: 'center',
+                fontSize: fonts.h1,
+                lineHeight: fonts.h1 + fonts.h1 / 3,
+              }}>
+              Success!
+            </Header>
+            <SuccessIndicator />
+            <Paragraph
+              style={{
+                textAlign: 'center',
+                marginTop: units.unit4,
+                marginBottom: units.unit5,
+              }}>
+              Your request was sent! Please allow 5 - 7 business days for us to
+              review your request.
+            </Paragraph>
+            <View
+              style={{
+                marginTop: units.unit4,
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <Link
+                text="Back to Plant Menu"
+                onPress={() =>
+                  this.setState({
+                    newPlantVariety: null,
+                    requestSentForNewPlantVariety: false,
+                    requestNewPlantVariety: false,
+                  })
+                }
+              />
+            </View>
+          </View>
+        )}
+        {!requestNewPlantVariety && !requestSentForNewPlantVariety && (
+          <View>
+            {/* plant variety dropdown */}
+            <View style={{paddingHorizontal: units.unit3}}>
+              <Dropdown
+                disabled={plantQty < 1}
+                label="Variety"
+                value={selectedPlant ? selectedPlant._id : 'none'}
+                options={
+                  selectedPlant ? varieties : [{label: 'None', value: 'none'}]
+                }
+                onChange={value => {
+                  const plantVariety = plants.find(p => p._id === value);
+                  this.setState({selectedPlant: plantVariety});
+                }}
+              />
+            </View>
+            <View
+              style={{
+                padding: units.unit4,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+              }}>
+              {/* subtract button */}
+              <View>
+                <CircularButton
+                  small
+                  disabled={plantQty === 0 || !selectedPlant}
+                  variant="btn2"
+                  icon={
+                    <Ionicons
+                      name={'remove-outline'}
+                      color={colors.purpleB}
+                      size={fonts.h3}
+                    />
+                  }
+                  onPress={() => {
+                    this.setState({
+                      plantQty: plantQty - 1,
+                    });
+                  }}
                 />
-              }
+              </View>
+
+              {/* qty output */}
+              <View>
+                <Header>{plantQty}</Header>
+              </View>
+
+              {/* add button */}
+              <View>
+                <CircularButton
+                  small
+                  variant="btn2"
+                  disabled={!selectedPlant}
+                  icon={
+                    <Ionicons
+                      name={'add'}
+                      color={colors.purpleB}
+                      size={fonts.h3}
+                    />
+                  }
+                  onPress={() => {
+                    this.setState({
+                      plantQty: plantQty + 1,
+                    });
+                  }}
+                />
+              </View>
+            </View>
+            <Button
+              disabled={plantQty < 1}
+              text="Add to Garden Bed"
+              style={{width: '100%'}}
               onPress={() => {
-                this.setState({
-                  plantQty: plantQty - 1,
+                // add plant
+                this.props.addPlant({
+                  plant: {
+                    id: this.state.selectedPlant,
+                  },
+                  qty: plantQty,
                 });
+
+                // clear selections
+                this.setState({
+                  selectedPlant: null,
+                  selectedPlants: [],
+                  plantQty: 0,
+                });
+
+                // close modal
+                this.props.close();
               }}
             />
+            <View
+              style={{
+                marginTop: units.unit4,
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <Link
+                text="Request new plant variety"
+                onPress={() => this.setState({requestNewPlantVariety: true})}
+              />
+            </View>
           </View>
-
-          {/* qty output */}
-          <View>
-            <Header>{plantQty}</Header>
-          </View>
-
-          {/* add button */}
-          <View>
-            <CircularButton
-              small
-              variant="btn2"
-              disabled={!selectedPlant}
-              icon={
-                <Ionicons name={'add'} color={colors.purpleB} size={fonts.h3} />
-              }
-              onPress={() => {
-                this.setState({
-                  plantQty: plantQty + 1,
-                });
-              }}
-            />
-          </View>
-        </View>
-        <Button
-          disabled={plantQty < 1}
-          text="Submit"
-          style={{width: '100%'}}
-          onPress={() => {
-            // add plant
-            this.props.addPlant({
-              plant: {
-                id: this.state.selectedPlant,
-              },
-              qty: plantQty,
-            });
-
-            // clear selections
-            this.setState({
-              selectedPlant: null,
-              selectedPlants: [],
-              plantQty: 0,
-            });
-
-            // close modal
-            this.props.close();
-          }}
-        />
-        <View
-          style={{
-            marginTop: units.unit4,
-            display: 'flex',
-            alignItems: 'center',
-          }}>
-          <Link
-            text="Request new plant variety"
-            onPress={() => {}}
-          />
-        </View>
+        )}
       </View>
     );
   }
@@ -457,6 +570,7 @@ class PlantMenu extends Component {
 
   render() {
     const {isOpen = false} = this.props;
+    const {menuType} = this.state;
 
     return (
       <View>
@@ -469,7 +583,7 @@ class PlantMenu extends Component {
             {this.renderHeader()}
 
             {/* search bar */}
-            {this.state.menuType === 'list' && this.renderSearchBar()}
+            {menuType === 'list' && this.renderSearchBar()}
 
             {/* plant menu */}
             <KeyboardAwareScrollView>
@@ -494,7 +608,16 @@ function mapStateToProps(state) {
   };
 }
 
-PlantMenu = connect(mapStateToProps, null)(PlantMenu);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      sendEmail,
+    },
+    dispatch,
+  );
+}
+
+PlantMenu = connect(mapStateToProps, mapDispatchToProps)(PlantMenu);
 
 export default PlantMenu;
 

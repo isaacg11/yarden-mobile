@@ -2431,6 +2431,7 @@ class GardenMap extends Component {
       fruit,
       harvestMenuIsOpen,
       newPlantMenuIsOpen,
+      requestNewPlantVarietyIsOpen,
     } = this.state;
 
     const {
@@ -2839,7 +2840,7 @@ function mapDispatchToProps(dispatch) {
       getBeds,
       createPlantActivity,
       getPlantSelection,
-      getPlants
+      getPlants,
     },
     dispatch,
   );
