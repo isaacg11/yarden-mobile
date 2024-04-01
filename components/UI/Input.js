@@ -35,6 +35,7 @@ class Input extends Component {
       onPressIn,
       password = false,
       multiline = false,
+      autoFocus = false,
       numberOfLines = 1,
       disabled = false,
       style
@@ -44,6 +45,7 @@ class Input extends Component {
       <View>
         <Text style={fonts.inputLabel}>{this.props.label}</Text>
         <TextInput
+          autoFocus={autoFocus}
           multiline={multiline}
           numberOfLines={numberOfLines}
           autoCapitalize="none"

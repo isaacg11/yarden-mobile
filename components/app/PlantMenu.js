@@ -370,10 +370,12 @@ class PlantMenu extends Component {
           borderTopWidth: 1,
           borderTopColor: colors.purpleB,
           padding: units.unit4,
+          height: requestNewPlantVariety ? '100%' : null
         }}>
         {requestNewPlantVariety && !requestSentForNewPlantVariety && (
           <View>
             <Input
+              autoFocus={true}
               label="New Plant Variety"
               placeholder='i.e "Roma Tomato"'
               value={newPlantVariety}

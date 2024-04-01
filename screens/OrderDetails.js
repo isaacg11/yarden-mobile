@@ -249,75 +249,7 @@ class OrderDetails extends Component {
       plantSelection,
     } = this.state;
 
-    const season = getSeason();
-    let bedsOutOfSeason = false;
-    let disableMaintenance = false;
     let cropRotationSelectionComplete = plantSelection;
-
-    if (order.type === types.CROP_ROTATION) {
-      if (user.type === types.GARDENER) {
-        let plants = 0;
-        beds.forEach(bed => {
-          bed.plot_points.forEach(rows => {
-            rows.forEach(column => {
-              if (column.plant) {
-                plants += 1;
-
-                // check plants for out of season selections
-                if (
-                  column.plant.id.season !== season &&
-                  column.plant.id.season !== types.ANNUAL
-                ) {
-                  bedsOutOfSeason = true;
-                }
-              }
-            });
-          });
-        });
-
-        // NOTE: This is necessary for the initial crop rotation of legacy customer pre garden map, as they will start with an empty state
-        // Author: Isaac G. 3/25/23
-        if (plants < 1) {
-          bedsOutOfSeason = true;
-        }
-      }
-    } else if (
-      order.type === types.FULL_PLAN ||
-      order.type === types.ASSISTED_PLAN
-    ) {
-      // if maintenance {...}
-      if (user.type === types.GARDENER) {
-        // check for pending crop rotation for customer with maintenance order
-        const pendingCropRotation = orders.list.find(
-          o =>
-            o.type === types.CROP_ROTATION &&
-            o.customer._id === order.customer._id,
-        );
-        if (pendingCropRotation) {
-          let plants = 0;
-          beds.forEach(bed => {
-            bed.plot_points.forEach(rows => {
-              rows.forEach(column => {
-                if (column.plant) {
-                  plants += 1;
-
-                  // check plants for in season selections
-                  if (column.plant.id.season === season) {
-                    disableMaintenance = true;
-                  }
-                }
-              });
-            });
-          });
-
-          // NOTE: This is necessary for the initial crop rotation of legacy customer pre garden map, as they will start with an empty state
-          // Author: Isaac G. 3/28/23
-          if (plants < 1) {
-            disableMaintenance = true;
-          }
-        }
-      }
-    }
 
     return (
       <SafeAreaView
@@ -551,8 +483,7 @@ class OrderDetails extends Component {
                 (order.type === types.FULL_PLAN ||
                   order.type === types.ASSISTED_PLAN) && (
                   <View>
-                    <View
-                      style={{display: disableMaintenance ? 'none' : 'flex'}}>
+                    <View>
                       <Button
                         style={{
                           marginTop: units.unit4,
@@ -578,26 +509,6 @@ class OrderDetails extends Component {
                         onPress={() => this.props.navigation.navigate('Step 1')}
                       />
                     </View>
-                    <View
-                      style={{
-                        display: disableMaintenance ? 'flex' : 'none',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        padding: units.unit5,
-                      }}>
-                      <View style={{display: 'flex', alignItems: 'center'}}>
-                        <Ionicons
-                          name="information-circle-outline"
-                          size={units.unit4}
-                          color={colors.purpleB}
-                          size={units.unit5}
-                        />
-                        <Text>
-                          Crop rotation in progress, must complete before
-                          processing maintenance order.
-                        </Text>
-                      </View>
-                    </View>
                   </View>
                 )}
 
@@ -610,12 +521,8 @@ class OrderDetails extends Component {
                     <View>
                       {/* buttons */}
                       <Button
-                        variant={bedsOutOfSeason ? 'button' : 'btn2'}
-                        text={`${
-                          bedsOutOfSeason
-                            ? 'Build Garden Map'
-                            : 'View Garden Beds'
-                        } `}
+                        variant="btn2"
+                        text="Build Garden Map"
                         onPress={() =>
                           this.props.navigation.navigate('Beds', {order})
                         }
@@ -646,8 +553,7 @@ class OrderDetails extends Component {
                       />
                       <Button
                         style={{
-                          display: bedsOutOfSeason ? 'none' : 'flex',
-                          marginTop: units.unit3,
+                          marginTop: units.unit4,
                         }}
                         text="Process Order"
                         onPress={() =>
