@@ -1,6 +1,14 @@
 // libraries
 import React, {useState} from 'react';
-import {SafeAreaView, View, TouchableOpacity, Text, Image} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // UI components
 import Header from '../components/UI/Header';
@@ -48,6 +56,11 @@ const Plants = props => {
       ? plantSelection.spring_plants
       : plantSelection.fall_plants;
 
+  const plantsFavorites =
+    season === SPRING
+      ? plantSelection.spring_favorites
+      : plantSelection.fall_favorites;
+
   const plantsFilteredByCategory = plants.filter(
     plant => plant.primary.category.name === plantCategory,
   );
@@ -58,7 +71,8 @@ const Plants = props => {
         flex: 1,
         width: '100%',
       }}>
-      <View style={{padding: units.unit3 + units.unit4}}>
+      <View
+        style={{padding: units.unit3 + units.unit4, marginBottom: units.unit5}}>
         {/* header */}
         <Header type="h4">Garden Plants</Header>
 
@@ -110,40 +124,53 @@ const Plants = props => {
         <Divider />
 
         {/* plant selection */}
-        <View>
-          {plantsFilteredByCategory.map((p, index) => (
-            <View key={index}>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Image
+        <ScrollView>
+          <View style={{paddingBottom: units.unit7 + units.unit3}}>
+            {plantsFilteredByCategory.map((p, index) => (
+              <View key={index}>
+                <View
                   style={{
-                    height: units.unit5,
-                    width: units.unit5,
-                    marginRight: units.unit4,
-                    borderRadius: units.unit3,
-                    marginLeft: units.unit4,
-                  }}
-                  source={{
-                    uri: p.image,
-                  }}
-                />
-                <Paragraph
-                  style={{
-                    fontWeight: 'bold',
-                    marginTop: units.unit4,
-                    marginBottom: units.unit4,
-                    color: colors.greenE75,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
-                  {capitalize(p.name)}
-                </Paragraph>
+                  <Image
+                    style={{
+                      height: units.unit5,
+                      width: units.unit5,
+                      marginRight: units.unit4,
+                      borderRadius: units.unit3,
+                      marginLeft: units.unit4,
+                    }}
+                    source={{
+                      uri: p.image,
+                    }}
+                  />
+                  <Paragraph
+                    style={{
+                      fontWeight: 'bold',
+                      marginTop: units.unit4,
+                      marginBottom: units.unit4,
+                      color: colors.greenE75,
+                    }}>
+                    {capitalize(p.name)}
+                  </Paragraph>
+                  {plantsFavorites.find(
+                    plantsFavorite => plantsFavorite._id === p._id,
+                  ) && (
+                    <View style={{marginLeft: units.unit3}}>
+                      <Ionicons
+                        name="star"
+                        size={units.unit4}
+                        color={colors.purpleB}
+                      />
+                    </View>
+                  )}
+                </View>
               </View>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
